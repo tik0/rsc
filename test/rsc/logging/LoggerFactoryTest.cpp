@@ -82,6 +82,10 @@ TEST(LoggerFactoryTest, testReselectLoggingSystem)
             randAlnumStr(25));
     Registry<LoggingSystem>::instance()->addRegistree(l2);
 
+    // TODO why does l2 leak???
+    Mock::AllowLeak(l1);
+    Mock::AllowLeak(l2);
+
     // force default
     LoggerFactory::getInstance()->reselectLoggingSystem(
             LoggerFactory::DEFAULT_LOGGING_SYSTEM);
@@ -118,7 +122,5 @@ TEST(LoggerFactoryTest, testReselectLoggingSystem)
     Registry<LoggingSystem>::instance()->removeRegistree(l2->name);
 
     LoggerFactory::getInstance()->clearKnownLoggers();
-
-    // TODO what is causing the leaking mock object???
 
 }

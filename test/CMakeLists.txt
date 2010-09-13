@@ -1,0 +1,22 @@
+
+ENABLE_TESTING()
+
+INCLUDE_DIRECTORIES(BEFORE ${GTEST_INCLUDE_DIR} ${GMOCK_INCLUDE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
+
+# --- library test ---
+
+SET(TEST_SOURCES rsc/RscTestSuite.cpp
+                 rsc/logging/ConsoleLoggerTest.cpp
+                 rsc/logging/LoggerFactoryTest.cpp
+                 rsc/logging/LoggerTest.cpp
+                 rsc/misc/RegistryTest.cpp
+                 rsc/threading/OrderedQueueDispatcherPoolTest.cpp
+                 rsc/threading/SynchronizedQueueTest.cpp)
+
+ADD_EXECUTABLE(${RSC_TEST_NAME} ${TEST_SOURCES})
+TARGET_LINK_LIBRARIES(${RSC_TEST_NAME}
+                      ${RSC_NAME}
+                      ${Boost_LIBRARIES}
+                      ${GMOCK_LIBRARY_NAME})
+
+ADD_TEST(${RSC_TEST_NAME} ${RSC_TEST_NAME})

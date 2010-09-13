@@ -1,0 +1,22 @@
+
+SET(CMAKE_MODULE_PATH ${CMAKE_INSTALL_PREFIX}/share/cmake/Modules)
+MESSAGE(STATUS "Installing CMake modules to: ${CMAKE_MODULE_PATH}")
+
+INSTALL(FILES TestAttributeConstructor.cpp
+              TestCRTInit.cpp
+              CheckInitMethod.cmake
+              EnableCoverageReport.cmake
+              FindBoostThreadpool.cmake
+              FindBoostUUID.cmake
+              FindEigen2.cmake
+              FindJsonCpp.cmake
+              FindLcov.cmake
+              FindLog4cxx.cmake
+              FindMongo.cmake
+              FindProtocolBuffers.cmake
+              FindSpread.cmake
+              FindTBB.cmake
+              IgnoreReturnCode.cmake
+              InstallFilesRecursive.cmake
+              ParseArguments.cmake
+        DESTINATION ${CMAKE_MODULE_PATH})

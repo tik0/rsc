@@ -1,0 +1,130 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+SET(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS TRUE)
+
+SET(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+
+INCLUDE(CheckCXXCompilerFlag)
+INCLUDE(CheckIncludeFile)
+INCLUDE(FindPkgConfig)
+INCLUDE(InstallFilesRecursive)
+INCLUDE(EnableCoverageReport)
+
+SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+
+PROJECT("RSC")
+
+# --- user options ---
+
+OPTION(BUILD_TESTS "Decide if the test suite shall be built or not" ON)
+OPTION(BUILD_EXAMPLES "Decide if the examples shall be built or not" ON)
+
+# --- global definitions ---
+
+SET(RSC_VERSION 0.1.0)
+SET(RSC_NAME "rsc")
+SET(RSC_TEST_NAME "rsctest")
+
+SET(GTEST_DIR ${CMAKE_SOURCE_DIR}/3rdparty/gtest-1.5.0)
+SET(GTEST_INCLUDE_DIR ${GTEST_DIR}/include)
+SET(GMOCK_DIR ${CMAKE_SOURCE_DIR}/3rdparty/gmock-1.5.0)
+SET(GMOCK_INCLUDE_DIR ${GMOCK_DIR}/include)
+SET(GMOCK_LIBRARY_NAME "gmock")
+
+# --- global compiler flags ---
+
+CHECK_CXX_COMPILER_FLAG(-pipe CHECK_CXX_FLAG_pipe)
+IF(CHECK_CXX_FLAG_pipe)
+    ADD_DEFINITIONS(-pipe)
+ENDIF()
+CHECK_CXX_COMPILER_FLAG(-Wall CHECK_CXX_FLAG_Wall)
+IF(CHECK_CXX_FLAG_Wall)
+    ADD_DEFINITIONS(-Wall)
+ENDIF()
+CHECK_CXX_COMPILER_FLAG(-Wextra CHECK_CXX_FLAG_Wextra)
+IF(CHECK_CXX_FLAG_Wextra)
+    ADD_DEFINITIONS(-Wextra)
+ENDIF()
+CHECK_CXX_COMPILER_FLAG(-fdiagnostics-show-option CHECK_CXX_FLAG_DIAGNOSTICS)
+IF(CHECK_CXX_FLAG_DIAGNOSTICS)
+    ADD_DEFINITIONS(-fdiagnostics-show-option)
+ENDIF()
+
+IF(WIN32)
+    ADD_DEFINITIONS(-D_USE_MATH_DEFINES)
+ENDIF()
+
+INCLUDE(CheckInitMethod)
+
+CHECK_INCLUDE_FILE("sys/types.h" HAVE_TYPES_H)
+IF(HAVE_TYPES_H)
+    ADD_DEFINITIONS(-DHAVE_TYPES_H)
+ENDIF()
+CHECK_INCLUDE_FILE("sys/wait.h" HAVE_WAIT_H)
+IF(HAVE_WAIT_H)
+    ADD_DEFINITIONS(-DHAVE_WAIT_H)
+ENDIF()
+CHECK_INCLUDE_FILE("unistd.h" HAVE_UNISTD_H)
+IF(HAVE_UNISTD_H)
+    ADD_DEFINITIONS(-DHAVE_UNISTD_H)
+ENDIF()
+
+# --- dependency handling ---
+
+SET(Boost_USE_STATIC_LIBS OFF)
+SET(BOOST_COMPONENTS thread)
+FIND_PACKAGE(Boost 1.34.1 REQUIRED ${BOOST_COMPONENTS})
+
+INCLUDE_DIRECTORIES(BEFORE SYSTEM ${Boost_INCLUDE_DIRS})
+LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
+
+FIND_PACKAGE(Doxygen)
+
+# --- source code ---
+
+INCLUDE_DIRECTORIES(BEFORE src ${CMAKE_CURRENT_BINARY_DIR}/src)
+
+ADD_SUBDIRECTORY(src)
+ADD_SUBDIRECTORY(3rdparty)
+IF(BUILD_TESTS)
+    ADD_SUBDIRECTORY(test)
+ENDIF()
+IF(BUILD_EXAMPLES)
+    ADD_SUBDIRECTORY(examples)
+ENDIF()
+
+ADD_SUBDIRECTORY(cmake)
+
+# --- pkgconfig file ---
+
+CONFIGURE_FILE(rsc.pc.in ${CMAKE_BINARY_DIR}/rsc.pc @ONLY)
+INSTALL(FILES ${CMAKE_BINARY_DIR}/rsc.pc DESTINATION lib/pkgconfig)
+
+# --- enable unit tests if desired ---
+
+IF(BUILD_TESTS)
+    ENABLE_TESTING()
+ENDIF()
+
+# --- documentation gneration ---
+
+IF(DOXYGEN_FOUND)
+
+    SET(API_DIR ${CMAKE_BINARY_DIR}/doc)
+    SET(SOURCE_DIR ${CMAKE_SOURCE_DIR}/src)
+    SET(DOXYFILE ${CMAKE_BINARY_DIR}/Doxyfile)
+    SET(WARNFILE ${CMAKE_BINARY_DIR}/doxygen-warn.log)
+    
+    CONFIGURE_FILE(Doxyfile.in ${DOXYFILE})
+    
+    ADD_CUSTOM_COMMAND(OUTPUT ${API_DIR}
+                       DEPENDS ${DOXYFILE}
+                       COMMAND ${DOXYGEN_EXECUTABLE}
+                       ARGS ${DOXYFILE}
+                       WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+    ADD_CUSTOM_TARGET(doc DEPENDS ${API_DIR})
+
+ENDIF()
+
+# --- coverage ---
+
+ENABLE_COVERAGE_REPORT(TARGETS ${RSC_NAME} TESTS ${RSC_TEST_NAME} FILTER "*3rdparty*" "*test/*")

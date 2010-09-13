@@ -1,0 +1,363 @@
+/* ============================================================
+ *
+ * This file is a part of RSC project
+ *
+ * Copyright (C) 2010 by Johannes Wienke <jwienke at techfak dot uni-bielefeld dot de>
+ *
+ * This program is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software Foundation;
+ * either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * ============================================================ */
+
+#ifndef ORDEREDQUEUEDISPATCHERPOOL_H_
+#define ORDEREDQUEUEDISPATCHERPOOL_H_
+
+//#include <iostream>
+
+#include <boost/bind.hpp>
+#include <boost/thread/condition.hpp>
+#include <boost/function.hpp>
+#include <boost/thread/mutex.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/thread.hpp>
+
+#include "rsc/misc/IllegalStateException.h"
+#include "rsc/threading/SynchronizedQueue.h"
+
+using namespace rsc::misc;
+
+namespace rsc {
+namespace threading {
+
+/**
+ * A thread pool that dispatches messages to a list of receivers. The number of
+ * threads is usually smaller than the number of receivers and for each
+ * receiver it is guaranteed that messages arrive in the order they were
+ * published. No guarantees are given between different receivers.
+ * All methods except #start and #stop are reentrant.
+ *
+ * The pool can be stopped and restarted at any time during the processing but
+ * these calls must be single-threaded.
+ *
+ * Assumptions:
+ *  * same subscriptions for multiple receivers unlikely, hence filtering done
+ *    per receiver thread
+ *
+ * @author jwienke
+ *
+ * @tparam M type of the messages dispatched by the pool
+ * @tparam R type of the message receiver
+ */
+template<class M, class R>
+class OrderedQueueDispatcherPool {
+public:
+
+    /**
+     * A function that delivers a message to a receiver. Must be reentrant.
+     */
+    typedef boost::function<void(boost::shared_ptr<R> &receiver,
+            const M &message)> deliverFunction;
+
+    /**
+     * A function that filter a message for a receiver. If @c true is returned,
+     * the message is acceptable for the receiver, else it will not be
+     * delivered.
+     */
+    typedef boost::function<bool(boost::shared_ptr<R> &receiver,
+            const M &message)> filterFunction;
+
+private:
+
+    class Receiver {
+    public:
+
+        Receiver(boost::shared_ptr<R> receiver) :
+            receiver(receiver), processing(false) {
+        }
+
+        boost::shared_ptr<R> receiver;
+        // TODO think about if this really requires a synchronized queue if
+        // all message dispatching to worker threads is synchronized
+        SynchronizedQueue<M> queue;
+
+        /**
+         * Indicates whether a job for this worker is currently being processed
+         * and this receiver hence cannot be addressed by another thread even
+         * though there may be more messages to process.
+         */
+        volatile bool processing;
+
+    };
+
+    // TODO make this a set to only allow unique subscriptions?
+    boost::mutex receiversMutex;
+    std::vector<boost::shared_ptr<Receiver> > receivers;
+    size_t currentPosition;
+
+    volatile bool jobsAvailable;
+    boost::condition jobsAvailableCondition;
+    volatile bool interrupted;
+
+    volatile bool started;
+
+    /**
+     * Returns the next job to process for worker threads and blocks if there
+     * is no job.
+     *
+     * @param workerNum number of the worker requesting a new job
+     * @param receiver out param with the receiver to work on
+     */
+    void nextJob(const unsigned int &/*workerNum*/,
+            boost::shared_ptr<Receiver> &receiver) {
+
+        boost::mutex::scoped_lock lock(receiversMutex);
+
+        //        std::cout << "Worker " << workerNum << " requests a new job"
+        //                << std::endl;
+
+        // wait until a job is available
+        bool gotJob = false;
+        while (!gotJob) {
+
+            while (!jobsAvailable && !interrupted) {
+                //                std::cout << "Worker " << workerNum
+                //                        << ": no jobs available, waiting" << std::endl;
+                jobsAvailableCondition.wait(lock);
+            }
+
+            if (interrupted) {
+                throw InterruptedException("Processing was interrupted");
+            }
+
+            // search for the next job
+            for (size_t pos = 0; pos < receivers.size(); ++pos) {
+
+                // TODO is this selection fair in any case?
+                ++currentPosition;
+                size_t realPos = currentPosition % receivers.size();
+
+                // TODO maybe provide an atomic pop and tell if successful
+                // operation in SynchronizedQueue
+                if (!receivers[realPos]->processing
+                        && !receivers[realPos]->queue.empty()) {
+
+                    // found a job
+
+                    receiver = receivers[realPos];
+                    receiver->processing = true;
+                    gotJob = true;
+                    break;
+
+                }
+
+            }
+
+            // did not find a job, hence there are no other jobs right now
+            if (!gotJob) {
+                jobsAvailable = false;
+            }
+
+        }
+
+        // if I got a job there are certainly others interested in jobs
+        //        std::cout << "Worker " << workerNum << ": got job for receiver"
+        //                << receiver->receiver << ", notify_one" << std::endl;
+        lock.unlock();
+        jobsAvailableCondition.notify_one();
+
+    }
+
+    unsigned int threadPoolSize;
+
+    void finishedWork(boost::shared_ptr<Receiver> receiver) {
+
+        boost::mutex::scoped_lock lock(receiversMutex);
+        // changing this flag must already be locked as it is read by the
+        // globally synchronized nextJob method to determine if a job is
+        // available
+        receiver->processing = false;
+        if (!receiver->queue.empty()) {
+            jobsAvailable = true;
+            lock.unlock();
+            jobsAvailableCondition.notify_one();
+        }
+
+    }
+
+    /**
+     * Threaded worker method.
+     */
+    void worker(const unsigned int &workerNum) {
+
+        try {
+            while (true) {
+
+                boost::shared_ptr<Receiver> receiver;
+                nextJob(workerNum, receiver);
+                M message = receiver->queue.pop();
+                //                std::cout << "Worker " << workerNum << " got new job: "
+                //                        << message << " for receiver " << *(receiver->receiver)
+                //                        << std::endl;
+                if (filterFunc(receiver->receiver, message)) {
+                    delFunc(receiver->receiver, message);
+                }
+                finishedWork(receiver);
+
+            }
+        } catch (InterruptedException &e) {
+            //            std::cout << "Worker " << workerNum << " was interrupted"
+            //                    << std::endl;
+        }
+
+    }
+
+    std::vector<boost::shared_ptr<boost::thread> > threadPool;
+
+    deliverFunction delFunc;
+    filterFunction filterFunc;
+
+public:
+
+    /**
+     * Constructs a new pool.
+     *
+     * @param threadPoolSize number of threads for this pool
+     * @param delFunc the strategy used to deliver messages of type M to
+     *                receivers of type R. This will most likely be a simple
+     *                delegate function mapping to a concrete method call. Must
+     *                be reentrant.
+     * @param filterFunc Reentrant function used to filter messages per
+     *                   receiver. Default accepts every message.
+     */
+    OrderedQueueDispatcherPool(const unsigned int &threadPoolSize,
+            deliverFunction delFunc, filterFunction filterFunc =
+                    alwaysTrueFilter) :
+        currentPosition(0), jobsAvailable(false), interrupted(false), started(
+                false), threadPoolSize(threadPoolSize), delFunc(delFunc),
+                filterFunc(filterFunc) {
+    }
+
+    virtual ~OrderedQueueDispatcherPool() {
+        stop();
+    }
+
+    static bool alwaysTrueFilter(boost::shared_ptr<R> &/*receiver*/, const M &/*message*/) {
+        return true;
+    }
+
+    /**
+     * Registers a new receiver at the pool. Multiple registrations of the same
+     * receiver are possible resulting in being called multiple times for the
+     * same message (but effectively this destroys the guarantee about ordering
+     * given above because multiple message queues are used for every
+     * subscription).
+     *
+     * @param receiver new receiver
+     */
+    void registerReceiver(boost::shared_ptr<R> receiver) {
+        boost::mutex::scoped_lock(receiversMutex);
+        boost::shared_ptr<Receiver> rec(new Receiver(receiver));
+        receivers.push_back(rec);
+    }
+
+    /**
+     * Unregisters all registration of one receiver.
+     *
+     * @param receiver receiver to unregister
+     * @return @c true if one or more receivers were unregistered, else @c false
+     */
+    bool unregisterReceiver(boost::shared_ptr<R> receiver) {
+
+        boost::mutex::scoped_lock(receiversMutex);
+
+        for (typename std::vector<boost::shared_ptr<Receiver> >::iterator it =
+                receivers.begin(); it != receivers.end(); ++it) {
+            if ((*it)->receiver == receiver) {
+                it = receivers.erase(it);
+                return true;
+            }
+        }
+        return false;
+
+    }
+
+    /**
+     * Non-blocking start.
+     *
+     * @throw IllegalStateException if the pool was already started and is
+     *                              running
+     */
+    void start() {
+
+        boost::mutex::scoped_lock lock(receiversMutex);
+        if (started) {
+            throw IllegalStateException("Pool already running");
+        }
+
+        interrupted = false;
+
+        for (unsigned int i = 0; i < threadPoolSize; ++i) {
+            boost::function<void()> workerMethod = boost::bind(
+                    &OrderedQueueDispatcherPool::worker, this, i);
+            boost::shared_ptr<boost::thread> w(new boost::thread(workerMethod));
+            threadPool.push_back(w);
+        }
+
+        started = true;
+
+    }
+
+    /**
+     * Blocking until every thread has stopped working.
+     */
+    void stop() {
+
+        {
+            boost::mutex::scoped_lock lock(receiversMutex);
+            interrupted = true;
+        }
+        jobsAvailableCondition.notify_all();
+
+        for (unsigned int i = 0; i < threadPool.size(); ++i) {
+            threadPool[i]->join();
+        }
+        threadPool.clear();
+
+        started = false;
+
+    }
+
+    /**
+     * Pushes a new message to be dispatched to all receivers in this pool.
+     *
+     * @param message message to dispatch
+     */
+    void push(const M &message) {
+
+        //        std::cout << "new job " << message << std::endl;
+        {
+            boost::mutex::scoped_lock(receiversMutex);
+            for (typename std::vector<boost::shared_ptr<Receiver> >::iterator
+                    it = receivers.begin(); it != receivers.end(); ++it) {
+                (*it)->queue.push(message);
+            }
+            jobsAvailable = true;
+        }
+        jobsAvailableCondition.notify_one();
+
+    }
+
+};
+
+}
+}
+
+#endif /* ORDEREDQUEUEDISPATCHERPOOL_H_ */

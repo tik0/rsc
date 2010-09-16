@@ -176,7 +176,8 @@ private:
  * constructor keyword in static libraries if the *.o file is really used by the
  * binary. Thus it is advisable not to use static libraries for this purpose.
  *
- * Class names for this macro must be given without namespaces.
+ * Class names for this macro must be given without namespaces and templates.
+ * Create typedefs as required to match these restrictions.
  *
  * @param registryClassName type of the Registry to register in
  * @param registreeClassName concrete registree to register. Must have a default

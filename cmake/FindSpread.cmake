@@ -1,7 +1,8 @@
 # - Find the Spread Toolkit
-# This module defines
-#  SPREAD_INCLUDE_DIRS, where to find json.h, etc.
-#  SPREAD_LIBRARIES, the libraries needed to use jsoncpp.
+# This module defines:
+#  SPREAD_INCLUDE_DIRS, where to find sp.h, etc.
+#  SPREAD_LIBRARIES, the libraries needed to use spread.
+#  SPREAD_EXECUTABLE, the spread daemon executable.
 #
 # Will react on:
 #  SPREAD_ROOT, additional directory to search for spread
@@ -28,6 +29,12 @@ FIND_PATH(SPREAD_INCLUDE_DIRS
           PATHS "${SPREAD_ROOT}/include"
                 "$ENV{HOME}/include")
 
+FIND_PROGRAM(SPREAD_EXECUTABLE
+             NAMES spread
+             PATHS "${SPREAD_ROOT}/sbin"
+                   "${SPREAD_ROOT}/bin"
+                   "sbin")
+
 SET(SPREAD_LIBNAME "libspread.so")
 IF(SPREAD_USE_STATIC)
     SET(SPREAD_LIBNAME "libspread.a")
@@ -38,6 +45,6 @@ FIND_LIBRARY(SPREAD_LIBRARIES
              PATHS "${SPREAD_ROOT}/lib"
                    "$ENV{HOME}/lib")
 
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(Spread DEFAULT_MSG SPREAD_LIBRARIES SPREAD_INCLUDE_DIRS)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(Spread DEFAULT_MSG SPREAD_LIBRARIES SPREAD_INCLUDE_DIRS SPREAD_EXECUTABLE)
 
-MARK_AS_ADVANCED(SPREAD_INCLUDE_DIRS SPREAD_LIBNAME SPREAD_LIBRARIES)
+MARK_AS_ADVANCED(SPREAD_INCLUDE_DIRS SPREAD_LIBNAME SPREAD_LIBRARIES SPREAD_EXECUTABLE)

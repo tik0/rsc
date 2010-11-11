@@ -68,7 +68,7 @@ bool UUID::operator<(const UUID &other) const {
 }
 
 ostream &operator<<(ostream &stream, const UUID &id) {
-    return stream << "UUID[" << id << "]";
+    return stream << "UUID[" << id.id << "]";
 }
 
 }

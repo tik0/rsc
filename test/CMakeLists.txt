@@ -10,6 +10,7 @@ SET(TEST_SOURCES rsc/RscTestSuite.cpp
                  rsc/logging/LoggerFactoryTest.cpp
                  rsc/logging/LoggerTest.cpp
                  rsc/misc/RegistryTest.cpp
+                 rsc/misc/UUIDTest.cpp
                  rsc/threading/OrderedQueueDispatcherPoolTest.cpp
                  rsc/threading/SynchronizedQueueTest.cpp)
 

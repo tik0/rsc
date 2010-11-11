@@ -1,6 +1,6 @@
 /* ============================================================
  *
- * This file is a part of the RSB project
+ * This file is a part of the RSC project
  *
  * Copyright (C) 2010 by Sebastian Wrede <swrede at techfak dot uni-bielefeld dot de>
  *
@@ -45,10 +45,30 @@ UUID::UUID(string uuid) {
 UUID::~UUID() {
 }
 
+boost::uuids::uuid UUID::getId() {
+    return id;
+}
+
 string UUID::getIdAsString() const {
     std::stringstream ss;
     ss << id;
     return ss.str();
+}
+
+bool UUID::operator==(const UUID &other) const {
+    return !(*this < other) && !(other < *this);
+}
+
+bool UUID::operator!=(const UUID &other) const {
+    return !operator==(other);
+}
+
+bool UUID::operator<(const UUID &other) const {
+    return id < other.id;
+}
+
+ostream &operator<<(ostream &stream, const UUID &id) {
+    return stream << "UUID[" << id << "]";
 }
 
 }

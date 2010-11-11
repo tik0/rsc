@@ -2,7 +2,8 @@
 SET(CMAKE_MODULE_PATH ${CMAKE_INSTALL_PREFIX}/share/cmake/Modules)
 MESSAGE(STATUS "Installing CMake modules to: ${CMAKE_MODULE_PATH}")
 
-INSTALL(FILES TestAttributeConstructor.cpp
+INSTALL(FILES ExtractTBBVersion.cpp.in
+              TestAttributeConstructor.cpp
               TestCRTInit.cpp
               CheckInitMethod.cmake
               EnableCoverageReport.cmake

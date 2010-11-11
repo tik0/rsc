@@ -12,7 +12,8 @@ SET(TEST_SOURCES rsc/RscTestSuite.cpp
                  rsc/misc/RegistryTest.cpp
                  rsc/misc/UUIDTest.cpp
                  rsc/threading/OrderedQueueDispatcherPoolTest.cpp
-                 rsc/threading/SynchronizedQueueTest.cpp)
+                 rsc/threading/SynchronizedQueueTest.cpp
+                 rsc/threading/TaskTest.cpp)
 
 ADD_EXECUTABLE(${RSC_TEST_NAME} ${TEST_SOURCES})
 TARGET_LINK_LIBRARIES(${RSC_TEST_NAME}

@@ -27,7 +27,10 @@ SET(SOURCES rsc/logging/ConsoleLogger.cpp
             rsc/misc/UUID.cpp
             rsc/threading/InterruptedException.cpp
             rsc/threading/OrderedQueueDispatcherPool.cpp
-            rsc/threading/SynchronizedQueue.cpp)
+            rsc/threading/PeriodicTask.cpp
+            rsc/threading/SynchronizedQueue.cpp
+            rsc/threading/Task.cpp
+            rsc/threading/TaskExecutor.cpp)
 
 SET(HEADERS rsc/logging/ConsoleLogger.h
             rsc/logging/ConsoleLoggingSystem.h
@@ -40,8 +43,11 @@ SET(HEADERS rsc/logging/ConsoleLogger.h
             rsc/misc/Timer.h
             rsc/misc/UUID.h
             rsc/threading/InterruptedException.h
+            rsc/threading/PeriodicTask.h
             rsc/threading/OrderedQueueDispatcherPool.h
-            rsc/threading/SynchronizedQueue.h)
+            rsc/threading/SynchronizedQueue.h
+            rsc/threading/Task.h
+            rsc/threading/TaskExecutor.h)
 
 ADD_LIBRARY(${RSC_NAME} SHARED ${SOURCES} ${HEADERS})
 TARGET_LINK_LIBRARIES(${RSC_NAME} ${Boost_LIBRARIES})

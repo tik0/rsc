@@ -21,7 +21,6 @@
 
 #include <sstream>
 #include <boost/uuid/uuid_io.hpp>
-#include <boost/uuid/string_generator.hpp>
 
 using namespace std;
 

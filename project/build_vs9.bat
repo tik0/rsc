@@ -28,7 +28,7 @@ IF %ERRORLEVEL% NEQ 0 (
 
 echo [running tests]
 call "testpath.bat"
-ctest
+ctest -V
 IF %ERRORLEVEL% NEQ 0 (
 	echo [test error]
 	goto :error

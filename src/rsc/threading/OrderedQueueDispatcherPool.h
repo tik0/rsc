@@ -29,8 +29,8 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
 
-#include "rsc/misc/IllegalStateException.h"
-#include "rsc/threading/SynchronizedQueue.h"
+#include "../misc/IllegalStateException.h"
+#include "SynchronizedQueue.h"
 
 using namespace rsc::misc;
 

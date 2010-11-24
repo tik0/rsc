@@ -22,7 +22,7 @@
 
 #include <boost/thread/recursive_mutex.hpp>
 
-#include "rsc/logging/Logger.h"
+#include "Logger.h"
 
 namespace rsc {
 namespace logging {

@@ -17,9 +17,9 @@
  *
  * ============================================================ */
 
-#include "rsc/logging/LoggerFactory.h"
+#include "LoggerFactory.h"
 
-#include "rsc/logging/ConsoleLoggingSystem.h"
+#include "ConsoleLoggingSystem.h"
 
 using namespace std;
 using namespace rsc::misc;

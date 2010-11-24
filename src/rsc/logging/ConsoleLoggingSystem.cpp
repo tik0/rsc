@@ -17,10 +17,10 @@
  *
  * ============================================================ */
 
-#include "rsc/logging/ConsoleLoggingSystem.h"
+#include "ConsoleLoggingSystem.h"
 
-#include "rsc/logging/ConsoleLogger.h"
-#include "rsc/misc/Registry.h"
+#include "ConsoleLogger.h"
+#include "../misc/Registry.h"
 
 namespace rsc {
 namespace logging {

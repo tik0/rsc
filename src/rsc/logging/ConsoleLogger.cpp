@@ -17,11 +17,11 @@
  *
  * ============================================================ */
 
-#include "rsc/logging/ConsoleLogger.h"
+#include "ConsoleLogger.h"
 
 #include <iostream>
 
-#include "rsc/misc/langutils.h"
+#include "../misc/langutils.h"
 
 using namespace std;
 

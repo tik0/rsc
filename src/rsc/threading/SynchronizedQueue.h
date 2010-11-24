@@ -27,7 +27,7 @@
 #include <boost/thread/condition.hpp>
 #include <boost/thread/recursive_mutex.hpp>
 
-#include "rsc/threading/InterruptedException.h"
+#include "InterruptedException.h"
 
 namespace rsc {
 namespace threading {

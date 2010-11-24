@@ -22,7 +22,7 @@
 
 #include <string>
 
-#include "rsc/logging/Logger.h"
+#include "Logger.h"
 
 namespace rsc {
 namespace logging {

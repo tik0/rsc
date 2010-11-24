@@ -20,7 +20,7 @@
 #ifndef CONSOLELOGGINGSYSTEM_H_
 #define CONSOLELOGGINGSYSTEM_H_
 
-#include "rsc/logging/LoggingSystem.h"
+#include "LoggingSystem.h"
 
 namespace rsc {
 namespace logging {

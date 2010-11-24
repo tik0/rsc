@@ -17,7 +17,7 @@
  *
  * ============================================================ */
 
-#include "rsc/misc/langutils.h"
+#include "langutils.h"
 
 #include <cstdlib>
 #include <cctype>

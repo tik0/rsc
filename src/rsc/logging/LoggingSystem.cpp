@@ -17,7 +17,7 @@
  *
  * ============================================================ */
 
-#include "rsc/logging/LoggingSystem.h"
+#include "LoggingSystem.h"
 
 namespace rsc {
 namespace logging {

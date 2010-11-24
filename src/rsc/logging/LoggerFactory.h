@@ -26,9 +26,9 @@
 #include <boost/thread/recursive_mutex.hpp>
 #include <boost/shared_ptr.hpp>
 
-#include "rsc/logging/Logger.h"
-#include "rsc/logging/LoggingSystem.h"
-#include "rsc/misc/Registry.h"
+#include "Logger.h"
+#include "LoggingSystem.h"
+#include "../misc/Registry.h"
 
 namespace rsc {
 namespace logging {

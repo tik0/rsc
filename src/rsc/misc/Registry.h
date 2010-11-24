@@ -148,6 +148,15 @@ private:
 
 };
 
+/**
+ * Creates a statically available registry as an accessor function.
+ */
+#define CREATE_REGISTRY(registryClassName, accessorName) \
+    inline ::rsc::misc::Registry<registryClassName> *accessorName() { \
+        static ::rsc::misc::Registry<registryClassName> *registry = new ::rsc::misc::Registry<registryClassName>; \
+        return registry; \
+    }
+
 #if defined(RSC_HAVE_INIT_METHOD_ATTRIBUTE_CONSTRUCTOR)
 
 /**
@@ -159,17 +168,15 @@ private:
  * Class names for this macro must be given without namespaces and templates.
  * Create typedefs as required to match these restrictions.
  *
- * @param registryClassName type of the Registry to register in
- * @param registreeClassName concrete registree to register. Must have a default
- *                           constructor.
+ * @param registry registry to register in
+ * @param registree registree to register
+ * @param uniqueName a unique name to generate a register function
  */
-#define CREATE_GLOBAL_REGISTREE(registryClassName, registreeClassName) \
+#define CREATE_GLOBAL_REGISTREE(registry, registree, uniqueName) \
     __attribute__ ((constructor)) \
-    static void init##registreeClassName##In##registryClassName() { \
-        ::rsc::misc::Registry<registryClassName>::instance()->addRegistree(new registreeClassName); \
+    static void init##uniqueName() { \
+        (registry)->addRegistree(registree); \
     }
-
-#define CREATE_REGISTRY(registryClassName)
 
 #else
 
@@ -178,21 +185,15 @@ private:
 /**
  * Ensure that getRegistryKey returns no static member. Damn Windows!
  */
-#define CREATE_GLOBAL_REGISTREE(registry, registree) \
+#define CREATE_GLOBAL_REGISTREE(registry, registree, uniqueName) \
 	typedef int preInitCallback(void); \
-    int init##registreeClassName##In##registryClassName() { \
+    int init##uniqueName() { \
         (registry)->addRegistree(registree); \
         return 0; \
     } \
     __pragma(data_seg(".CRT$XCU")) \
-    static preInitCallback *autostart##registreeClassName##In##registryClassName[] = { init##registreeClassName##In##registryClassName }; \
+    static preInitCallback *autostart##uniqueName[] = { init##uniqueName }; \
     __pragma(data_seg())
-
-#define CREATE_REGISTRY(registryClassName, accessorName) \
-	inline ::rsc::misc::Registry<registryClassName> *##accessorName() { \
-		static ::rsc::misc::Registry<registryClassName> *registry = new ::rsc::misc::Registry<registryClassName>; \
-		return registry; \
-	}
 
 #else
 // There is no way to achieve what we need. Sad :(

@@ -41,7 +41,31 @@ public:
     }
 };
 
-CREATE_REGISTRY(TestRegistree, testRegistry);
+CREATE_REGISTRY(TestRegistree, testRegistry)
+;
+CREATE_REGISTRY(TestRegistree, globalTestRegistry)
+;
+
+static string getGlobalKey1() {
+    return "global1";
+}
+static string getGlobalKey2() {
+    return "global2";
+}
+static string getGlobalKey3() {
+    return "global3";
+}
+
+CREATE_GLOBAL_REGISTREE(globalTestRegistry(), new TestRegistree(getGlobalKey1()), global1)
+;
+CREATE_GLOBAL_REGISTREE(globalTestRegistry(), new TestRegistree(getGlobalKey2()), global2)
+;
+CREATE_GLOBAL_REGISTREE(globalTestRegistry(), new TestRegistree(getGlobalKey3()), global3)
+;
+
+TEST(RegistryTest, testGlobalRegistration) {
+    EXPECT_EQ((size_t) 3, globalTestRegistry()->getKnownRegistryKeys().size());
+}
 
 TEST(RegistryTest, testRegistration)
 {

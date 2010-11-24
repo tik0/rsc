@@ -27,14 +27,14 @@
 #include <boost/thread.hpp>
 #include <boost/thread/condition.hpp>
 #include <boost/thread/recursive_mutex.hpp>
+#include <boost/timer.hpp>
 
 #include "../logging/Logger.h"
-#include "../misc/Timer.h"
 
 namespace rsc {
 namespace threading {
 
-template < class R >
+template<class R>
 class Task;
 typedef boost::shared_ptr<Task<void> > TaskPtr;
 
@@ -44,123 +44,116 @@ typedef boost::shared_ptr<Task<void> > TaskPtr;
 //      to the callbacks
 typedef boost::function<void()> Callback;
 
-template < class R >
+template<class R>
 class Task {
 public:
-	Task(boost::function<R(Task<R>*)> delegate) : logger(rsc::logging::Logger::getLogger("rsc.threading.Task")) {
-		d = delegate;
-		cancelRequest = false;
-		cancelled = false;
-		// TODO add id
-	    timer = rsc::misc::TimerPtr(new rsc::misc::Timer("TimedObject"));
-	    timer->start();
-	//    pre = boost::bind(&TimedObject::beforeCycle,this);
-	//    post = boost::bind(&TimedObject::afterCycle,this);
-	}
+    Task(boost::function<R(Task<R>*)> delegate) :
+        d(delegate), cancelRequest(false), cancelled(false), logger(
+                rsc::logging::Logger::getLogger("rsc.threading.Task")) {
+        //    pre = boost::bind(&TimedObject::beforeCycle,this);
+        //    post = boost::bind(&TimedObject::afterCycle,this);
+    }
 
-	virtual ~Task() {
-		// TODO Auto-generated destructor stub
-	}
+    virtual ~Task() {
+    }
 
-	void run() {
-		RSCTRACE(logger, "run() entered"); // << *id);
-		// TODO Think about returning an iterator to the results of execute here!
-		do {
-			// TODO add exception handling
-			// call pre hook
-			if (pre)
-				pre();
-			// call template method
-			d(this);
-			// call post hook
-			if (post)
-				post();
-			RSCTRACE(logger, "run cycle done");
-		} while (continueExec());
-		boost::recursive_mutex::scoped_lock lock(m);
-		RSCINFO(logger, "run() finished");
-		cancelled = true;
-		this->c.notify_all();
-	}
+    void run() {
+        RSCTRACE(logger, "run() entered"); // << *id);
+        // TODO Think about returning an iterator to the results of execute here!
+        do {
+            // TODO add exception handling
+            // call pre hook
+            if (pre)
+                pre();
+            // call template method
+            d(this);
+            // call post hook
+            if (post)
+                post();
+            RSCTRACE(logger, "run cycle done");
+        } while (continueExec());
+        boost::recursive_mutex::scoped_lock lock(m);
+        RSCINFO(logger, "run() finished");
+        cancelled = true;
+        this->c.notify_all();
+    }
 
-	boost::shared_ptr<boost::thread> start() {
-		boost::shared_ptr<boost::thread> thread = boost::shared_ptr<boost::thread>(new boost::thread(
-				boost::bind(&Task::run, this)));
-		return thread;
-	}
+    boost::shared_ptr<boost::thread> start() {
+        boost::shared_ptr<boost::thread> thread =
+                boost::shared_ptr<boost::thread>(new boost::thread(boost::bind(
+                        &Task::run, this)));
+        return thread;
+    }
 
-	// beautify this
-	// provide time mesaurement as default implementation
-	void setPreCallback(Callback f) {;
-		pre = f;
-	}
+    // beautify this
+    // provide time mesaurement as default implementation
+    void setPreCallback(Callback f) {
+        pre = f;
+    }
 
-	void setPostCallback(Callback f) {;
-		pre = f;
-	}
+    void setPostCallback(Callback f) {
+        pre = f;
+    }
 
-	virtual void cancel() {
-		RSCTRACE(logger, "Task::cancel() entered");
-//		// protect setting and comparison of cancel boolean, see execute()
-//		boost::recursive_mutex::scoped_lock lock(m);
-		cancelRequest = true;
-	}
+    virtual void cancel() {
+        RSCTRACE(logger, "Task::cancel() entered");
+        //		// protect setting and comparison of cancel boolean, see execute()
+        //		boost::recursive_mutex::scoped_lock lock(m);
+        cancelRequest = true;
+    }
 
-	virtual bool isCancelRequested() {
-		return cancelRequest;
-	}
-	virtual void restart() {
-		cancelRequest = false;
-	}
+    virtual bool isCancelRequested() {
+        return cancelRequest;
+    }
+    virtual void restart() {
+        cancelRequest = false;
+    }
 
-	virtual void waitDone() {
-		RSCDEBUG(logger, "waitDone() entered");
-		boost::recursive_mutex::scoped_lock lock(m);
-		RSCDEBUG(logger, "waitDone() after lock, before wait");
-		while (!cancelled) {
-			this->c.wait(lock);
-		}
-		RSCDEBUG(logger, "waitDone() finished");
-	}
+    virtual void waitDone() {
+        RSCDEBUG(logger, "waitDone() entered");
+        boost::recursive_mutex::scoped_lock lock(m);
+        RSCDEBUG(logger, "waitDone() after lock, before wait");
+        while (!cancelled) {
+            this->c.wait(lock);
+        }
+        RSCDEBUG(logger, "waitDone() finished");
+    }
 
-	friend std::ostream& operator<< (std::ostream& out, const Task<R>& t) {
-		out << "Task[cancelRequest=" << t.cancelRequest <<"]";
-		return out;
-	}
+    friend std::ostream& operator<<(std::ostream& out, const Task<R>& t) {
+        out << "Task[cancelRequest=" << t.cancelRequest << "]";
+        return out;
+    }
 
 protected:
 
-	boost::function<R(Task<R>*)> d;
-	//boost::shared_ptr<boost::thread> thread;
+    boost::function<R(Task<R>*)> d;
+    //boost::shared_ptr<boost::thread> thread;
 
-	mutable boost::recursive_mutex m;
+    mutable boost::recursive_mutex m;
     boost::condition c;
 
-	//void TimedObject::beforeCycle(TimedObjectPtr p) {
-	void beforeCycle() {
-		// store last time
-		timestamp = timer->getElapsed();
-	}
+    void beforeCycle() {
+        timer.restart();
+    }
 
-	void afterCycle() {
-		// calculate processing time for last cycle, last n cycle, variance...
-		// TODO change to logging
-		RSCINFO(logger, "Times (last cycle = " << timer->getElapsed()-timestamp << "ms)");
-	}
+    void afterCycle() {
+        // calculate processing time for last cycle, last n cycle, variance...
+        // TODO change to logging
+        RSCINFO(logger, "Times (last cycle = " << timer.elapsed() << "s)");
+    }
 
-	virtual bool continueExec() {
-		return false;
-	};
+    virtual bool continueExec() {
+        return false;
+    }
 
-	volatile bool cancelRequest;
-	volatile bool cancelled;
+    volatile bool cancelRequest;
+    volatile bool cancelled;
 
 private:
-	rsc::logging::LoggerPtr logger;
-	double timestamp;
-	rsc::misc::TimerPtr timer;
-	Callback pre;
-	Callback post;
+    rsc::logging::LoggerPtr logger;
+    boost::timer timer;
+    Callback pre;
+    Callback post;
 
 };
 

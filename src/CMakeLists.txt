@@ -23,7 +23,6 @@ SET(SOURCES rsc/logging/ConsoleLogger.cpp
             rsc/logging/LoggingSystem.cpp
             rsc/misc/IllegalStateException.cpp
             rsc/misc/langutils.cpp
-            rsc/misc/Timer.cpp
             rsc/misc/UUID.cpp
             rsc/threading/InterruptedException.cpp
             rsc/threading/OrderedQueueDispatcherPool.cpp
@@ -40,7 +39,6 @@ SET(HEADERS rsc/logging/ConsoleLogger.h
             rsc/misc/IllegalStateException.h
             rsc/misc/langutils.h
             rsc/misc/Registry.h
-            rsc/misc/Timer.h
             rsc/misc/UUID.h
             rsc/threading/InterruptedException.h
             rsc/threading/PeriodicTask.h

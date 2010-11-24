@@ -61,7 +61,7 @@ protected:
                 RSCTRACE(logger, "PeriodicTask()::continueExec() before thread sleep, sleeping " << cycleTime << " ms");
                 boost::thread::sleep(time);
                 //	thread->sleep(time);
-            } catch (boost::thread_interrupted e) {
+            } catch (const boost::thread_interrupted &e) {
                 RSCWARN(logger, "PeriodicTask()::continueExec() catched boost::thread_interrupted exception");
             }
             RSCTRACE(logger, "PeriodicTask()::continueExec() thread woke up");

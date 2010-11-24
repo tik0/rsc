@@ -27,6 +27,8 @@
 #include <boost/noncopyable.hpp>
 #include <boost/shared_ptr.hpp>
 
+#include "rsc/rscexports.h"
+
 namespace rsc {
 namespace logging {
 
@@ -39,7 +41,7 @@ typedef boost::shared_ptr<Logger> LoggerPtr;
  *
  * @author jwienke
  */
-class Logger: public boost::noncopyable {
+class RSC_EXPORT Logger: public boost::noncopyable {
 public:
 
     /**
@@ -58,6 +60,8 @@ public:
         FATAL = 10,
         OFF = 0
     };
+
+    virtual ~Logger();
 
     /**
      * Returns a logger for the given name. The initial log level of the logger

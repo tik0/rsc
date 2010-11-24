@@ -21,6 +21,7 @@
 #define CONSOLELOGGINGSYSTEM_H_
 
 #include "LoggingSystem.h"
+#include "rsc/rscexports.h"
 
 namespace rsc {
 namespace logging {
@@ -30,7 +31,7 @@ namespace logging {
  *
  * @author jwienke
  */
-class ConsoleLoggingSystem: public LoggingSystem {
+class RSC_EXPORT ConsoleLoggingSystem: public LoggingSystem {
 public:
 
     ConsoleLoggingSystem();

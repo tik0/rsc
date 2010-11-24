@@ -22,6 +22,8 @@
 
 #include <stdexcept>
 
+#include "rsc/rscexports.h"
+
 namespace rsc {
 namespace misc {
 
@@ -31,7 +33,7 @@ namespace misc {
  *
  * @author jwienke
  */
-class IllegalStateException: public std::runtime_error {
+class RSC_EXPORT IllegalStateException: public std::runtime_error {
 public:
     IllegalStateException();
     IllegalStateException(const std::string &message);

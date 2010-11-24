@@ -23,6 +23,7 @@
 #include <string>
 
 #include "Logger.h"
+#include "rsc/rscexports.h"
 
 namespace rsc {
 namespace logging {
@@ -33,7 +34,7 @@ namespace logging {
  *
  * @author jwienke
  */
-class LoggingSystem {
+class RSC_EXPORT LoggingSystem {
 public:
 
     /**

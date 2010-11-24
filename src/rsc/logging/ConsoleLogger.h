@@ -23,6 +23,7 @@
 #include <boost/thread/recursive_mutex.hpp>
 
 #include "Logger.h"
+#include "rsc/rscexports.h"
 
 namespace rsc {
 namespace logging {
@@ -32,7 +33,7 @@ namespace logging {
  *
  * @author jwienke
  */
-class ConsoleLogger: public Logger {
+class RSC_EXPORT ConsoleLogger: public Logger {
 public:
 
     /**

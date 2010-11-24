@@ -29,6 +29,7 @@
 #include "Logger.h"
 #include "LoggingSystem.h"
 #include "../misc/Registry.h"
+#include "rsc/rscexports.h"
 
 namespace rsc {
 namespace logging {
@@ -41,7 +42,7 @@ CREATE_REGISTRY(LoggingSystem);
  *
  * @author jwienke
  */
-class LoggerFactory: boost::noncopyable {
+class RSC_EXPORT LoggerFactory: boost::noncopyable {
 private:
     LoggerFactory();
 

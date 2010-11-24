@@ -27,6 +27,8 @@
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/shared_ptr.hpp>
 
+#include "rsc/rscexports.h"
+
 namespace rsc {
 namespace misc {
 
@@ -35,7 +37,7 @@ namespace misc {
  *
  * @author swrede
  */
-class UUID {
+class RSC_EXPORT UUID {
 public:
 
     /**

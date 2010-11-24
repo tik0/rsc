@@ -24,6 +24,8 @@
 
 #include <boost/cstdint.hpp>
 
+#include "rsc/rscexports.h"
+
 namespace rsc {
 namespace misc {
 
@@ -35,7 +37,7 @@ namespace misc {
  *
  * @author jwienke
  */
-class NullDeleter {
+class RSC_EXPORT NullDeleter {
 public:
 
     /**
@@ -52,14 +54,14 @@ public:
  *
  * @return current system time in milliseconds
  */
-boost::uint64_t currentTimeMillis();
+RSC_EXPORT boost::uint64_t currentTimeMillis();
 
 /**
  * Generates a random alpha-numeric character.
  *
  * @return alpha-numeric character
  */
-char randAlnumChar();
+RSC_EXPORT char randAlnumChar();
 
 /**
  * Generates a random alpha-numeric string with fixed length.
@@ -67,7 +69,7 @@ char randAlnumChar();
  * @param length desired length of the string
  * @return random string of specified length
  */
-std::string randAlnumStr(const std::string::size_type &length);
+RSC_EXPORT std::string randAlnumStr(const std::string::size_type &length);
 
 }
 }

@@ -26,6 +26,9 @@ using namespace std;
 namespace rsc {
 namespace logging {
 
+Logger::~Logger() {
+}
+
 LoggerPtr Logger::getLogger(const std::string &name) {
     return LoggerFactory::getInstance()->getLogger(name);
 }

@@ -17,29 +17,27 @@
  *
  * ============================================================ */
 
-#ifndef INTERRUPTEDEXCEPTION_H_
-#define INTERRUPTEDEXCEPTION_H_
+#ifndef RSCEXPORTS_H_
+#define RSCEXPORTS_H_
 
-#include <stdexcept>
+#include <map>
+#include <string>
 
-#include "rsc/rscexports.h"
+#if defined (_WIN32) 
+    #if defined(@RSC_NAME@_EXPORTS)
+        #define RSC_EXPORT __declspec(dllexport)
+        #define RSC_EXPIMP
+    #else
+        #define RSC_EXPORT __declspec(dllimport)
+        #define RSC_EXPIMP extern
+    #endif
+#else
+    #define RSC_EXPORT
+#endif
 
-namespace rsc {
-namespace threading {
+// stl exports...
+#ifdef _WIN32
+RSC_EXPIMP template class RSC_EXPORT std::multimap<std::string, std::string>;
+#endif
 
-/**
- * An exception thrown if a blocking operation was interrupted.
- *
- * @author jwienke
- */
-class RSC_EXPORT InterruptedException: public std::runtime_error {
-public:
-    InterruptedException();
-    InterruptedException(const std::string &message);
-    virtual ~InterruptedException() throw();
-};
-
-}
-}
-
-#endif /* INTERRUPTEDEXCEPTION_H_ */
+#endif /* RSCEXPORTS_H_ */

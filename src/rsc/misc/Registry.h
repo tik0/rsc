@@ -153,7 +153,7 @@ private:
  */
 #define CREATE_REGISTRY(registryClassName, accessorName) \
     inline ::rsc::misc::Registry<registryClassName> *accessorName() { \
-        static ::rsc::misc::Registry<registryClassName> *registry = new ::rsc::misc::Registry<registryClassName>; \
+        static ::rsc::misc::Registry< registryClassName > *registry = new ::rsc::misc::Registry<registryClassName>; \
         return registry; \
     }
 

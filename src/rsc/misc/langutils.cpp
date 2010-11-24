@@ -63,8 +63,9 @@ boost::uint64_t currentTimeMillis() {
 
 char randAlnumChar() {
     char c;
-    while (!std::isalnum(c = static_cast<char> (std::rand()))) {
-    }
+    do {
+        c = (char) (rand() % ('z' - '0' + 1) + '0');
+    } while (!std::isalnum(c));
     return c;
 }
 

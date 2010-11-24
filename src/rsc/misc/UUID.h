@@ -73,7 +73,7 @@ public:
 	bool operator!=(const UUID &other) const;
 	bool operator<(const UUID &other) const;
 
-	friend std::ostream &operator<<(std::ostream &stream, const UUID &id);
+	friend RSC_EXPORT std::ostream &operator<<(std::ostream &stream, const UUID &id);
 
 private:
 
@@ -85,7 +85,7 @@ private:
 
 typedef boost::shared_ptr<UUID> UUIDPtr;
 
-std::ostream &operator<<(std::ostream &stream, const UUID &id);
+RSC_EXPORT std::ostream &operator<<(std::ostream &stream, const UUID &id);
 
 }
 }

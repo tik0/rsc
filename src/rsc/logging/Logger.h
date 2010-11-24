@@ -183,7 +183,7 @@ public:
 
 };
 
-std::ostream &operator<<(std::ostream &stream, const Logger::Level &level);
+RSC_EXPORT std::ostream &operator<<(std::ostream &stream, const Logger::Level &level);
 
 }
 }

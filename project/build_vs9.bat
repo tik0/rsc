@@ -26,6 +26,8 @@ REM TODO unit tests
 
 echo "success"
 
+cd ..
+
 exit /b 0
 
 :error

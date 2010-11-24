@@ -41,29 +41,24 @@ public:
     }
 };
 
-CREATE_REGISTRY(TestRegistree);
-
-TEST(RegistryTest, testInstance)
-{
-    EXPECT_EQ(Registry<TestRegistree>::instance(), Registry<TestRegistree>::instance());
-}
+CREATE_REGISTRY(TestRegistree, testRegistry);
 
 TEST(RegistryTest, testRegistration)
 {
 
     string dummyName1 = randAlnumStr(20);
-    EXPECT_THROW(Registry<TestRegistree>::instance()->getRegistree(dummyName1), invalid_argument);
-    EXPECT_TRUE(Registry<TestRegistree>::instance()->getKnownRegistryKeys().empty());
+    EXPECT_THROW(testRegistry()->getRegistree(dummyName1), invalid_argument);
+    EXPECT_TRUE(testRegistry()->getKnownRegistryKeys().empty());
 
     TestRegistree *f = new TestRegistree(dummyName1);
-    Registry<TestRegistree>::instance()->addRegistree(f);
-    EXPECT_EQ(f, Registry<TestRegistree>::instance()->getRegistree(dummyName1).get());
+    testRegistry()->addRegistree(f);
+    EXPECT_EQ(f, testRegistry()->getRegistree(dummyName1).get());
 
-    EXPECT_TRUE(Registry<TestRegistree>::instance()->getKnownRegistryKeys().count(dummyName1));
-    EXPECT_EQ((size_t) 1, Registry<TestRegistree>::instance()->getKnownRegistryKeys().size());
+    EXPECT_TRUE(testRegistry()->getKnownRegistryKeys().count(dummyName1));
+    EXPECT_EQ((size_t) 1, testRegistry()->getKnownRegistryKeys().size());
 
     TestRegistree *f2 = new TestRegistree(dummyName1);
-    EXPECT_THROW(Registry<TestRegistree>::instance()->addRegistree(f2), invalid_argument);
+    EXPECT_THROW(testRegistry()->addRegistree(f2), invalid_argument);
     delete f2;
 
 }
@@ -73,10 +68,10 @@ TEST(RegistryTest, testRemove)
 
     string dummyName1 = randAlnumStr(20);
     TestRegistree *r = new TestRegistree(dummyName1);
-    Registry<TestRegistree>::instance()->addRegistree(r);
-    EXPECT_TRUE(Registry<TestRegistree>::instance()->getKnownRegistryKeys().count(dummyName1));
-    EXPECT_TRUE(Registry<TestRegistree>::instance()->removeRegistree(dummyName1));
-    EXPECT_FALSE(Registry<TestRegistree>::instance()->getKnownRegistryKeys().count(dummyName1));
-    EXPECT_FALSE(Registry<TestRegistree>::instance()->removeRegistree(dummyName1));
+    testRegistry()->addRegistree(r);
+    EXPECT_TRUE(testRegistry()->getKnownRegistryKeys().count(dummyName1));
+    EXPECT_TRUE(testRegistry()->removeRegistree(dummyName1));
+    EXPECT_FALSE(testRegistry()->getKnownRegistryKeys().count(dummyName1));
+    EXPECT_FALSE(testRegistry()->removeRegistree(dummyName1));
 
 }

@@ -43,7 +43,7 @@ LoggerPtr ConsoleLoggingSystem::createLogger(const std::string &name) {
     return LoggerPtr(new ConsoleLogger(name));
 }
 
-CREATE_GLOBAL_REGISTREE(LoggingSystem, ConsoleLoggingSystem)
+CREATE_GLOBAL_REGISTREE(loggingSystemRegistry(), new ConsoleLoggingSystem)
 ;
 
 }

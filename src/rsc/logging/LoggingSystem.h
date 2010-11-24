@@ -23,6 +23,7 @@
 #include <string>
 
 #include "Logger.h"
+#include "../misc/Registry.h"
 #include "rsc/rscexports.h"
 
 namespace rsc {
@@ -56,6 +57,8 @@ public:
     virtual LoggerPtr createLogger(const std::string &name) = 0;
 
 };
+
+RSC_EXPORT CREATE_REGISTRY(LoggingSystem, loggingSystemRegistry);
 
 }
 }

@@ -34,8 +34,6 @@
 namespace rsc {
 namespace logging {
 
-CREATE_REGISTRY(LoggingSystem);
-
 /**
  * Factory to create logger instances. On singleton creation selects a logger
  * according to the heuristic mentioned for #reselectLoggingSystem.

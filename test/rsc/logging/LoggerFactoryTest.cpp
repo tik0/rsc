@@ -77,10 +77,10 @@ TEST(LoggerFactoryTest, testReselectLoggingSystem)
     // ensure that there are other logging systems
     StrictMock<MockLoggingSystem> *l1 = new StrictMock<MockLoggingSystem> (
             randAlnumStr(25));
-    Registry<LoggingSystem>::instance()->addRegistree(l1);
+    loggingSystemRegistry()->addRegistree(l1);
     StrictMock<MockLoggingSystem> *l2 = new StrictMock<MockLoggingSystem> (
             randAlnumStr(25));
-    Registry<LoggingSystem>::instance()->addRegistree(l2);
+    loggingSystemRegistry()->addRegistree(l2);
 
     // TODO why does l2 leak???
     Mock::AllowLeak(l1);
@@ -105,7 +105,7 @@ TEST(LoggerFactoryTest, testReselectLoggingSystem)
 
     LoggerFactory::getInstance()->reselectLoggingSystem(
             LoggerFactory::DEFAULT_LOGGING_SYSTEM);
-    Registry<LoggingSystem>::instance()->removeRegistree(l1->name);
+    loggingSystemRegistry()->removeRegistree(l1->name);
 
     // wrong hint, fallback to other available system
     string newName = randAlnumStr(12);
@@ -119,7 +119,7 @@ TEST(LoggerFactoryTest, testReselectLoggingSystem)
     // cleanup mocks
     LoggerFactory::getInstance()->reselectLoggingSystem(
             LoggerFactory::DEFAULT_LOGGING_SYSTEM);
-    Registry<LoggingSystem>::instance()->removeRegistree(l2->name);
+    loggingSystemRegistry()->removeRegistree(l2->name);
 
     LoggerFactory::getInstance()->clearKnownLoggers();
 

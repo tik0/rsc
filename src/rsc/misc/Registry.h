@@ -32,18 +32,16 @@
 #include <boost/thread/recursive_mutex.hpp>
 
 #include "rsc/config.h"
+#include "rsc/rscexports.h"
 
 namespace rsc {
 namespace misc {
 
 /**
- * A templatized global registry. There exists exactly on registry per type at
- * runtime (singleton). Classes to register must implement a method:
- * <code>std::string getRegistryKey() const;</code> that returns a unique key
- * to use for registration.
+ * A templatized global registry.
  *
  * To create a registree, that will be registered on application startup before
- * main use the provided macro. This will work on every supported compiler.
+ * main use the provided macros. This will work on every supported compiler.
  *
  * This class is reentrant.
  *
@@ -52,25 +50,9 @@ namespace misc {
  */
 template<class R>
 class Registry: public boost::noncopyable {
-
-private:
-
-    /**
-     * Do not allow to make instances of this class.
-     */
-    Registry() {
-    }
-
 public:
 
-    /**
-     * Get singleton instance.
-     *
-     * @return singleton instance.
-     */
-    static Registry<R> *instance() {
-        static Registry<R> *inst = new Registry<R> ;
-        return inst;
+    Registry() {
     }
 
     /**
@@ -164,8 +146,6 @@ private:
     boost::recursive_mutex mutex;
     std::map<std::string, boost::shared_ptr<R> > registreesByName;
 
-    static Registry<R> *inst;
-
 };
 
 #if defined(RSC_HAVE_INIT_METHOD_ATTRIBUTE_CONSTRUCTOR)
@@ -198,19 +178,21 @@ private:
 /**
  * Ensure that getRegistryKey returns no static member. Damn Windows!
  */
-#define CREATE_GLOBAL_REGISTREE(registryClassName, registreeClassName) \
+#define CREATE_GLOBAL_REGISTREE(registry, registree) \
 	typedef int preInitCallback(void); \
     int init##registreeClassName##In##registryClassName() { \
-        ::std::cout << "Registering registree " << #registreeClassName << " at Registry " << ::rsc::misc::Registry<registryClassName>::instance() << ::std::endl; \
-        ::rsc::misc::Registry<registryClassName>::instance()->addRegistree(new registreeClassName); \
+        (registry)->addRegistree(registree); \
         return 0; \
     } \
     __pragma(data_seg(".CRT$XCU")) \
     static preInitCallback *autostart##registreeClassName##In##registryClassName[] = { init##registreeClassName##In##registryClassName }; \
     __pragma(data_seg())
 
-#define CREATE_REGISTRY(registryClassName) \
-	template __declspec(dllexport) class ::rsc::misc::Registry<registryClassName>;
+#define CREATE_REGISTRY(registryClassName, accessorName) \
+	inline ::rsc::misc::Registry<registryClassName> *##accessorName() { \
+		static ::rsc::misc::Registry<registryClassName> *registry = new ::rsc::misc::Registry<registryClassName>; \
+		return registry; \
+	}
 
 #else
 // There is no way to achieve what we need. Sad :(

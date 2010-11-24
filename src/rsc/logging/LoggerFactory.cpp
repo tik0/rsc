@@ -40,8 +40,7 @@ LoggerFactory::~LoggerFactory() {
 
 void LoggerFactory::reselectLoggingSystem(const std::string &nameHint) {
 
-    Registry<LoggingSystem> *registry = Registry<LoggingSystem>::instance();
-    set<string> keys = registry->getKnownRegistryKeys();
+    set<string> keys = loggingSystemRegistry()->getKnownRegistryKeys();
     assert(keys.count(DEFAULT_LOGGING_SYSTEM));
 
     string systemName;
@@ -68,7 +67,7 @@ void LoggerFactory::reselectLoggingSystem(const std::string &nameHint) {
 
     boost::recursive_mutex::scoped_lock lock(mutex);
 
-    loggingSystem = registry->getRegistree(systemName);
+	loggingSystem = loggingSystemRegistry()->getRegistree(systemName);
     LoggerPtr loggingLogger = loggingSystem->createLogger("rsc.logging");
     loggingLogger->info("Selected logging system with name " + systemName);
 

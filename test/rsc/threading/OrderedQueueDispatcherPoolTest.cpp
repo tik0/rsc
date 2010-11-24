@@ -58,7 +58,8 @@ void deliver(boost::shared_ptr<StubReceiver> &receiver, const int &message) {
     boost::mutex::scoped_lock lock(receiver->mutex);
 
     // emulate slow processing
-    usleep(rand() % (receiver->receiverNum * 50000));
+    boost::this_thread::sleep(boost::posix_time::millisec(rand()
+            % (receiver->receiverNum * 50)));
 
     receiver->messages.push_back(message);
     receiver->condition.notify_all();

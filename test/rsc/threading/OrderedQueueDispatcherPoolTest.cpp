@@ -25,6 +25,9 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/thread.hpp>
+
 #include <gtest/gtest.h>
 
 #include "rsc/threading/OrderedQueueDispatcherPool.h"
@@ -264,7 +267,7 @@ TEST(OrderedQueueDispatcherPoolTest, testUnregister)
 
     pool.stop();
 
-    usleep(100000);
+    boost::this_thread::sleep(boost::posix_time::millisec(100));
 
     EXPECT_EQ((size_t) 0, receiver->messages.size());
 

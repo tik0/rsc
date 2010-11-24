@@ -1,6 +1,6 @@
 echo off
 
-echo "Common tools directory: %VS90COMNTOOLS%"
+echo Common tools directory: %VS90COMNTOOLS%
 
 call "%VS90COMNTOOLS%/vsvars32.bat"
 
@@ -10,21 +10,30 @@ IF %ERRORLEVEL% NEQ 0 (
 	goto :error
 )
 
+echo [calling CMake]
+
 cmake /G "Visual Studio 9 2008" /DCMAKE_INSTALL_PREFIX=%1 /DCMAKE_BUILD_TYPE=debug ..
 IF %ERRORLEVEL% NEQ 0 (
-	echo "CMake error"
+	echo [CMake error]
 	goto :error
 )
+
+echo [building project]
 
 msbuild /t:ALL_BUILD /v:d RSC.sln
 IF %ERRORLEVEL% NEQ 0 (
-	echo "Build error"
+	echo [build error]
 	goto :error
 )
 
-REM TODO unit tests
+echo [running tests]
+ctest
+IF %ERRORLEVEL% NEQ 0 (
+	echo [test error]
+	goto :error
+)
 
-echo "success"
+echo [build and tests successful]
 
 cd ..
 

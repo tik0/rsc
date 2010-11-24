@@ -195,12 +195,11 @@ private:
 
 #if defined(RSC_HAVE_INIT_METHOD_CRT)
 
-typedef int preInitCallback(void);
-
 /**
  * Ensure that getRegistryKey returns no static member. Damn Windows!
  */
 #define CREATE_GLOBAL_REGISTREE(registryClassName, registreeClassName) \
+	typedef int preInitCallback(void); \
     int init##registreeClassName##In##registryClassName() { \
         ::std::cout << "Registering registree " << #registreeClassName << " at Registry " << ::rsc::misc::Registry<registryClassName>::instance() << ::std::endl; \
         ::rsc::misc::Registry<registryClassName>::instance()->addRegistree(new registreeClassName); \
@@ -211,7 +210,7 @@ typedef int preInitCallback(void);
     __pragma(data_seg())
 
 #define CREATE_REGISTRY(registryClassName) \
-    template __declspec(dllexport) class Registry<registryClassName>;
+	template __declspec(dllexport) class ::rsc::misc::Registry<registryClassName>;
 
 #else
 // There is no way to achieve what we need. Sad :(

@@ -12,7 +12,7 @@ IF %ERRORLEVEL% NEQ 0 (
 
 echo [calling CMake]
 
-cmake /G "Visual Studio 9 2008" /DCMAKE_INSTALL_PREFIX=%1 /DCMAKE_BUILD_TYPE=debug ..
+cmake /G "NMake Makefiles" -DCMAKE_INSTALL_PREFIX=%1 -DCMAKE_BUILD_TYPE=debug ..
 IF %ERRORLEVEL% NEQ 0 (
 	echo [CMake error]
 	goto :error
@@ -20,7 +20,7 @@ IF %ERRORLEVEL% NEQ 0 (
 
 echo [building project]
 
-msbuild /t:ALL_BUILD /v:d RSC.sln
+nmake
 IF %ERRORLEVEL% NEQ 0 (
 	echo [build error]
 	goto :error
@@ -35,6 +35,14 @@ IF %ERRORLEVEL% NEQ 0 (
 )
 
 echo [build and tests successful]
+
+echo [installing project]
+
+nmake install
+IF %ERRORLEVEL% NEQ 0 (
+	echo [install error]
+	goto :error
+)
 
 cd ..
 

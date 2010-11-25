@@ -107,6 +107,11 @@ ADD_SUBDIRECTORY(cmake)
 CONFIGURE_FILE(rsc.pc.in ${CMAKE_BINARY_DIR}/rsc.pc @ONLY)
 INSTALL(FILES ${CMAKE_BINARY_DIR}/rsc.pc DESTINATION lib/pkgconfig)
 
+# --- cmake config file ---
+
+CONFIGURE_FILE(RSCConfig.cmake.in ${CMAKE_BINARY_DIR}/RSCConfig.cmake @ONLY)
+INSTALL(FILES ${CMAKE_BINARY_DIR}/RSCConfig.cmake DESTINATION share/RSC)
+
 # --- enable unit tests if desired ---
 
 IF(BUILD_TESTS)

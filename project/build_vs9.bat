@@ -12,7 +12,7 @@ IF %ERRORLEVEL% NEQ 0 (
 
 echo [calling CMake]
 
-cmake /G "NMake Makefiles" -DCMAKE_INSTALL_PREFIX=%1 -DCMAKE_BUILD_TYPE=debug ..
+cmake -G "NMake Makefiles" -DCMAKE_INSTALL_PREFIX=%1 -DCMAKE_BUILD_TYPE=debug ..
 IF %ERRORLEVEL% NEQ 0 (
 	echo [CMake error]
 	goto :error

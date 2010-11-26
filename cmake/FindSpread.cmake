@@ -35,10 +35,12 @@ FIND_PROGRAM(SPREAD_EXECUTABLE
                    "${SPREAD_ROOT}/bin"
                    "sbin")
 
-SET(SPREAD_LIBNAME "libspread.so")
+SET(SPREAD_LIBNAME "libspread${CMAKE_SHARED_LIBRARY_SUFFIX}")
 IF(SPREAD_USE_STATIC)
-    SET(SPREAD_LIBNAME "libspread.a")
+    SET(SPREAD_LIBNAME "libspread${CMAKE_STATIC_LIBRARY_SUFFIX}")
 ENDIF()
+
+MESSAGE(STATUS "Searching for spread library with name ${SPREAD_LIBNAME}")
 
 FIND_LIBRARY(SPREAD_LIBRARIES
              NAMES ${SPREAD_LIBNAME}

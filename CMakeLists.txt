@@ -5,7 +5,6 @@ SET(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 INCLUDE(CheckCXXCompilerFlag)
 INCLUDE(CheckIncludeFile)
-INCLUDE(FindPkgConfig)
 INCLUDE(InstallFilesRecursive)
 INCLUDE(EnableCoverageReport)
 

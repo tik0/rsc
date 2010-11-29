@@ -35,7 +35,7 @@ namespace subprocess {
 
 UnixSubprocess::UnixSubprocess(const string &command, const vector<string> args) :
     logger(logging::Logger::getLogger("rsc.subprocess.UnixSubprocess")),
-            argLen(args.size() + 2) {
+            command(command), argLen(args.size() + 2) {
 
     if (logger->isDebugEnabled()) {
         stringstream argStream;
@@ -88,13 +88,17 @@ UnixSubprocess::UnixSubprocess(const string &command, const vector<string> args)
 
 UnixSubprocess::~UnixSubprocess() {
 
+    RSCDEBUG(logger, "Interrupting subprocess with command '" << command << "'");
+
     kill(pid, SIGINT);
     int status;
     pid_t terminated;
+    RSCDEBUG(logger, "Waiting for command to finish: '" << command << "'");
     while (!(terminated = waitpid(pid, &status, WNOHANG))) {
         // TODO introduce a timeout
         continue;
     }
+    RSCDEBUG(logger, "Command finished: '" << command << "'");
 
     // clean up argument structure
     for (size_t i = 0; i < argLen - 1; ++i) {

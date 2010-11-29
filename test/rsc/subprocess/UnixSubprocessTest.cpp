@@ -50,12 +50,14 @@ TEST(UnixSubprocessTest, testSubprocess)
     {
         UnixSubprocess subprocess("/bin/bash", args);
         // wait for the process to start
+        cout << "Waiting for strt file" << endl;
         do {
             // TODO timeouts
             usleep(50000);
         } while (!boost::filesystem::exists(startedName));
     }
 
+    cout << "Waiting for kill file" << endl;
     do {
         // TODO timeouts
         usleep(50000);

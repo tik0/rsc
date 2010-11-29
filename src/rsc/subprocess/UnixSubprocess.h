@@ -47,7 +47,10 @@ private:
 
     logging::LoggerPtr logger;
 
+    std::string command;
+
     pid_t pid;
+
     char **args;
     size_t argLen;
 

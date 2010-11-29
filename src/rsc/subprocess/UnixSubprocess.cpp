@@ -88,17 +88,36 @@ UnixSubprocess::UnixSubprocess(const string &command, const vector<string> args)
 
 UnixSubprocess::~UnixSubprocess() {
 
-    RSCDEBUG(logger, "Interrupting subprocess with command '" << command << "'");
+    RSCDEBUG(logger, "Killing subprocess with command '" << command << "'");
+    int killed = kill(pid, SIGINT);
+    if (killed == 0) {
+        // successful signal sent
 
-    kill(pid, SIGINT);
-    int status;
-    pid_t terminated;
-    RSCDEBUG(logger, "Waiting for command to finish: '" << command << "'");
-    while (!(terminated = waitpid(pid, &status, WNOHANG))) {
-        // TODO introduce a timeout
-        continue;
+        int status;
+        pid_t childStatus;
+        RSCDEBUG(logger, "Waiting for command to finish: '" << command << "'");
+        do {
+            childStatus = waitpid(pid, &status, 0);
+            if (childStatus == -1) {
+                RSCERROR(logger, "Error while waiting for child to finish: "
+                        << strerror(errno));
+                break;
+            }
+
+            if (WIFEXITED(status)) {
+                RSCDEBUG(logger, "Child exited with status " << WEXITSTATUS(status));
+            } else if (WIFSIGNALED(status)) {
+                RSCDEBUG(logger, "Child was killed by signal " << WTERMSIG(status));
+            }
+        } while (!WIFEXITED(status) && !WIFSIGNALED(status));
+        RSCDEBUG(logger, "Command finished: '" << command << "'");
+
+    } else {
+
+        RSCERROR(logger, "Problem killing the child command '" << command
+                << "': " << strerror(errno));
+
     }
-    RSCDEBUG(logger, "Command finished: '" << command << "'");
 
     // clean up argument structure
     for (size_t i = 0; i < argLen - 1; ++i) {

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+trap "touch $2; exit" SIGINT
+touch $1
+read

@@ -24,6 +24,7 @@ SET(SOURCES rsc/logging/ConsoleLogger.cpp
             rsc/misc/IllegalStateException.cpp
             rsc/misc/langutils.cpp
             rsc/misc/UUID.cpp
+            rsc/subprocess/Subprocess.cpp
             rsc/threading/InterruptedException.cpp
             rsc/threading/OrderedQueueDispatcherPool.cpp
             rsc/threading/PeriodicTask.cpp
@@ -40,12 +41,20 @@ SET(HEADERS rsc/logging/ConsoleLogger.h
             rsc/misc/langutils.h
             rsc/misc/Registry.h
             rsc/misc/UUID.h
+            rsc/subprocess/Subprocess.h
             rsc/threading/InterruptedException.h
             rsc/threading/PeriodicTask.h
             rsc/threading/OrderedQueueDispatcherPool.h
             rsc/threading/SynchronizedQueue.h
             rsc/threading/Task.h
             rsc/threading/TaskExecutor.h)
+            
+# subprocess choice
+IF(UNIX)
+    SET(SOURCES ${SOURCES} rsc/subprocess/UnixSubprocess.cpp)
+    SET(HEADERS ${SOURCES} rsc/subprocess/UnixSubprocess.cpp)
+    ADD_DEFINITIONS(-DSUBPROCESS_UNIX)
+ENDIF()
 
 ADD_LIBRARY(${RSC_NAME} SHARED ${SOURCES} ${HEADERS})
 TARGET_LINK_LIBRARIES(${RSC_NAME} ${Boost_LIBRARIES})

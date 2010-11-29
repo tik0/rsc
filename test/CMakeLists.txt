@@ -3,6 +3,9 @@ ENABLE_TESTING()
 
 INCLUDE_DIRECTORIES(BEFORE ${GTEST_INCLUDE_DIR} ${GMOCK_INCLUDE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 
+SET(TEST_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
+CONFIGURE_FILE(testconfig.h.in ${CMAKE_CURRENT_BINARY_DIR}/testconfig.h)
+
 # --- library test ---
 
 SET(TEST_SOURCES rsc/RscTestSuite.cpp
@@ -14,6 +17,11 @@ SET(TEST_SOURCES rsc/RscTestSuite.cpp
                  rsc/threading/OrderedQueueDispatcherPoolTest.cpp
                  rsc/threading/SynchronizedQueueTest.cpp
                  rsc/threading/TaskTest.cpp)
+                 
+# subprocess
+IF(UNIX)
+    SET(TEST_SOURCES ${TEST_SOURCES} rsc/subprocess/UnixSubprocessTest.cpp)
+ENDIF()
 
 ADD_EXECUTABLE(${RSC_TEST_NAME} ${TEST_SOURCES})
 TARGET_LINK_LIBRARIES(${RSC_TEST_NAME}

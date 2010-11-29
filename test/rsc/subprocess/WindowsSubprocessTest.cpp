@@ -20,15 +20,19 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
+#include <boost/thread.hpp>
+
 #include "rsc/subprocess/WindowsSubprocess.h"
 
 using namespace std;
 using namespace testing;
 using namespace rsc;
-using namespace rsc::misc;
 using namespace rsc::subprocess;
 
-TEST(UnixSubprocessTest, testSubprocess)
+TEST(WindowsSubprocessTest, testSubprocess)
 {
+
+    WindowsSubprocess proc("foo");
+    //boost::this_thread::sleep(boost::posix_time::seconds(20));
 
 }

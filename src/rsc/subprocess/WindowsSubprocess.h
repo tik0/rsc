@@ -23,7 +23,10 @@
 #include <string>
 #include <vector>
 
+#include <windows.h>
+
 #include "Subprocess.h"
+#include "rsc/rscexports.h"
 
 namespace rsc {
 namespace subprocess {
@@ -33,11 +36,17 @@ namespace subprocess {
  *
  * @author jwienke
  */
-class WindowsSubprocess: public Subprocess {
+class RSC_EXPORT WindowsSubprocess: public Subprocess {
 public:
+
     WindowsSubprocess(const std::string &command,
             const std::vector<std::string> &args = std::vector<std::string>());
     virtual ~WindowsSubprocess();
+    
+private:
+
+    PROCESS_INFORMATION processInformation;
+    
 };
 
 }

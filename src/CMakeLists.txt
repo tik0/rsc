@@ -51,10 +51,12 @@ SET(HEADERS rsc/logging/ConsoleLogger.h
             
 # subprocess choice
 IF(UNIX)
+    MESSAGE(STATUS "Selected UnixSubprocess")
     SET(SOURCES ${SOURCES} rsc/subprocess/UnixSubprocess.cpp)
     SET(HEADERS ${HEADERS} rsc/subprocess/UnixSubprocess.h)
     ADD_DEFINITIONS(-DSUBPROCESS_UNIX)
-ELSEIF(WIND32)
+ELSEIF(WIN32)
+    MESSAGE(STATUS "Selected WindowsSubprocess")
     SET(SOURCES ${SOURCES} rsc/subprocess/WindowsSubprocess.cpp)
     SET(HEADERS ${HEADERS} rsc/subprocess/WindowsSubprocess.h)
     ADD_DEFINITIONS(-DSUBPROCESS_WINDOWS)

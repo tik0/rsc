@@ -23,6 +23,8 @@
 
 #if defined(SUBPROCESS_UNIX)
 #include "UnixSubprocess.h"
+#elif defined(SUBPROCESS_WINDOWS)
+#include "WindowsSubprocess.h"
 #endif
 
 using namespace std;
@@ -40,6 +42,8 @@ SubprocessPtr Subprocess::newInstance(const string &command,
             const vector<string> args) {
 #if defined(SUBPROCESS_UNIX)
     return SubprocessPtr(new UnixSubprocess(command, args));
+#elif defined(SUBPROCESS_WINDOWS)
+    return SubprocessPtr(new WindowsSubprocess(command, args));
 #else
     // No subprocess module available for this architecture
     BOOST_STATIC_ASSERT(false);

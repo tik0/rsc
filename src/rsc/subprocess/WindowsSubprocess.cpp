@@ -40,7 +40,8 @@ bool CALLBACK terminateAppEnum(HWND hwnd, LPARAM lParam) {
 
 }
 
-WindowsSubprocess::TerminateResult WindowsSubprocess::terminateApp(DWORD pid, DWORD timeoutMs) {
+WindowsSubprocess::TerminateResult WindowsSubprocess::terminateApp(DWORD pid,
+        DWORD timeoutMs) {
 
     // If we can't open the process with PROCESS_TERMINATE rights,
     // then we give up immediately.
@@ -75,15 +76,17 @@ WindowsSubprocess::WindowsSubprocess(const string &command,
     STARTUPINFO startupInfo = { 0 };
     startupInfo.cb = sizeof(startupInfo);
 
-	stringstream commandLine;
-	commandLine << command << " ";
-	for (vector<string>::const_iterator argIt = args.begin(); argIt != args.end(); ++argIt) {
-		commandLine << *argIt << " ";
-	}
-	
+    stringstream commandLine;
+    commandLine << command << " ";
+    for (vector<string>::const_iterator argIt = args.begin(); argIt
+            != args.end(); ++argIt) {
+        commandLine << *argIt << " ";
+    }
+
     // Try to start the process
-    bool result = ::CreateProcess(NULL, const_cast<char*> (commandLine.str().c_str()), NULL, NULL,
-            false, NORMAL_PRIORITY_CLASS, NULL, NULL, &startupInfo,
+    bool result = ::CreateProcess(NULL,
+            const_cast<char*> (commandLine.str().c_str()), NULL, NULL, false,
+            NORMAL_PRIORITY_CLASS, NULL, NULL, &startupInfo,
             &processInformation);
 
     if (result == 0) {

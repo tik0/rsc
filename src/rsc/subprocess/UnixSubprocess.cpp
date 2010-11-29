@@ -20,7 +20,9 @@
 #include "UnixSubprocess.h"
 
 #include <stdexcept>
+#include <sstream>
 
+#include <errno.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -32,7 +34,23 @@ namespace rsc {
 namespace subprocess {
 
 UnixSubprocess::UnixSubprocess(const string &command, const vector<string> args) :
-    argLen(args.size() + 2) {
+    logger(logging::Logger::getLogger("rsc.subprocess.UnixSubprocess")),
+            argLen(args.size() + 2) {
+
+    if (logger->isDebugEnabled()) {
+        stringstream argStream;
+        argStream << "[";
+        for (size_t i = 0; i < args.size(); ++i) {
+            argStream << args[i];
+            if (i != args.size() - 1) {
+                argStream << ", ";
+            } else {
+                argStream << "]";
+            }
+        }
+        RSCDEBUG(logger, "Creating a subprocess for command '" << command
+                << "' with arguments " << argStream.str());
+    }
 
     // convert arguments to char pointer array
     this->args = new char *[argLen];
@@ -48,12 +66,16 @@ UnixSubprocess::UnixSubprocess(const string &command, const vector<string> args)
     if (pid == 0) {
 
         // child process
-        execv(command.c_str(), this->args);
+        int ret = execv(command.c_str(), this->args);
+        if (ret == -1) {
+            RSCERROR(logger, "Error starting subprocess command '" << command
+                    << "': " << strerror(errno));
+        }
 
     } else if (pid < 0) {
 
         // failed to fork
-        throw runtime_error("Cannot start spread server");
+        throw runtime_error("Forking new subprocess failed.");
 
     } else {
 

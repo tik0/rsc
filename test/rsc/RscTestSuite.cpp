@@ -20,10 +20,16 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
+#include "rsc/logging/LoggerFactory.h"
+
 using namespace std;
 using namespace testing;
+using namespace rsc;
+using namespace rsc::logging;
 
 int main(int argc, char **argv) {
+
+    LoggerFactory::getInstance()->reconfigure(Logger::TRACE);
 
     InitGoogleMock(&argc, argv);
     return RUN_ALL_TESTS();

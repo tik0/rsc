@@ -37,14 +37,16 @@ using namespace rsc::subprocess;
 TEST(UnixSubprocessTest, testSubprocess)
 {
 
+    srand(time(NULL));
+
     const string unique = randAlnumStr(10);
     const string startedName = "/tmp/started-" + unique;
     const string killedName = "/tmp/killed-" + unique;
 
     vector<string> args;
     args.push_back("-c");
-    args.push_back(TEST_ROOT + "/rsc/subprocess/killNotify " + startedName
-            + " " + killedName);
+    args.push_back("\"" + TEST_ROOT + "/rsc/subprocess/killNotify\" \""
+            + startedName + "\" \"" + killedName + "\"");
     {
         UnixSubprocess subprocess("/bin/bash", args);
         // wait for the process to start

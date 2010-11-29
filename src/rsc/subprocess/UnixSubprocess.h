@@ -25,6 +25,8 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include "../logging/Logger.h"
+
 namespace rsc {
 namespace subprocess {
 
@@ -42,6 +44,9 @@ public:
     virtual ~UnixSubprocess();
 
 private:
+
+    logging::LoggerPtr logger;
+
     pid_t pid;
     char **args;
     size_t argLen;

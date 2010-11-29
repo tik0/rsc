@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "killNotify started with start file $1 and kill file $2"
+
 trap "touch $2; exit" SIGINT
 touch $1
 read

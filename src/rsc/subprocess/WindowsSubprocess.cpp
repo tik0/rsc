@@ -19,122 +19,81 @@
 
 #include "WindowsSubprocess.h"
 
+#include <sstream>
+
 using namespace std;
 
 namespace rsc {
 namespace subprocess {
 
-   #define TA_FAILED 0
-   #define TA_SUCCESS_CLEAN 1
-   #define TA_SUCCESS_KILL 2
-   #define TA_SUCCESS_16 3
+bool CALLBACK terminateAppEnum(HWND hwnd, LPARAM lParam) {
 
-   DWORD TerminateApp( DWORD dwPID, DWORD dwTimeout );
+    DWORD id;
+    GetWindowThreadProcessId(hwnd, &id);
 
-   typedef struct
-   {
-      DWORD   dwID;
-      DWORD   dwThread;
-   } TERMINFO;
+    if(id == (DWORD)lParam)
+    {
+        PostMessage(hwnd, WM_CLOSE, 0, 0);
+    }
 
-   // Declare Callback Enum Functions.
-   bool CALLBACK TerminateAppEnum( HWND hwnd, LPARAM lParam );
+    return true;
 
-   /*----------------------------------------------------------------
-   DWORD WINAPI TerminateApp( DWORD dwPID, DWORD dwTimeout )
+}
 
-   Purpose:
-      Shut down a 32-Bit Process (or 16-bit process under Windows 95)
+WindowsSubprocess::TerminateResult WindowsSubprocess::terminateApp(DWORD pid, DWORD timeoutMs) {
 
-   Parameters:
-      dwPID
-         Process ID of the process to shut down.
+    // If we can't open the process with PROCESS_TERMINATE rights,
+    // then we give up immediately.
+    HANDLE process = OpenProcess(SYNCHRONIZE | PROCESS_TERMINATE, false, pid);
 
-      dwTimeout
-         Wait time in milliseconds before shutting down the process.
+    if (process == NULL) {
+        return FAILED;
+    }
 
-   Return Value:
-      TA_FAILED - If the shutdown failed.
-      TA_SUCCESS_CLEAN - If the process was shutdown using WM_CLOSE.
-      TA_SUCCESS_KILL - if the process was shut down with
-         TerminateProcess().
-      NOTE:  See header for these defines.
-   ----------------------------------------------------------------*/ 
-   DWORD TerminateApp( DWORD dwPID, DWORD dwTimeout )
-   {
+    // TerminateAppEnum() posts WM_CLOSE to all windows whose PID
+    // matches your process's.
+    EnumWindows((WNDENUMPROC) terminateAppEnum, (LPARAM) pid);
 
-      // If we can't open the process with PROCESS_TERMINATE rights,
-      // then we give up immediately.
-      HANDLE hProc = OpenProcess(SYNCHRONIZE|PROCESS_TERMINATE, FALSE,
-         dwPID);
+    // Wait on the handle. If it signals, great. If it times out,
+    // then you kill it.
+    TerminateResult terminateReturn;
+    if (WaitForSingleObject(process, timeoutMs) != WAIT_OBJECT_0) {
+        terminateReturn
+                = (TerminateProcess(process, 0) ? SUCCESS_KILL : FAILED);
+    } else {
+        terminateReturn = SUCCESS_CLEAN;
+    }
 
-      if(hProc == NULL)
-      {
-         return TA_FAILED;
-      }
+    CloseHandle(process);
 
-      // TerminateAppEnum() posts WM_CLOSE to all windows whose PID
-      // matches your process's.
-      EnumWindows((WNDENUMPROC)TerminateAppEnum, (LPARAM) dwPID);
-
-      // Wait on the handle. If it signals, great. If it times out,
-      // then you kill it.
-      DWORD   dwRet;
-      if(WaitForSingleObject(hProc, dwTimeout)!=WAIT_OBJECT_0) {
-         dwRet=(TerminateProcess(hProc,0)?TA_SUCCESS_KILL:TA_FAILED);
-      } else {
-         dwRet= TA_SUCCESS_CLEAN;
-      }
-
-      CloseHandle(hProc);
-
-      return dwRet;
-   }
-
-   bool CALLBACK TerminateAppEnum( HWND hwnd, LPARAM lParam )
-   {
-   
-      DWORD dwID;
-      GetWindowThreadProcessId(hwnd, &dwID);
-
-      if(dwID == (DWORD)lParam)
-      {
-         PostMessage(hwnd, WM_CLOSE, 0, 0);
-      }
-
-      return true;
-      
-   }
-
+    return terminateReturn;
+}
 
 WindowsSubprocess::WindowsSubprocess(const string &command,
-    const vector<string> &args) {
+        const vector<string> &args) {
 
-    STARTUPINFO startupInfo = {0};
+    STARTUPINFO startupInfo = { 0 };
     startupInfo.cb = sizeof(startupInfo);
 
+	stringstream commandLine;
+	commandLine << command << " ";
+	for (vector<string>::const_iterator argIt = args.begin(); argIt != args.end(); ++argIt) {
+		commandLine << *argIt << " ";
+	}
+	
     // Try to start the process
-    BOOL result = ::CreateProcess(
-        "C:\\Windows\\NOTEPAD.exe",
-        NULL,
-        NULL,
-        NULL,
-        false,
-        NORMAL_PRIORITY_CLASS,
-        NULL,
-        NULL,
-        &startupInfo,
-        &processInformation
-        );
+    bool result = ::CreateProcess(NULL, const_cast<char*> (commandLine.str().c_str()), NULL, NULL,
+            false, NORMAL_PRIORITY_CLASS, NULL, NULL, &startupInfo,
+            &processInformation);
 
-    if(result == 0) {
+    if (result == 0) {
         throw runtime_error("Could not create process");
     }
 
 }
 
 WindowsSubprocess::~WindowsSubprocess() {
-    TerminateApp(processInformation.dwProcessId, 5000);
+    terminateApp(processInformation.dwProcessId, 5000);
 }
 
 }

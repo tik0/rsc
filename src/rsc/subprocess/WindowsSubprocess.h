@@ -42,11 +42,22 @@ public:
     WindowsSubprocess(const std::string &command,
             const std::vector<std::string> &args = std::vector<std::string>());
     virtual ~WindowsSubprocess();
-    
+
 private:
 
+    enum TerminateResult {
+        FAILED, SUCCESS_CLEAN, SUCCESS_KILL
+    };
+
+    typedef struct {
+        DWORD id;
+        DWORD thread;
+    } TermInfo;
+
+    TerminateResult terminateApp(DWORD pid, DWORD timeoutMs);
+
     PROCESS_INFORMATION processInformation;
-    
+
 };
 
 }

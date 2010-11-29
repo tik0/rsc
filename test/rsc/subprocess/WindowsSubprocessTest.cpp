@@ -32,7 +32,10 @@ using namespace rsc::subprocess;
 TEST(WindowsSubprocessTest, testSubprocess)
 {
 
-    WindowsSubprocess proc("foo");
-    //boost::this_thread::sleep(boost::posix_time::seconds(20));
+	// TODO this test is really a stub. Think about how to better test this on windows
+	vector<string> args;
+	args.push_back("c:\\Users\\languitar\\workspace\\RSC\\build\\Doxyfile");
+    WindowsSubprocess proc("cmake", args);
+    boost::this_thread::sleep(boost::posix_time::seconds(5));
 
 }

@@ -21,6 +21,8 @@ SET(TEST_SOURCES rsc/RscTestSuite.cpp
 # subprocess
 IF(UNIX)
     SET(TEST_SOURCES ${TEST_SOURCES} rsc/subprocess/UnixSubprocessTest.cpp)
+ELSEIF(WIN32)
+    SET(TEST_SOURCES ${TEST_SOURCES} rsc/subprocess/WindowsSubprocessTest.cpp)
 ENDIF()
 
 ADD_EXECUTABLE(${RSC_TEST_NAME} ${TEST_SOURCES})

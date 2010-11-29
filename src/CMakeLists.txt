@@ -52,7 +52,7 @@ SET(HEADERS rsc/logging/ConsoleLogger.h
 # subprocess choice
 IF(UNIX)
     SET(SOURCES ${SOURCES} rsc/subprocess/UnixSubprocess.cpp)
-    SET(HEADERS ${SOURCES} rsc/subprocess/UnixSubprocess.cpp)
+    SET(HEADERS ${HEADERS} rsc/subprocess/UnixSubprocess.h)
     ADD_DEFINITIONS(-DSUBPROCESS_UNIX)
 ENDIF()
 

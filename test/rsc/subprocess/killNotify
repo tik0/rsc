@@ -2,6 +2,6 @@
 
 echo "killNotify started with start file $1 and kill file $2"
 
-trap "touch $2; exit" SIGINT
+trap "echo \"Creating kill file $2\"; touch $2; echo \"Wrote kill file $2\"; exit" SIGINT
 touch $1
 read

@@ -26,6 +26,8 @@
 #include <boost/noncopyable.hpp>
 #include <boost/shared_ptr.hpp>
 
+#include "rsc/rscexports.h"
+
 namespace rsc {
 namespace subprocess {
 
@@ -47,7 +49,7 @@ typedef boost::shared_ptr<Subprocess> SubprocessPtr;
  *
  * @author jwienke
  */
-class Subprocess: public boost::noncopyable {
+class RSC_EXPORT Subprocess: public boost::noncopyable {
 public:
     virtual ~Subprocess();
 

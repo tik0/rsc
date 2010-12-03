@@ -122,7 +122,7 @@ IF(BUILD_TESTS)
     ENABLE_TESTING()
 ENDIF()
 
-# --- documentation gneration ---
+# --- documentation generation ---
 
 IF(DOXYGEN_FOUND)
 

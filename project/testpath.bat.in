@@ -1,4 +1,0 @@
-echo off
-
-echo [setting path for unit tests]
-PATH=%PATH%;@BOOST_PATH@;@OUTPUT_PATH@

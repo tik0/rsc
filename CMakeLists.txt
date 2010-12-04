@@ -148,8 +148,3 @@ ENDIF()
 # --- coverage ---
 
 ENABLE_COVERAGE_REPORT(TARGETS ${RSC_NAME} TESTS ${RSC_TEST_NAME} FILTER "*3rdparty*" "*test/*")
-
-# --- scripts ---
-
-SET(BOOST_PATH "${Boost_LIBRARY_DIRS}")
-CONFIGURE_FILE(project/testpath.bat.in ${CMAKE_BINARY_DIR}/testpath.bat @ONLY)

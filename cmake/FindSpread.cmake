@@ -45,6 +45,7 @@ MESSAGE(STATUS "Searching for spread library with name ${SPREAD_LIBNAME}")
 FIND_LIBRARY(SPREAD_LIBRARIES
              NAMES ${SPREAD_LIBNAME}
              PATHS "${SPREAD_ROOT}/lib"
+                   "${SPREAD_ROOT}/bin"
                    "$ENV{HOME}/lib")
 
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(Spread DEFAULT_MSG SPREAD_LIBRARIES SPREAD_INCLUDE_DIRS SPREAD_EXECUTABLE)

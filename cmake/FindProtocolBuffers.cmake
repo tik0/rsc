@@ -12,6 +12,10 @@
 #   PROTOBUF_INCLUDE_DIR - The include directory for protocol buffers
 #   PROTOBUF_PROTOC_EXECUTABLE - The protoc compiler
 #
+# These variables are read for additional hints:
+#   PROTOBUF_ROOT - Root directory of the protobuf installation if not found
+#                   automatically
+#
 #  ====================================================================
 #  Example:
 #
@@ -180,7 +184,8 @@ FUNCTION(PROTOBUF_GENERATE_CPP SRCS HDRS)
     
 ENDFUNCTION()
 
-FIND_PATH(PROTOBUF_INCLUDE_DIR google/protobuf/service.h)
+FIND_PATH(PROTOBUF_INCLUDE_DIR google/protobuf/service.h
+          PATHS "${PROTOBUF_ROOT}/include")
 
 # Google's provided vcproj files generate libraries with a "lib"
 # prefix on Windows
@@ -190,12 +195,17 @@ IF(WIN32)
 ENDIF()
 
 FIND_LIBRARY(PROTOBUF_LIBRARY NAMES protobuf
+             PATHS "${PROTOBUF_ROOT}/bin"
+                   "${PROTOBUF_ROOT}/lib"
              DOC "The Google Protocol Buffers Library"
 )
 FIND_LIBRARY(PROTOBUF_PROTOC_LIBRARY NAMES protoc
+             PATHS "${PROTOBUF_ROOT}/bin"
+                   "${PROTOBUF_ROOT}/lib"
              DOC "The Google Protocol Buffers Compiler Library"
 )
 FIND_PROGRAM(PROTOBUF_PROTOC_EXECUTABLE NAMES protoc
+             PATHS "${PROTOBUF_ROOT}/bin"
              DOC "The Google Protocol Buffers Compiler"
 )
 

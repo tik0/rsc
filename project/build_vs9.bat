@@ -4,6 +4,10 @@ echo Common tools directory: %VS90COMNTOOLS%
 
 call "%VS90COMNTOOLS%/vsvars32.bat"
 
+echo [cleaning build tree]
+rd /S /Q build
+mkdir build
+
 cd build
 IF %ERRORLEVEL% NEQ 0 (
 	echo "Could not change to build directory"

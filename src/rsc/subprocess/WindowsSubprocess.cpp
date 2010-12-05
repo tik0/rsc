@@ -80,7 +80,7 @@ WindowsSubprocess::WindowsSubprocess(const string &command,
     commandLine << command << " ";
     for (vector<string>::const_iterator argIt = args.begin(); argIt
             != args.end(); ++argIt) {
-        commandLine << *argIt << " ";
+        commandLine << "\"" <<  *argIt << "\" ";
     }
 
     // Try to start the process

@@ -44,6 +44,9 @@ typedef boost::shared_ptr<Task<void> > TaskPtr;
 //      to the callbacks
 typedef boost::function<void()> Callback;
 
+/**
+ * @author swrede
+ */
 template<class R>
 class Task {
 public:

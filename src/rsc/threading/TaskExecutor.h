@@ -34,6 +34,9 @@ typedef std::map<TaskPtr, TaskThreadPtr> TaskMap;
 // TODO refactor to use boost::ptr_map
 typedef boost::shared_ptr<TaskMap> TaskMapPtr;
 
+/**
+ * @author swrede
+ */
 template<class R>
 class TaskExecutor {
 public:

@@ -23,14 +23,22 @@
 
 INCLUDE(FindPackageHandleStandardArgs)
 
+# use pkg-config as a hint if available
+INCLUDE(FindPkgConfig)
+IF(PKG_CONFIG_FOUND)
+    PKG_CHECK_MODULES(PKG liblog4cxx)
+ENDIF()
+
 FIND_PATH(LOG4CXX_INCLUDE_DIRS
-          PATHS ${LOG4CXX_VISUAL_STUDIO_PROJECT}/src/main/include
+          HINTS ${LOG4CXX_VISUAL_STUDIO_PROJECT}/src/main/include
+                ${PKG_INCLUDE_DIRS}
           NAMES logger.h
           PATH_SUFFIXES log4cxx)
 
 FIND_LIBRARY(LOG4CXX_LIBRARIES
-             PATHS ${LOG4CXX_VISUAL_STUDIO_PROJECT}/projects/Debug
+             HINTS ${LOG4CXX_VISUAL_STUDIO_PROJECT}/projects/Debug
                    ${LOG4CXX_VISUAL_STUDIO_PROJECT}/projects/Release
+                   ${PKG_LIBRARY_DIRS}
              NAMES log4cxx)
              
 # post-process inlude path

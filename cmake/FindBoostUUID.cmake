@@ -1,3 +1,5 @@
+# -*- mode: cmake -*-
+
 # - Try to find the boost uuid library
 # Will define:
 #
@@ -21,6 +23,7 @@ INCLUDE(FindPackageHandleStandardArgs)
 
 FIND_PATH(BOOSTUUID_INCLUDE_DIRS
           NAMES uuid.hpp
+          HINTS ${BOOST_ROOT}
           PATH_SUFFIXES boost/uuid)
              
 # post-process inlude path

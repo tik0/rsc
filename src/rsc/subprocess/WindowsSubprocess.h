@@ -17,8 +17,7 @@
  *
  * ============================================================ */
 
-#ifndef WINDOWSSUBPROCESS_H_
-#define WINDOWSSUBPROCESS_H_
+#pragma once
 
 #include <string>
 #include <vector>
@@ -63,4 +62,3 @@ private:
 }
 }
 
-#endif /* WINDOWSSUBPROCESS_H_ */

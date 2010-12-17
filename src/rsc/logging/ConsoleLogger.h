@@ -17,8 +17,7 @@
  *
  * ============================================================ */
 
-#ifndef CONSOLELOGGER_H_
-#define CONSOLELOGGER_H_
+#pragma once
 
 #include <boost/thread/recursive_mutex.hpp>
 
@@ -74,4 +73,3 @@ private:
 }
 }
 
-#endif /* CONSOLELOGGER_H_ */

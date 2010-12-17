@@ -17,8 +17,7 @@
  *
  * ============================================================ */
 
-#ifndef REGISTRY_H_
-#define REGISTRY_H_
+#pragma once
 
 #include <iostream>
 #include <map>
@@ -205,4 +204,3 @@ BOOST_STATIC_ASSERT(false);
 }
 }
 
-#endif /* REGISTRY_H_ */

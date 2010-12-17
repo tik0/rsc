@@ -17,8 +17,7 @@
  *
  * ============================================================ */
 
-#ifndef TASKEXECUTOR_H_
-#define TASKEXECUTOR_H_
+#pragma once
 
 #include <map>
 #include <boost/thread.hpp>
@@ -144,4 +143,3 @@ typedef boost::shared_ptr<TaskExecutor<void> > TaskExecutorVoidPtr;
 }
 }
 
-#endif /* TASKEXECUTOR_H_ */

@@ -17,8 +17,7 @@
  *
  * ============================================================ */
 
-#ifndef LOGGER_H_
-#define LOGGER_H_
+#pragma once
 
 #include <string>
 #include <ostream>
@@ -230,4 +229,3 @@ RSC_EXPORT std::ostream &operator<<(std::ostream &stream, const Logger::Level &l
         logger->fatal(s.str()); \
     }
 
-#endif /* LOGGER_H_ */

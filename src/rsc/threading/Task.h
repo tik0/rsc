@@ -17,8 +17,7 @@
  *
  * ============================================================ */
 
-#ifndef TASK_H_
-#define TASK_H_
+#pragma once
 
 #include <iostream>
 
@@ -163,4 +162,3 @@ private:
 }
 }
 
-#endif /* TASK_H_ */

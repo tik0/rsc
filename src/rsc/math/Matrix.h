@@ -17,8 +17,7 @@
  *
  * ============================================================ */
 
-#ifndef MATRIX_H_
-#define MATRIX_H_
+#pragma once
 
 #include <iomanip>
 #include <sstream>
@@ -29,7 +28,7 @@ namespace math {
 
 /**
  * @author jwienke
- * @todo allow working with matrices of different types, e.g. doule and float
+ * @todo allow working with matrices of different types, e.g. double and float
  *       are possible
  */
 template<unsigned int Rows, unsigned int Cols, class DataType = double>
@@ -327,4 +326,3 @@ typedef Matrix<3, 1, double> Vector3d;
 }
 }
 
-#endif /* MATRIX_H_ */

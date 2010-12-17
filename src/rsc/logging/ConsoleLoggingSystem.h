@@ -17,8 +17,7 @@
  *
  * ============================================================ */
 
-#ifndef CONSOLELOGGINGSYSTEM_H_
-#define CONSOLELOGGINGSYSTEM_H_
+#pragma once
 
 #include "LoggingSystem.h"
 #include "rsc/rscexports.h"
@@ -48,4 +47,3 @@ public:
 }
 }
 
-#endif /* CONSOLELOGGINGSYSTEM_H_ */

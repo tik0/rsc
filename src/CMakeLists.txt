@@ -21,6 +21,7 @@ SET(SOURCES rsc/logging/ConsoleLogger.cpp
             rsc/logging/Logger.cpp
             rsc/logging/LoggerFactory.cpp
             rsc/logging/LoggingSystem.cpp
+            rsc/math/MathUtils.cpp
             rsc/math/Matrix.cpp
             rsc/misc/IllegalStateException.cpp
             rsc/misc/langutils.cpp
@@ -38,6 +39,7 @@ SET(HEADERS rsc/logging/ConsoleLogger.h
             rsc/logging/Logger.h
             rsc/logging/LoggerFactory.h
             rsc/logging/LoggingSystem.h
+            rsc/math/MathUtils.h
             rsc/math/Matrix.h
             rsc/misc/IllegalStateException.h
             rsc/misc/langutils.h

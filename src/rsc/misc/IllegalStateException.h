@@ -17,8 +17,7 @@
  *
  * ============================================================ */
 
-#ifndef ILLEGALSTATEEXCEPTION_H_
-#define ILLEGALSTATEEXCEPTION_H_
+#pragma once
 
 #include <stdexcept>
 
@@ -43,4 +42,3 @@ public:
 }
 }
 
-#endif /* ILLEGALSTATEEXCEPTION_H_ */

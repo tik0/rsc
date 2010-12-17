@@ -14,6 +14,7 @@ SET(TEST_SOURCES rsc/RscTestSuite.cpp
                  rsc/logging/ConsoleLoggerTest.cpp
                  rsc/logging/LoggerFactoryTest.cpp
                  rsc/logging/LoggerTest.cpp
+                 rsc/math/MathUtilsTest.cpp
                  rsc/math/MatrixTest.cpp
                  rsc/misc/RegistryTest.cpp
                  rsc/misc/UUIDTest.cpp

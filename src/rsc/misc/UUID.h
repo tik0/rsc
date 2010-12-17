@@ -17,8 +17,7 @@
  *
  * ============================================================ */
 
-#ifndef UUID_H_
-#define UUID_H_
+#pragma once
 
 #include <ostream>
 #include <string>
@@ -90,4 +89,3 @@ RSC_EXPORT std::ostream &operator<<(std::ostream &stream, const UUID &id);
 }
 }
 
-#endif /* UUID_H_ */

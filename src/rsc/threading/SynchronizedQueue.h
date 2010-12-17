@@ -17,8 +17,7 @@
  *
  * ============================================================ */
 
-#ifndef SYNCHRONIZEDQUEUE_H_
-#define SYNCHRONIZEDQUEUE_H_
+#pragma once
 
 #include <queue>
 
@@ -152,4 +151,3 @@ public:
 }
 }
 
-#endif /* SYNCHRONIZEDQUEUE_H_ */

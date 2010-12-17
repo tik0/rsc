@@ -17,8 +17,7 @@
  *
  * ============================================================ */
 
-#ifndef SUBPROCESS_H_
-#define SUBPROCESS_H_
+#pragma once
 
 #include <string>
 #include <vector>
@@ -74,4 +73,3 @@ protected:
 }
 }
 
-#endif /* SUBPROCESS_H_ */

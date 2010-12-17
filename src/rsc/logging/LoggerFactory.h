@@ -17,8 +17,7 @@
  *
  * ============================================================ */
 
-#ifndef LOGGERFACTORY_H_
-#define LOGGERFACTORY_H_
+#pragma once
 
 #include <map>
 
@@ -127,4 +126,3 @@ private:
 }
 }
 
-#endif /* LOGGERFACTORY_H_ */

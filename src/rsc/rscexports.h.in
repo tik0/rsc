@@ -17,8 +17,7 @@
  *
  * ============================================================ */
 
-#ifndef RSCEXPORTS_H_
-#define RSCEXPORTS_H_
+#pragma once
 
 #include <map>
 #include <string>
@@ -40,4 +39,3 @@
 RSC_EXPIMP template class RSC_EXPORT std::multimap<std::string, std::string>;
 #endif
 
-#endif /* RSCEXPORTS_H_ */

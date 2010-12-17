@@ -17,8 +17,7 @@
  *
  * ============================================================ */
 
-#ifndef MOCKS_H_
-#define MOCKS_H_
+#pragma once
 
 #include "rsc/logging/Logger.h"
 #include "rsc/logging/LoggingSystem.h"
@@ -44,4 +43,3 @@ public:
 MOCK_METHOD1(createLogger, rsc::logging::LoggerPtr(const std::string &name));
 };
 
-#endif /* MOCKS_H_ */

@@ -17,8 +17,7 @@
  *
  * ============================================================ */
 
-#ifndef INTERRUPTEDEXCEPTION_H_
-#define INTERRUPTEDEXCEPTION_H_
+#pragma once
 
 #include <stdexcept>
 
@@ -42,4 +41,3 @@ public:
 }
 }
 
-#endif /* INTERRUPTEDEXCEPTION_H_ */

@@ -17,8 +17,7 @@
  *
  * ============================================================ */
 
-#ifndef PERIODICTASK_H_
-#define PERIODICTASK_H_
+#pragma once
 
 #include "Task.h"
 
@@ -86,4 +85,3 @@ private:
 }
 }
 
-#endif /* PERIODICTASK_H_ */

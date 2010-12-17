@@ -17,8 +17,7 @@
  *
  * ============================================================ */
 
-#ifndef RSCLANGUTILS_H_
-#define RSCLANGUTILS_H_
+#pragma once
 
 #include <string>
 
@@ -74,4 +73,3 @@ RSC_EXPORT std::string randAlnumStr(const std::string::size_type &length);
 }
 }
 
-#endif /* RSCLANGUTILS_H_ */

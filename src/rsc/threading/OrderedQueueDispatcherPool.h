@@ -17,8 +17,7 @@
  *
  * ============================================================ */
 
-#ifndef ORDEREDQUEUEDISPATCHERPOOL_H_
-#define ORDEREDQUEUEDISPATCHERPOOL_H_
+#pragma once
 
 //#include <iostream>
 
@@ -360,4 +359,3 @@ public:
 }
 }
 
-#endif /* ORDEREDQUEUEDISPATCHERPOOL_H_ */

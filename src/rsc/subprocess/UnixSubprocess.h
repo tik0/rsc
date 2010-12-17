@@ -17,8 +17,7 @@
  *
  * ============================================================ */
 
-#ifndef UNIXSUBPROCESS_H_
-#define UNIXSUBPROCESS_H_
+#pragma once
 
 #include "Subprocess.h"
 
@@ -59,4 +58,3 @@ private:
 }
 }
 
-#endif /* UNIXSUBPROCESS_H_ */

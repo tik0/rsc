@@ -17,8 +17,7 @@
  *
  * ============================================================ */
 
-#ifndef LOGGINGSYSTEM_H_
-#define LOGGINGSYSTEM_H_
+#pragma once
 
 #include <string>
 
@@ -63,4 +62,3 @@ RSC_EXPORT CREATE_REGISTRY(LoggingSystem, loggingSystemRegistry);
 }
 }
 
-#endif /* LOGGINGSYSTEM_H_ */

@@ -25,8 +25,8 @@ ELSE()
 
     MESSAGE(STATUS "Checking if __attribute__ ((constructor)) is working")
     TRY_RUN(ATTRIBUTE_CONSTRUCTOR_RESULT COMPILER_COMPILES_ATTRIBUTE_CONSTRUCTOR
-            ${CMAKE_BINARY_DIR}
-            ${CMAKE_MODULE_PATH}/TestAttributeConstructor.cpp
+            "${CMAKE_BINARY_DIR}"
+            "${CMAKE_MODULE_PATH}/TestAttributeConstructor.cpp"
             RUN_OUTPUT_VARIABLE RUN_OUTPUT)
     
     IF(ATTRIBUTE_CONSTRUCTOR_RESULT)
@@ -47,8 +47,8 @@ ELSE()
     
     MESSAGE(STATUS "Checking if CRT initialization is working")
     TRY_RUN(CRT_RESULT COMPILER_COMPILES_CRT
-            ${CMAKE_BINARY_DIR}
-            ${CMAKE_MODULE_PATH}/TestCRTInit.cpp
+            "${CMAKE_BINARY_DIR}"
+            "${CMAKE_MODULE_PATH}/TestCRTInit.cpp"
             RUN_OUTPUT_VARIABLE RUN_OUTPUT)
             
     IF(CRT_RESULT)

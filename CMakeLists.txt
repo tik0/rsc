@@ -9,6 +9,7 @@ INCLUDE(CheckCXXCompilerFlag)
 INCLUDE(CheckIncludeFile)
 INCLUDE(InstallFilesRecursive)
 INCLUDE(EnableCoverageReport)
+INCLUDE(GenerateDoxygen)
 
 SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
@@ -129,7 +130,6 @@ ENDIF()
 
 # --- documentation generation ---
 
-INCLUDE(GenerateDoxygen)
 GENERATE_DOXYGEN(VERSION "${RSC_VERSION}")
 
 # --- coverage ---

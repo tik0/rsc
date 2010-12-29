@@ -6,6 +6,7 @@ INSTALL(FILES ExtractTBBVersion.cpp.in
               TestAttributeConstructor.cpp
               TestCRTInit.cpp
               CheckInitMethod.cmake
+              CMakeDoxyfile.in
               EnableCoverageReport.cmake
               FindBoostThreadpool.cmake
               FindBoostUUID.cmake
@@ -17,6 +18,7 @@ INSTALL(FILES ExtractTBBVersion.cpp.in
               FindProtocolBuffers.cmake
               FindSpread.cmake
               FindTBB.cmake
+              GenerateDoxygen.cmake
               IgnoreReturnCode.cmake
               InstallFilesRecursive.cmake
               ParseArguments.cmake

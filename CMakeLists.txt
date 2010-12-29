@@ -92,8 +92,6 @@ INCLUDE_DIRECTORIES(BEFORE SYSTEM ${Boost_INCLUDE_DIRS}
   ${BOOSTUUID_INCLUDE_DIRS})
 LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
 
-FIND_PACKAGE(Doxygen)
-
 # --- source code ---
 
 INCLUDE_DIRECTORIES(BEFORE src ${CMAKE_CURRENT_BINARY_DIR}/src)
@@ -131,26 +129,8 @@ ENDIF()
 
 # --- documentation generation ---
 
-IF(DOXYGEN_FOUND)
-
-    SET(API_DIR ${CMAKE_BINARY_DIR}/doc)
-    SET(SOURCE_DIR ${CMAKE_SOURCE_DIR}/src)
-    SET(DOXYFILE ${CMAKE_BINARY_DIR}/Doxyfile)
-    SET(WARNFILE ${CMAKE_BINARY_DIR}/doxygen-warn.log)
-    
-    CONFIGURE_FILE(Doxyfile.in ${DOXYFILE})
-    
-    ADD_CUSTOM_COMMAND(OUTPUT ${API_DIR}
-                       DEPENDS ${DOXYFILE}
-                       COMMAND ${DOXYGEN_EXECUTABLE}
-                       ARGS ${DOXYFILE}
-                       WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
-    ADD_CUSTOM_TARGET(doc DEPENDS ${API_DIR})
-    
-    INSTALL(CODE "execute_process(COMMAND ${CMAKE_BUILD_TOOL} doc)")
-    INSTALL(DIRECTORY ${API_DIR} DESTINATION share/RSC)
-
-ENDIF()
+INCLUDE(GenerateDoxygen)
+GENERATE_DOXYGEN(VERSION "${RSC_VERSION}")
 
 # --- coverage ---
 

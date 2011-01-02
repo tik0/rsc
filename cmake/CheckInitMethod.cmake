@@ -18,6 +18,8 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details. 
 
+GET_FILENAME_COMPONENT(CHECK_INIT_METHOD_MODULE_DIR ${CMAKE_CURRENT_LIST_FILE} PATH)
+
 IF(INIT_METHOD_CRT OR INIT_METHOD_ATTRIBUTE_CONSTRUCTOR)
     MESSAGE(STATUS "Using cached init method values")
 ELSE()
@@ -26,7 +28,7 @@ ELSE()
     MESSAGE(STATUS "Checking if __attribute__ ((constructor)) is working")
     TRY_RUN(ATTRIBUTE_CONSTRUCTOR_RESULT COMPILER_COMPILES_ATTRIBUTE_CONSTRUCTOR
             "${CMAKE_BINARY_DIR}"
-            "${CMAKE_CURRENT_LIST_DIR}/TestAttributeConstructor.cpp"
+            "${CHECK_INIT_METHOD_MODULE_DIR}/TestAttributeConstructor.cpp"
             RUN_OUTPUT_VARIABLE RUN_OUTPUT)
     
     IF(ATTRIBUTE_CONSTRUCTOR_RESULT)
@@ -48,7 +50,7 @@ ELSE()
     MESSAGE(STATUS "Checking if CRT initialization is working")
     TRY_RUN(CRT_RESULT COMPILER_COMPILES_CRT
             "${CMAKE_BINARY_DIR}"
-            "${CMAKE_CURRENT_LIST_DIR}/TestCRTInit.cpp"
+            "${CHECK_INIT_METHOD_MODULE_DIR}/TestCRTInit.cpp"
             RUN_OUTPUT_VARIABLE RUN_OUTPUT)
             
     IF(CRT_RESULT)

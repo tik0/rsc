@@ -26,6 +26,8 @@
 # GNU General Public License for more details.
 #
 
+GET_FILENAME_COMPONENT(FIND_TBB_MODULE_DIR ${CMAKE_CURRENT_LIST_FILE} PATH)
+
 INCLUDE(FindPackageHandleStandardArgs)
 
 FIND_PATH(TBB_INCLUDE_DIRS
@@ -94,7 +96,7 @@ ENDIF()
 SET(TBB_INCLUDE_DIRS ${TBB_INCLUDE_DIRS} CACHE PATH "TBB include dirs" FORCE)
 
 # find out the TBB version that is present
-CONFIGURE_FILE("${CMAKE_CURRENT_LIST_DIR}/ExtractTBBVersion.cpp.in" "${CMAKE_CURRENT_BINARY_DIR}/ExtractTBBVersion.cpp" @ONLY)
+CONFIGURE_FILE("${FIND_TBB_MODULE_DIR}/ExtractTBBVersion.cpp.in" "${CMAKE_CURRENT_BINARY_DIR}/ExtractTBBVersion.cpp" @ONLY)
 TRY_RUN(TBB_VERSION_RUN_RESULT TBB_VERSION_COMPILE_RESULT
         "${CMAKE_BINARY_DIR}"
         "${CMAKE_CURRENT_BINARY_DIR}/ExtractTBBVersion.cpp"

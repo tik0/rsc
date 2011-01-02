@@ -7,7 +7,7 @@
 # Possible hints:
 # CPPCHECK_ROOT - root directory of the mongodb installation
 #
-# Copyright (C) 2010 by Johannes Wienke <jwienke at techfak dot uni-bielefeld dot de>
+# Copyright (C) 2011 by Johannes Wienke <jwienke at techfak dot uni-bielefeld dot de>
 #
 # This program is free software; you can redistribute it
 # and/or modify it under the terms of the GNU General

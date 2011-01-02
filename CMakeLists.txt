@@ -10,6 +10,7 @@ INCLUDE(CheckIncludeFile)
 INCLUDE(InstallFilesRecursive)
 INCLUDE(EnableCoverageReport)
 INCLUDE(GenerateDoxygen)
+INCLUDE(GenerateCppcheck)
 
 SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 

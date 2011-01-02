@@ -66,7 +66,7 @@ ELSEIF(WIN32)
     ADD_DEFINITIONS(-DSUBPROCESS_WINDOWS)
 ENDIF()
 
-ADD_LIBRARY(${RSC_NAME} SHARED ${SOURCES} ${HEADERS})
+ADD_LIBRARY(${RSC_NAME} SHARED ${SOURCES} ${HEADERS} ${CMAKE_CURRENT_BINARY_DIR}/rsc/config.h ${CMAKE_CURRENT_BINARY_DIR}/rsc/rscexports.h)
 TARGET_LINK_LIBRARIES(${RSC_NAME} ${Boost_LIBRARIES})
 SET_TARGET_PROPERTIES(${RSC_NAME}
                       PROPERTIES
@@ -77,3 +77,11 @@ INSTALL(TARGETS ${RSC_NAME}
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib)
 INSTALL_FILES_RECURSIVE(include HEADERS)
+
+# --- cppcheck ---
+
+GENERATE_CPPCHECK(SOURCES ${SOURCES}
+                          ${HEADERS}
+                          ${CMAKE_CURRENT_BINARY_DIR}/rsc/config.h
+                          ${CMAKE_CURRENT_BINARY_DIR}/rsc/rscexports.h
+                  SUPPRESSION_FILE "cppcheck-suppressions")

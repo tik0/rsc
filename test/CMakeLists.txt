@@ -49,5 +49,6 @@ ENDIF()
 # --- cppcheck ---
 
 GENERATE_CPPCHECK(SOURCES ${TEST_SOURCES}
+                  ENABLE_IDS style
                   TARGET_NAME cppcheck-tests
                   INCLUDES "../src")

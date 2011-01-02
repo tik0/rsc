@@ -84,4 +84,5 @@ GENERATE_CPPCHECK(SOURCES ${SOURCES}
                           ${HEADERS}
                           ${CMAKE_CURRENT_BINARY_DIR}/rsc/config.h
                           ${CMAKE_CURRENT_BINARY_DIR}/rsc/rscexports.h
-                  SUPPRESSION_FILE "cppcheck-suppressions")
+                  SUPPRESSION_FILE "cppcheck-suppressions"
+                  ENABLE_IDS style)

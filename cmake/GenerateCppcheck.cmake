@@ -4,8 +4,9 @@
 #
 # GENERATE_CPPCHECK(SOURCES <sources to check...>
 #                   [SUPPRESSION_FILE <file>]
+#                   [ENABLE_IDS <id...>]
 #                   [TARGET_NAME <name>]
-#                   [INCLUDES <dirs...>])
+#                   [INCLUDES <dir...>])
 #
 # Generates a target "cppcheck" that executes cppcheck on the specified sources.
 # SUPPRESSION_FILE may be give additionally to specify suppressions for#
@@ -13,6 +14,8 @@
 # format like given for SOURCES. This means if you specified them relative to
 # CMAKE_CURRENT_SOURCE_DIR, then the same relative paths must be used in the
 # suppression file.
+# ENABLE_IDS allows to specify which additional cppcheck check ids to execute,
+# e.g. all or style. They are combined with AND.
 # With TARGET_NAME a different name for the generated check target can be
 # specified. This is useful if several calles to this function are made in one
 # CMake project, as otherwise the target names collide.
@@ -46,7 +49,7 @@ FUNCTION(GENERATE_CPPCHECK)
 
     IF(CPPCHECK_FOUND)
     
-        PARSE_ARGUMENTS(ARG "SOURCES;SUPPRESSION_FILE;TARGET_NAME;INCLUDES" "" ${ARGN})
+        PARSE_ARGUMENTS(ARG "SOURCES;SUPPRESSION_FILE;ENABLE_IDS;TARGET_NAME;INCLUDES" "" ${ARGN})
         
         SET(TARGET_NAME "cppcheck")
         SET(TARGET_NAME_SUFFIX "")
@@ -86,9 +89,23 @@ FUNCTION(GENERATE_CPPCHECK)
             SET(INCLUDE_ARGUMENTS "${INCLUDE_ARGUMENTS} \"-I${INCLUDE}\"")
         ENDFOREACH()
         
+        # enabled ids
+        SET(ID_LIST "")
+        FOREACH(ID ${ARG_ENABLE_IDS})
+            SET(ID_LIST "${ID_LIST},${ID}")
+        ENDFOREACH()
+        IF(ID_LIST)
+            STRING(LENGTH ${ID_LIST} LIST_LENGTH)
+            MATH(EXPR FINAL_LIST_LENGTH "${LIST_LENGTH} - 1")
+            STRING(SUBSTRING ${ID_LIST} 1 ${FINAL_LIST_LENGTH} FINAL_ID_LIST)
+            SET(IDS_ARGUMENT "\"--enable=${FINAL_ID_LIST}\"")
+        ELSE()
+            SET(IDS_ARGUMENT "")
+        ENDIF()
+        
         FILE(WRITE ${CPPCHECK_WRAPPER_SCRIPT}
 "
-EXECUTE_PROCESS(COMMAND \"${CPPCHECK_EXECUTABLE}\" ${INCLUDE_ARGUMENTS} ${SUPPRESSION_ARGUMENT} ${SUPPRESSION_FILE} --enable=style --xml \"--file-list=${CPPCHECK_CHECKFILE}\"
+EXECUTE_PROCESS(COMMAND \"${CPPCHECK_EXECUTABLE}\" ${INCLUDE_ARGUMENTS} ${SUPPRESSION_ARGUMENT} ${SUPPRESSION_FILE} ${IDS_ARGUMENT} --xml \"--file-list=${CPPCHECK_CHECKFILE}\"
                 RESULT_VARIABLE CPPCHECK_EXIT_CODE
                 ERROR_VARIABLE ERROR_OUT
                 WORKING_DIRECTORY \"${CMAKE_CURRENT_SOURCE_DIR}\")

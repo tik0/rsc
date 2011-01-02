@@ -2,7 +2,7 @@
 # The function GENERATE_CPPCHECK is provided to create a "cppcheck" target that
 # performs static code analysis using the cppcheck utility program.
 #
-# GENERATE_CPPCHECK(SOURCES <sources to check...> [SUPPRESSION_FILE <file>])
+# GENERATE_CPPCHECK(SOURCES <sources to check...> [SUPPRESSION_FILE <file>] [TARGET_NAME <name>])
 #
 # Generates a target "cppcheck" that executes cppcheck on the specified sources.
 # SUPPRESSION_FILE may be give additionally to specify suppressions for#
@@ -10,6 +10,9 @@
 # format like given for SOURCES. This means if you specified them relative to
 # CMAKE_CURRENT_SOURCE_DIR, then the same relative paths must be used in the
 # suppression file.
+# With TARGET_NAME a different name for the generated check target can be
+# specified. This is useful if several calles to this function are made in one
+# CMake project, as otherwise the target names collide.
 #
 # This function can always be called, even if no cppcheck was found. Then no
 # target is created.
@@ -32,15 +35,24 @@ GET_FILENAME_COMPONENT(GENERATE_CPPCHECK_MODULE_DIR ${CMAKE_CURRENT_LIST_FILE} P
 
 FIND_PACKAGE(Cppcheck)
 
-SET(CPPCHECK_CHECKFILE "${CMAKE_BINARY_DIR}/cppcheck-files")
-SET(CPPCHECK_REPORT_FILE "${CMAKE_BINARY_DIR}/cppcheck-report.xml")
-SET(CPPCHECK_WRAPPER_SCRIPT "${CMAKE_BINARY_DIR}/cppcheck.cmake")
-
 FUNCTION(GENERATE_CPPCHECK)
 
     IF(CPPCHECK_FOUND)
     
-        PARSE_ARGUMENTS(ARG "SOURCES;SUPPRESSION_FILE" "" ${ARGN})
+        PARSE_ARGUMENTS(ARG "SOURCES;SUPPRESSION_FILE;TARGET_NAME" "" ${ARGN})
+        
+        SET(TARGET_NAME "cppcheck")
+        SET(TARGET_NAME_SUFFIX "")
+        # parse target name
+        LIST(LENGTH ARG_TARGET_NAME TARGET_NAME_LENGTH)
+        IF(${TARGET_NAME_LENGTH} EQUAL 1)
+            SET(TARGET_NAME ${ARG_TARGET_NAME})
+            SET(TARGET_NAME_SUFFIX "-${ARG_TARGET_NAME}")
+        ENDIF()
+        
+        SET(CPPCHECK_CHECKFILE "${CMAKE_BINARY_DIR}/cppcheck-files${TARGET_NAME_SUFFIX}")
+        SET(CPPCHECK_REPORT_FILE "${CMAKE_BINARY_DIR}/cppcheck-report${TARGET_NAME_SUFFIX}.xml")
+        SET(CPPCHECK_WRAPPER_SCRIPT "${CMAKE_BINARY_DIR}/cppcheck${TARGET_NAME_SUFFIX}.cmake")
     
         # write a list file containing all sources to check for the call to
         # cppcheck
@@ -76,7 +88,7 @@ FILE(WRITE \"${CPPCHECK_REPORT_FILE}\" \"\${ERROR_OUT}\")
 "
             )
             
-        ADD_CUSTOM_TARGET(cppcheck ${CMAKE_COMMAND} -P "${CPPCHECK_WRAPPER_SCRIPT}"
+        ADD_CUSTOM_TARGET(${TARGET_NAME} ${CMAKE_COMMAND} -P "${CPPCHECK_WRAPPER_SCRIPT}"
                           COMMENT "Generates the cppcheck result for this project")
 
     ENDIF()

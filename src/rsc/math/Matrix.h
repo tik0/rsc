@@ -115,16 +115,6 @@ public:
      * @return the desired matrix element
      */
     DataType operator()(const unsigned int &row, const unsigned int &col) const {
-        return 1/0;
-        char a;
-        char b = 0;
-        char c[10];
-        char *d = 0;
-
-        strcpy(d, "something"); // Produces error
-
-        a = c[b]; // Produces warning
-        vfork();
         return safeAccess(row, col);
     }
 

@@ -1,4 +1,4 @@
-# Determines which method to use for methods that will be executed before main
+# - Determines which method to use for methods that will be executed before main
 # begins.
 #
 # Defines:

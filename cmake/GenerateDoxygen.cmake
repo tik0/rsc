@@ -1,5 +1,18 @@
 # - Generate a doxygen documentation for a project.
-# TODO documentation
+# The function GENERATE_DOXYGEN is provided to create a "doc" target that
+# generates a doxygen documentation (currently only as HTML report).
+#
+# GENERATE_DOXYGEN([AUTO_INSTALL] [NAME <project name>] [VERSION <project version>] [INSTALL_DIR <doc install dir>])
+#
+#     AUTO_INSTALL: if given the documentation is automatically generated with
+#                   the install target and then installed (sometimes buggy)
+#     NAME: name of the project used for the documentation, defaults to
+#           CMAKE_PROJECT_NAME
+#     VERSION: version of the software, if not given, no version is passed to
+#              doxygen
+#     INSTALL_DIR: directory under which to install the generated documentation.
+#                  If not given, this defaults to
+#                  ${CMAKE_INSTALL_PREFIX}/share/${NAME} 
 #
 # Copyright (C) 2010 by Johannes Wienke <jwienke at techfak dot uni-bielefeld dot de>
 #

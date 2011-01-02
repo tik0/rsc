@@ -1,4 +1,4 @@
-# - Creates a special coverage build type and target on GCC
+# - Creates a special coverage build type and target on GCC.
 #
 # Defines a function ENABLE_COVERAGE_REPORT which generates the coverage target
 # for selected targets. Optional arguments to this function are used to filter

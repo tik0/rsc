@@ -12,7 +12,10 @@
 #              doxygen
 #     INSTALL_DIR: directory under which to install the generated documentation.
 #                  If not given, this defaults to
-#                  ${CMAKE_INSTALL_PREFIX}/share/${NAME} 
+#                  ${CMAKE_INSTALL_PREFIX}/share/${NAME}
+#
+# This function can always be called, even if no doxygen was found. Then no
+# target is created.
 #
 # Copyright (C) 2010 by Johannes Wienke <jwienke at techfak dot uni-bielefeld dot de>
 #

@@ -10,6 +10,7 @@ INSTALL(FILES ExtractTBBVersion.cpp.in
               EnableCoverageReport.cmake
               FindBoostThreadpool.cmake
               FindBoostUUID.cmake
+              FindCppcheck.cmake
               FindEigen2.cmake
               FindJsonCpp.cmake
               FindLcov.cmake
@@ -18,6 +19,7 @@ INSTALL(FILES ExtractTBBVersion.cpp.in
               FindProtocolBuffers.cmake
               FindSpread.cmake
               FindTBB.cmake
+              GenerateCppcheck.cmake
               GenerateDoxygen.cmake
               IgnoreReturnCode.cmake
               InstallFilesRecursive.cmake

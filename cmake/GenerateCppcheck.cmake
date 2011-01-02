@@ -2,7 +2,10 @@
 # The function GENERATE_CPPCHECK is provided to create a "cppcheck" target that
 # performs static code analysis using the cppcheck utility program.
 #
-# GENERATE_CPPCHECK(SOURCES <sources to check...> [SUPPRESSION_FILE <file>] [TARGET_NAME <name>])
+# GENERATE_CPPCHECK(SOURCES <sources to check...>
+#                   [SUPPRESSION_FILE <file>]
+#                   [TARGET_NAME <name>]
+#                   [INCLUDES <dirs...>])
 #
 # Generates a target "cppcheck" that executes cppcheck on the specified sources.
 # SUPPRESSION_FILE may be give additionally to specify suppressions for#
@@ -13,6 +16,10 @@
 # With TARGET_NAME a different name for the generated check target can be
 # specified. This is useful if several calles to this function are made in one
 # CMake project, as otherwise the target names collide.
+# Additional include directories for the cppcheck program can be given with
+# INCLUDES.
+#
+# cppcheck will be executed with CMAKE_CURRENT_SOURCE_DIR as working directory.
 #
 # This function can always be called, even if no cppcheck was found. Then no
 # target is created.
@@ -39,7 +46,7 @@ FUNCTION(GENERATE_CPPCHECK)
 
     IF(CPPCHECK_FOUND)
     
-        PARSE_ARGUMENTS(ARG "SOURCES;SUPPRESSION_FILE;TARGET_NAME" "" ${ARGN})
+        PARSE_ARGUMENTS(ARG "SOURCES;SUPPRESSION_FILE;TARGET_NAME;INCLUDES" "" ${ARGN})
         
         SET(TARGET_NAME "cppcheck")
         SET(TARGET_NAME_SUFFIX "")
@@ -64,6 +71,7 @@ FUNCTION(GENERATE_CPPCHECK)
         # prepare a cmake wrapper to write the stderr output of cppcheck to
         # the result file
         
+        # suppression argument
         LIST(LENGTH ARG_SUPPRESSION_FILE SUPPRESSION_FILE_LENGTH)
         IF(${SUPPRESSION_FILE_LENGTH} EQUAL 1)
             GET_FILENAME_COMPONENT(ABS "${ARG_SUPPRESSION_FILE}" ABSOLUTE)
@@ -72,9 +80,15 @@ FUNCTION(GENERATE_CPPCHECK)
             SET(SUPPRESSION_FILE "\"${ABS}\"")
         ENDIF()
         
+        # includes
+        SET(INCLUDE_ARGUMENTS "")
+        FOREACH(INCLUDE ${ARG_INCLUDES})
+            SET(INCLUDE_ARGUMENTS "${INCLUDE_ARGUMENTS} \"-I${INCLUDE}\"")
+        ENDFOREACH()
+        
         FILE(WRITE ${CPPCHECK_WRAPPER_SCRIPT}
 "
-EXECUTE_PROCESS(COMMAND \"${CPPCHECK_EXECUTABLE}\" ${SUPPRESSION_ARGUMENT} ${SUPPRESSION_FILE} --enable=style --xml \"--file-list=${CPPCHECK_CHECKFILE}\"
+EXECUTE_PROCESS(COMMAND \"${CPPCHECK_EXECUTABLE}\" ${INCLUDE_ARGUMENTS} ${SUPPRESSION_ARGUMENT} ${SUPPRESSION_FILE} --enable=style --xml \"--file-list=${CPPCHECK_CHECKFILE}\"
                 RESULT_VARIABLE CPPCHECK_EXIT_CODE
                 ERROR_VARIABLE ERROR_OUT
                 WORKING_DIRECTORY \"${CMAKE_CURRENT_SOURCE_DIR}\")
@@ -89,7 +103,7 @@ FILE(WRITE \"${CPPCHECK_REPORT_FILE}\" \"\${ERROR_OUT}\")
             )
             
         ADD_CUSTOM_TARGET(${TARGET_NAME} ${CMAKE_COMMAND} -P "${CPPCHECK_WRAPPER_SCRIPT}"
-                          COMMENT "Generates the cppcheck result for this project")
+                          COMMENT "Generating cppcheck result ${TARGET_NAME}")
 
     ENDIF()
 

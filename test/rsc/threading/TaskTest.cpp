@@ -43,7 +43,7 @@ public:
     boost::mutex m;
     boost::condition cond;
 
-    void execute(Task<void>* t) {
+    void execute(Task<void>* /*t*/) {
         boost::mutex::scoped_lock lock(m);
 
         i++;

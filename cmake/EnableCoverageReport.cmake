@@ -27,9 +27,9 @@
 
 INCLUDE(ParseArguments)
 
+FIND_PACKAGE(Lcov)
+
 FUNCTION(ENABLE_COVERAGE_REPORT)
-    
-    FIND_PACKAGE(Lcov)
     
     # argument parsing
     PARSE_ARGUMENTS(ARG "FILTER;TARGETS;TESTS" "" ${ARGN})

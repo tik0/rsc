@@ -29,21 +29,29 @@
 
 #include "rsc/threading/Task.h"
 #include "rsc/threading/PeriodicTask.h"
+#include "rsc/threading/TaskExecutor.h"
+#include "rsc/logging/LoggerFactory.h"
 
 using namespace std;
 using namespace rsc::threading;
 using namespace testing;
 
-class PeriodicTaskTest {
+// TODO this is a really bad test case as it does not test the units on its own
+//      provide more fine-grained tests first
+
+class PeriodicTaskTest: public PeriodicTask {
 public:
     PeriodicTaskTest() :
-        i(0) {
+        PeriodicTask(50), i(0) {
     }
 
     boost::mutex m;
     boost::condition cond;
 
-    void execute(Task<void>* /*t*/) {
+    void execute() {
+
+        cout << "BLAAAA" << endl;
+
         boost::mutex::scoped_lock lock(m);
 
         i++;
@@ -65,8 +73,9 @@ public:
             cond.wait(lock);
         }
         if (i > 20) {
-            ASSERT_TRUE(0)<< "Race Condition Detected!";
+            FAIL() << "Race Condition Detected!" ;
         }
+
     }
 
     volatile int i;
@@ -75,12 +84,15 @@ public:
 
 TEST(TaskTest, testExecution)
 {
+
+    rsc::logging::LoggerFactory::getInstance()->reconfigure(
+            rsc::logging::Logger::ALL);
+
     boost::shared_ptr<PeriodicTaskTest> p =
             boost::shared_ptr<PeriodicTaskTest>(new PeriodicTaskTest());
-    TaskPtr t(new PeriodicTask<void> (boost::bind(&PeriodicTaskTest::execute,
-            p.get(), _1), 0));
 
-    boost::shared_ptr<boost::thread> thread = t->start();
+    TaskExecutor executor;
+    executor.schedule(p);
 
     boost::mutex::scoped_lock lock(p->m);
     bool shutdown = false;
@@ -92,10 +104,10 @@ TEST(TaskTest, testExecution)
         //cout << "Condition satisfied in Step " << p->i << endl << flush;
         if (p->i == 10) {
             //cout << "Stopping Task!" << endl;
-            t->cancel();
+            p->cancel();
             lock.unlock();
             p->cond.notify_all();
-            t->waitDone();
+            p->waitDone();
             shutdown = true;
         }
     }

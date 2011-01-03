@@ -26,58 +26,68 @@
 namespace rsc {
 namespace threading {
 
-template<class R>
-class PeriodicTask: public Task<R> {
+/**
+ * A specialization of Task that executes a task in a periodic manner by
+ * providing an special implementation of #continueExec. A fixed interval
+ * is guaranteed.
+ *
+ * @author swrede
+ * @author jwienke
+ * @todo remove header implementations
+ * @todo jwienke: normally I would prefer a decorator type pattern instead of
+ *       inheritance to make something periodic, but this would make the loop
+ *       already provided in Task completely useless. We could simply introduce
+ *       the loop in this decorator and have the default use an empty sleep
+ *       time.
+ */
+class PeriodicTask: public Task {
 public:
 
-    PeriodicTask(boost::function<R(Task<R>*)> delegate, int ms) :
-        Task<R> (delegate), cycleTime(ms), logger(
-                rsc::logging::Logger::getLogger("rsc.threading.task")) {
+    PeriodicTask(const unsigned int &ms) :
+        cycleTime(ms), logger(rsc::logging::Logger::getLogger(
+                "rsc.threading.PeriodicTask")) {
     }
 
     virtual ~PeriodicTask() {
         RSCTRACE(logger, "~PeriodicTask() entered");
-        //	if (!cancelRequest) cancel();
     }
-
-    virtual void cancel() {
-        RSCTRACE(logger, "PeriodicTask::cancel() entered");
-        Task<R>::cancel();
-    }
-
-protected:
 
     virtual bool continueExec() {
         RSCTRACE(logger, "~PeriodicTask()::continueExec() entered");
+
+        if (isCancelRequested()) {
+            return false;
+        }
+
         // wait, give others a chance
-        bool cont = false;
         if (cycleTime != 0) {
+            // TODO this does not really guarantee a fixed scheduling interval
+            // we need to store the last time as a class member and constantly
+            // increase it
             boost::xtime time;
             xtime_get(&time, boost::TIME_UTC);
             time.nsec += cycleTime * 1000000;
             // TODO provide option to interrupt in cancel using boost::this_thread
             try {
                 RSCTRACE(logger, "PeriodicTask()::continueExec() before thread sleep, sleeping " << cycleTime << " ms");
-                boost::thread::sleep(time);
-                //	thread->sleep(time);
+                boost::this_thread::sleep(time);
             } catch (const boost::thread_interrupted &e) {
-                RSCWARN(logger, "PeriodicTask()::continueExec() catched boost::thread_interrupted exception");
+                // TODO handle interruption somewhere directly in task. This is
+                // something all tasks should benefit of, see above TODO.
+                RSCWARN(logger, "PeriodicTask()::continueExec() caught boost::thread_interrupted exception");
+                return false;
             }
             RSCTRACE(logger, "PeriodicTask()::continueExec() thread woke up");
         }
         RSCTRACE(logger, "PeriodicTask()::continueExec() before lock");
-        //boost::recursive_mutex::scoped_lock lock(Task<R>::m);
-        if (!this->cancelRequest) {
-            cont = true;
-        } else {
-            RSCTRACE(logger, "PeriodicTask()::continueExec() cancel requested");
-        }
-        RSCTRACE(logger, "PeriodicTask()::continueExec() finished");
-        return cont;
+
+        return true;
+
     }
 
 private:
-    int cycleTime;
+
+    unsigned int cycleTime;
     rsc::logging::LoggerPtr logger;
 
 };

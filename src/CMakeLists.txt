@@ -32,7 +32,8 @@ SET(SOURCES rsc/logging/ConsoleLogger.cpp
             rsc/threading/PeriodicTask.cpp
             rsc/threading/SynchronizedQueue.cpp
             rsc/threading/Task.cpp
-            rsc/threading/TaskExecutor.cpp)
+            rsc/threading/TaskExecutor.cpp
+            rsc/threading/TaskStateObserver.cpp)
 
 SET(HEADERS rsc/logging/ConsoleLogger.h
             rsc/logging/ConsoleLoggingSystem.h
@@ -47,11 +48,12 @@ SET(HEADERS rsc/logging/ConsoleLogger.h
             rsc/misc/UUID.h
             rsc/subprocess/Subprocess.h
             rsc/threading/InterruptedException.h
-            rsc/threading/PeriodicTask.h
             rsc/threading/OrderedQueueDispatcherPool.h
+            rsc/threading/PeriodicTask.h
             rsc/threading/SynchronizedQueue.h
             rsc/threading/Task.h
-            rsc/threading/TaskExecutor.h)
+            rsc/threading/TaskExecutor.h
+            rsc/threading/TaskStateObserver.h)
             
 # subprocess choice
 IF(UNIX)

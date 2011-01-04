@@ -43,10 +43,8 @@ namespace threading {
  * afterwards a post hook (#post) is called. If another iteration shall be
  * performed, #continueExec has to return @c true (defaults to @c false).
  *
- * A default flag mechanism to cancel a task is provided but not incorporated
- * into #continueExec, as there is only one iteration to perform as a default.
- * If #exec itself does not provide a cancel mechanism, incorporate the cancel
- * flag into #continueExec.
+ * A default flag mechanism to cancel a task is provided and incorporated into
+ * #continueExec.
  *
  * @author swrede
  * @author jwienke
@@ -97,7 +95,8 @@ public:
      * if the #exec method does not do this itself.
      *
      * @return @c true of iterations of #exec calls shall continue, else
-     *         @c false, default implementation returns @c false
+     *         @c false, default implementation returns @c true unless the task
+     *         is canceled.
      */
     virtual bool continueExec();
 

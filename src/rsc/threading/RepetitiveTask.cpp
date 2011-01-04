@@ -49,15 +49,14 @@ bool RepetitiveTask::isCancelRequested() {
 }
 
 bool RepetitiveTask::continueExec() {
-    return false;
+    return !isCancelRequested();
 }
 
 void RepetitiveTask::run() {
 
     done = false;
 
-    RSCTRACE(logger, "run() entered"); // << *id);
-    // TODO Think about returning an iterator to the results of execute here!
+    RSCTRACE(logger, "run() entered");
     do {
 
         // TODO add exception handling

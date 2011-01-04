@@ -17,10 +17,34 @@
  *
  * ============================================================ */
 
-#include "TaskStateObserver.h"
+#pragma once
+
+#include "TaskExecutor.h"
 
 namespace rsc {
 namespace threading {
 
+/**
+ * A very simple TaskExecutor that uses a new thread for each incomming task.
+ *
+ * @author jwienke
+ * @author swrede
+ */
+class ThreadedTaskExecutor: public TaskExecutor {
+public:
+
+    ThreadedTaskExecutor();
+    virtual ~ThreadedTaskExecutor();
+
+    void schedule(TaskPtr t);
+
+private:
+
+    static void executeTask(TaskPtr task);
+
+};
+
 }
+
 }
+

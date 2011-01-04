@@ -1,8 +1,8 @@
 /* ============================================================
  *
- * This file is a part of the RSC project
+ * This file is a part of the RSC project.
  *
- * Copyright (C) 2010 by Sebastian Wrede <swrede at techfak dot uni-bielefeld dot de>
+ * Copyright (C) 2011 by Johannes Wienke <jwienke at techfak dot uni-bielefeld dot de>
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -17,37 +17,27 @@
  *
  * ============================================================ */
 
-#pragma once
-
-#include <map>
-#include <boost/thread.hpp>
-
-#include "Task.h"
+#include "ThreadedTaskExecutor.h"
 
 namespace rsc {
 namespace threading {
 
-/**
- * Interface for different scheduling strategies for Task instances.
- *
- * @author swrede
- * @author jwienke
- */
-class TaskExecutor {
-public:
+ThreadedTaskExecutor::ThreadedTaskExecutor() {
+}
 
-    /**
-     * Schedules the new task.
-     *
-     * @param t the new task to schedule
-     * @todo exception specification, which errors can occur?
-     */
-    virtual void schedule(TaskPtr t) = 0;
+ThreadedTaskExecutor::~ThreadedTaskExecutor() {
+}
 
-};
+void ThreadedTaskExecutor::schedule(TaskPtr t) {
+    boost::thread taskThread(boost::bind(ThreadedTaskExecutor::executeTask, t));
+    // detach the thread because all further operations can be done on the
+    // task object and this executor does not have to care about the thread
+    taskThread.detach();
+}
 
-typedef boost::shared_ptr<TaskExecutor> TaskExecutorPtr;
+void ThreadedTaskExecutor::executeTask(TaskPtr task) {
+    task->run();
+}
 
 }
 }
-

@@ -24,5 +24,47 @@ using namespace std;
 namespace rsc {
 namespace threading {
 
+PeriodicTask::PeriodicTask(const unsigned int &ms) :
+    cycleTime(ms), logger(rsc::logging::Logger::getLogger(
+            "rsc.threading.PeriodicTask")) {
+}
+
+PeriodicTask::~PeriodicTask() {
+    RSCTRACE(logger, "~PeriodicTask() entered");
+}
+
+bool PeriodicTask::continueExec() {
+    RSCTRACE(logger, "~PeriodicTask()::continueExec() entered");
+
+    if (isCancelRequested()) {
+        return false;
+    }
+
+    // wait, give others a chance
+    if (cycleTime != 0) {
+        // TODO this does not really guarantee a fixed scheduling interval
+        // we need to store the last time as a class member and constantly
+        // increase it
+        boost::xtime time;
+        xtime_get(&time, boost::TIME_UTC);
+        time.nsec += cycleTime * 1000000;
+        // TODO provide option to interrupt in cancel using boost::this_thread
+        try {
+            RSCTRACE(logger, "PeriodicTask()::continueExec() before thread sleep, sleeping " << cycleTime << " ms");
+            boost::this_thread::sleep(time);
+        } catch (const boost::thread_interrupted &e) {
+            // TODO handle interruption somewhere directly in task. This is
+            // something all tasks should benefit of, see above TODO.
+            RSCWARN(logger, "PeriodicTask()::continueExec() caught boost::thread_interrupted exception");
+            return false;
+        }
+        RSCTRACE(logger, "PeriodicTask()::continueExec() thread woke up");
+    }
+    RSCTRACE(logger, "PeriodicTask()::continueExec() before lock");
+
+    return true;
+
+}
+
 }
 }

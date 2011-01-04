@@ -26,6 +26,5 @@ using namespace std;
 namespace rsc {
 namespace threading {
 
-
 }
 }

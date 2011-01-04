@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "Task.h"
+#include "RepetitiveTask.h"
 
 #include <iostream>
 
@@ -33,57 +33,28 @@ namespace threading {
  *
  * @author swrede
  * @author jwienke
- * @todo remove header implementations
- * @todo jwienke: normally I would prefer a decorator type pattern instead of
- *       inheritance to make something periodic, but this would make the loop
- *       already provided in Task completely useless. We could simply introduce
- *       the loop in this decorator and have the default use an empty sleep
- *       time.
  */
-class PeriodicTask: public Task {
+class PeriodicTask: public RepetitiveTask {
 public:
 
-    PeriodicTask(const unsigned int &ms) :
-        cycleTime(ms), logger(rsc::logging::Logger::getLogger(
-                "rsc.threading.PeriodicTask")) {
-    }
+    /**
+     * Constructs a new periodic task with a fixed wait time after each
+     * iteration.
+     *
+     * @param ms time to wait between iterations. No overall-fixed interval
+     *           is guaranteed by the implementation. Time is in milliseconds.
+     */
+    PeriodicTask(const unsigned int &ms);
 
-    virtual ~PeriodicTask() {
-        RSCTRACE(logger, "~PeriodicTask() entered");
-    }
+    virtual ~PeriodicTask();
 
-    virtual bool continueExec() {
-        RSCTRACE(logger, "~PeriodicTask()::continueExec() entered");
-
-        if (isCancelRequested()) {
-            return false;
-        }
-
-        // wait, give others a chance
-        if (cycleTime != 0) {
-            // TODO this does not really guarantee a fixed scheduling interval
-            // we need to store the last time as a class member and constantly
-            // increase it
-            boost::xtime time;
-            xtime_get(&time, boost::TIME_UTC);
-            time.nsec += cycleTime * 1000000;
-            // TODO provide option to interrupt in cancel using boost::this_thread
-            try {
-                RSCTRACE(logger, "PeriodicTask()::continueExec() before thread sleep, sleeping " << cycleTime << " ms");
-                boost::this_thread::sleep(time);
-            } catch (const boost::thread_interrupted &e) {
-                // TODO handle interruption somewhere directly in task. This is
-                // something all tasks should benefit of, see above TODO.
-                RSCWARN(logger, "PeriodicTask()::continueExec() caught boost::thread_interrupted exception");
-                return false;
-            }
-            RSCTRACE(logger, "PeriodicTask()::continueExec() thread woke up");
-        }
-        RSCTRACE(logger, "PeriodicTask()::continueExec() before lock");
-
-        return true;
-
-    }
+    /**
+     * Implements a waiting logic for the continuation of the repetitive task.
+     *
+     * @return @ctrue until the task is canceled after having waited for the
+     *         specified amount of time.
+     */
+    virtual bool continueExec();
 
 private:
 

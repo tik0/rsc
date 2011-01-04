@@ -29,7 +29,7 @@
 
 #include "rsc/threading/Task.h"
 #include "rsc/threading/PeriodicTask.h"
-#include "rsc/threading/TaskExecutor.h"
+#include "rsc/threading/ThreadedTaskExecutor.h"
 #include "rsc/logging/LoggerFactory.h"
 
 using namespace std;
@@ -91,7 +91,7 @@ TEST(TaskTest, testExecution)
     boost::shared_ptr<PeriodicTaskTest> p =
             boost::shared_ptr<PeriodicTaskTest>(new PeriodicTaskTest());
 
-    TaskExecutor executor;
+    ThreadedTaskExecutor executor;
     executor.schedule(p);
 
     boost::mutex::scoped_lock lock(p->m);

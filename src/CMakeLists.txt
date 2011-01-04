@@ -22,7 +22,7 @@ SET(SOURCES rsc/logging/ConsoleLogger.cpp
             rsc/logging/LoggerFactory.cpp
             rsc/logging/LoggingSystem.cpp
             rsc/math/MathUtils.cpp
-            rsc/math/Matrix.cpp
+            rsc/math/StaticMatrix.cpp
             rsc/misc/IllegalStateException.cpp
             rsc/misc/langutils.cpp
             rsc/misc/UUID.cpp
@@ -42,7 +42,7 @@ SET(HEADERS rsc/logging/ConsoleLogger.h
             rsc/logging/LoggerFactory.h
             rsc/logging/LoggingSystem.h
             rsc/math/MathUtils.h
-            rsc/math/Matrix.h
+            rsc/math/StaticMatrix.h
             rsc/misc/IllegalStateException.h
             rsc/misc/langutils.h
             rsc/misc/Registry.h

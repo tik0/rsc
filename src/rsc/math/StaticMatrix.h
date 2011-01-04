@@ -27,12 +27,18 @@ namespace rsc {
 namespace math {
 
 /**
+ * A matrix with static dimensions. This allows compile-time dimension checking
+ * but prevents dynamic sizes.
+ *
  * @author jwienke
- * @todo allow working with matrices of different types, e.g. double and float
- *       are possible
+ * @tparam Rows the number of rows in this matrix > 0
+ * @tparam Cols the number of columns for this matrix > 0
+ * @tparam DataType the type of contained elements, defaults to double
+ * @todo add a comparator through the template arguments for floating points
+ *       etc.
  */
 template<unsigned int Rows, unsigned int Cols, class DataType = double>
-class Matrix {
+class StaticMatrix {
 public:
 
     /**
@@ -46,18 +52,18 @@ public:
      *       rounding is applied. Instead the fractional part is set to 0.
      */
     template<class OtherDataType>
-    Matrix(const Matrix<Rows, Cols, OtherDataType> &otherMatrix) {
+    StaticMatrix(const StaticMatrix<Rows, Cols, OtherDataType> &otherMatrix) {
         fillFrom(otherMatrix);
     }
 
     /**
      * Creates an empty matrix with all elements being zero.
      */
-    Matrix() {
+    StaticMatrix() {
         set(0);
     }
 
-    virtual ~Matrix() {
+    virtual ~StaticMatrix() {
     }
 
     /**
@@ -66,7 +72,7 @@ public:
      * @param value value to set
      * @return a reference to this matrix itself
      */
-    Matrix<Rows, Cols, DataType> &set(const DataType &value) {
+    StaticMatrix<Rows, Cols, DataType> &set(const DataType &value) {
         for (unsigned int row = 0; row < Rows; ++row) {
             for (unsigned int col = 0; col < Cols; ++col) {
                 data[row][col] = value;
@@ -85,7 +91,7 @@ public:
      *       rounding is applied. Instead the fractional part is set to 0.
      */
     template<class OtherDataType>
-    void fillFrom(const Matrix<Rows, Cols, OtherDataType> &otherMatrix) {
+    void fillFrom(const StaticMatrix<Rows, Cols, OtherDataType> &otherMatrix) {
         for (unsigned int row = 0; row < Rows; ++row) {
             for (unsigned int col = 0; col < Cols; ++col) {
                 data[row][col] = otherMatrix(row, col);
@@ -126,10 +132,10 @@ public:
      *                        changed
      */
     template<unsigned int OtherCols>
-    Matrix<Rows, OtherCols, DataType> mult(const Matrix<Cols, OtherCols,
+    StaticMatrix<Rows, OtherCols, DataType> mult(const StaticMatrix<Cols, OtherCols,
             DataType> &other) const {
 
-        Matrix<Rows, OtherCols> result;
+        StaticMatrix<Rows, OtherCols> result;
 
         for (unsigned int otherCol = 0; otherCol < OtherCols; ++otherCol) {
             for (unsigned int row = 0; row < Rows; ++row) {
@@ -150,7 +156,7 @@ public:
      * @param scalar scalar to multiply with
      * @return a reference to this matrix itself
      */
-    Matrix<Rows, Cols, DataType> &mult(const DataType &scalar) {
+    StaticMatrix<Rows, Cols, DataType> &mult(const DataType &scalar) {
         for (unsigned int row = 0; row < Rows; ++row) {
             for (unsigned int col = 0; col < Cols; ++col) {
                 data[row][col] *= scalar;
@@ -166,7 +172,7 @@ public:
      * @return multiplication result
      */
     template<unsigned int OtherCols>
-    Matrix<Rows, OtherCols, DataType> operator*(const Matrix<Cols, OtherCols,
+    StaticMatrix<Rows, OtherCols, DataType> operator*(const StaticMatrix<Cols, OtherCols,
             DataType> &other) const {
         return mult(other);
     }
@@ -176,7 +182,7 @@ public:
      *
      * @param scalar scalar to add.
      */
-    Matrix<Rows, Cols, DataType> add(const DataType &scalar) {
+    StaticMatrix<Rows, Cols, DataType> add(const DataType &scalar) {
         for (unsigned int row = 0; row < Rows; ++row) {
             for (unsigned int col = 0; col < Cols; ++col) {
                 data[row][col] += scalar;
@@ -192,7 +198,7 @@ public:
      * @param other other matrix
      * @return this matrix which is changed
      */
-    Matrix<Rows, Cols, DataType> add(const Matrix<Rows, Cols, DataType> &other) {
+    StaticMatrix<Rows, Cols, DataType> add(const StaticMatrix<Rows, Cols, DataType> &other) {
         for (unsigned int row = 0; row < Rows; ++row) {
             for (unsigned int col = 0; col < Cols; ++col) {
                 data[row][col] += other.data[row][col];
@@ -208,7 +214,7 @@ public:
      * @return @c true if matrices are equal according to comparison operation
      *         else @c false
      */
-    bool operator==(const Matrix<Rows, Cols, DataType> &other) const {
+    bool operator==(const StaticMatrix<Rows, Cols, DataType> &other) const {
 
         for (unsigned int row = 0; row < Rows; ++row) {
             for (unsigned int col = 0; col < Cols; ++col) {
@@ -231,7 +237,7 @@ public:
      * @param scalar value of the diagonal (defaut 1)
      * @return this matrix
      */
-    Matrix<Rows, Cols, DataType> setDiagonal(const DataType &scalar = 1) {
+    StaticMatrix<Rows, Cols, DataType> setDiagonal(const DataType &scalar = 1) {
         for (unsigned int row = 0; row < Rows; ++row) {
             for (unsigned int col = 0; col < Cols; ++col) {
                 if (row == col) {
@@ -251,7 +257,7 @@ public:
      * @return @c false if matrices are equal according to comparison operation
      *         else @c true
      */
-    bool operator!=(const Matrix<Rows, Cols> &other) const {
+    bool operator!=(const StaticMatrix<Rows, Cols> &other) const {
         return !this->operator ==(other);
     }
 
@@ -282,7 +288,7 @@ private:
  *       in the source file
  */
 template<unsigned int Rows, unsigned int Cols, class DataType>
-std::ostream &operator<<(std::ostream &stream, const Matrix<Rows, Cols,
+std::ostream &operator<<(std::ostream &stream, const StaticMatrix<Rows, Cols,
         DataType> &matrix) {
 
     stream << "Matrix[rows = " << Rows << ", cols = " << Cols << "\n";
@@ -320,7 +326,7 @@ std::ostream &operator<<(std::ostream &stream, const Matrix<Rows, Cols,
 
 }
 
-typedef Matrix<3, 1, double> Vector3d;
+typedef StaticMatrix<3, 1, double> StaticVector3d;
 
 }
 }

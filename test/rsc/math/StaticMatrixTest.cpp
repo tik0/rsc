@@ -20,19 +20,19 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include "rsc/math/Matrix.h"
+#include "rsc/math/StaticMatrix.h"
 
 using namespace std;
 using namespace testing;
 using namespace rsc;
 using namespace rsc::math;
 
-TEST(MatrixTest, testConstruction)
+TEST(StaticMatrixTest, testConstruction)
 {
 
     const unsigned int rows = 3;
     const unsigned int cols = 10;
-    Matrix<rows, cols> testMatrix;
+    StaticMatrix<rows, cols> testMatrix;
     for (unsigned int row = 0; row < rows; ++row) {
         for (unsigned int col; col < cols; ++col) {
             EXPECT_DOUBLE_EQ(0, testMatrix(row, col));
@@ -41,12 +41,12 @@ TEST(MatrixTest, testConstruction)
 
 }
 
-TEST(MatrixTest, testAssignment)
+TEST(StaticMatrixTest, testAssignment)
 {
 
     const unsigned int rows = 3;
     const unsigned int cols = 10;
-    Matrix<rows, cols> testMatrix;
+    StaticMatrix<rows, cols> testMatrix;
     const unsigned int changedRow = 2;
     const unsigned int changedCol = 6;
     const double newValue = 10.345;
@@ -63,36 +63,36 @@ TEST(MatrixTest, testAssignment)
 
 }
 
-TEST(MatrixTest, testIllegalAccess)
+TEST(StaticMatrixTest, testIllegalAccess)
 {
-    Matrix<1, 1> testMatrix;
+    StaticMatrix<1, 1> testMatrix;
     EXPECT_THROW(testMatrix(1, 0), std::domain_error);
     EXPECT_THROW(testMatrix(0, 1), std::domain_error);
     EXPECT_THROW(testMatrix(1, 1), std::domain_error);
     EXPECT_THROW(testMatrix(2, 1), std::domain_error);
 }
 
-TEST(MatrixTest, testConstAccess)
+TEST(StaticMatrixTest, testConstAccess)
 {
-    const Matrix<1, 1> testMatrix;
+    const StaticMatrix<1, 1> testMatrix;
     EXPECT_DOUBLE_EQ(0, testMatrix(0, 0));
 }
 
-TEST(MatrixTest, testMult)
+TEST(StaticMatrixTest, testMult)
 {
 
-    Matrix<1, 1> a;
+    StaticMatrix<1, 1> a;
     a(0, 0) = 2;
-    Matrix<1, 1> aSquare = a.mult(a);
+    StaticMatrix<1, 1> aSquare = a.mult(a);
     EXPECT_DOUBLE_EQ(4, aSquare(0, 0));
 
-    Matrix<2, 2> b;
+    StaticMatrix<2, 2> b;
     b(0, 0) = 2; // 2 3
     b(0, 1) = 3; // 4 5
     b(1, 0) = 4;
     b(1, 1) = 5;
 
-    Matrix<2, 4> c;
+    StaticMatrix<2, 4> c;
     c(0, 0) = 1; // 1 3 2 4
     c(0, 1) = 3; // 4 5 7 2
     c(0, 2) = 2;
@@ -102,7 +102,7 @@ TEST(MatrixTest, testMult)
     c(1, 2) = 7;
     c(1, 3) = 2;
 
-    Matrix<2, 4> res = b.mult(c);
+    StaticMatrix<2, 4> res = b.mult(c);
     EXPECT_DOUBLE_EQ(14, res(0, 0));
     EXPECT_DOUBLE_EQ(21, res(0, 1));
     EXPECT_DOUBLE_EQ(25, res(0, 2));
@@ -114,16 +114,16 @@ TEST(MatrixTest, testMult)
 
 }
 
-TEST(MatrixTest, testMultOperator)
+TEST(StaticMatrixTest, testMultOperator)
 {
 
-    Matrix<2, 2> b;
+    StaticMatrix<2, 2> b;
     b(0, 0) = 2; // 2 3
     b(0, 1) = 3; // 4 5
     b(1, 0) = 4;
     b(1, 1) = 5;
 
-    Matrix<2, 4> c;
+    StaticMatrix<2, 4> c;
     c(0, 0) = 1; // 1 3 2 4
     c(0, 1) = 3; // 4 5 7 2
     c(0, 2) = 2;
@@ -133,7 +133,7 @@ TEST(MatrixTest, testMultOperator)
     c(1, 2) = 7;
     c(1, 3) = 2;
 
-    Matrix<2, 4> res = b * c;
+    StaticMatrix<2, 4> res = b * c;
     EXPECT_DOUBLE_EQ(14, res(0, 0));
     EXPECT_DOUBLE_EQ(21, res(0, 1));
     EXPECT_DOUBLE_EQ(25, res(0, 2));
@@ -145,11 +145,11 @@ TEST(MatrixTest, testMultOperator)
 
 }
 
-TEST(MatrixTest, testComparisonOperator)
+TEST(StaticMatrixTest, testComparisonOperator)
 {
 
-    Matrix<2, 2> a;
-    Matrix<2, 2> b;
+    StaticMatrix<2, 2> a;
+    StaticMatrix<2, 2> b;
 
     EXPECT_EQ(a, b);
     EXPECT_EQ(b, a);
@@ -176,26 +176,26 @@ TEST(MatrixTest, testComparisonOperator)
 
 }
 
-TEST(MatrixTest, testDataTypeConversion)
+TEST(StaticMatrixTest, testDataTypeConversion)
 {
 
-    Matrix<2, 2> doubleMatrix;
-    Matrix<2, 2, float> floatMatrix;
+    StaticMatrix<2, 2> doubleMatrix;
+    StaticMatrix<2, 2, float> floatMatrix;
     EXPECT_EQ(doubleMatrix, floatMatrix);
 
-    Matrix<1, 1> start;
+    StaticMatrix<1, 1> start;
     start(0, 0) = 1.7;
 
-    Matrix<1, 1, int> stop = start;
+    StaticMatrix<1, 1, int> stop = start;
 
     EXPECT_EQ(1, stop(0, 0));
 
 }
 
-TEST(MatrixTest, testSet)
+TEST(StaticMatrixTest, testSet)
 {
 
-    Matrix<2, 2> m;
+    StaticMatrix<2, 2> m;
     const double value = 3.5;
     m.set(value);
 
@@ -206,10 +206,10 @@ TEST(MatrixTest, testSet)
 
 }
 
-TEST(MatrixTest, testScalarMult)
+TEST(StaticMatrixTest, testScalarMult)
 {
 
-    Matrix<2, 2> matrix;
+    StaticMatrix<2, 2> matrix;
     matrix.set(1.5);
     matrix.mult(2);
 
@@ -220,32 +220,32 @@ TEST(MatrixTest, testScalarMult)
 
 }
 
-TEST(MatrixTest, testScalarAdd)
+TEST(StaticMatrixTest, testScalarAdd)
 {
 
-    Matrix<2, 2, int> m;
+    StaticMatrix<2, 2, int> m;
     m.add(3);
-    Matrix<2, 2, int> expected;
+    StaticMatrix<2, 2, int> expected;
     expected.set(3);
     EXPECT_EQ(expected, m);
 
 }
 
-TEST(MatrixTest, testAdd)
+TEST(StaticMatrixTest, testAdd)
 {
 
-    Matrix<2, 2> a;
-    Matrix<2, 2> b;
+    StaticMatrix<2, 2> a;
+    StaticMatrix<2, 2> b;
     b.set(5);
     EXPECT_EQ(b, a.add(b));
     EXPECT_EQ(b, a);
 
 }
 
-TEST(MatrixTest, testSetDiagonal)
+TEST(StaticMatrixTest, testSetDiagonal)
 {
 
-    Matrix<3, 5> m1;
+    StaticMatrix<3, 5> m1;
     m1.setDiagonal(1.5);
     EXPECT_DOUBLE_EQ(1.5, m1(0, 0));
     EXPECT_DOUBLE_EQ(0, m1(0, 1));

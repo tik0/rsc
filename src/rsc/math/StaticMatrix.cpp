@@ -17,7 +17,7 @@
  *
  * ============================================================ */
 
-#include "Matrix.h"
+#include "StaticMatrix.h"
 
 namespace rsc {
 namespace math {

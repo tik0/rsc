@@ -30,7 +30,7 @@ namespace threading {
  * @author jwienke
  * @author swrede
  */
-class ThreadedTaskExecutor: public TaskExecutor {
+class RSC_EXPORT ThreadedTaskExecutor: public TaskExecutor {
 public:
 
     ThreadedTaskExecutor();

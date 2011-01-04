@@ -34,7 +34,7 @@ namespace threading {
  * @author swrede
  * @author jwienke
  */
-class PeriodicTask: public RepetitiveTask {
+class RSC_EXPORT PeriodicTask: public RepetitiveTask {
 public:
 
     /**

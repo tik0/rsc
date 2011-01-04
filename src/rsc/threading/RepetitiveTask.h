@@ -49,7 +49,7 @@ namespace threading {
  * @author swrede
  * @author jwienke
  */
-class RepetitiveTask: public Task {
+class RSC_EXPORT RepetitiveTask: public Task {
 public:
 
     RepetitiveTask();

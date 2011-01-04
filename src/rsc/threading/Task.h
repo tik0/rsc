@@ -22,6 +22,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include "../logging/Logger.h"
+#include "rsc/rscexports.h"
 
 namespace rsc {
 namespace threading {
@@ -34,7 +35,7 @@ namespace threading {
  * @author swrede
  * @author jwienke
  */
-class Task {
+class RSC_EXPORT Task {
 public:
 
     /**

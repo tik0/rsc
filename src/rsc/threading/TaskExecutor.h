@@ -23,6 +23,7 @@
 #include <boost/thread.hpp>
 
 #include "Task.h"
+#include "rsc/rscexports.h"
 
 namespace rsc {
 namespace threading {
@@ -33,7 +34,7 @@ namespace threading {
  * @author swrede
  * @author jwienke
  */
-class TaskExecutor {
+class RSC_EXPORT TaskExecutor {
 public:
 
     /**

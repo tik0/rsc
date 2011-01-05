@@ -23,7 +23,7 @@ OPTION(BUILD_EXAMPLES "Decide if the examples shall be built or not" ON)
 
 # --- global definitions ---
 
-SET(RSC_VERSION 0.1.0)
+SET(RSC_VERSION 0.2.0)
 SET(RSC_NAME "rsc")
 SET(RSC_TEST_NAME "rsctest")
 
@@ -79,7 +79,7 @@ IF(HAVE_UNISTD_H)
 ENDIF()
 
 # --- dependency handling ---
-SET(Boost_USE_VERSION 1.34.1 CACHE INTERNAL "Boost Version to use")
+SET(Boost_USE_VERSION 1.38 CACHE INTERNAL "Boost Version to use")
 SET(Boost_USE_MULTITHREADED ON)
 SET(Boost_USE_STATIC_LIBS OFF)
 ADD_DEFINITIONS(-DBOOST_ALL_DYN_LINK)

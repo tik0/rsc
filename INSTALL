@@ -10,7 +10,7 @@ make test
 make doc
 # opt. static code analysis
 make cppcheck
-make cppcheck-test
+make cppcheck-tests
 # install
 make install
 

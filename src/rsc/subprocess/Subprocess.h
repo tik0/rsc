@@ -48,7 +48,7 @@ typedef boost::shared_ptr<Subprocess> SubprocessPtr;
  *
  * @author jwienke
  */
-class RSC_EXPORT Subprocess: public boost::noncopyable {
+class RSC_EXPORT Subprocess: private boost::noncopyable {
 public:
     virtual ~Subprocess();
 

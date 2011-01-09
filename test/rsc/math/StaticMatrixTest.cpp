@@ -34,7 +34,7 @@ TEST(StaticMatrixTest, testConstruction)
     const unsigned int cols = 10;
     StaticMatrix<rows, cols> testMatrix;
     for (unsigned int row = 0; row < rows; ++row) {
-        for (unsigned int col; col < cols; ++col) {
+        for (unsigned int col = 0; col < cols; ++col) {
             EXPECT_DOUBLE_EQ(0, testMatrix(row, col));
         }
     }
@@ -52,7 +52,7 @@ TEST(StaticMatrixTest, testAssignment)
     const double newValue = 10.345;
     testMatrix(changedRow, changedCol) = newValue;
     for (unsigned int row = 0; row < rows; ++row) {
-        for (unsigned int col; col < cols; ++col) {
+        for (unsigned int col = 0; col < cols; ++col) {
             if (row == changedRow && col == changedCol) {
                 EXPECT_DOUBLE_EQ(newValue, testMatrix(row, col));
             } else {

@@ -24,4 +24,5 @@ INSTALL(FILES ExtractTBBVersion.cpp.in
               IgnoreReturnCode.cmake
               InstallFilesRecursive.cmake
               ParseArguments.cmake
+              PedanticCompilerWarnings.cmake
         DESTINATION ${CMAKE_MODULE_PATH})

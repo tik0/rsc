@@ -63,6 +63,7 @@ IF(HAVE_UNISTD_H)
 ENDIF()
 
 # --- dependency handling ---
+
 SET(Boost_USE_VERSION 1.38 CACHE INTERNAL "Boost Version to use")
 SET(Boost_USE_MULTITHREADED ON)
 SET(Boost_USE_STATIC_LIBS OFF)

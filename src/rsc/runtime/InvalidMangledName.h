@@ -23,8 +23,10 @@
 
 namespace rsc { namespace runtime {
 
-  /*! @brief This exception indicates the special case of an invalid
-   *  argument where an invalid mangled name was passed to a function.
+  /** @brief This exception indicates the special case of an invalid
+   * argument where an invalid mangled name was passed to a function.
+   *
+   * @author Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
    */
   class InvalidMangledName : public std::invalid_argument {
   public:

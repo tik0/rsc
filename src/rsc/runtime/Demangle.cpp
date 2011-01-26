@@ -22,6 +22,7 @@
 #include <boost/format.hpp>
 
 #include <cxxabi.h>
+#define CXX_ABI
 
 namespace rsc { namespace runtime {
 
@@ -30,7 +31,7 @@ namespace rsc { namespace runtime {
   std::string
   demangle(const char* mangled_symbol) throw (std::runtime_error,
 					      InvalidMangledName) {
-#ifdef 1
+#ifdef CXX_ABI
     // Try to demangle the symbol.
     int status;
     char* demangled_symbol_ = abi::__cxa_demangle(mangled_symbol, 0, 0, &status);

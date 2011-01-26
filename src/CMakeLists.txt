@@ -21,6 +21,7 @@ FILE(GLOB SOURCES
   "rsc/math/*.cpp"
   "rsc/misc/*.cpp"
   "rsc/runtime/*.cpp"
+  "rsc/patterns/*.cpp"
   "rsc/threading/*.cpp")
 SET(SOURCES ${SOURCES} rsc/subprocess/Subprocess.cpp)
 
@@ -29,6 +30,7 @@ FILE(GLOB HEADERS
   "rsc/math/*.h"
   "rsc/misc/*.h"
   "rsc/runtime/*.h"
+  "rsc/patterns/*.h"
   "rsc/threading/*.h")
 SET(HEADERS ${HEADERS} rsc/subprocess/Subprocess.h)
 

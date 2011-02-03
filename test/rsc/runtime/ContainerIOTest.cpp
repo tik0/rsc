@@ -34,7 +34,7 @@ using namespace boost;
 
 class ContainerIOTest : public ::testing::Test {
 public:
-  pair<double, string> pair(5.0, "a");
+  pair<double, string> pair;
   list<int>            list;
   vector<int>          vector;
   set<int>             set;
@@ -42,6 +42,9 @@ public:
 
   virtual void
   SetUp() {
+    this->pair.first  = 5.0;
+    this->pair.second = "a";
+
     this->list.clear();
     this->list.push_back(1);
     this->list.push_back(2);

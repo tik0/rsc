@@ -1,0 +1,10 @@
+FILE(GLOB EXAMPLE_SOURCES "*.cpp")
+
+FOREACH(EXAMPLE ${EXAMPLE_SOURCES})
+string(REGEX REPLACE ".*/\(.*\)\\.cpp$" "\\1" EXAMPLE_NAME ${EXAMPLE})
+add_executable(${EXAMPLE_NAME}
+  ${EXAMPLE})
+target_link_libraries(${EXAMPLE_NAME}
+  ${Boost_LIBRARIES}
+  ${RSC_NAME})
+ENDFOREACH(EXAMPLE)

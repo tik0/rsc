@@ -57,7 +57,7 @@ TEST_F(FactoryTest, testRegistration)
     factory.impls().register_("impl_2", &impl_2::create);
     factory.impls().register_("impl_failing_constructor",
             &impl_failing_constructor::create);
-    EXPECT_EQ(factory.impls().size(), 3);
+    EXPECT_EQ(factory.impls().size(), size_t(3));
 
     // Duplicates
     factory.impls().register_("duplicate", &impl_1::create);
@@ -66,7 +66,7 @@ TEST_F(FactoryTest, testRegistration)
 
     // Ordinary Unregistration
     factory.impls().unregister("impl_1");
-    EXPECT_EQ(factory.impls().size(), 3);
+    EXPECT_EQ(factory.impls().size(), size_t(3));
 
     // Invalid Unregistration
     EXPECT_THROW(factory.impls().unregister("impl_1"),

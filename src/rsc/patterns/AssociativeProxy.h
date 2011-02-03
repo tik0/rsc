@@ -163,26 +163,24 @@ AssociativeProxy<Container, pass_through>::AssociativeProxy(
     base(container) {
 }
 
-template<typename Container>
-typename detail::force_const<typename Container::mapped_type>::type&
-AssociativeProxy<Container, pass_through>::operator[](const key_type& key) const
-        throw (NoSuchKey) {
+template <typename Container>
+typename detail::force_const< typename AssociativeProxy<Container, pass_through>::mapped_type >::type&
+AssociativeProxy<Container, pass_through>::operator[](const key_type& key) const throw (NoSuchKey) {
     typename Container::const_iterator it;
     if ((it = base_type::container.find(key)) == base_type::container.end())
         throw no_such_key(type_string("no such key in container: `%1%'",
-                "no such key in container", key));
+				      "no such key in container", key));
 
     return it->second;
 }
 
-template<typename Container>
-typename Container::mapped_type&
-AssociativeProxy<Container, pass_through>::operator[](const key_type& key)
-        throw (NoSuchKey) {
+template <typename Container>
+typename AssociativeProxy<Container, pass_through>::mapped_type&
+AssociativeProxy<Container, pass_through>::operator[](const key_type& key) throw (NoSuchKey) {
     typename Container::iterator it;
     if ((it = base_type::container.find(key)) == base_type::container.end())
         throw no_such_key(type_string("no such key in container: `%1%'",
-                "no such key in container", key));
+				      "no such key in container", key));
 
     return it->second;
 }

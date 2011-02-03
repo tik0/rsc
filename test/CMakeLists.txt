@@ -15,6 +15,7 @@ FILE(GLOB TEST_SOURCES
      "rsc/math/*.cpp"
      "rsc/misc/*.cpp"
      "rsc/threading/*.cpp"
+     "rsc/runtime/*.cpp"
      "rsc/patterns/*.cpp")
 SET(TEST_SOURCES ${TEST_SOURCES} "rsc/RscTestSuite.cpp")
 

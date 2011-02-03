@@ -59,12 +59,12 @@ TEST_F(ObservableFactoryTest, testSignals) {
 					     ref(removed), _1));
 
   factory.impls().unregister("impl_1");
-  EXPECT_EQ(added.size(), 0);
-  EXPECT_EQ(removed.size(), 1);
+  EXPECT_EQ(added.size(), size_t(0));
+  EXPECT_EQ(removed.size(), size_t(1));
   EXPECT_EQ(removed.back(), "impl_1");
 
   factory.impls().register_("impl_1", &impl_1::create);
-  EXPECT_EQ(added.size(), 1);
+  EXPECT_EQ(added.size(), size_t(1));
   EXPECT_EQ(added.back(), "impl_1");
-  EXPECT_EQ(removed.size(), 1);
+  EXPECT_EQ(removed.size(), size_t(1));
 }

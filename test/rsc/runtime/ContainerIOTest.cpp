@@ -27,6 +27,8 @@
 
 #include <gtest/gtest.h>
 
+#include <rsc/runtime/ContainerIO.h>
+
 using namespace std;
 using namespace boost;
 using namespace rsc::runtime;

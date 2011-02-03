@@ -22,6 +22,8 @@
 
 #include <gtest/gtest.h>
 
+#include <rsc/runtime/Demangle.h>
+
 using namespace std;
 using namespace rsc::runtime;
 

@@ -28,11 +28,9 @@
 #include <gtest/gtest.h>
 
 using namespace std;
+using namespace boost;
 using namespace rsc::runtime;
 
-/*! \brief
- *
- */
 class ContainerIOTest : public ::testing::Test {
 public:
   pair<double, string> pair(5.0, "a");

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <boost/type_traits/add_const.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/noncopyable.hpp>
 
@@ -8,6 +7,7 @@
 #include "rsc/patterns/NoSuchKey.h"
 #include "rsc/patterns/ContainerProxy.h"
 #include "rsc/patterns/Accessors.h"
+#include "rsc/patterns/detail/ForceConst.h"
 #include "rsc/patterns/detail/PairWorkaround.h"
 
 namespace rsc { namespace patterns {
@@ -59,7 +59,7 @@ namespace rsc { namespace patterns {
 
     AssociativeProxy(Container& container);
 
-    typename boost::add_const<typename Accessor::result_type>::type
+    typename detail::force_const<typename Accessor::result_type>::type
     operator[](const key_type& key) const throw (NoSuchKey);
 
     typename Accessor::result_type
@@ -78,8 +78,8 @@ namespace rsc { namespace patterns {
 
   template <typename Container>
   class AssociativeProxy<Container,
-			  pass_through> : public ContainerProxy<Container,
-								 pass_through> {
+			 pass_through> : public ContainerProxy<Container,
+							       pass_through> {
   public:
     typedef typename Container::key_type    key_type;
     typedef typename Container::mapped_type mapped_type;
@@ -90,7 +90,7 @@ namespace rsc { namespace patterns {
 
     AssociativeProxy(Container& container);
 
-    const mapped_type&
+    typename detail::force_const<mapped_type>::type&
     operator[](const key_type& key) const throw (NoSuchKey);
 
     mapped_type&
@@ -116,7 +116,7 @@ namespace rsc { namespace patterns {
 
   template <typename Container,
 	    typename Accessor>
-  typename boost::add_const<typename Accessor::result_type>::type
+  typename detail::force_const<typename Accessor::result_type>::type
   AssociativeProxy<Container,
 		   Accessor>::operator[](const key_type& key) const throw (NoSuchKey) {
     typename Container::const_iterator it;
@@ -132,8 +132,7 @@ namespace rsc { namespace patterns {
   template <typename Container,
 	    typename Accessor>
   typename Accessor::result_type
-  AssociativeProxy<Container,
-		   Accessor>::operator[](const key_type& key) throw (NoSuchKey) {
+  AssociativeProxy<Container, Accessor>::operator[](const key_type& key) throw (NoSuchKey) {
     typename Container::iterator it;
     if ((it = base_type::container.find(key))
 	== base_type::container.end())
@@ -146,10 +145,8 @@ namespace rsc { namespace patterns {
 
   template <typename Container,
 	    typename Accessor>
-  typename AssociativeProxy<Container,
-			     Accessor>::base_type::const_iterator
-  AssociativeProxy<Container,
-		   Accessor>::find(const key_type& key) const throw () {
+  typename AssociativeProxy<Container, Accessor>::base_type::const_iterator
+  AssociativeProxy<Container, Accessor>::find(const key_type& key) const throw () {
     return
       typename base_type::const_iterator(base_type::container.find(key),
 					 base_type::accessor);
@@ -157,27 +154,23 @@ namespace rsc { namespace patterns {
 
   template <typename Container,
 	    typename Accessor>
-  typename AssociativeProxy<Container,
-			     Accessor>::base_type::iterator
-  AssociativeProxy<Container,
-		   Accessor>::find(const key_type& key) throw () {
+  typename AssociativeProxy<Container, Accessor>::base_type::iterator
+  AssociativeProxy<Container, Accessor>::find(const key_type& key) throw () {
     return typename base_type::iterator(base_type::container.find(key),
 					base_type::accessor);
   }
 
-  //
+
   // AssociativeProxy<Container, pass_through> implementation
-  //
+
   template <typename Container>
-  AssociativeProxy<Container,
-		    pass_through>::AssociativeProxy(Container& container)
+  AssociativeProxy<Container, pass_through>::AssociativeProxy(Container& container)
     : base(container) {
   }
 
   template <typename Container>
-  const typename Container::mapped_type&
-  AssociativeProxy<Container,
-		   pass_through>::operator[](const key_type& key) const throw (NoSuchKey) {
+  typename detail::force_const<typename Container::mapped_type>::type&
+  AssociativeProxy<Container, pass_through>::operator[](const key_type& key) const throw (NoSuchKey) {
     typename Container::const_iterator it;
     if ((it = base_type::container.find(key))
 	== base_type::container.end())
@@ -190,8 +183,7 @@ namespace rsc { namespace patterns {
 
   template <typename Container>
   typename Container::mapped_type&
-  AssociativeProxy<Container,
-		   pass_through>::operator[](const key_type& key) throw (NoSuchKey) {
+  AssociativeProxy<Container, pass_through>::operator[](const key_type& key) throw (NoSuchKey) {
     typename Container::iterator it;
     if ((it = base_type::container.find(key))
 	== base_type::container.end())
@@ -203,18 +195,14 @@ namespace rsc { namespace patterns {
   }
 
   template <typename Container>
-  typename ContainerProxy<Container,
-			   pass_through>::const_iterator
-  AssociativeProxy<Container,
-		   pass_through>::find(const key_type& key) const throw () {
+  typename ContainerProxy<Container, pass_through>::const_iterator
+  AssociativeProxy<Container, pass_through>::find(const key_type& key) const throw () {
     return base_type::container.find(key);
   }
 
   template <typename Container>
-  typename ContainerProxy<Container,
-			   pass_through>::iterator
-  AssociativeProxy<Container,
-		   pass_through>::find(const key_type& key) throw () {
+  typename ContainerProxy<Container, pass_through>::iterator
+  AssociativeProxy<Container, pass_through>::find(const key_type& key) throw () {
     return base::container.find(key);
   }
 

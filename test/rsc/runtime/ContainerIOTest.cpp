@@ -70,7 +70,7 @@ public:
   }
 };
 
-TEST(ContainerIOTest, testOutput) {
+TEST_F(ContainerIOTest, testOutput) {
   EXPECT_EQ(lexical_cast<std::string>(this->list_),
 	    "[1, 2, 3, 4]");
 }

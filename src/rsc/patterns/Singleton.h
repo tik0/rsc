@@ -22,21 +22,22 @@
 #include <boost/noncopyable.hpp>
 #include <boost/shared_ptr.hpp>
 
-namespace rsc { namespace patterns {
+namespace rsc {
+namespace patterns {
 
-  /** @brief This template class implements the singleton pattern.
-   *
-   * To add singleton behavior to a class @c C, add @c Singleton<C> to
-   * its list of base classes.
-   *
-   * @note C has to contain a friend declaration for @c Singleton<C>.
-   * @note This singleton implementation is not thread-safe.
-   *
-   * @author Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
-   */
-  template <typename T>
-  class Singleton : private boost::noncopyable {
-  public:
+/** @brief This template class implements the singleton pattern.
+ *
+ * To add singleton behavior to a class @c C, add @c Singleton<C> to
+ * its list of base classes.
+ *
+ * @note C has to contain a friend declaration for @c Singleton<C>.
+ * @note This singleton implementation is not thread-safe.
+ *
+ * @author Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
+ */
+template<typename T>
+class Singleton: private boost::noncopyable {
+public:
     /** @brief Retrieve the singleton instance, creating it if
      * necessary.
      *
@@ -56,40 +57,40 @@ namespace rsc { namespace patterns {
      */
     static void
     killInstance();
-  private:
+private:
     static boost::shared_ptr<T>&
     getStorage();
-  };
+};
 
-  // Singleton implementation
+// Singleton implementation
 
-  template <typename T>
-  T&
-  Singleton<T>::getInstance() {
+template<typename T>
+T&
+Singleton<T>::getInstance() {
     boost::shared_ptr<T>& instance = getStorage();
 
     if (!instance)
-      instance = boost::shared_ptr<T>(new T());
+        instance = boost::shared_ptr<T>(new T());
 
     return *instance;
-  }
+}
 
-  template <typename T>
-  void
-  Singleton<T>::killInstance() {
+template<typename T>
+void Singleton<T>::killInstance() {
     boost::shared_ptr<T>& instance = getStorage();
 
     if (instance)
-      instance.reset();
-  }
+        instance.reset();
+}
 
-  template <typename T>
-  boost::shared_ptr<T>&
-  Singleton<T>::getStorage() {
-    static boost::shared_ptr<T> instance
-      = boost::shared_ptr<T>(reinterpret_cast<T*>(0));
+template<typename T>
+boost::shared_ptr<T>&
+Singleton<T>::getStorage() {
+    static boost::shared_ptr<T> instance = boost::shared_ptr<T>(
+            reinterpret_cast<T*> (0));
 
     return instance;
-  }
+}
 
-} }
+}
+}

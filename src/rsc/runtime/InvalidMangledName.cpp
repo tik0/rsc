@@ -19,12 +19,14 @@
 
 #include "InvalidMangledName.h"
 
-namespace rsc { namespace runtime {
+namespace rsc {
+namespace runtime {
 
-  // InvalidMangledName implementation
+// InvalidMangledName implementation
 
-  InvalidMangledName::InvalidMangledName(const std::string& message)
-    : std::invalid_argument(message) {
-  }
+InvalidMangledName::InvalidMangledName(const std::string& message) :
+    std::invalid_argument(message) {
+}
 
-} }
+}
+}

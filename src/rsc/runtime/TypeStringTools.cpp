@@ -21,11 +21,12 @@
 
 #include <boost/format.hpp>
 
-namespace rsc { namespace runtime {
+namespace rsc {
+namespace runtime {
 
-  std::string
-  type_name(const std::type_info& type) throw (std::runtime_error) {
+std::string type_name(const std::type_info& type) throw (std::runtime_error) {
     return demangle(type.name());
-  }
+}
 
-} }
+}
+}

@@ -19,12 +19,14 @@
 
 #include "NoSuchObject.h"
 
-namespace rsc { namespace runtime {
+namespace rsc {
+namespace runtime {
 
-  // NoSuchObject implementation
+// NoSuchObject implementation
 
-  NoSuchObject::NoSuchObject(const std::string& object)
-    : std::runtime_error(object) {
-  }
+NoSuchObject::NoSuchObject(const std::string& object) :
+    std::runtime_error(object) {
+}
 
-} }
+}
+}

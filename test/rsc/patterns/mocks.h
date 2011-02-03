@@ -21,43 +21,43 @@
 #include <string>
 
 struct interface {
-  virtual ~interface() {};
+    virtual ~interface() {
+    }
+    ;
 };
 
-struct impl_1 : interface {
-  std::string string_member;
-  float	      float_member;
+struct impl_1: interface {
+    std::string string_member;
+    float float_member;
 
-  impl_1(const std::string& string_param,
-	 float              float_param)
-   : string_member(string_param),
-     float_member(float_param) {
-  }
+    impl_1(const std::string& string_param, float float_param) :
+        string_member(string_param), float_member(float_param) {
+    }
 
-  static interface*
-  create(const rsc::runtime::Properties& props) {
-    return new impl_1(props.get<std::string>("string_param"),
-		      props.get<float>      ("float_param"));
-  }
+    static interface*
+    create(const rsc::runtime::Properties& props) {
+        return new impl_1(props.get<std::string> ("string_param"), props.get<
+                float> ("float_param"));
+    }
 };
 
-struct impl_2 : interface {
-  impl_2() {
-  }
+struct impl_2: interface {
+    impl_2() {
+    }
 
-  static interface*
-  create(const rsc::runtime::Properties&) {
-    return new impl_2();
-  }
+    static interface*
+    create(const rsc::runtime::Properties&) {
+        return new impl_2();
+    }
 };
 
-struct impl_failing_constructor : interface {
-  impl_failing_constructor() {
-    throw std::runtime_error("intentionally failing constructor");
-  }
+struct impl_failing_constructor: interface {
+    impl_failing_constructor() {
+        throw std::runtime_error("intentionally failing constructor");
+    }
 
-  static interface*
-  create(const rsc::runtime::Properties&) {
-    return new impl_failing_constructor();
-  }
+    static interface*
+    create(const rsc::runtime::Properties&) {
+        return new impl_failing_constructor();
+    }
 };

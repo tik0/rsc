@@ -36,35 +36,35 @@ using namespace rsc::patterns;
 
 typedef ObservableFactory<string, interface> test_factory;
 
-class ObservableFactoryTest : public ::testing::Test {
+class ObservableFactoryTest: public ::testing::Test {
 protected:
-  test_factory factory;
+    test_factory factory;
 
-  virtual void
-  SetUp() {
-    this->factory.impls().register_("impl_1",  &impl_1::create);
-    this->factory.impls().register_("impl_2",  &impl_2::create);
-    this->factory.impls().register_("impl_failing_constructor",
-				    &impl_failing_constructor::create);
-  }
+    virtual void SetUp() {
+        this->factory.impls().register_("impl_1", &impl_1::create);
+        this->factory.impls().register_("impl_2", &impl_2::create);
+        this->factory.impls().register_("impl_failing_constructor",
+                &impl_failing_constructor::create);
+    }
 };
 
-TEST_F(ObservableFactoryTest, testSignals) {
-  vector<string> added;
-  vector<string> removed;
+TEST_F(ObservableFactoryTest, testSignals)
+{
+    vector<string> added;
+    vector<string> removed;
 
-  factory.signal_impl_added().connect(bind(&vector<string>::push_back,
-					   ref(added), _1));
-  factory.signal_impl_removed().connect(bind(&vector<string>::push_back,
-					     ref(removed), _1));
+    factory.signal_impl_added().connect(bind(&vector<string>::push_back, ref(
+            added), _1));
+    factory.signal_impl_removed().connect(bind(&vector<string>::push_back, ref(
+            removed), _1));
 
-  factory.impls().unregister("impl_1");
-  EXPECT_EQ(added.size(), size_t(0));
-  EXPECT_EQ(removed.size(), size_t(1));
-  EXPECT_EQ(removed.back(), "impl_1");
+    factory.impls().unregister("impl_1");
+    EXPECT_EQ(added.size(), size_t(0));
+    EXPECT_EQ(removed.size(), size_t(1));
+    EXPECT_EQ(removed.back(), "impl_1");
 
-  factory.impls().register_("impl_1", &impl_1::create);
-  EXPECT_EQ(added.size(), size_t(1));
-  EXPECT_EQ(added.back(), "impl_1");
-  EXPECT_EQ(removed.size(), size_t(1));
+    factory.impls().register_("impl_1", &impl_1::create);
+    EXPECT_EQ(added.size(), size_t(1));
+    EXPECT_EQ(added.back(), "impl_1");
+    EXPECT_EQ(removed.size(), size_t(1));
 }

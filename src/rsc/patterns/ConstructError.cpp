@@ -19,12 +19,14 @@
 
 #include "ConstructError.h"
 
-namespace rsc { namespace patterns {
+namespace rsc {
+namespace patterns {
 
-  // ConstructError implementation
+// ConstructError implementation
 
-  ConstructError::ConstructError(const std::string& message)
-    : std::runtime_error(message) {
-  }
+ConstructError::ConstructError(const std::string& message) :
+    std::runtime_error(message) {
+}
 
-} }
+}
+}

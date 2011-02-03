@@ -27,9 +27,10 @@
 using namespace std;
 using namespace rsc::runtime;
 
-TEST(DemangleTest, testDemangle) {
-  EXPECT_EQ(demangle(typeid(bool).name()),             "bool");
-  EXPECT_EQ(demangle(typeid(int).name()),              "int");
-  EXPECT_EQ(demangle(typeid(std::string).name()),      "std::string");
-  EXPECT_EQ(demangle(typeid(std::vector<int>).name()), "std::vector<int, std::allocator<int> >");
+TEST(DemangleTest, testDemangle)
+{
+    EXPECT_EQ(demangle(typeid(bool).name()), "bool");
+    EXPECT_EQ(demangle(typeid(int).name()), "int");
+    EXPECT_EQ(demangle(typeid(std::string).name()), "std::string");
+    EXPECT_EQ(demangle(typeid(std::vector<int>).name()), "std::vector<int, std::allocator<int> >");
 }

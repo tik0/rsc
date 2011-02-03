@@ -21,11 +21,13 @@
 
 using namespace std;
 
-namespace rsc { namespace patterns {
+namespace rsc {
+namespace patterns {
 
-  // NoSuchImpl implementation
-  NoSuchImpl::NoSuchImpl(const std::string& message)
-    : NoSuchObject(message) {
-  }
+// NoSuchImpl implementation
+NoSuchImpl::NoSuchImpl(const std::string& message) :
+    NoSuchObject(message) {
+}
 
-} }
+}
+}

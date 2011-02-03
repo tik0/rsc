@@ -21,31 +21,26 @@
 
 namespace std {
 
-  namespace detail {
+namespace detail {
 
-    void
-    pair_style_delete(ios_base::event event_,
-		      ios_base&       stream,
-		      int             index) {
-      if (event_ == ios_base::erase_event
-	  && stream.pword(pair_style::stream_storage))
-	delete reinterpret_cast<pair_style*>
-	  (stream.pword(pair_style::stream_storage));
-    }
+void pair_style_delete(ios_base::event event_, ios_base& stream, int index) {
+    if (event_ == ios_base::erase_event && stream.pword(
+            pair_style::stream_storage))
+        delete reinterpret_cast<pair_style*> (stream.pword(
+                pair_style::stream_storage));
+}
 
-    pair_style::pair_style(const string& open_brace,
-			   const string& separator,
-			   const string& close_brace)
-      : open_brace(open_brace), separator(separator), close_brace(close_brace) {
-    }
+pair_style::pair_style(const string& open_brace, const string& separator,
+        const string& close_brace) :
+    open_brace(open_brace), separator(separator), close_brace(close_brace) {
+}
 
-    const int pair_style::stream_storage = ios_base::xalloc();
+const int pair_style::stream_storage = ios_base::xalloc();
 
-  }
+}
 
-  const detail::set_pair_style<detail::pair_style> pair_default;
-  const detail::set_pair_style<detail::pair_style> pair_whitespace = {
-    detail::pair_style("", " ", "")
-  };
+const detail::set_pair_style<detail::pair_style> pair_default;
+const detail::set_pair_style<detail::pair_style> pair_whitespace = {
+        detail::pair_style("", " ", "") };
 
 }

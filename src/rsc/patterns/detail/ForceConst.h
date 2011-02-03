@@ -41,19 +41,20 @@
 #include <boost/type_traits/add_const.hpp>
 #include <boost/type_traits/reference_traits.hpp>
 
-namespace rsc { namespace patterns {
+namespace rsc {
+namespace patterns {
 
-  namespace detail {
+namespace detail {
 
-    template <typename T>
-    struct force_const {
-      typedef typename boost::mpl::if_<typename boost::is_reference<T>::type,
-				       typename boost::add_reference<
-	                                  typename boost::add_const<
-                                             typename boost::remove_reference<T>::type >::type >::type,
-				       typename boost::add_const<T>::type >::type type;
-    };
+template<typename T>
+struct force_const {
+    typedef typename boost::mpl::if_<typename boost::is_reference<T>::type,
+            typename boost::add_reference<typename boost::add_const<
+                    typename boost::remove_reference<T>::type>::type>::type,
+            typename boost::add_const<T>::type>::type type;
+};
 
-  }
+}
 
-} }
+}
+}

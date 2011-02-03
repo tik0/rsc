@@ -19,12 +19,14 @@
 
 #include "NoSuchKey.h"
 
-namespace rsc { namespace patterns {
+namespace rsc {
+namespace patterns {
 
-  // NoSuchKey implementation
+// NoSuchKey implementation
 
-  NoSuchKey::NoSuchKey(const std::string& message)
-    : runtime::NoSuchObject(message) {
-  }
+NoSuchKey::NoSuchKey(const std::string& message) :
+    runtime::NoSuchObject(message) {
+}
 
-} }
+}
+}

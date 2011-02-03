@@ -24,41 +24,43 @@
 #include <cxxabi.h>
 #define CXX_ABI
 
-namespace rsc { namespace runtime {
+namespace rsc {
+namespace runtime {
 
-  // free function implementations
+// free function implementations
 
-  std::string
-  demangle(const char* mangled_symbol) throw (std::runtime_error,
-					      InvalidMangledName) {
+std::string demangle(const char* mangled_symbol) throw (std::runtime_error,
+        InvalidMangledName) {
 #ifdef CXX_ABI
     // Try to demangle the symbol.
     int status;
-    char* demangled_symbol_ = abi::__cxa_demangle(mangled_symbol, 0, 0, &status);
+    char* demangled_symbol_ =
+            abi::__cxa_demangle(mangled_symbol, 0, 0, &status);
 
     // Check whether demangling worked.
     if (status == -1)
-      throw std::runtime_error("out of memory when allocating buffer for demangling");
+        throw std::runtime_error(
+                "out of memory when allocating buffer for demangling");
 
     if (status == -2 || status == -3)
-      throw InvalidMangledName(boost::str(boost::format("invalid mangled name: `%1%'")
-					  % mangled_symbol)); // TODO is buffer allocated or not?
+        throw InvalidMangledName(boost::str(boost::format(
+                "invalid mangled name: `%1%'") % mangled_symbol)); // TODO is buffer allocated or not?
 
     // Convert result to string and free temporary buffer.
     std::string demangled_symbol(demangled_symbol_);
     free(demangled_symbol_);
 #else
     std::string demangled_symbol(boost::str(boost::format("<cannot demangle %1%>")
-					    % mangled_symbol));
+                    % mangled_symbol));
 #endif
 
     return demangled_symbol;
-  }
+}
 
-  std::string
-  demangle(const std::string& mangled_symbol) throw (std::runtime_error,
-						     InvalidMangledName) {
+std::string demangle(const std::string& mangled_symbol)
+        throw (std::runtime_error, InvalidMangledName) {
     return demangle(mangled_symbol.c_str());
-  }
+}
 
-} }
+}
+}

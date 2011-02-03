@@ -31,7 +31,6 @@
 
 using namespace std;
 using namespace boost;
-using namespace rsc::runtime;
 
 class ContainerIOTest : public ::testing::Test {
 public:

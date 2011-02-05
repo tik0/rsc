@@ -22,25 +22,23 @@
 #include <rsc/runtime/TypeStringTools.h>
 
 struct my_base {
-  virtual void
-  f() = 0;
+    virtual void
+    f() = 0;
 };
 
-struct my_derived : my_base {
-  void
-  f() {
-  }
+struct my_derived: my_base {
+    void f() {
+    }
 };
 
-int
-main(int, char*[]) {
-  std::cout << rsc::runtime::type_name<int>() << std::endl;
+int main(int, char*[]) {
+    std::cout << rsc::runtime::type_name<int>() << std::endl;
 
-  int i = 1;
-  std::cout << rsc::runtime::type_name(i) << std::endl;
+    int i = 1;
+    std::cout << rsc::runtime::type_name(i) << std::endl;
 
-  my_base* base = new my_derived();
-  std::cout << rsc::runtime::type_name(*base) << std::endl;
+    my_base* base = new my_derived();
+    std::cout << rsc::runtime::type_name(*base) << std::endl;
 
-  return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }

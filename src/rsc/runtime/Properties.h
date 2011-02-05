@@ -58,15 +58,20 @@ public:
     bool
     has(const std::string& name) const throw (); // TODO check type
 
+    /**
+     * @throw NoSuchObject
+     * @throw boost::bad_any_cast
+     */
     template<typename T>
     T
-    get(const std::string& name) const throw (NoSuchObject,
-            boost::bad_any_cast);
+    get(const std::string& name) const;
 
+    /**
+     * @throw boost::bad_any_cast
+     */
     template<typename T>
     T
-    get(const std::string& name, const T& default_) const
-            throw (boost::bad_any_cast);
+    get(const std::string& name, const T& default_) const;
 
     template<typename Target, typename T>
     bool
@@ -88,8 +93,7 @@ operator<<(std::basic_ostream<Ch, Tr>& stream, const Properties& properties);
 // Properties implementation
 
 template<typename T>
-T Properties::get(const std::string& name) const throw (NoSuchObject,
-        boost::bad_any_cast) {
+T Properties::get(const std::string& name) const {
     const_iterator it;
     if ((it = find(name)) == end())
         throw NoSuchObject(
@@ -108,8 +112,7 @@ T Properties::get(const std::string& name) const throw (NoSuchObject,
 }
 
 template<typename T>
-T Properties::get(const std::string& name, const T& default_) const
-        throw (boost::bad_any_cast) {
+T Properties::get(const std::string& name, const T& default_) const {
     const_iterator it;
     if ((it = find(name)) == end())
         return default_;

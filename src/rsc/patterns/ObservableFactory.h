@@ -62,12 +62,15 @@ protected:
     impl_added_signal signal_impl_added_;
     impl_removed_signal signal_impl_removed_;
 
-    void
-    register_(const Key& key, const create_function& create_function_)
-            throw (std::invalid_argument);
+    /**
+     * @throw std::invalid_argument
+     */
+    void register_(const Key& key, const create_function& create_function_);
 
-    void
-    unregister(const Key& key) throw (NoSuchImpl);
+    /**
+     * @throw NoSuchImpl
+     */
+    void unregister(const Key& key);
 };
 
 /**
@@ -97,7 +100,7 @@ ObservableFactory<Key, Interface>::signal_impl_removed() throw () {
 
 template<typename Key, typename Interface>
 void ObservableFactory<Key, Interface>::register_(const Key& key,
-        const create_function& create_function_) throw (std::invalid_argument) {
+        const create_function& create_function_) {
     base::register_(key, create_function_);
 
     //
@@ -106,8 +109,7 @@ void ObservableFactory<Key, Interface>::register_(const Key& key,
 }
 
 template<typename Key, typename Interface>
-void ObservableFactory<Key, Interface>::unregister(const Key& key)
-        throw (NoSuchImpl) {
+void ObservableFactory<Key, Interface>::unregister(const Key& key) {
     //
     if (!this->signal_impl_removed_.empty()) {
         typename impl_map::iterator it;

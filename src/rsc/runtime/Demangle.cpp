@@ -28,8 +28,7 @@
 namespace rsc {
 namespace runtime {
 
-std::string demangle(const char *mangledSymbol) throw (std::runtime_error,
-        InvalidMangledName) {
+std::string demangle(const char *mangledSymbol) {
 
     // Try to demangle the symbol.
     int status;
@@ -61,8 +60,7 @@ std::string demangle(const char *mangledSymbol) throw (std::runtime_error,
 namespace rsc {
     namespace runtime {
 
-        std::string demangle(const char *mangled_symbol) throw (std::runtime_error,
-                InvalidMangledName) {
+        std::string demangle(const char *mangled_symbol) {
             std::string demangled_symbol(boost::str(boost::format(
                                     "<cannot demangle %1%>") % mangled_symbol));
         }
@@ -75,8 +73,7 @@ namespace rsc {
 namespace rsc {
 namespace runtime {
 
-std::string demangle(const std::string &mangled_symbol)
-        throw (std::runtime_error, InvalidMangledName) {
+std::string demangle(const std::string &mangled_symbol) {
     return demangle(mangled_symbol.c_str());
 }
 

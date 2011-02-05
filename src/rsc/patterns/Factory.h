@@ -107,7 +107,7 @@ public:
      */
     virtual type_and_storage
     create_base(const Key& key, const runtime::Properties& properties_ =
-            runtime::Properties()) throw (NoSuchImpl, ConstructError) = 0;
+            runtime::Properties()) = 0;
 };
 
 /**
@@ -146,12 +146,16 @@ public:
     class impl_map_proxy: public AssociativeProxy<impl_map> {
         friend class Factory<Key, Interface> ;
     public:
-        void
-        register_(const key_type& key, const create_function& create_function_)
-                throw (std::invalid_argument);
+        /**
+         * @throw std::invalid_argument
+         */
+        void register_(const key_type& key,
+                const create_function& create_function_);
 
-        void
-        unregister(const key_type& key) throw (NoSuchImpl);
+        /**
+         * @throw NoSuchImpl
+         */
+        void unregister(const key_type& key);
     private:
         typedef AssociativeProxy<impl_map> base_type;
 
@@ -185,9 +189,13 @@ public:
     const impl_map_proxy&
     impls() const throw ();
 
+    /**
+     * @throw NoSuchImpl
+     * @throw ConstructError
+     */
     typename FactoryBase<Key>::type_and_storage // TODO we should inherit that
     create_base(const Key& key, const runtime::Properties& properties_ =
-            runtime::Properties()) throw (NoSuchImpl, ConstructError);
+            runtime::Properties());
 
     /**
      * Create and return an instance of the implementation designated by @a key.
@@ -204,7 +212,7 @@ public:
      */
     Interface*
     create_inst(const Key& key, const runtime::Properties& properties_ =
-            runtime::Properties()) throw (NoSuchImpl, ConstructError);
+            runtime::Properties());
 protected:
     impl_map_base impl_map_base_;
     impl_map_base_proxy impl_map_base_proxy_;
@@ -212,12 +220,16 @@ protected:
     impl_map impl_map_;
     impl_map_proxy impl_map_proxy_;
 
-    virtual void
-    register_(const Key& key, const create_function& create_function_)
-            throw (std::invalid_argument);
+    /**
+     * @throw std::invalid_
+     */
+    virtual void register_(const Key& key,
+            const create_function& create_function_);
 
-    virtual void
-    unregister(const Key& key) throw (NoSuchImpl);
+    /**
+     * @throw NoSuchImpl
+     */
+    virtual void unregister(const Key& key);
 };
 
 /**
@@ -241,13 +253,12 @@ Factory<Key, Interface>::impl_map_proxy::impl_map_proxy(
 
 template<typename Key, typename Interface>
 void Factory<Key, Interface>::impl_map_proxy::register_(const key_type& key,
-        const create_function& create_function_) throw (std::invalid_argument) {
+        const create_function& create_function_) {
     this->owner.register_(key, create_function_);
 }
 
 template<typename Key, typename Interface>
-void Factory<Key, Interface>::impl_map_proxy::unregister(const key_type& key)
-        throw (NoSuchImpl) {
+void Factory<Key, Interface>::impl_map_proxy::unregister(const key_type& key) {
     this->owner.unregister(key);
 }
 
@@ -288,7 +299,7 @@ Factory<Key, Interface>::impls() const throw () {
 
 template<typename Key, typename Interface>
 void Factory<Key, Interface>::register_(const Key& key,
-        const create_function& create_function_) throw (std::invalid_argument) {
+        const create_function& create_function_) {
     //
     if (this->impl_map_.find(key) != this->impl_map_.end())
         throw std::invalid_argument(runtime::type_string("duplicate key `%1%'",
@@ -300,7 +311,7 @@ void Factory<Key, Interface>::register_(const Key& key,
 }
 
 template<typename Key, typename Interface>
-void Factory<Key, Interface>::unregister(const Key& key) throw (NoSuchImpl) {
+void Factory<Key, Interface>::unregister(const Key& key) {
     //
     typename impl_map::iterator it;
     if ((it = this->impl_map_.find(key)) == this->impl_map_.end()) {
@@ -316,8 +327,7 @@ void Factory<Key, Interface>::unregister(const Key& key) throw (NoSuchImpl) {
 
 template<typename Key, typename Interface>
 typename FactoryBase<Key>::type_and_storage Factory<Key, Interface>::create_base(
-        const Key& key, const runtime::Properties& properties_)
-        throw (NoSuchImpl, ConstructError) {
+        const Key& key, const runtime::Properties& properties_) {
     Interface* instance = create_inst(key, properties_);
 
     return std::make_pair(&typeid(*instance), instance);
@@ -326,8 +336,7 @@ typename FactoryBase<Key>::type_and_storage Factory<Key, Interface>::create_base
 template<typename Key, typename Interface>
 Interface*
 Factory<Key, Interface>::create_inst(const Key& key,
-        const runtime::Properties& properties_) throw (NoSuchImpl,
-        ConstructError) {
+        const runtime::Properties& properties_) {
     // Try to find the implementation specified by key.
     typename impl_map::const_iterator it;
     if ((it = this->impl_map_.find(key)) == this->impl_map_.end())

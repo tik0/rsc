@@ -66,11 +66,17 @@ public:
 
     AssociativeProxy(Container& container);
 
+    /**
+     * @throw NoSuchKey
+     */
     typename detail::force_const<typename Accessor::result_type>::type
-    operator[](const key_type& key) const throw (NoSuchKey);
+    operator[](const key_type& key) const;
 
+    /**
+     * @throw NoSuchKey
+     */
     typename Accessor::result_type
-    operator[](const key_type& key) throw (NoSuchKey);
+    operator[](const key_type& key);
 
     typename base_type::const_iterator
     find(const key_type& key) const throw ();
@@ -95,11 +101,17 @@ public:
 
     AssociativeProxy(Container& container);
 
+    /**
+     * @throw NoSuchKey
+     */
     typename detail::force_const<mapped_type>::type&
-    operator[](const key_type& key) const throw (NoSuchKey);
+    operator[](const key_type& key) const;
 
+    /**
+     * @throw NoSuchKey
+     */
     mapped_type&
-    operator[](const key_type& key) throw (NoSuchKey);
+    operator[](const key_type& key);
 
     typename ContainerProxy<Container, pass_through>::const_iterator
     find(const key_type& key) const throw ();
@@ -119,8 +131,7 @@ AssociativeProxy<Container, Accessor>::AssociativeProxy(Container& container) :
 
 template<typename Container, typename Accessor>
 typename detail::force_const<typename Accessor::result_type>::type AssociativeProxy<
-        Container, Accessor>::operator[](const key_type& key) const
-        throw (NoSuchKey) {
+        Container, Accessor>::operator[](const key_type& key) const {
     typename Container::const_iterator it;
     if ((it = base_type::container.find(key)) == base_type::container.end())
         throw no_such_key(type_string("no such key in container: `%1%'",
@@ -131,7 +142,7 @@ typename detail::force_const<typename Accessor::result_type>::type AssociativePr
 
 template<typename Container, typename Accessor>
 typename Accessor::result_type AssociativeProxy<Container, Accessor>::operator[](
-        const key_type& key) throw (NoSuchKey) {
+        const key_type& key) {
     typename Container::iterator it;
     if ((it = base_type::container.find(key)) == base_type::container.end())
         throw no_such_key(type_string("no such key in container: `%1%'",
@@ -162,24 +173,25 @@ AssociativeProxy<Container, pass_through>::AssociativeProxy(
     base(container) {
 }
 
-template <typename Container>
-typename detail::force_const< typename AssociativeProxy<Container, pass_through>::mapped_type >::type&
-AssociativeProxy<Container, pass_through>::operator[](const key_type& key) const throw (NoSuchKey) {
+template<typename Container>
+typename detail::force_const<
+        typename AssociativeProxy<Container, pass_through>::mapped_type>::type&
+AssociativeProxy<Container, pass_through>::operator[](const key_type& key) const {
     typename Container::const_iterator it;
     if ((it = base_type::container.find(key)) == base_type::container.end())
         throw no_such_key(type_string("no such key in container: `%1%'",
-				      "no such key in container", key));
+                "no such key in container", key));
 
     return it->second;
 }
 
-template <typename Container>
+template<typename Container>
 typename AssociativeProxy<Container, pass_through>::mapped_type&
-AssociativeProxy<Container, pass_through>::operator[](const key_type& key) throw (NoSuchKey) {
+AssociativeProxy<Container, pass_through>::operator[](const key_type& key) {
     typename Container::iterator it;
     if ((it = base_type::container.find(key)) == base_type::container.end())
         throw no_such_key(type_string("no such key in container: `%1%'",
-				      "no such key in container", key));
+                "no such key in container", key));
 
     return it->second;
 }

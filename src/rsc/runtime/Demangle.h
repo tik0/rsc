@@ -39,8 +39,7 @@ namespace runtime {
  *
  * @author Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  */
-std::string demangle(const char *mangledSymbol) throw (std::runtime_error,
-        InvalidMangledName);
+std::string demangle(const char *mangledSymbol);
 
 /**
  * This function takes the mangled name of a symbol and returns the demangled
@@ -53,8 +52,7 @@ std::string demangle(const char *mangledSymbol) throw (std::runtime_error,
  *
  * @author Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  */
-std::string demangle(const std::string &mangledSymbol)
-        throw (std::runtime_error, InvalidMangledName);
+std::string demangle(const std::string &mangledSymbol);
 
 }
 }

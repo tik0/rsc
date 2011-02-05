@@ -112,8 +112,7 @@ namespace runtime {
  *
  * @author Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  */
-std::string
-type_name(const std::type_info& type) throw (std::runtime_error);
+std::string type_name(const std::type_info& type);
 
 /**
  * Returns a (demangled) string representation of the type of the template
@@ -125,8 +124,7 @@ type_name(const std::type_info& type) throw (std::runtime_error);
  * @author Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  */
 template<typename T>
-std::string
-type_name() throw (std::runtime_error);
+std::string type_name();
 
 /**
  * Returns a (demangled) string representation of the type of @a object.
@@ -138,8 +136,7 @@ type_name() throw (std::runtime_error);
  * @author Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  */
 template<typename T>
-std::string
-type_name(const T& object) throw (std::runtime_error);
+std::string type_name(const T& object);
 
 /**
  * Returns one of two to strings depending on whether type @a T is known to be
@@ -166,10 +163,8 @@ type_name(const T& object) throw (std::runtime_error);
  * @author Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  */
 template<typename T>
-std::string
-type_string(const std::string& known_type_string,
-        const std::string& unknown_type_string, const T& value)
-        throw (boost::io::format_error);
+std::string type_string(const std::string& known_type_string,
+        const std::string& unknown_type_string, const T& value);
 
 }
 }
@@ -188,33 +183,30 @@ namespace rsc {
 namespace runtime {
 
 template<typename T>
-std::string type_name() throw (std::runtime_error) {
+std::string type_name() {
     return demangle(typeid(T).name());
 }
 
 template<typename T>
-std::string type_name(const T& object) throw (std::runtime_error) {
+std::string type_name(const T& object) {
     return demangle(typeid(object).name());
 }
 
 template<typename T>
 std::string do_type_string(const std::string& known_type_string,
-        const std::string&, const T& value, boost::true_type)
-        throw (boost::io::format_error) {
+        const std::string&, const T& value, boost::true_type) {
     return (boost::format(known_type_string) % value).str();
 }
 
 template<typename T>
 std::string do_type_string(const std::string&,
-        const std::string& unknown_type_string, const T&, boost::false_type)
-        throw (boost::io::format_error) {
+        const std::string& unknown_type_string, const T&, boost::false_type) {
     return unknown_type_string;
 }
 
 template<typename T>
 std::string type_string(const std::string& known_type_string,
-        const std::string& unknown_type_string, const T& value)
-        throw (boost::io::format_error) {
+        const std::string& unknown_type_string, const T& value) {
     return do_type_string(known_type_string, unknown_type_string, value,
             boost::has_stream_output<T>());
 }

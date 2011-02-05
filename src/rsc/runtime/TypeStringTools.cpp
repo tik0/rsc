@@ -24,7 +24,7 @@
 namespace rsc {
 namespace runtime {
 
-std::string type_name(const std::type_info& type) throw (std::runtime_error) {
+std::string type_name(const std::type_info& type) {
     return demangle(type.name());
 }
 

@@ -27,8 +27,8 @@
 #include <boost/any.hpp>
 #include <boost/format.hpp>
 
-#include "rsc/runtime/NoSuchObject.h"
-#include "rsc/runtime/TypeStringTools.h"
+#include "NoSuchObject.h"
+#include "TypeStringTools.h"
 
 namespace rsc {
 namespace runtime {

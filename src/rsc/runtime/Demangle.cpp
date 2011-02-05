@@ -58,14 +58,14 @@ std::string demangle(const char *mangledSymbol) {
 #else
 
 namespace rsc {
-    namespace runtime {
+namespace runtime {
 
-        std::string demangle(const char *mangled_symbol) {
-            std::string demangled_symbol(boost::str(boost::format(
-                                    "<cannot demangle %1%>") % mangled_symbol));
-        }
+std::string demangle(const char *mangled_symbol) {
+	return std::string(boost::str(boost::format("<cannot demangle %1%>")
+			% mangled_symbol));
+}
 
-    }
+}
 }
 
 #endif

@@ -22,7 +22,8 @@
 #include <string>
 #include <stdexcept>
 
-#include "rsc/runtime/NoSuchObject.h"
+#include "../runtime/NoSuchObject.h"
+#include "rsc/rscexports.h"
 
 namespace rsc {
 namespace patterns {
@@ -30,7 +31,7 @@ namespace patterns {
 /**
  * @author Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  */
-class NoSuchImpl: public runtime::NoSuchObject {
+class RSC_EXPORT NoSuchImpl: public runtime::NoSuchObject {
 public:
     NoSuchImpl(const std::string& message);
 };

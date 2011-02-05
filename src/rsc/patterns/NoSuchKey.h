@@ -23,7 +23,8 @@
 
 #include <boost/any.hpp>
 
-#include "rsc/runtime/NoSuchObject.h"
+#include "../runtime/NoSuchObject.h"
+#include "rsc/rscexports.h"
 
 namespace rsc {
 namespace patterns {
@@ -34,7 +35,7 @@ namespace patterns {
  *
  * @author Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  */
-class NoSuchKey: public runtime::NoSuchObject {
+class RSC_EXPORT NoSuchKey: public runtime::NoSuchObject {
 public:
 
     /**

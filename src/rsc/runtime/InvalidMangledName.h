@@ -21,6 +21,8 @@
 
 #include <stdexcept>
 
+#include "rsc/rscexports.h"
+
 namespace rsc {
 namespace runtime {
 
@@ -30,7 +32,7 @@ namespace runtime {
  *
  * @author Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  */
-class InvalidMangledName: public std::invalid_argument {
+class RSC_EXPORT InvalidMangledName: public std::invalid_argument {
 public:
     InvalidMangledName(const std::string& message);
 };

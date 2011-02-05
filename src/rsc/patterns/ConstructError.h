@@ -20,8 +20,9 @@
 #pragma once
 
 #include <stdexcept>
-
 #include <string>
+
+#include "rsc/rscexports.h"
 
 namespace rsc {
 namespace patterns {
@@ -29,7 +30,7 @@ namespace patterns {
 /**
  * @author Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  */
-class ConstructError: public std::runtime_error {
+class RSC_EXPORT ConstructError: public std::runtime_error {
 public:
     ConstructError(const std::string& message);
 };

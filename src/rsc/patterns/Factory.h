@@ -27,12 +27,12 @@
 #include <boost/function.hpp>
 #include <boost/format.hpp>
 
-#include "rsc/runtime/TypeStringTools.h"
-#include "rsc/runtime/Properties.h"
-#include "rsc/patterns/Singleton.h"
-#include "rsc/patterns/NoSuchImpl.h"
-#include "rsc/patterns/ConstructError.h"
-#include "rsc/patterns/AssociativeProxy.h"
+#include "../runtime/TypeStringTools.h"
+#include "../runtime/Properties.h"
+#include "Singleton.h"
+#include "NoSuchImpl.h"
+#include "ConstructError.h"
+#include "AssociativeProxy.h"
 
 namespace rsc {
 namespace patterns {

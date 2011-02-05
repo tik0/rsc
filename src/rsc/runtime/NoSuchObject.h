@@ -20,8 +20,9 @@
 #pragma once
 
 #include <stdexcept>
-
 #include <string>
+
+#include "rsc/rscexports.h"
 
 namespace rsc {
 namespace runtime {
@@ -32,7 +33,7 @@ namespace runtime {
  * @author Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  * @todo base class could be std::logic_error
  */
-class NoSuchObject: public std::runtime_error {
+class RSC_EXPORT NoSuchObject: public std::runtime_error {
 public:
     /**
      * Constructs a new @a NoSuchObject exception which indicates the absence of

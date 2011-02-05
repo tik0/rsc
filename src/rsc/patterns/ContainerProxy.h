@@ -22,10 +22,10 @@
 #include <boost/noncopyable.hpp>
 #include <boost/iterator/transform_iterator.hpp>
 
-#include "rsc/patterns/NoSuchKey.h"
-#include "rsc/patterns/Accessors.h"
-#include "rsc/patterns/detail/ForceConst.h"
-#include "rsc/runtime/TypeStringTools.h"
+#include "NoSuchKey.h"
+#include "Accessors.h"
+#include "detail/ForceConst.h"
+#include "../runtime/TypeStringTools.h"
 
 namespace rsc {
 namespace patterns {

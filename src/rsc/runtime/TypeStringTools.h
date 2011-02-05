@@ -28,8 +28,9 @@
 
 #include <boost/format.hpp>
 
-#include "rsc/runtime/Demangle.h"
-#include "rsc/runtime/ContainerIO.h"
+#include "Demangle.h"
+#include "ContainerIO.h"
+#include "rsc/rscexports.h"
 
 namespace boost {
 
@@ -112,7 +113,7 @@ namespace runtime {
  *
  * @author Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  */
-std::string type_name(const std::type_info& type);
+RSC_EXPORT std::string type_name(const std::type_info& type);
 
 /**
  * Returns a (demangled) string representation of the type of the template

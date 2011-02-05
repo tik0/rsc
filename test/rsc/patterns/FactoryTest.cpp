@@ -85,12 +85,12 @@ TEST_F(FactoryTest, testCreation)
         p["string_param"] = string("test");
         p["float_param"] = static_cast<float>(1.0);
         interface* instance = factory.create_inst("impl_1", p);
-        EXPECT_TRUE(instance);
+        EXPECT_TRUE(instance != 0);
     }
 
     {
         interface* instance = factory.create_inst("impl_2");
-        EXPECT_TRUE(instance);
+        EXPECT_TRUE(instance != 0);
     }
 
     // Constructor error

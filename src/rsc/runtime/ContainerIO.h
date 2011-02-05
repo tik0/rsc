@@ -32,14 +32,14 @@
 
 #include <iostream>
 
-namespace std {
+#include "rsc/rscexports.h"
 
+namespace std {
 namespace detail {
 
-void
-pair_style_delete(ios_base::event event_, ios_base& stream, int index);
+RSC_EXPORT void pair_style_delete(ios_base::event event_, ios_base& stream, int index);
 
-struct pair_style {
+struct RSC_EXPORT pair_style {
     string open_brace;
     string separator;
     string close_brace;
@@ -74,8 +74,8 @@ operator<<(basic_ostream<Ch, Tr>& stream,
     return stream;
 }
 
-extern const detail::set_pair_style<detail::pair_style> pair_default;
-extern const detail::set_pair_style<detail::pair_style> pair_whitespace;
+RSC_EXPORT extern const detail::set_pair_style<detail::pair_style> pair_default;
+RSC_EXPORT extern const detail::set_pair_style<detail::pair_style> pair_whitespace;
 
 template<typename Ch, typename Tr, typename R, typename S>
 basic_ostream<Ch, Tr>&

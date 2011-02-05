@@ -23,7 +23,8 @@
 
 #include <string>
 
-#include "rsc/runtime/InvalidMangledName.h"
+#include "InvalidMangledName.h"
+#include "rsc/rscexports.h"
 
 namespace rsc {
 namespace runtime {
@@ -39,7 +40,7 @@ namespace runtime {
  *
  * @author Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  */
-std::string demangle(const char *mangledSymbol);
+RSC_EXPORT std::string demangle(const char *mangledSymbol);
 
 /**
  * This function takes the mangled name of a symbol and returns the demangled
@@ -52,7 +53,7 @@ std::string demangle(const char *mangledSymbol);
  *
  * @author Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  */
-std::string demangle(const std::string &mangledSymbol);
+RSC_EXPORT std::string demangle(const std::string &mangledSymbol);
 
 }
 }

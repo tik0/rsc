@@ -22,12 +22,12 @@
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/noncopyable.hpp>
 
-#include "rsc/runtime/TypeStringTools.h"
-#include "rsc/patterns/NoSuchKey.h"
-#include "rsc/patterns/ContainerProxy.h"
-#include "rsc/patterns/Accessors.h"
-#include "rsc/patterns/detail/ForceConst.h"
-#include "rsc/patterns/detail/PairWorkaround.h"
+#include "../runtime/TypeStringTools.h"
+#include "NoSuchKey.h"
+#include "ContainerProxy.h"
+#include "Accessors.h"
+#include "detail/ForceConst.h"
+#include "detail/PairWorkaround.h"
 
 namespace rsc {
 namespace patterns {
@@ -79,10 +79,17 @@ public:
     operator[](const key_type& key);
 
     typename base_type::const_iterator
-    find(const key_type& key) const throw ();
+    find(const key_type& key) const throw () {
+        return typename base_type::const_iterator(base_type::container.find(key),
+                base_type::accessor);
+    }
 
     typename base_type::iterator
-    find(const key_type& key) throw ();
+    find(const key_type& key) throw () {
+        return typename base_type::iterator(base_type::container.find(key),
+                base_type::accessor);
+    }
+
 private:
     typedef Accessor accessor_type;
 
@@ -149,20 +156,6 @@ typename Accessor::result_type AssociativeProxy<Container, Accessor>::operator[]
                 "no such key in container", key));
 
     return this->accessor(it->second);
-}
-
-template<typename Container, typename Accessor>
-typename AssociativeProxy<Container, Accessor>::base_type::const_iterator AssociativeProxy<
-        Container, Accessor>::find(const key_type& key) const throw () {
-    return typename base_type::const_iterator(base_type::container.find(key),
-            base_type::accessor);
-}
-
-template<typename Container, typename Accessor>
-typename AssociativeProxy<Container, Accessor>::base_type::iterator AssociativeProxy<
-        Container, Accessor>::find(const key_type& key) throw () {
-    return typename base_type::iterator(base_type::container.find(key),
-            base_type::accessor);
 }
 
 // AssociativeProxy<Container, pass_through> implementation

@@ -71,6 +71,6 @@ public:
 
 TEST_F(ContainerIOTest, testOutput)
 {
-    EXPECT_EQ(lexical_cast<std::string>(this->list_),
+    EXPECT_EQ(lexical_cast<std::string>(list_),
             "[1, 2, 3, 4]");
 }

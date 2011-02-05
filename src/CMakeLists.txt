@@ -16,22 +16,22 @@ INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/rsc/rscexports.h DESTINATION include/r
 
 INCLUDE_DIRECTORIES(BEFORE ${CMAKE_CURRENT_BINARY_DIR})
 
-FILE(GLOB SOURCES
-  "rsc/logging/*.cpp"
-  "rsc/math/*.cpp"
-  "rsc/misc/*.cpp"
-  "rsc/runtime/*.cpp"
-  "rsc/patterns/*.cpp"
-  "rsc/threading/*.cpp")
+FILE(GLOB SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+                  "rsc/logging/*.cpp"
+                  "rsc/math/*.cpp"
+                  "rsc/misc/*.cpp"
+                  "rsc/runtime/*.cpp"
+                  "rsc/patterns/*.cpp"
+                  "rsc/threading/*.cpp")
 SET(SOURCES ${SOURCES} rsc/subprocess/Subprocess.cpp)
 
-FILE(GLOB HEADERS
-  "rsc/logging/*.h"
-  "rsc/math/*.h"
-  "rsc/misc/*.h"
-  "rsc/runtime/*.h"
-  "rsc/patterns/*.h"
-  "rsc/threading/*.h")
+FILE(GLOB HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+                  "rsc/logging/*.h"
+                  "rsc/math/*.h"
+                  "rsc/misc/*.h"
+                  "rsc/runtime/*.h"
+                  "rsc/patterns/*.h"
+                  "rsc/threading/*.h")
 SET(HEADERS ${HEADERS} rsc/subprocess/Subprocess.h)
 
 # subprocess choice

@@ -10,13 +10,13 @@ CONFIGURE_FILE(testconfig.h.in ${CMAKE_CURRENT_BINARY_DIR}/testconfig.h)
 
 # --- library test ---
 
-FILE(GLOB TEST_SOURCES
-     "rsc/logging/*.cpp"
-     "rsc/math/*.cpp"
-     "rsc/misc/*.cpp"
-     "rsc/threading/*.cpp"
-     "rsc/runtime/*.cpp"
-     "rsc/patterns/*.cpp")
+FILE(GLOB TEST_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+                       "rsc/logging/*.cpp"
+                       "rsc/math/*.cpp"
+                       "rsc/misc/*.cpp"
+                       "rsc/threading/*.cpp"
+                       "rsc/runtime/*.cpp"
+                       "rsc/patterns/*.cpp")
 SET(TEST_SOURCES ${TEST_SOURCES} "rsc/RscTestSuite.cpp")
 
 # subprocess

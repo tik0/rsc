@@ -36,7 +36,7 @@ double MathUtils::getDefaultAnglePrecision() {
 
 double MathUtils::normalizeAngle(const double &angleInRad) {
 
-    double mod = fmodf(angleInRad, getTwoPi());
+    double mod = fmod(angleInRad, getTwoPi());
 
     if (mod < 0) {
         return getTwoPi() + mod;

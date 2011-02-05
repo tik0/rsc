@@ -21,21 +21,20 @@
 
 #include <boost/format.hpp>
 
+// GCC implementation
+#if defined HAVE_CXXABI_H
 #include <cxxabi.h>
-#define CXX_ABI
 
 namespace rsc {
 namespace runtime {
 
-// free function implementations
-
-std::string demangle(const char* mangled_symbol) throw (std::runtime_error,
+std::string demangle(const char *mangledSymbol) throw (std::runtime_error,
         InvalidMangledName) {
-#ifdef CXX_ABI
+
     // Try to demangle the symbol.
     int status;
     char* demangled_symbol_ =
-            abi::__cxa_demangle(mangled_symbol, 0, 0, &status);
+            abi::__cxa_demangle(mangledSymbol, 0, 0, &status);
 
     // Check whether demangling worked.
     if (status == -1)
@@ -44,20 +43,39 @@ std::string demangle(const char* mangled_symbol) throw (std::runtime_error,
 
     if (status == -2 || status == -3)
         throw InvalidMangledName(boost::str(boost::format(
-                "invalid mangled name: `%1%'") % mangled_symbol)); // TODO is buffer allocated or not?
+                "invalid mangled name: `%1%'") % mangledSymbol)); // TODO is buffer allocated or not?
 
     // Convert result to string and free temporary buffer.
     std::string demangled_symbol(demangled_symbol_);
     free(demangled_symbol_);
-#else
-    std::string demangled_symbol(boost::str(boost::format("<cannot demangle %1%>")
-                    % mangled_symbol));
-#endif
 
     return demangled_symbol;
+
 }
 
-std::string demangle(const std::string& mangled_symbol)
+}
+}
+
+#else
+
+namespace rsc {
+    namespace runtime {
+
+        std::string demangle(const char *mangled_symbol) throw (std::runtime_error,
+                InvalidMangledName) {
+            std::string demangled_symbol(boost::str(boost::format(
+                                    "<cannot demangle %1%>") % mangled_symbol));
+        }
+
+    }
+}
+
+#endif
+
+namespace rsc {
+namespace runtime {
+
+std::string demangle(const std::string &mangled_symbol)
         throw (std::runtime_error, InvalidMangledName) {
     return demangle(mangled_symbol.c_str());
 }

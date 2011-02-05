@@ -33,7 +33,7 @@ TEST(TypeStringToolsTest, test_type_name)
 {
 
 #if defined DEMANGLE_GCC
-    string stringName = "std::string"
+    string stringName = "std::string";
 #elif defined DEMANGLE_MSVC
     string stringName = "class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >";
 #else

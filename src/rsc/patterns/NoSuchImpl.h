@@ -27,8 +27,7 @@
 namespace rsc {
 namespace patterns {
 
-/** @brief
- *
+/**
  * @author Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  */
 class NoSuchImpl: public runtime::NoSuchObject {

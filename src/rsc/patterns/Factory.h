@@ -37,8 +37,9 @@
 namespace rsc {
 namespace patterns {
 
-/** @brief An interface-independent factory interface. This is
- * mainly used as a base class for more specific factories.
+/**
+ * An interface-independent factory interface, mainly used as a base class for
+ * more specific factories.
  *
  * A factory of this kind is basically a mapping of keys to creation
  * functions that create objects of some common base class.
@@ -77,41 +78,41 @@ public:
         }
     };
 
-    /*! @brief Return the type information of the interface type of
-     * the factory.
+    /**
+     * Return the type information of the interface type of the factory.
      */
     virtual const std::type_info&
     get_interface_type() const throw () = 0;
 
-    /*! @brief Return a container-like object holding all registered
-     * implementations.
+    /**
+     * Return a container-like object holding all registered implementations.
      *
      * @return A constant reference to the implementation list proxy.
      */
     virtual const impl_map_proxy&
     impls_base() const throw () = 0;
 
-    /*! @brief Create and return an instance of the implementation
-     * designated by @a key. @a properties_ is passed to the create
-     * function.
+    /**
+     * Create and return an instance of the implementation designated by @a key.
+     * @a properties_ is passed to the create function.
      *
      * @param key The name of a registered implementation.
-     * @param properties_ A set of properties. The interpretation is
-     * up the selected create function.
-     * @return A pair containing the type information of the created
-     * object and a void pointer pointing to it.
-     * @throw NoSuchImpl If @a key does not name a registered
-     * implementation.
-     * @throw ConstructError If the selected create function produced
-     * an exception during execution.
+     * @param properties_ A set of properties. The interpretation is up the
+     *                    selected create function.
+     * @return A pair containing the type information of the created object and
+     *         a void pointer pointing to it.
+     * @throw NoSuchImpl If @a key does not name a registered implementation.
+     * @throw ConstructError If the selected create function produced an
+     *                       exception during execution.
      */
     virtual type_and_storage
     create_base(const Key& key, const runtime::Properties& properties_ =
             runtime::Properties()) throw (NoSuchImpl, ConstructError) = 0;
 };
 
-/** @brief Objects of this class manage a family of named
- * implementations of a particular interface.
+/**
+ * Objects of this class manage a family of named implementations of a
+ * particular interface.
  *
  * @see FactoryBase
  *
@@ -132,12 +133,15 @@ public:
 
     typedef typename base::impl_map impl_map_base;
     typedef typename base::impl_map_proxy impl_map_base_proxy;
+
 public:
-    /*! @brief This object presents the registered implementations in
-     * a form very similar to a STL container.
+
+    /**
+     * This object presents the registered implementations in a form very
+     * similar to a STL container.
      *
-     * In addition, implementations can be registered or unregistered
-     * using additional functions.
+     * In addition, implementations can be registered or unregistered using
+     * additional functions.
      */
     class impl_map_proxy: public AssociativeProxy<impl_map> {
         friend class Factory<Key, Interface> ;
@@ -169,47 +173,34 @@ public:
     const impl_map_base_proxy&
     impls_base() const throw ();
 
-    /*! @brief Return a container-like object holding all registered
-     * implementations.
-     *
-     * @return
+    /**
+     * Return a container-like object holding all registered implementations.
      */
     impl_map_proxy&
     impls() throw ();
 
-    /*! @brief Return a container-like object holding all registered
-     * implementations.
-     *
-     * @return
+    /**
+     * Return a container-like object holding all registered implementations.
      */
     const impl_map_proxy&
     impls() const throw ();
 
-    /*! @brief
-     *
-     * @param key
-     * @param properties_
-     * @return type_and_storage
-     * @throw NoSuchImpl
-     * @throw ConstructError
-     */
     typename FactoryBase<Key>::type_and_storage // TODO we should inherit that
     create_base(const Key& key, const runtime::Properties& properties_ =
             runtime::Properties()) throw (NoSuchImpl, ConstructError);
 
-    /*! @brief Create and return an instance of the implementation
-     * designated by @a key. @a properties_ is passed to the create
-     * function.
+    /**
+     * Create and return an instance of the implementation designated by @a key.
+     * @a properties_ is passed to the create function.
      *
      * @param key The name of a registered implementation.
-     * @param properties_ A set of properties. The interpretation is
-     * up the selected create function.
-     * @return A pointer to a newly created instance of the
-     * implementation specified by @a key.
-     * @throw NoSuchImpl If @a key does not name a registered
-     * implementation.
-     * @throw ConstructError If the selected create function produced
-     * an exception during execution.
+     * @param properties_ A set of properties. The interpretation is up the
+     *        selected create function.
+     * @return A pointer to a newly created instance of the implementation
+     *         specified by @a key.
+     * @throw NoSuchImpl If @a key does not name a registered implementation.
+     * @throw ConstructError If the selected create function produced an
+     *                       exception during execution.
      */
     Interface*
     create_inst(const Key& key, const runtime::Properties& properties_ =
@@ -229,8 +220,8 @@ protected:
     unregister(const Key& key) throw (NoSuchImpl);
 };
 
-/*! @brief A factory of which at most one instance exists at any
- * time.
+/**
+ * A factory of which at most one instance exists at any time.
  */
 template<typename Key, typename Interface>
 class SingletonFactory: public Singleton<SingletonFactory<Key, Interface> > ,

@@ -25,10 +25,11 @@
 namespace rsc {
 namespace patterns {
 
-/** @brief This template class implements the singleton pattern.
+/**
+ * This template class implements the singleton pattern.
  *
- * To add singleton behavior to a class @c C, add @c Singleton<C> to
- * its list of base classes.
+ * To add singleton behavior to a class @c C, add @c Singleton<C> to its list of
+ * base classes.
  *
  * @note C has to contain a friend declaration for @c Singleton<C>.
  * @note This singleton implementation is not thread-safe.
@@ -38,22 +39,23 @@ namespace patterns {
 template<typename T>
 class Singleton: private boost::noncopyable {
 public:
-    /** @brief Retrieve the singleton instance, creating it if
-     * necessary.
+
+    /**
+     * Retrieve the singleton instance, creating it if necessary.
      *
      * @return A reference to the instance.
      */
     static T&
     getInstance();
 
-    /** @brief This function can be used to make sure the instance is
-     * deleted at a particular time.
+    /**
+     * This function can be used to make sure the instance is deleted at a
+     * particular time.
      *
-     * You may need this function to enforce a certain order of
-     * destruction.
+     * You may need this function to enforce a certain order of destruction.
      *
-     * @note The instance will be destroyed in any case but the order
-     * of destruction is unspecified then.
+     * @note The instance will be destroyed in any case but the order of
+     *       destruction is unspecified then.
      */
     static void
     killInstance();

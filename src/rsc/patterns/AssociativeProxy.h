@@ -48,8 +48,7 @@ struct pair_adapter {
 
 }
 
-/** @brief
- *
+/**
  * @author Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  */
 template<typename Container, typename Accessor = pass_through>

@@ -26,8 +26,9 @@
 namespace rsc {
 namespace patterns {
 
-/** @brief A specialized factory class objects of which emit
- * signals when implementations are registered or unregistered.
+/**
+ * A specialized factory class objects of which emit signals when
+ * implementations are registered or unregistered.
  *
  * @author Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  */
@@ -44,12 +45,14 @@ public:
     typedef boost::signal2<void, const std::string&, const create_function&>
             impl_removed_signal;
 
-    /* @brief Return the "implementation added" signal.
+    /**
+     * Return the "implementation added" signal.
      */
     impl_added_signal&
     signal_impl_added() throw ();
 
-    /* @brief Return the "implementation removed" signal.
+    /**
+     * Return the "implementation removed" signal.
      */
     impl_removed_signal&
     signal_impl_removed() throw ();
@@ -67,8 +70,8 @@ protected:
     unregister(const Key& key) throw (NoSuchImpl);
 };
 
-/*! @brief An observable factory of which at most one instance
- * exists at any time.
+/**
+ * An observable factory of which at most one instance exists at any time.
  */
 template<typename Key, typename Interface>
 class ObservableSingletonFactory: public Singleton<ObservableSingletonFactory<

@@ -33,12 +33,13 @@
 namespace rsc {
 namespace runtime {
 
-/** @brief @a Properties objects are basically glorified @c
- * map<string, boost::any> objects.
+/**
+ * @a Properties objects are basically glorified @c map<string, boost::any>
+ * objects.
  *
- * In addition to the implied semantics, Properties objects support
- * basic stream output and merging and provide some convenience
- * functions for setting and retrieving values.
+ * In addition to the implied semantics, Properties objects support basic stream
+ * output and merging and provide some convenience functions for setting and
+ * retrieving values.
  *
  * @author Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  */

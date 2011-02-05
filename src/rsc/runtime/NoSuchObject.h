@@ -26,15 +26,17 @@
 namespace rsc {
 namespace runtime {
 
-/** @brief This exception is thrown if a specified object does not
- * exist.
+/**
+ * This exception is thrown if a specified object does not exist.
  *
  * @author Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
+ * @todo base class could be std::logic_error
  */
-class NoSuchObject: public std::runtime_error { // TODO could be logic_error
+class NoSuchObject: public std::runtime_error {
 public:
-    /** @brief Constructs a new @a NoSuchObject exception which
-     * indicates the absence of the object specified by @a object.
+    /**
+     * Constructs a new @a NoSuchObject exception which indicates the absence of
+     * the object specified by @a object.
      *
      * @param object The object which was specified but did not exist.
      */

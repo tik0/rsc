@@ -28,20 +28,23 @@
 namespace rsc {
 namespace patterns {
 
-/** @brief This exception is thrown if a specified key does not
- * exist in an associative container.
+/**
+ * This exception is thrown if a specified key does not exist in an associative
+ * container.
  *
  * @author Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  */
 class NoSuchKey: public runtime::NoSuchObject {
 public:
-    /*! @brief Constructs a new no_such_key exception which indicates
-     * the that an invalid key was used to query an associative
-     * container.
+
+    /**
+     * Constructs a new no_such_key exception which indicates the that an
+     * invalid key was used to query an associative container.
      *
      * @param message A string describing the invalid access.
      */
     NoSuchKey(const std::string& message);
+
 };
 
 }

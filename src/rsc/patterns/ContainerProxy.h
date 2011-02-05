@@ -30,8 +30,7 @@
 namespace rsc {
 namespace patterns {
 
-/** @brief
- *
+/**
  * @note The container type @a Container has to be a model of the @a
  * Container concept defined in the stl.
  * @note The type container_proxy<Container> is almost a model of

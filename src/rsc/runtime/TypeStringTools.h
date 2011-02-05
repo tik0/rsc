@@ -102,7 +102,8 @@ struct has_stream_output<std::type_info> : public true_type {
 namespace rsc {
 namespace runtime {
 
-/** @brief Returns a (demangled) string representation of @a type.
+/**
+ * Returns a (demangled) string representation of @a type.
  *
  * @param type The type that's name should be returned.
  *
@@ -114,11 +115,11 @@ namespace runtime {
 std::string
 type_name(const std::type_info& type) throw (std::runtime_error);
 
-/** @brief Returns a (demangled) string representation of the type
- *  of the template parameter.
- *
- * @return Demangled type name of the type of the template
+/**
+ * Returns a (demangled) string representation of the type of the template
  * parameter.
+ *
+ * @return Demangled type name of the type of the template parameter.
  * @throw runtime_error If demangling the type's name fails.
  *
  * @author Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
@@ -127,11 +128,10 @@ template<typename T>
 std::string
 type_name() throw (std::runtime_error);
 
-/** @brief Returns a (demangled) string representation of the type
- *  of @a object.
+/**
+ * Returns a (demangled) string representation of the type of @a object.
  *
- * @param object The object, the stringified type of which should be
- * returned.
+ * @param object The object, the stringified type of which should be returned.
  * @return Demangled type name of the type of @a object.
  * @throw runtime_error If demangling the type's name fails.
  *
@@ -141,28 +141,27 @@ template<typename T>
 std::string
 type_name(const T& object) throw (std::runtime_error);
 
-/** @brief Returns one of two to strings depending on whether type
- * @a T is known to be able to support stream output (using
- * operator<<).
+/**
+ * Returns one of two to strings depending on whether type @a T is known to be
+ * able to support stream output (using operator<<).
  *
- * @param known_type_string The string to be used if type @a T
- * supports stream output. This string may contain @c %1%
- * substrings that will be replaced by the result of writing @a
- * value to a stream.
- * @param unknown_type_string The string to be used if type @a T
- * does not support stream output. This string will be returned
- * unmodified.
- * @param value The value that is to be embedded in @a
- * known_type_string if that is possible.
- * @return
- * - @a known_type_string   - If type @a T supports stream output.
- * - @a unknown_type_string - otherwise.
- * @throw format_error If the format specified in @a
- * known_type_string is invalid.
+ * @param known_type_string The string to be used if type @a T supports stream
+ *                          output. This string may contain @c %1% substrings
+ *                          that will be replaced by the result of writing @a
+ *                          value to a stream.
+ * @param unknown_type_string The string to be used if type @a T does not
+ *                            support stream output. This string will be
+ *                            returned unmodified.
+ * @param value The value that is to be embedded in @a known_type_string if that
+ *              is possible.
+ * @return- @a known_type_string   - If type @a T supports stream output.
+ *        - @a unknown_type_string - otherwise.
+ * @throw format_error If the format specified in @a known_type_string is
+ *                     invalid.
  *
  * @note As it cannot be deduced automatically whether a type T has
- * @c operator<<(ostream,T) defined or not, work has to be done to
- * support user-defined types here.
+ *       @c operator<<(ostream,T) defined or not, work has to be done to support
+ *       user-defined types here.
  *
  * @author Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  */

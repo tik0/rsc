@@ -28,8 +28,9 @@
 namespace rsc {
 namespace runtime {
 
-/** @brief This function takes the mangled name of a symbol and
- * returns the demangled name of the symbol.
+/**
+ * This function takes the mangled name of a symbol and returns the demangled
+ * name of the symbol.
  *
  * @param mangled_symbol The mangled name of the symbol.
  * @return The demangled name of the symbol.
@@ -42,8 +43,9 @@ std::string
 demangle(const char* mangled_symbol) throw (std::runtime_error,
         InvalidMangledName);
 
-/** @brief This function takes the mangled name of a symbol and
- * returns the demangled name of the symbol.
+/**
+ * This function takes the mangled name of a symbol and returns the demangled
+ * name of the symbol.
  *
  * @param mangled_symbol The mangled name of the symbol.
  * @return The demangled name of the symbol.

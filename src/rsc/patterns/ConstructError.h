@@ -26,8 +26,7 @@
 namespace rsc {
 namespace patterns {
 
-/** @brief
- *
+/**
  * @author Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  */
 class ConstructError: public std::runtime_error {

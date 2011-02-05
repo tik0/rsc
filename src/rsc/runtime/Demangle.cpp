@@ -22,7 +22,7 @@
 #include <boost/format.hpp>
 
 // GCC implementation
-#if defined HAVE_CXXABI_H
+#if defined DEMANGLE_GCC
 #include <cxxabi.h>
 
 namespace rsc {
@@ -50,6 +50,20 @@ std::string demangle(const char *mangledSymbol) {
 
     return demangled_symbol;
 
+}
+
+}
+}
+
+#elif defined DEMANGLE_MSVC
+// MSVC implementation
+
+namespace rsc {
+namespace runtime {
+
+std::string demangle(const char *mangled_symbol) {
+	// MSVC does everything on its own with typeid.
+	return mangled_symbol;
 }
 
 }

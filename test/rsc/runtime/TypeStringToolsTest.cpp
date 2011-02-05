@@ -20,6 +20,8 @@
 #include <string>
 #include <vector>
 
+#include <boost/static_assert.hpp>
+
 #include <gtest/gtest.h>
 
 #include <rsc/runtime/TypeStringTools.h>
@@ -29,17 +31,26 @@ using namespace rsc::runtime;
 
 TEST(TypeStringToolsTest, test_type_name)
 {
-    EXPECT_EQ(type_name(typeid(bool)), "bool");
-    EXPECT_EQ(type_name(typeid(int)), "int");
-    EXPECT_EQ(type_name(typeid(string)), "std::string");
 
-    EXPECT_EQ(type_name<bool>(), "bool");
-    EXPECT_EQ(type_name<int>(), "int");
-    EXPECT_EQ(type_name<string>(), "std::string");
+#if defined DEMANGLE_GCC
+    string stringName = "std::string"
+#elif defined DEMANGLE_MSVC
+    string stringName = "class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >";
+#else
+    BOOST_STATIC_ASSERT(false);
+#endif
 
-    EXPECT_EQ(type_name(true), "bool");
-    EXPECT_EQ(type_name(1), "int");
-    EXPECT_EQ(type_name(string("bla")), "std::string");
+    EXPECT_EQ("bool", type_name(typeid(bool)));
+    EXPECT_EQ("int", type_name(typeid(int)));
+    EXPECT_EQ(stringName, type_name(typeid(string)));
+
+    EXPECT_EQ("bool", type_name<bool>());
+    EXPECT_EQ("int", type_name<int>());
+    EXPECT_EQ(stringName, type_name<string>());
+
+    EXPECT_EQ("bool", type_name(true));
+    EXPECT_EQ("int", type_name(1));
+    EXPECT_EQ(stringName, type_name(string("bla")));
 }
 
 TEST(TypeStringToolsTest, test_type_string)

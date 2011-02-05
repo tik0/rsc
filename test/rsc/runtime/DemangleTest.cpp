@@ -19,6 +19,9 @@
 
 #include <string>
 #include <vector>
+#include <iostream>
+
+#include <boost/static_assert.hpp>
 
 #include <gtest/gtest.h>
 
@@ -29,8 +32,15 @@ using namespace rsc::runtime;
 
 TEST(DemangleTest, testDemangle)
 {
-    EXPECT_EQ(demangle(typeid(bool).name()), "bool");
-    EXPECT_EQ(demangle(typeid(int).name()), "int");
-    EXPECT_EQ(demangle(typeid(std::string).name()), "std::string");
-    EXPECT_EQ(demangle(typeid(std::vector<int>).name()), "std::vector<int, std::allocator<int> >");
+    EXPECT_EQ("bool", demangle(typeid(bool).name()));
+    EXPECT_EQ("int", demangle(typeid(int).name()));
+#if defined DEMANGLE_GCC
+    EXPECT_EQ("std::string", demangle(typeid(std::string).name()));
+    EXPECT_EQ("std::vector<int, std::allocator<int> >", demangle(typeid(std::vector<int>).name()));
+#elif defined DEMANGLE_MSVC
+    EXPECT_EQ("class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >", demangle(typeid(std::string).name()));
+    EXPECT_EQ("class std::vector<int,class std::allocator<int> >", demangle(typeid(std::vector<int>).name()));
+#else
+    BOOST_STATIC_ASSERT(false);
+#endif
 }

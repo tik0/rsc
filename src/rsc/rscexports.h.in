@@ -35,7 +35,7 @@
 #endif
 
 // stl exports...
-#ifdef _WIN32
-RSC_EXPIMP template class RSC_EXPORT std::multimap<std::string, std::string>;
-#endif
+//#ifdef _WIN32
+//RSC_EXPIMP template class RSC_EXPORT std::multimap<std::string, std::string>;
+//#endif
 

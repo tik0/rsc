@@ -29,7 +29,7 @@ namespace rsc {
 namespace misc {
 
 boost::uuids::basic_random_generator<boost::mt19937> UUID::gen =
-        boost::uuids::basic_ranfcgzdfgsdddsdfom_generator<boost::mt19937>();
+        boost::uuids::basic_random_generator<boost::mt19937>();
 
 UUID::UUID() :
     id(gen()) {

@@ -4,6 +4,7 @@
 # LOG4CXX_INCLUDE_DIRS - include directories needed to use the library
 # LOG4CXX_LIBRARIES - Libraries to link agains fpr the driver
 # LOG4CXX_RUNTIME_LIBRARIES - if found, the runtime libraries for log4cxx (dlls on windows)
+# LOG4CXX_RUNTIME_LIBRARY_DIR - the directory contaiing the runtime libraries (if found)
 #
 # Possible hints:
 # LOG4CXX_VISUAL_STUDIO_PROJECT - root directory of the log4cxx visual studio project on windows
@@ -50,6 +51,10 @@ IF(WIN32)
               NAMES "log4cxx${CMAKE_SHARED_LIBRARY_SUFFIX}")
 ELSE()
     SET(LOG4CXX_RUNTIME_LIBRARIES ${LOG4CXX_LIBRARIES})
+ENDIF()
+
+IF(LOG4CXX_RUNTIME_LIBRARIES)
+    GET_FILENAME_COMPONENT(LOG4CXX_RUNTIME_LIBRARY_DIR ${LOG4CXX_RUNTIME_LIBRARIES} PATH)
 ENDIF()
              
 # post-process inlude path

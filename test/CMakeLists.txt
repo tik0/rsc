@@ -10,14 +10,17 @@ CONFIGURE_FILE(testconfig.h.in ${CMAKE_CURRENT_BINARY_DIR}/testconfig.h)
 
 # --- library test ---
 
+SET(REGISTRY_TEST_LIB_NAME "registree")
+ADD_LIBRARY(${REGISTRY_TEST_LIB_NAME} SHARED "rsc/misc/RegistreeLib.cpp")
+
 FILE(GLOB TEST_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
                        "rsc/logging/*.cpp"
                        "rsc/math/*.cpp"
-                       "rsc/misc/*.cpp"
                        "rsc/threading/*.cpp"
                        "rsc/runtime/*.cpp"
                        "rsc/patterns/*.cpp")
 SET(TEST_SOURCES ${TEST_SOURCES} "rsc/RscTestSuite.cpp")
+LIST(APPEND TEST_SOURCES "rsc/misc/UUIDTest.cpp" "rsc/misc/RegistryTest.cpp")
 
 # subprocess
 IF(UNIX)
@@ -28,6 +31,7 @@ ENDIF()
 
 ADD_EXECUTABLE(${RSC_TEST_NAME} ${TEST_SOURCES})
 TARGET_LINK_LIBRARIES(${RSC_TEST_NAME}
+                      ${REGISTRY_TEST_LIB_NAME}
                       ${RSC_NAME}
                       ${Boost_LIBRARIES}
                       ${GMOCK_LIBRARY_NAME})

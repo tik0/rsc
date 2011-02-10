@@ -156,50 +156,27 @@ private:
         return registry; \
     }
 
-#if defined(RSC_HAVE_INIT_METHOD_ATTRIBUTE_CONSTRUCTOR)
-
 /**
  * Creates an object that globally registers in the Registry. This method only
- * works directly in binaries or shared libraries. GCC only handles the
- * constructor keyword in static libraries if the *.o file is really used by the
- * binary. Thus it is advisable not to use static libraries for this purpose.
+ * works directly in binaries or shared libraries, no static libraries.
  *
  * Class names for this macro must be given without namespaces and templates.
  * Create typedefs as required to match these restrictions.
  *
+ * @note be aware of the static initialization order fiasco and do not return
+ *       static members for the registry key
  * @param registry registry to register in
  * @param registree registree to register
  * @param uniqueName a unique name to generate a register function
  */
 #define CREATE_GLOBAL_REGISTREE(registry, registree, uniqueName) \
-    __attribute__ ((constructor)) \
-    static void init##uniqueName() { \
+    class Starter##uniqueName { \
+    public: \
+        Starter##uniqueName() { \
         (registry)->addRegistree(registree); \
-    }
-
-#else
-
-#if defined(RSC_HAVE_INIT_METHOD_CRT)
-
-/**
- * Ensure that getRegistryKey returns no static member. Damn Windows!
- */
-#define CREATE_GLOBAL_REGISTREE(registry, registree, uniqueName) \
-	typedef int preInitCallback(void); \
-    int init##uniqueName() { \
-        (registry)->addRegistree(registree); \
-        return 0; \
-    } \
-    __pragma(data_seg(".CRT$XCU")) \
-    static preInitCallback *autostart##uniqueName[] = { init##uniqueName }; \
-    __pragma(data_seg())
-
-#else
-// There is no way to achieve what we need. Sad :(
-BOOST_STATIC_ASSERT(false);
-#endif
-
-#endif
+        } \
+    }; \
+    static Starter##uniqueName uniqueName##Starter;
 
 }
 }

@@ -50,6 +50,8 @@ CREATE_GLOBAL_REGISTREE(globalTestRegistry(), new TestRegistree(getGlobalKey2())
 ;
 
 TEST(RegistryTest, testGlobalRegistration) {
+	// TODO XXX the global registration works only if the dll is somehow used on windows
+	cout << getGlobalKey3() << endl;
     EXPECT_EQ((size_t) 3, globalTestRegistry()->getKnownRegistryKeys().size());
 }
 

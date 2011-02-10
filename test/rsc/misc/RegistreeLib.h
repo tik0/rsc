@@ -17,16 +17,20 @@
  *
  * ============================================================ */
 
-#include "RegistreeLib.h"
+#pragma once
 
 #include <string>
 
-#include "testRegistry.h"
+#if defined (_WIN32) 
+    #if defined(registree_EXPORTS)
+        #define REGISTREE_EXPORT __declspec(dllexport)
+        #define REGISTREE_EXPIMP
+    #else
+        #define REGISTREE_EXPORT __declspec(dllimport)
+        #define REGISTREE_EXPIMP extern
+    #endif
+#else
+    #define REGISTREE_EXPORT
+#endif
 
-std::string getGlobalKey3() {
-    return "global3";
-}
-
-CREATE_GLOBAL_REGISTREE(globalTestRegistry(), new TestRegistree(getGlobalKey3()), global3)
-;
-
+REGISTREE_EXPORT std::string getGlobalKey3();

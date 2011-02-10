@@ -148,15 +148,6 @@ private:
 };
 
 /**
- * Creates a statically available registry as an accessor function.
- */
-#define CREATE_REGISTRY(registryClassName, accessorName) \
-    inline ::rsc::misc::Registry<registryClassName> *accessorName() { \
-        static ::rsc::misc::Registry< registryClassName > *registry = new ::rsc::misc::Registry<registryClassName>; \
-        return registry; \
-    }
-
-/**
  * Creates an object that globally registers in the Registry. This method only
  * works directly in binaries or shared libraries, no static libraries.
  *
@@ -173,10 +164,11 @@ private:
     class Starter##uniqueName { \
     public: \
         Starter##uniqueName() { \
+		std::cout << "Registering " << #uniqueName << " in registry: " << registry << std::endl; \
         (registry)->addRegistree(registree); \
         } \
     }; \
-    static Starter##uniqueName uniqueName##Starter;
+    Starter##uniqueName uniqueName##Starter;
 
 }
 }

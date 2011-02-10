@@ -22,6 +22,10 @@
 namespace rsc {
 namespace logging {
 
+rsc::misc::Registry<LoggingSystem> *loggingSystemRegistry() {
+    static rsc::misc::Registry< LoggingSystem > *registry = new ::rsc::misc::Registry<LoggingSystem>;
+    return registry;
+}
 
 }
 }

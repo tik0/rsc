@@ -10,8 +10,12 @@ CONFIGURE_FILE(testconfig.h.in ${CMAKE_CURRENT_BINARY_DIR}/testconfig.h)
 
 # --- library test ---
 
-SET(REGISTRY_TEST_LIB_NAME "registree")
-ADD_LIBRARY(${REGISTRY_TEST_LIB_NAME} SHARED "rsc/misc/RegistreeLib.cpp")
+SET(REGISTRY_TEST_LIB_NAME "registry")
+ADD_LIBRARY(${REGISTRY_TEST_LIB_NAME} SHARED "rsc/misc/testRegistry.cpp" "rsc/misc/testRegistry.h")
+
+SET(REGISTREE_TEST_LIB_NAME "registree")
+ADD_LIBRARY(${REGISTREE_TEST_LIB_NAME} SHARED "rsc/misc/RegistreeLib.cpp" "rsc/misc/RegistreeLib.h")
+TARGET_LINK_LIBRARIES(${REGISTREE_TEST_LIB_NAME} ${REGISTRY_TEST_LIB_NAME})
 
 FILE(GLOB TEST_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
                        "rsc/logging/*.cpp"
@@ -32,6 +36,7 @@ ENDIF()
 ADD_EXECUTABLE(${RSC_TEST_NAME} ${TEST_SOURCES})
 TARGET_LINK_LIBRARIES(${RSC_TEST_NAME}
                       ${REGISTRY_TEST_LIB_NAME}
+					  ${REGISTREE_TEST_LIB_NAME}
                       ${RSC_NAME}
                       ${Boost_LIBRARIES}
                       ${GMOCK_LIBRARY_NAME})

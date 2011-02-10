@@ -26,13 +26,16 @@
 #include "rsc/misc/langutils.h"
 
 #include "testRegistry.h"
+#include "RegistreeLib.h"
 
 using namespace std;
 using namespace testing;
 using namespace rsc::misc;
 
-CREATE_REGISTRY(TestRegistree, testRegistry)
-;
+rsc::misc::Registry<TestRegistree> *testRegistry() {
+    static rsc::misc::Registry< TestRegistree > *registry = new ::rsc::misc::Registry<TestRegistree>;
+    return registry;
+}
 
 static string getGlobalKey1() {
     return "global1";
@@ -47,6 +50,7 @@ CREATE_GLOBAL_REGISTREE(globalTestRegistry(), new TestRegistree(getGlobalKey2())
 ;
 
 TEST(RegistryTest, testGlobalRegistration) {
+	cout << getGlobalKey3() << endl;
     EXPECT_EQ((size_t) 3, globalTestRegistry()->getKnownRegistryKeys().size());
 }
 

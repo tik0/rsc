@@ -23,17 +23,23 @@
 
 #include "rsc/misc/Registry.h"
 
-class TestRegistree {
+#if defined (_WIN32) 
+    #if defined(registry_EXPORTS)
+        #define REGISTRY_EXPORT __declspec(dllexport)
+        #define REGISTRY_EXPIMP
+    #else
+        #define REGISTRY_EXPORT __declspec(dllimport)
+        #define REGISTRY_EXPIMP extern
+    #endif
+#else
+    #define REGISTRY_EXPORT
+#endif
+
+class REGISTRY_EXPORT TestRegistree {
 public:
     std::string key;
-    TestRegistree(const std::string &key) :
-        key(key) {
-
-    }
-    std::string getRegistryKey() const {
-        return key;
-    }
+    TestRegistree(const std::string &key);
+    std::string getRegistryKey() const;
 };
 
-CREATE_REGISTRY(TestRegistree, globalTestRegistry)
-;
+REGISTRY_EXPORT rsc::misc::Registry<TestRegistree> *globalTestRegistry();

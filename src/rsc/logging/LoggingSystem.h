@@ -57,7 +57,7 @@ public:
 
 };
 
-RSC_EXPORT CREATE_REGISTRY(LoggingSystem, loggingSystemRegistry);
+RSC_EXPORT rsc::misc::Registry<LoggingSystem> *loggingSystemRegistry();
 
 }
 }

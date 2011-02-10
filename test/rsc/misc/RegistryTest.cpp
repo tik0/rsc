@@ -50,7 +50,6 @@ CREATE_GLOBAL_REGISTREE(globalTestRegistry(), new TestRegistree(getGlobalKey2())
 ;
 
 TEST(RegistryTest, testGlobalRegistration) {
-	cout << getGlobalKey3() << endl;
     EXPECT_EQ((size_t) 3, globalTestRegistry()->getKnownRegistryKeys().size());
 }
 

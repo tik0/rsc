@@ -164,7 +164,6 @@ private:
     class Starter##uniqueName { \
     public: \
         Starter##uniqueName() { \
-		std::cout << "Registering " << #uniqueName << " in registry: " << registry << std::endl; \
         (registry)->addRegistree(registree); \
         } \
     }; \

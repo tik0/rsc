@@ -29,7 +29,7 @@
 using namespace std;
 using namespace rsc::runtime;
 
-TEST(TypeStringToolsTest, test_type_name)
+TEST(TypeStringToolsTest, testTypeName)
 {
 
 #if defined DEMANGLE_GCC
@@ -40,38 +40,38 @@ TEST(TypeStringToolsTest, test_type_name)
     BOOST_STATIC_ASSERT(false);
 #endif
 
-    EXPECT_EQ("bool", type_name(typeid(bool)));
-    EXPECT_EQ("int", type_name(typeid(int)));
-    EXPECT_EQ(stringName, type_name(typeid(string)));
+    EXPECT_EQ("bool", typeName(typeid(bool)));
+    EXPECT_EQ("int", typeName(typeid(int)));
+    EXPECT_EQ(stringName, typeName(typeid(string)));
 
-    EXPECT_EQ("bool", type_name<bool>());
-    EXPECT_EQ("int", type_name<int>());
-    EXPECT_EQ(stringName, type_name<string>());
+    EXPECT_EQ("bool", typeName<bool>());
+    EXPECT_EQ("int", typeName<int>());
+    EXPECT_EQ(stringName, typeName<string>());
 
-    EXPECT_EQ("bool", type_name(true));
-    EXPECT_EQ("int", type_name(1));
-    EXPECT_EQ(stringName, type_name(string("bla")));
+    EXPECT_EQ("bool", typeName(true));
+    EXPECT_EQ("int", typeName(1));
+    EXPECT_EQ(stringName, typeName(string("bla")));
 }
 
-TEST(TypeStringToolsTest, test_type_string)
+TEST(TypeStringToolsTest, testTypeString)
 {
-    EXPECT_EQ(type_string("known type %1%",
+    EXPECT_EQ(typeString("known type %1%",
                     "unknown type",
                     true),
             "known type 1");
-    EXPECT_EQ(type_string("known type %1%",
+    EXPECT_EQ(typeString("known type %1%",
                     "unknown type",
                     5),
             "known type 5");
-    EXPECT_EQ(type_string("known type %1%",
+    EXPECT_EQ(typeString("known type %1%",
                     "unknown type",
                     string("test")),
             "known type test");
-    EXPECT_EQ(type_string("known type %1%",
+    EXPECT_EQ(typeString("known type %1%",
                     "unknown type",
                     vector<int>()),
             "known type #()");
-    EXPECT_EQ(type_string("known type %1%",
+    EXPECT_EQ(typeString("known type %1%",
                     "unknown type",
                     vector< vector<int> >()),
             "known type #()");

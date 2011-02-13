@@ -113,7 +113,7 @@ namespace runtime {
  *
  * @author Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  */
-RSC_EXPORT std::string type_name(const std::type_info& type);
+RSC_EXPORT std::string typeName(const std::type_info& type);
 
 /**
  * Returns a (demangled) string representation of the type of the template
@@ -125,7 +125,7 @@ RSC_EXPORT std::string type_name(const std::type_info& type);
  * @author Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  */
 template<typename T>
-std::string type_name();
+std::string typeName();
 
 /**
  * Returns a (demangled) string representation of the type of @a object.
@@ -137,7 +137,7 @@ std::string type_name();
  * @author Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  */
 template<typename T>
-std::string type_name(const T& object);
+std::string typeName(const T& object);
 
 /**
  * Returns one of two to strings depending on whether type @a T is known to be
@@ -164,7 +164,7 @@ std::string type_name(const T& object);
  * @author Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  */
 template<typename T>
-std::string type_string(const std::string& known_type_string,
+std::string typeString(const std::string& known_type_string,
         const std::string& unknown_type_string, const T& value);
 
 }
@@ -184,31 +184,31 @@ namespace rsc {
 namespace runtime {
 
 template<typename T>
-std::string type_name() {
+std::string typeName() {
     return demangle(typeid(T).name());
 }
 
 template<typename T>
-std::string type_name(const T& object) {
+std::string typeName(const T& object) {
     return demangle(typeid(object).name());
 }
 
 template<typename T>
-std::string do_type_string(const std::string& known_type_string,
+std::string doTypeString(const std::string& known_type_string,
         const std::string&, const T& value, boost::true_type) {
     return (boost::format(known_type_string) % value).str();
 }
 
 template<typename T>
-std::string do_type_string(const std::string&,
-        const std::string& unknown_type_string, const T&, boost::false_type) {
+std::string doTypeString(const std::string&,
+			 const std::string& unknown_type_string, const T&, boost::false_type) {
     return unknown_type_string;
 }
 
 template<typename T>
-std::string type_string(const std::string& known_type_string,
+std::string typeString(const std::string& known_type_string,
         const std::string& unknown_type_string, const T& value) {
-    return do_type_string(known_type_string, unknown_type_string, value,
+    return doTypeString(known_type_string, unknown_type_string, value,
             boost::has_stream_output<T>());
 }
 
@@ -220,7 +220,7 @@ namespace std {
 template<typename Ch, typename Tr>
 basic_ostream<Ch, Tr>&
 operator<<(basic_ostream<Ch, Tr>& stream, const type_info& type_info_) {
-    stream << rsc::runtime::type_name(type_info_);
+    stream << rsc::runtime::typeName(type_info_);
 
     return stream;
 }

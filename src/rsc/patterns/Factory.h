@@ -49,7 +49,7 @@ namespace patterns {
  *
  * Runtime type information for the interface implemented by
  * constructed objects can be retrieved using the
- * @a get_interface_type method.
+ * @a GetInterfaceType method.
  *
  * Objects are constructed by calling @a create_base with a key
  * identifying the implementation and properties to be used as
@@ -60,20 +60,20 @@ namespace patterns {
 template<typename Key>
 class FactoryBase {
 public:
-    typedef Key key_type;
-    typedef boost::function1<void*, const runtime::Properties&> create_function;
+    typedef Key KeyType;
+    typedef boost::function1<void*, const runtime::Properties&> CreateFunction;
     typedef std::pair<const std::type_info*, void*> type_and_storage;
 
-    typedef std::map<Key, create_function> impl_map;
+    typedef std::map<Key, CreateFunction> ImplMap;
 
-    class impl_map_proxy: public AssociativeProxy<impl_map> {
+    class ImplMapProxy: public AssociativeProxy<ImplMap> {
     protected:
         template<typename K, typename I>
         friend class Factory;
 
-        typedef AssociativeProxy<impl_map> base;
+        typedef AssociativeProxy<ImplMap> base;
 
-        impl_map_proxy(impl_map& container) :
+        ImplMapProxy(ImplMap& container) :
             base(container) {
         }
     };
@@ -82,15 +82,15 @@ public:
      * Return the type information of the interface type of the factory.
      */
     virtual const std::type_info&
-    get_interface_type() const throw () = 0;
+    GetInterfaceType() const throw () = 0;
 
     /**
      * Return a container-like object holding all registered implementations.
      *
      * @return A constant reference to the implementation list proxy.
      */
-    virtual const impl_map_proxy&
-    impls_base() const throw () = 0;
+    virtual const ImplMapProxy&
+    implsBase() const throw () = 0;
 
     /**
      * Create and return an instance of the implementation designated by @a key.
@@ -106,7 +106,7 @@ public:
      *                       exception during execution.
      */
     virtual type_and_storage
-    create_base(const Key& key, const runtime::Properties& properties_ =
+    createBase(const Key& key, const runtime::Properties& properties_ =
             runtime::Properties()) = 0;
 };
 
@@ -123,16 +123,16 @@ class Factory: public FactoryBase<Key> {
 public:
     typedef FactoryBase<Key> base;
 
-    typedef typename base::key_type key_type;
-    typedef Interface interface_type;
+    typedef typename base::KeyType KeyType;
+    typedef Interface InterfaceType;
 
-    typedef boost::function1<interface_type*, const runtime::Properties&>
-            create_function;
+    typedef boost::function1<InterfaceType*, const runtime::Properties&>
+            CreateFunction;
 
-    typedef std::map<Key, create_function> impl_map;
+    typedef std::map<Key, CreateFunction> ImplMap;
 
-    typedef typename base::impl_map impl_map_base;
-    typedef typename base::impl_map_proxy impl_map_base_proxy;
+    typedef typename base::ImplMap ImplMapBase;
+    typedef typename base::ImplMapProxy ImplMapBaseProxy;
 
 public:
 
@@ -143,28 +143,28 @@ public:
      * In addition, implementations can be registered or unregistered using
      * additional functions.
      */
-    class impl_map_proxy: public AssociativeProxy<impl_map> {
+    class ImplMapProxy: public AssociativeProxy<ImplMap> {
         friend class Factory<Key, Interface> ;
     public:
         /**
          * @throw std::invalid_argument
          */
-        void register_(const key_type& key,
-                const create_function& create_function_);
+        void register_(const KeyType& key,
+                const CreateFunction& create_function_);
 
         /**
          * @throw NoSuchImpl
          */
-        void unregister(const key_type& key);
+        void unregister(const KeyType& key);
     private:
-        typedef AssociativeProxy<impl_map> base_type;
+        typedef AssociativeProxy<ImplMap> base_type;
 
         Factory<Key, Interface>& owner;
 
-        impl_map_proxy(Factory<Key, Interface>& owner);
+        ImplMapProxy(Factory<Key, Interface>& owner);
     };
 
-    friend class impl_map_proxy;
+    friend class ImplMapProxy;
 
     Factory();
 
@@ -172,21 +172,21 @@ public:
     ~Factory();
 
     const std::type_info&
-    get_interface_type() const throw ();
+    GetInterfaceType() const throw ();
 
-    const impl_map_base_proxy&
-    impls_base() const throw ();
+    const ImplMapBaseProxy&
+    implsBase() const throw ();
 
     /**
      * Return a container-like object holding all registered implementations.
      */
-    impl_map_proxy&
+    ImplMapProxy&
     impls() throw ();
 
     /**
      * Return a container-like object holding all registered implementations.
      */
-    const impl_map_proxy&
+    const ImplMapProxy&
     impls() const throw ();
 
     /**
@@ -194,7 +194,7 @@ public:
      * @throw ConstructError
      */
     typename FactoryBase<Key>::type_and_storage // TODO we should inherit that
-    create_base(const Key& key, const runtime::Properties& properties_ =
+    createBase(const Key& key, const runtime::Properties& properties_ =
             runtime::Properties());
 
     /**
@@ -211,20 +211,20 @@ public:
      *                       exception during execution.
      */
     Interface*
-    create_inst(const Key& key, const runtime::Properties& properties_ =
+    createInst(const Key& key, const runtime::Properties& properties_ =
             runtime::Properties());
 protected:
-    impl_map_base impl_map_base_;
-    impl_map_base_proxy impl_map_base_proxy_;
+    ImplMapBase impl_map_base_;
+    ImplMapBaseProxy impl_map_base_proxy_;
 
-    impl_map impl_map_;
-    impl_map_proxy impl_map_proxy_;
+    ImplMap impl_map_;
+    ImplMapProxy impl_map_proxy_;
 
     /**
      * @throw std::invalid_
      */
     virtual void register_(const Key& key,
-            const create_function& create_function_);
+            const CreateFunction& create_function_);
 
     /**
      * @throw NoSuchImpl
@@ -246,19 +246,19 @@ private:
 // Factory::impl_list_proxy implementation
 
 template<typename Key, typename Interface>
-Factory<Key, Interface>::impl_map_proxy::impl_map_proxy(
+Factory<Key, Interface>::ImplMapProxy::ImplMapProxy(
         Factory<Key, Interface>& owner) :
     base_type(owner.impl_map_), owner(owner) {
 }
 
 template<typename Key, typename Interface>
-void Factory<Key, Interface>::impl_map_proxy::register_(const key_type& key,
-        const create_function& create_function_) {
+void Factory<Key, Interface>::ImplMapProxy::register_(const KeyType& key,
+        const CreateFunction& create_function_) {
     this->owner.register_(key, create_function_);
 }
 
 template<typename Key, typename Interface>
-void Factory<Key, Interface>::impl_map_proxy::unregister(const key_type& key) {
+void Factory<Key, Interface>::ImplMapProxy::unregister(const KeyType& key) {
     this->owner.unregister(key);
 }
 
@@ -275,35 +275,36 @@ Factory<Key, Interface>::~Factory() {
 
 template<typename Key, typename Interface>
 const std::type_info&
-Factory<Key, Interface>::get_interface_type() const throw () {
+Factory<Key, Interface>::GetInterfaceType() const throw () {
     return typeid(Interface);
 }
 
 template<typename Key, typename Interface>
-const typename Factory<Key, Interface>::impl_map_base_proxy&
-Factory<Key, Interface>::impls_base() const throw () {
+const typename Factory<Key, Interface>::ImplMapBaseProxy&
+Factory<Key, Interface>::implsBase() const throw () {
     return this->impl_map_base_proxy_;
 }
 
 template<typename Key, typename Interface>
-typename Factory<Key, Interface>::impl_map_proxy&
+typename Factory<Key, Interface>::ImplMapProxy&
 Factory<Key, Interface>::impls() throw () {
     return this->impl_map_proxy_;
 }
 
 template<typename Key, typename Interface>
-const typename Factory<Key, Interface>::impl_map_proxy&
+const typename Factory<Key, Interface>::ImplMapProxy&
 Factory<Key, Interface>::impls() const throw () {
     return this->impl_map_proxy_;
 }
 
 template<typename Key, typename Interface>
 void Factory<Key, Interface>::register_(const Key& key,
-        const create_function& create_function_) {
+        const CreateFunction& create_function_) {
     //
-    if (this->impl_map_.find(key) != this->impl_map_.end())
-        throw std::invalid_argument(runtime::type_string("duplicate key `%1%'",
+    if (this->impl_map_.find(key) != this->impl_map_.end()) {
+        throw std::invalid_argument(runtime::typeString("duplicate key `%1%'",
                 "duplicate key", key));
+    }
 
     //
     this->impl_map_base_[key] = create_function_;
@@ -313,9 +314,9 @@ void Factory<Key, Interface>::register_(const Key& key,
 template<typename Key, typename Interface>
 void Factory<Key, Interface>::unregister(const Key& key) {
     //
-    typename impl_map::iterator it;
+    typename ImplMap::iterator it;
     if ((it = this->impl_map_.find(key)) == this->impl_map_.end()) {
-        throw NoSuchImpl(runtime::type_string(
+        throw NoSuchImpl(runtime::typeString(
                 "no implementation found for specified key `%1%'",
                 "no implementation found for specified key", key));
     }
@@ -326,33 +327,35 @@ void Factory<Key, Interface>::unregister(const Key& key) {
 }
 
 template<typename Key, typename Interface>
-typename FactoryBase<Key>::type_and_storage Factory<Key, Interface>::create_base(
+typename FactoryBase<Key>::type_and_storage Factory<Key, Interface>::createBase(
         const Key& key, const runtime::Properties& properties_) {
-    Interface* instance = create_inst(key, properties_);
+    Interface* instance = createInst(key, properties_);
 
     return std::make_pair(&typeid(*instance), instance);
 }
 
 template<typename Key, typename Interface>
 Interface*
-Factory<Key, Interface>::create_inst(const Key& key,
+Factory<Key, Interface>::createInst(const Key& key,
         const runtime::Properties& properties_) {
     // Try to find the implementation specified by key.
-    typename impl_map::const_iterator it;
-    if ((it = this->impl_map_.find(key)) == this->impl_map_.end())
-        throw NoSuchImpl(runtime::type_string(
+    typename ImplMap::const_iterator it;
+    if ((it = this->impl_map_.find(key)) == this->impl_map_.end()) {
+        throw NoSuchImpl(runtime::typeString(
                 "no implementation found for specified key `%1%'",
                 "no implementation found for specified key", key));
+    }
 
     // Try to create an instance of that implementation.
     Interface* instance = 0;
     try {
         instance = reinterpret_cast<Interface*> (it->second(properties_));
     } catch (const std::exception& exception_) {
-        throw ConstructError(runtime::type_name(typeid(exception_)) + ": "
+        throw ConstructError(runtime::typeName(typeid(exception_)) + ": "
                 + exception_.what());
+	// TODO use boost exception stuff and rethrow
     } catch (...) {
-        throw ConstructError(runtime::type_string(
+        throw ConstructError(runtime::typeString(
                 "could not construct implementation instance for key `%1%'",
                 "could not construct implementation instance", key));
     }
@@ -374,19 +377,20 @@ std::basic_ostream<Ch, Tr>&
 operator<<(std::basic_ostream<Ch, Tr>& stream,
         const Factory<Key, Interface>& factory) {
     typedef Factory<Key, Interface> Factory_type;
-    typedef typename Factory<Key, Interface>::impl_map_proxy
+    typedef typename Factory<Key, Interface>::ImplMapProxy
             impl_map_proxy_type;
 
     //
     stream << (boost::format("implementations of interface %1%:\n")
-            % runtime::type_name(typeid(Interface)));
+            % runtime::typeName(typeid(Interface)));
 
     //
     const impl_map_proxy_type& impls = factory.impls();
 
     for (typename impl_map_proxy_type::const_iterator it = impls.begin(); it
-            != impls.end(); ++it)
+	   != impls.end(); ++it) {
         stream << (boost::format("* %1%\n") % it->first);
+    }
 
     // Don't forget to return the stream.
     return stream;

@@ -20,44 +20,43 @@
 #include <stdexcept>
 #include <string>
 
-struct interface {
-    virtual ~interface() {
+struct Interface {
+    virtual ~Interface() {
     }
-    ;
 };
 
-struct impl_1: interface {
-    std::string string_member;
-    float float_member;
+struct Impl1: Interface {
+    std::string stringMember;
+    float floatMember;
 
-    impl_1(const std::string& string_param, float float_param) :
-        string_member(string_param), float_member(float_param) {
+    Impl1(const std::string& stringParam, float floatParam) :
+        stringMember(stringParam), floatMember(floatParam) {
     }
 
-    static interface*
+    static Interface*
     create(const rsc::runtime::Properties& props) {
-        return new impl_1(props.get<std::string> ("string_param"), props.get<
+        return new Impl1(props.get<std::string> ("string_param"), props.get<
                 float> ("float_param"));
     }
 };
 
-struct impl_2: interface {
-    impl_2() {
+struct Impl2: Interface {
+    Impl2() {
     }
 
-    static interface*
+    static Interface*
     create(const rsc::runtime::Properties&) {
-        return new impl_2();
+        return new Impl2();
     }
 };
 
-struct impl_failing_constructor: interface {
-    impl_failing_constructor() {
+struct ImplFailingConstructor: Interface {
+    ImplFailingConstructor() {
         throw std::runtime_error("intentionally failing constructor");
     }
 
-    static interface*
+    static Interface*
     create(const rsc::runtime::Properties&) {
-        return new impl_failing_constructor();
+        return new ImplFailingConstructor();
     }
 };

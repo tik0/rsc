@@ -95,9 +95,10 @@ operator<<(std::basic_ostream<Ch, Tr>& stream, const Properties& properties);
 template<typename T>
 T Properties::get(const std::string& name) const {
     const_iterator it;
-    if ((it = find(name)) == end())
+    if ((it = find(name)) == end()) {
         throw NoSuchObject(
                 (boost::format("no such property `%1%'") % name).str());
+    }
 
     try {
         return boost::any_cast<T>(it->second); // TODO could try lexical_cast if any_cast fails
@@ -105,7 +106,7 @@ T Properties::get(const std::string& name) const {
         std::cerr
                 << (boost::format(
                         "properties: type mismatch in get: requested: %1%; actual: %2%")
-                        % type_name<T> () % type_name(it->second.type()))
+                        % typeName<T> () % typeName(it->second.type()))
                 << std::endl;
         throw;
     }
@@ -114,15 +115,16 @@ T Properties::get(const std::string& name) const {
 template<typename T>
 T Properties::get(const std::string& name, const T& default_) const {
     const_iterator it;
-    if ((it = find(name)) == end())
+    if ((it = find(name)) == end()) {
         return default_;
+    }
 
     try {
         return boost::any_cast<T>(it->second);
     } catch (const boost::bad_any_cast&) {
         std::cerr << (boost::format(
                 "properties type mismatch in get: requested: %1%; actual: %2%")
-                % type_name<T> () % type_name(it->second.type())) << std::endl;
+                % typeName<T> () % typeName(it->second.type())) << std::endl;
         throw;
     }
 }
@@ -143,16 +145,17 @@ operator<<(std::basic_ostream<Ch, Tr>& stream, const Properties& properties) {
             != properties.end();) {
         stream << it->first << ": ";
 
-        if (it->second.type() == typeid(std::string))
+        if (it->second.type() == typeid(std::string)) {
             stream << "\"" << boost::any_cast<std::string>(it->second) << "\"";
-        else if (it->second.type() == typeid(bool))
+	} else if (it->second.type() == typeid(bool)) {
             stream << boost::any_cast<bool>(it->second);
-        else if (it->second.type() == typeid(int))
+	} else if (it->second.type() == typeid(int)) {
             stream << boost::any_cast<int>(it->second);
-        else if (it->second.type() == typeid(double))
+	} else if (it->second.type() == typeid(double)) {
             stream << boost::any_cast<double>(it->second);
-        else
-            stream << "<" + type_name(it->second.type()) + ">"; // TODO this sucks
+	} else {
+            stream << "<" + typeName(it->second.type()) + ">"; // TODO this sucks
+	}
 
         stream << ((++it) != properties.end() ? ", " : "");
     }

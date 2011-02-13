@@ -32,13 +32,13 @@ struct my_derived: my_base {
 };
 
 int main(int, char*[]) {
-    std::cout << rsc::runtime::type_name<int>() << std::endl;
+    std::cout << rsc::runtime::typeName<int>() << std::endl;
 
     int i = 1;
-    std::cout << rsc::runtime::type_name(i) << std::endl;
+    std::cout << rsc::runtime::typeName(i) << std::endl;
 
     my_base* base = new my_derived();
-    std::cout << rsc::runtime::type_name(*base) << std::endl;
+    std::cout << rsc::runtime::typeName(*base) << std::endl;
 
     return EXIT_SUCCESS;
 }

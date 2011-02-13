@@ -71,8 +71,9 @@ T&
 Singleton<T>::getInstance() {
     boost::shared_ptr<T>& instance = getStorage();
 
-    if (!instance)
+    if (!instance) {
         instance = boost::shared_ptr<T>(new T());
+    }
 
     return *instance;
 }
@@ -81,8 +82,9 @@ template<typename T>
 void Singleton<T>::killInstance() {
     boost::shared_ptr<T>& instance = getStorage();
 
-    if (instance)
+    if (instance) {
         instance.reset();
+    }
 }
 
 template<typename T>

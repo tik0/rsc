@@ -31,52 +31,52 @@ using namespace boost;
 using namespace rsc::runtime;
 using namespace rsc::patterns;
 
-typedef Factory<string, interface> test_factory;
+typedef Factory<string, Interface> TestFactory;
 
 class FactoryTest: public ::testing::Test {
 protected:
-    test_factory factory;
+    TestFactory factory;
 
     virtual void SetUp() {
-        this->factory.impls().register_("impl_1", &impl_1::create);
-        this->factory.impls().register_("impl_2", &impl_2::create);
-        this->factory.impls().register_("impl_failing_constructor",
-                &impl_failing_constructor::create);
+        this->factory.impls().register_("Impl1", &Impl1::create);
+        this->factory.impls().register_("Impl2", &Impl2::create);
+        this->factory.impls().register_("ImplFailingConstructor",
+                &ImplFailingConstructor::create);
     }
 };
 
 TEST_F(FactoryTest, testRegistration)
 {
-    test_factory factory;
+    TestFactory factory;
 
     // Should start out empty
     EXPECT_EQ(factory.impls().size(), size_t(0));
 
     // Ordinary registration
-    factory.impls().register_("impl_1", &impl_1::create);
-    factory.impls().register_("impl_2", &impl_2::create);
-    factory.impls().register_("impl_failing_constructor",
-            &impl_failing_constructor::create);
+    factory.impls().register_("Impl1", &Impl1::create);
+    factory.impls().register_("Impl2", &Impl2::create);
+    factory.impls().register_("ImplFailingConstructor",
+            &ImplFailingConstructor::create);
     EXPECT_EQ(factory.impls().size(), size_t(3));
 
     // Duplicates
-    factory.impls().register_("duplicate", &impl_1::create);
-    EXPECT_THROW(factory.impls().register_("duplicate", &impl_1::create),
+    factory.impls().register_("duplicate", &Impl1::create);
+    EXPECT_THROW(factory.impls().register_("duplicate", &Impl1::create),
             invalid_argument);
 
     // Ordinary Unregistration
-    factory.impls().unregister("impl_1");
+    factory.impls().unregister("Impl1");
     EXPECT_EQ(factory.impls().size(), size_t(3));
 
     // Invalid Unregistration
-    EXPECT_THROW(factory.impls().unregister("impl_1"),
+    EXPECT_THROW(factory.impls().unregister("Impl1"),
             NoSuchImpl);
 }
 
 TEST_F(FactoryTest, testCreation)
 {
     // Non-existent impl
-    EXPECT_THROW(factory.create_inst("impl_does_not_exist"),
+    EXPECT_THROW(factory.createInst("ImplDoesNotExist"),
             NoSuchImpl);
 
     // Ordinary creation
@@ -84,16 +84,16 @@ TEST_F(FactoryTest, testCreation)
         Properties p;
         p["string_param"] = string("test");
         p["float_param"] = static_cast<float>(1.0);
-        interface* instance = factory.create_inst("impl_1", p);
+        Interface* instance = factory.createInst("Impl1", p);
         EXPECT_TRUE(instance != 0);
     }
 
     {
-        interface* instance = factory.create_inst("impl_2");
+        Interface* instance = factory.createInst("Impl2");
         EXPECT_TRUE(instance != 0);
     }
 
     // Constructor error
-    EXPECT_THROW(factory.create_inst("impl_failing_constructor"),
+    EXPECT_THROW(factory.createInst("ImplFailingConstructor"),
             ConstructError);
 }

@@ -140,9 +140,10 @@ template<typename Container, typename Accessor>
 typename detail::force_const<typename Accessor::result_type>::type AssociativeProxy<
         Container, Accessor>::operator[](const key_type& key) const {
     typename Container::const_iterator it;
-    if ((it = base_type::container.find(key)) == base_type::container.end())
+    if ((it = base_type::container.find(key)) == base_type::container.end()) {
         throw no_such_key(type_string("no such key in container: `%1%'",
                 "no such key in container", key));
+    }
 
     return this->accessor(it->second);
 }
@@ -151,9 +152,10 @@ template<typename Container, typename Accessor>
 typename Accessor::result_type AssociativeProxy<Container, Accessor>::operator[](
         const key_type& key) {
     typename Container::iterator it;
-    if ((it = base_type::container.find(key)) == base_type::container.end())
+    if ((it = base_type::container.find(key)) == base_type::container.end()) {
         throw no_such_key(type_string("no such key in container: `%1%'",
                 "no such key in container", key));
+    }
 
     return this->accessor(it->second);
 }
@@ -171,9 +173,10 @@ typename detail::force_const<
         typename AssociativeProxy<Container, pass_through>::mapped_type>::type&
 AssociativeProxy<Container, pass_through>::operator[](const key_type& key) const {
     typename Container::const_iterator it;
-    if ((it = base_type::container.find(key)) == base_type::container.end())
+    if ((it = base_type::container.find(key)) == base_type::container.end()) {
         throw no_such_key(type_string("no such key in container: `%1%'",
                 "no such key in container", key));
+    }
 
     return it->second;
 }
@@ -182,9 +185,10 @@ template<typename Container>
 typename AssociativeProxy<Container, pass_through>::mapped_type&
 AssociativeProxy<Container, pass_through>::operator[](const key_type& key) {
     typename Container::iterator it;
-    if ((it = base_type::container.find(key)) == base_type::container.end())
+    if ((it = base_type::container.find(key)) == base_type::container.end()) {
         throw no_such_key(type_string("no such key in container: `%1%'",
                 "no such key in container", key));
+    }
 
     return it->second;
 }

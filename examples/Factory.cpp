@@ -22,51 +22,51 @@
 
 #include "rsc/patterns/Factory.h"
 
-struct my_interface {
+struct MyInterface {
     virtual void
-    do_stuff() = 0;
+    doStuff() = 0;
 };
 
-struct my_impl_1: my_interface {
-    my_impl_1(const std::string& my_string_param, float my_float_param) {
-        std::cout << "my_impl_1: " << my_string_param << " " << my_float_param
+struct MyImpl1: MyInterface {
+    MyImpl1(const std::string& myStringParam, float myFloatParam) {
+        std::cout << "my_impl_1: " << myStringParam << " " << myFloatParam
                 << std::endl;
     }
 
-    void do_stuff() {
-        std::cout << "my_impl_1: doing stuff" << std::endl;
+    void doStuff() {
+        std::cout << "MyImpl1: doing stuff" << std::endl;
     }
 
-    static my_interface*
+    static MyInterface*
     create(const rsc::runtime::Properties& props) {
-        return new my_impl_1(props.get<std::string> ("my_string_param"),
+        return new MyImpl1(props.get<std::string> ("my_string_param"),
                 props.get<float> ("my_float_param"));
     }
 };
 
-struct my_impl_2: my_interface {
-    my_impl_2(int my_int_param, float my_float_param) {
-        std::cout << "my_impl_2: " << my_int_param << " " << my_float_param
+struct MyImpl2: MyInterface {
+    MyImpl2(int myIntParam, float myFloatParam) {
+        std::cout << "MyImpl2: " << myIntParam << " " << myFloatParam
                 << std::endl;
     }
 
-    void do_stuff() {
-        std::cout << "my_impl_2: doing stuff" << std::endl;
+    void doStuff() {
+        std::cout << "myImpl2: doing stuff" << std::endl;
     }
 
-    static my_interface*
+    static MyInterface*
     create(const rsc::runtime::Properties& props) {
-        return new my_impl_2(props.get<int> ("my_int_param"),
+        return new MyImpl2(props.get<int> ("my_int_param"),
                 props.get<float> ("my_float_param"));
     }
 };
 
-typedef rsc::patterns::SingletonFactory<std::string, my_interface> my_factory;
+typedef rsc::patterns::SingletonFactory<std::string, MyInterface> MyFactory;
 
-void register_impls() {
-    my_factory& factory = my_factory::getInstance();
-    factory.impls().register_("my_impl_1", &my_impl_1::create);
-    factory.impls().register_("my_impl_2", &my_impl_2::create);
+void registerImpls() {
+    MyFactory& factory = MyFactory::getInstance();
+    factory.impls().register_("my_impl_1", &MyImpl1::create);
+    factory.impls().register_("my_impl_2", &MyImpl2::create);
 
     std::cout << "registered " << factory.impls().size() << " impls:"
             << std::endl << factory << std::endl;
@@ -78,9 +78,9 @@ int main(int argc, char* argv[]) {
         return EXIT_FAILURE;
     }
 
-    register_impls();
+    registerImpls();
 
-    my_factory& factory = my_factory::getInstance();
+    MyFactory& factory = MyFactory::getInstance();
 
     rsc::runtime::Properties props;
     if (argc >= 3)
@@ -93,16 +93,16 @@ int main(int argc, char* argv[]) {
         if (std::string(argv[1]) != "all") {
             std::cout << "using impl " << argv[1] << std::endl;
 
-            my_interface* inst = factory.create_inst(argv[1], props);
+            MyInterface* inst = factory.createInst(argv[1], props);
 
-            inst->do_stuff();
+            inst->doStuff();
         } else {
             std::cout << "using all impls" << std::endl;
 
-            for (my_factory::impl_map::iterator it = factory.impls().begin(); it
+            for (MyFactory::ImplMap::iterator it = factory.impls().begin(); it
                     != factory.impls().end(); ++it) {
-                my_interface* inst = it->second(props);
-                inst->do_stuff();
+	        MyInterface* inst = it->second(props);
+                inst->doStuff();
             }
         }
     } catch (const rsc::patterns::NoSuchImpl&) {

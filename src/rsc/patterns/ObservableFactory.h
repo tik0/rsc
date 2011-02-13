@@ -37,35 +37,35 @@ class ObservableFactory: public Factory<Key, Interface> {
 protected:
     typedef Factory<Key, Interface> base;
 public:
-    typedef typename base::create_function create_function;
+    typedef typename base::CreateFunction CreateFunction;
 
-    typedef boost::signal2<void, const std::string&, const create_function&>
-            impl_added_signal;
+    typedef boost::signal2<void, const std::string&, const CreateFunction&>
+            ImplAddedSignal;
 
-    typedef boost::signal2<void, const std::string&, const create_function&>
-            impl_removed_signal;
+    typedef boost::signal2<void, const std::string&, const CreateFunction&>
+            ImplRemovedSignal;
 
     /**
      * Return the "implementation added" signal.
      */
-    impl_added_signal&
-    signal_impl_added() throw ();
+    ImplAddedSignal&
+    signalImplAdded() throw ();
 
     /**
      * Return the "implementation removed" signal.
      */
-    impl_removed_signal&
-    signal_impl_removed() throw ();
+    ImplRemovedSignal&
+    signalImplRemoved() throw ();
 protected:
-    typedef typename base::impl_map impl_map;
+    typedef typename base::ImplMap ImplMap;
 
-    impl_added_signal signal_impl_added_;
-    impl_removed_signal signal_impl_removed_;
+    ImplAddedSignal signal_impl_added_;
+    ImplRemovedSignal signal_impl_removed_;
 
     /**
      * @throw std::invalid_argument
      */
-    void register_(const Key& key, const create_function& create_function_);
+    void register_(const Key& key, const CreateFunction& create_function_);
 
     /**
      * @throw NoSuchImpl
@@ -87,34 +87,36 @@ private:
 // ObservableFactory implementation
 
 template<typename Key, typename Interface>
-typename ObservableFactory<Key, Interface>::impl_added_signal&
-ObservableFactory<Key, Interface>::signal_impl_added() throw () {
+typename ObservableFactory<Key, Interface>::ImplAddedSignal&
+ObservableFactory<Key, Interface>::signalImplAdded() throw () {
     return this->signal_impl_added_;
 }
 
 template<typename Key, typename Interface>
-typename ObservableFactory<Key, Interface>::impl_removed_signal&
-ObservableFactory<Key, Interface>::signal_impl_removed() throw () {
+typename ObservableFactory<Key, Interface>::ImplRemovedSignal&
+ObservableFactory<Key, Interface>::signalImplRemoved() throw () {
     return this->signal_impl_removed_;
 }
 
 template<typename Key, typename Interface>
 void ObservableFactory<Key, Interface>::register_(const Key& key,
-        const create_function& create_function_) {
+        const CreateFunction& create_function_) {
     base::register_(key, create_function_);
 
     //
-    if (!this->signal_impl_added_.empty())
+    if (!this->signal_impl_added_.empty()) {
         this->signal_impl_added_(key, create_function_);
+    }
 }
 
 template<typename Key, typename Interface>
 void ObservableFactory<Key, Interface>::unregister(const Key& key) {
     //
     if (!this->signal_impl_removed_.empty()) {
-        typename impl_map::iterator it;
-        if ((it = this->impl_map_.find(key)) != this->impl_map_.end())
+        typename ImplMap::iterator it;
+        if ((it = this->impl_map_.find(key)) != this->impl_map_.end()) {
             this->signal_impl_removed_(it->first, it->second);
+	}
     }
 
     base::unregister(key);

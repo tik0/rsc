@@ -34,17 +34,15 @@ using namespace boost;
 using namespace rsc::runtime;
 using namespace rsc::patterns;
 
-typedef ObservableFactory<string, interface> test_factory;
+typedef ObservableFactory<string, Interface> TestFactory;
 
 class ObservableFactoryTest: public ::testing::Test {
 protected:
-    test_factory factory;
+    TestFactory factory;
 
     virtual void SetUp() {
-        this->factory.impls().register_("impl_1", &impl_1::create);
-        this->factory.impls().register_("impl_2", &impl_2::create);
-        this->factory.impls().register_("impl_failing_constructor",
-                &impl_failing_constructor::create);
+        this->factory.impls().register_("Impl1", &Impl1::create);
+        this->factory.impls().register_("Impl2", &Impl2::create);
     }
 };
 
@@ -53,18 +51,18 @@ TEST_F(ObservableFactoryTest, testSignals)
     vector<string> added;
     vector<string> removed;
 
-    factory.signal_impl_added().connect(bind(&vector<string>::push_back, ref(
+    factory.signalImplAdded().connect(bind(&vector<string>::push_back, ref(
             added), _1));
-    factory.signal_impl_removed().connect(bind(&vector<string>::push_back, ref(
+    factory.signalImplRemoved().connect(bind(&vector<string>::push_back, ref(
             removed), _1));
 
-    factory.impls().unregister("impl_1");
+    factory.impls().unregister("Impl1");
     EXPECT_EQ(added.size(), size_t(0));
     EXPECT_EQ(removed.size(), size_t(1));
-    EXPECT_EQ(removed.back(), "impl_1");
+    EXPECT_EQ(removed.back(), "Impl1");
 
-    factory.impls().register_("impl_1", &impl_1::create);
+    factory.impls().register_("Impl1", &Impl1::create);
     EXPECT_EQ(added.size(), size_t(1));
-    EXPECT_EQ(added.back(), "impl_1");
+    EXPECT_EQ(added.back(), "Impl1");
     EXPECT_EQ(removed.size(), size_t(1));
 }

@@ -25,9 +25,10 @@ namespace detail {
 
 void pair_style_delete(ios_base::event event_, ios_base& stream, int index) {
     if (event_ == ios_base::erase_event && stream.pword(
-            pair_style::stream_storage))
+        pair_style::stream_storage)) {
         delete reinterpret_cast<pair_style*> (stream.pword(
                 pair_style::stream_storage));
+    }
 }
 
 pair_style::pair_style(const string& open_brace, const string& separator,

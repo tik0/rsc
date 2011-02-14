@@ -127,7 +127,7 @@ public:
      */
     bool removeRegistree(const std::string &name) {
         boost::recursive_mutex::scoped_lock lock(mutex);
-        return registreesByName.erase(name);
+        return registreesByName.erase(name) != 0;
     }
 
     /**

@@ -43,6 +43,12 @@ IF(UNIX)
 ELSEIF(MSVC)
 
     # right now W3 is as pedantic as GCC with the above settings
+    # still we do not want everything from the compiler...
+    
+    # needs to have dll-interface to be used by clients
+    ADD_DEFINITIONS(/wd4251)
+    # exported class derived from non-exported class
+    ADD_DEFINITIONS(/wd4275)
 
 ENDIF()
 
@@ -55,8 +61,6 @@ ENDIF()
 #    ADD_DEFINITIONS(/wd4127) # conditional expression is constant
 #    ADD_DEFINITIONS(/wd4217) # member template isn't copy constructor
 #    ADD_DEFINITIONS(/wd4250) # inherits (implements) some member via dominance
-#    ADD_DEFINITIONS(/wd4251) # needs to have dll-interface to be used by clients
-#    ADD_DEFINITIONS(/wd4275) # exported class derived from non-exported class
 #    ADD_DEFINITIONS(/wd4347) # "behavior change", function called instead of template
 #    ADD_DEFINITIONS(/wd4355) # "'this': used in member initializer list
 #    ADD_DEFINITIONS(/wd4505) # unreferenced function has been removed

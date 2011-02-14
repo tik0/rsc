@@ -49,6 +49,8 @@ ELSEIF(MSVC)
     ADD_DEFINITIONS(/wd4251)
     # exported class derived from non-exported class
     ADD_DEFINITIONS(/wd4275)
+    # do not warn for "unsafe" stl functions
+    ADD_DEFINITIONS(-D_SCL_SECURE_NO_WARNINGS)
 
 ENDIF()
 

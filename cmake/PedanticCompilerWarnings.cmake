@@ -39,6 +39,11 @@ IF(UNIX)
     IF(CHECK_CXX_FLAG_DIAGNOSTICS)
         ADD_DEFINITIONS(-fdiagnostics-show-option)
     ENDIF()
+    # if you are insane, enable this...
+    #CHECK_CXX_COMPILER_FLAG(-Weffc++ CHECK_CXX_FLAG_EFFCPP)
+    #IF(CHECK_CXX_FLAG_EFFCPP)
+    #    ADD_DEFINITIONS(-Weffc++)
+    #ENDIF()
 
 ELSEIF(MSVC)
 

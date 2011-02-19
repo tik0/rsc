@@ -73,8 +73,8 @@ FUNCTION(GENERATE_DOXYGEN)
         
         ADD_CUSTOM_COMMAND(OUTPUT ${DOC_API_DIR}
                            DEPENDS ${DOXYFILE}
-                           COMMAND ${DOXYGEN_EXECUTABLE}
-                           ARGS ${DOXYFILE}
+                           COMMAND ${CMAKE_COMMAND} ARGS -E make_directory "${DOC_API_DIR}"
+                           COMMAND ${DOXYGEN_EXECUTABLE} ARGS "${DOXYFILE}"
                            WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
         ADD_CUSTOM_TARGET(doc DEPENDS ${DOC_API_DIR})
         

@@ -76,7 +76,7 @@ public:
     static double degreeFromRadian(const double &radian);
 
     /**
-     * Returns the default precision used for ::isClose.
+     * Returns the default precision used for #isClose.
      *
      * @return default precision
      */
@@ -89,7 +89,7 @@ public:
      * @param a first number to compare
      * @param b second number to compare
      * @param precision precision to use for the comparison, default is
-     *                  ::getDefaultClosePrecision
+     *                  #getDefaultClosePrecision
      * @return @c true if \f$|a-b| < \textrm{precision}\f$
      */
     static bool isClose(const double &a, const double &b,

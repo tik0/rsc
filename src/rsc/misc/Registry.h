@@ -123,7 +123,7 @@ public:
      * clients will assume that system configuration knowledge is static!
      *
      * @param name name of the registree to remove
-     * @return @true if a registree was removed, else @c false
+     * @return @c true if a registree was removed, else @c false
      */
     bool removeRegistree(const std::string &name) {
         boost::recursive_mutex::scoped_lock lock(mutex);

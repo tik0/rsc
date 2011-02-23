@@ -60,13 +60,15 @@ CHECK_INCLUDE_FILE("unistd.h" HAVE_UNISTD_H)
 IF(HAVE_UNISTD_H)
     ADD_DEFINITIONS(-DHAVE_UNISTD_H)
 ENDIF()
-CHECK_INCLUDE_FILE_CXX("cxxabi.h" HAVE_CXXABI_H)
 
 # decide how to do name demangling
+CHECK_INCLUDE_FILE_CXX("cxxabi.h" HAVE_CXXABI_H)
 IF(HAVE_CXXABI_H)
     ADD_DEFINITIONS(-DDEMANGLE_GCC)
 ELSEIF(MSVC)
     ADD_DEFINITIONS(-DDEMANGLE_MSVC)
+ELSE()
+    MESSAGE(SEND_ERROR "No demangling solution found for the system.")
 ENDIF()
 
 # --- dependency handling ---

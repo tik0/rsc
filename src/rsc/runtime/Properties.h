@@ -80,7 +80,7 @@ public:
     set(const std::string& name, const T& value) throw ();
 };
 
-Properties
+RSC_EXPORT Properties
 operator<<(const Properties& left, const Properties& right);
 
 template<typename Ch, typename Tr>

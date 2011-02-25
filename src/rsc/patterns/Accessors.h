@@ -21,6 +21,8 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include "detail/ForceConst.h"
+
 namespace rsc {
 namespace patterns {
 
@@ -38,7 +40,8 @@ struct dereferencer {
         return *t;
     }
 
-    inline const result_type operator()(const T* t) const {
+    inline typename detail::force_const<result_type>::type
+    operator()(const T* t) const {
         return *t;
     }
 };
@@ -54,7 +57,8 @@ struct shared_ptr_dereferencer {
         return *t;
     }
 
-    inline const result_type operator()(boost::shared_ptr<const T> t) const {
+    inline typename detail::force_const<result_type>::type
+    operator()(boost::shared_ptr<const T> t) const {
         return *t;
     }
 };

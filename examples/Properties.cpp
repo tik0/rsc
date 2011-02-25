@@ -24,39 +24,46 @@
 
 int main(int, char*[]) {
     rsc::runtime::Properties props;
-    std::cout << "empty " << props << std::endl;
+    std::cout << "empty:       " << props << std::endl;
 
     props["key1"] = 1;
     props["key2"] = 2u;
     props["key3"] = 3.0;
     props["key4"] = std::string("four");
-    std::cout << "some values " << props << std::endl;
+    std::cout << "some values: " << props << std::endl;
 
     // Forcing entry type
     props.set<unsigned int> ("uint", 1.0);
-    std::cout << "forced type " << props << std::endl;
+    std::cout << "forced type: " << props << std::endl;
 
     // Lookup
-    std::cout << "key1: " << props.get<int> ("key1") << std::endl;
+    std::cout << "key1:        " << props.get<int> ("key1") << std::endl;
 
-    std::cout << "key2: " << boost::any_cast<unsigned int>(props["key2"])
+    std::cout << "key2:        " << boost::any_cast<unsigned int>(props["key2"])
             << std::endl;
 
     try {
-        std::cout << "key2: " << boost::any_cast<std::string>(props["key2"]) // wrong type
+        std::cout << "key2:        " << boost::any_cast<std::string>(props["key2"]) // wrong type
                 << std::endl;
     } catch (const boost::bad_any_cast& e) {
-        std::cerr << "error: " << e.what() << std::endl;
+        std::cerr << "error:       " << e.what() << std::endl;
     }
 
     //
     try {
-        std::cout << "invalid: " << props.get<bool> ("invalid") << std::endl;
+        std::cout << "invalid:     " << props.get<bool> ("invalid") << std::endl;
     } catch (const rsc::runtime::NoSuchObject& e) {
-        std::cerr << "error: " << e.what() << std::endl;
+        std::cerr << "error:       " << e.what() << std::endl;
     }
 
-    std::cout << "invalid: " << props.get<bool> ("invalid", true) << std::endl; // default
+    std::cout << "invalid:     " << props.get<bool> ("invalid", true) << std::endl; // default
+
+    // Merging of properties
+    rsc::runtime::Properties props2;
+    props2["key1"]   = 42;
+    props2["unique"] = std::string("only in props2");
+
+    std::cout << "merged:      " << (props << props2) << std::endl;
 
     return EXIT_SUCCESS;
 }

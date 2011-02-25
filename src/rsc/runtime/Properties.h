@@ -151,6 +151,8 @@ operator<<(std::basic_ostream<Ch, Tr>& stream, const Properties& properties) {
             stream << boost::any_cast<bool>(it->second);
 	} else if (it->second.type() == typeid(int)) {
             stream << boost::any_cast<int>(it->second);
+	} else if (it->second.type() == typeid(unsigned int)) {
+	  stream << boost::any_cast<unsigned int>(it->second);
 	} else if (it->second.type() == typeid(double)) {
             stream << boost::any_cast<double>(it->second);
 	} else {

@@ -46,7 +46,7 @@ namespace runtime {
  * @author Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  */
 class RSC_EXPORT Properties: public std::map<std::string, boost::any> { // TODO left_shiftable from Boost.Operators
-    friend Properties
+    friend RSC_EXPORT Properties
     operator<<(const Properties& properties1, const Properties& properties2);
     template<typename Ch, typename Tr>
     friend std::basic_ostream<Ch, Tr>

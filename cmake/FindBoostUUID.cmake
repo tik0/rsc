@@ -24,9 +24,9 @@ INCLUDE(FindPackageHandleStandardArgs)
 FIND_PATH(BOOSTUUID_INCLUDE_DIRS
           NAMES uuid.hpp
           HINTS ${BOOST_ROOT}
-          PATH_SUFFIXES boost/uuid)
-             
-# post-process inlude path
+          PATH_SUFFIXES include/boost/uuid)
+
+# post-process include path
 IF(BOOSTUUID_INCLUDE_DIRS)
     STRING(REGEX REPLACE boost/uuid$$ "" BOOSTUUID_INCLUDE_DIRS ${BOOSTUUID_INCLUDE_DIRS})
     SET(BOOSTUUID_INCLUDE_DIRS ${BOOSTUUID_INCLUDE_DIRS} CACHE PATH "Boost uuid include dirs" FORCE)

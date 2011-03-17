@@ -56,6 +56,13 @@ public:
 RSC_EXPORT boost::uint64_t currentTimeMillis();
 
 /**
+ * Returns the current system time as microseconds.
+ *
+ * @return current system time in microseconds
+ */
+RSC_EXPORT boost::uint64_t currentTimeMicros();
+
+/**
  * Generates a random alpha-numeric character.
  *
  * @return alpha-numeric character

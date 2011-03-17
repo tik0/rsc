@@ -36,9 +36,9 @@ namespace misc {
 void NullDeleter::operator()(void */*ignored*/) const {
 }
 
-boost::uint64_t currentTimeMillis() {
-
 #ifdef WIN32
+
+boost::uint64_t windowsTime() {
 
     static const __int64 magic = 116444736000000000; // 1970/1/1
     SYSTEMTIME st;
@@ -47,7 +47,17 @@ boost::uint64_t currentTimeMillis() {
     SystemTimeToFileTime(&st,&ft); // in 100-nanosecs...
     __int64 t;
     memcpy(&t,&ft,sizeof t);
-    return (t - magic)/10000; // scale to millis.
+    return t - magic;
+
+}
+
+#endif
+
+boost::uint64_t currentTimeMillis() {
+
+#ifdef WIN32
+
+    return windowsTime() / 10000; // scale to millis.
 
 #else
 
@@ -56,6 +66,24 @@ boost::uint64_t currentTimeMillis() {
 
     // (second-value in milliseconds) + (microsecond value in milliseconds)
     return (((boost::uint64_t) tv.tv_sec) * 1000l) + (tv.tv_usec / 1000l);
+
+#endif
+
+}
+
+boost::uint64_t currentTimeMicros() {
+
+#ifdef WIN32
+
+    return windowsTime() / 10;
+
+#else
+
+    timeval tv;
+    gettimeofday(&tv, NULL);
+
+    // (second-value in microseconds) + (microsecond value)
+    return (((boost::uint64_t) tv.tv_sec) * 1000000ull) + (tv.tv_usec);
 
 #endif
 

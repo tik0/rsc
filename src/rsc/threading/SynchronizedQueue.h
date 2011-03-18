@@ -27,6 +27,7 @@
 #include <boost/thread/recursive_mutex.hpp>
 
 #include "InterruptedException.h"
+#include "rsc/rscexports.h"
 
 namespace rsc {
 namespace threading {
@@ -36,7 +37,7 @@ namespace threading {
  *
  * @author jwienke
  */
-class QueueEmptyException: public std::runtime_error {
+class RSC_EXPORT QueueEmptyException: public std::runtime_error {
 public:
     QueueEmptyException();
     explicit QueueEmptyException(const std::string &message);

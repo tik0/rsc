@@ -59,6 +59,21 @@ TEST(SynchronizedQueueTest, testBasicPushPopSingleThreaded)
 
 }
 
+TEST(SynchronizedQueueTest, testTryPop)
+{
+
+    SynchronizedQueue<int> queue;
+
+    EXPECT_THROW(queue.tryPop(), QueueEmptyException);
+
+    const int i = 3;
+    queue.push(i);
+    EXPECT_EQ(i, queue.tryPop());
+
+    EXPECT_THROW(queue.tryPop(), QueueEmptyException);
+
+}
+
 TEST(SynchronizedQueueTest, testBasicPushPopMultiThreaded)
 {
 

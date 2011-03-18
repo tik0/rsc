@@ -32,6 +32,17 @@ namespace rsc {
 namespace threading {
 
 /**
+ * Indicates that a queue was empty while trying to pop an element from it.
+ *
+ * @author jwienke
+ */
+class QueueEmptyException: public std::runtime_error {
+public:
+    QueueEmptyException();
+    explicit QueueEmptyException(const std::string &message);
+};
+
+/**
  * A queue with synchronized access and interruption support. On #push
  * operations only one waiting thread is woken up.
  *
@@ -115,6 +126,27 @@ public:
 
         if (interrupted) {
             throw InterruptedException("Queue was interrupted");
+        }
+
+        M message = queue.front();
+        queue.pop();
+        return message;
+
+    }
+
+    /**
+     * Tries to pop an element from the queue but does not wait if there is no
+     * element on the queue.
+     *
+     * @return element from the queue
+     * @throw QueueEmptyException the queue was empty
+     */
+    M tryPop() {
+
+        boost::recursive_mutex::scoped_lock lock(mutex);
+
+        if (queue.empty()) {
+            throw QueueEmptyException();
         }
 
         M message = queue.front();

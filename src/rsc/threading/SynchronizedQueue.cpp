@@ -19,8 +19,20 @@
 
 #include "SynchronizedQueue.h"
 
+using namespace std;
+
 namespace rsc {
 namespace threading {
+
+QueueEmptyException::QueueEmptyException() :
+    runtime_error("Queue was empty") {
+
+}
+
+QueueEmptyException::QueueEmptyException(const string &message) :
+    runtime_error(message) {
+
+}
 
 }
 }

@@ -17,7 +17,7 @@
  *
  * ============================================================ */
 
-#include "ConvergenceMonitor.h"
+#include "SequenceMonitor.h"
 
 namespace rsc {
 namespace math {

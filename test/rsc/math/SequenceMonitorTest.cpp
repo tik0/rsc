@@ -61,22 +61,29 @@ TEST(SequenceMonitorTest, testConvergence)
     double v5[5] = {0, 1, 2, 2.991, 4};
     double v6[5] = {0, 1, 2, 3, 4.009};
 
-    // test different vectors
-    EXPECT_FALSE(monitor.condition_fulfilled(v, 5));
-    EXPECT_FALSE(monitor.condition_fulfilled(y, 5));
-    EXPECT_FALSE(monitor.condition_fulfilled(v, 5));
-    EXPECT_FALSE(monitor.condition_fulfilled(x, 5));
-    EXPECT_FALSE(monitor.condition_fulfilled(w, 5));
-    EXPECT_FALSE(monitor.condition_fulfilled(y, 5));
-    EXPECT_FALSE(monitor.condition_fulfilled(v, 5));
+    for (int t=1; t<=2; t++) {
+        // test different vectors
+        EXPECT_FALSE(monitor.condition_fulfilled(v, 5));
+        EXPECT_FALSE(monitor.condition_fulfilled(y, 5));
+        EXPECT_FALSE(monitor.condition_fulfilled(v, 5));
+        EXPECT_FALSE(monitor.condition_fulfilled(x, 5));
+        EXPECT_FALSE(monitor.condition_fulfilled(w, 5));
+        EXPECT_FALSE(monitor.condition_fulfilled(y, 5));
+        EXPECT_FALSE(monitor.condition_fulfilled(v, 5));
 
-    // test similar vectors
-    EXPECT_FALSE(monitor.condition_fulfilled(v3, 5));
-    EXPECT_FALSE(monitor.condition_fulfilled(v1, 5));
-    EXPECT_FALSE(monitor.condition_fulfilled(v4, 5));
-    EXPECT_FALSE(monitor.condition_fulfilled(v5, 5));
-    EXPECT_FALSE(monitor.condition_fulfilled(v2, 5));
-    EXPECT_TRUE(monitor.condition_fulfilled(v6, 5));
+        // test similar vectors
+        EXPECT_FALSE(monitor.condition_fulfilled(v3, 5));
+        EXPECT_FALSE(monitor.condition_fulfilled(v1, 5));
+        EXPECT_FALSE(monitor.condition_fulfilled(v4, 5));
+        EXPECT_FALSE(monitor.condition_fulfilled(v5, 5));
+        EXPECT_FALSE(monitor.condition_fulfilled(v2, 5));
+        EXPECT_TRUE(monitor.condition_fulfilled(v6, 5));
+        EXPECT_TRUE(monitor.condition_fulfilled(v1, 5));
+        EXPECT_TRUE(monitor.condition_fulfilled(v2, 5));
+        EXPECT_TRUE(monitor.condition_fulfilled(v3, 5));
+    }
+
+
 }
 
 TEST(SequenceMonitorTest, testDivergence)
@@ -120,44 +127,4 @@ TEST(SequenceMonitorTest, testDivergence)
 
 
 }
-
-TEST(SequenceMonitorTest, testStayConverged)
-{
-    double v[5] = {0, 1, 2, 3, 4.5};
-    double w[5] = {7, 3.2, 6, 3, 0};
-    MetricPtr m(new EuclidDist());
-    MetricConditionPtr mc(new BelowThreshold(m, 0.01));
-    SequenceMonitor monitor(5, 5, mc);
-
-    // let converge
-    for (int i=1; i<=5; i++)    monitor.condition_fulfilled(v, 5);
-    EXPECT_TRUE(monitor.condition_fulfilled(v, 5));
-
-    // stay converged regardless of input
-    EXPECT_TRUE(monitor.condition_fulfilled(v, 5));
-    EXPECT_TRUE(monitor.condition_fulfilled(w, 5));
-    EXPECT_TRUE(monitor.condition_fulfilled(w, 5));
-    EXPECT_TRUE(monitor.condition_fulfilled(v, 5));
-    EXPECT_TRUE(monitor.condition_fulfilled(w, 5));
-}
-
-
-TEST(SequenceMonitorTest, testReset)
-{
-    double v[5] = {0, 1, 2, 3, 4.5};
-    MetricPtr m(new EuclidDist());
-    MetricConditionPtr mc(new BelowThreshold(m, 0.01));
-    SequenceMonitor monitor(5, 5, mc);
-
-    // let converge
-    for (int i=1; i<=5; i++)    monitor.condition_fulfilled(v, 5);
-    EXPECT_TRUE(monitor.condition_fulfilled(v, 5));
-
-    // reset and test again convergence
-    monitor.reset();
-    for (int i=1; i<=5; i++)    EXPECT_FALSE(monitor.condition_fulfilled(v, 5));
-    EXPECT_TRUE(monitor.condition_fulfilled(v, 5));
-}
-
-
 

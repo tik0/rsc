@@ -219,7 +219,9 @@ public:
             MetricConditionPtr condition) :
         dim(dim), windowSize(window), metricCondition(condition) {
         prev_v = new double[dim];
-        reset();
+        for (unsigned int i = 0; i < dim; i++)
+            prev_v[i] = 0;
+        resetCnt();
     }
 
     ~SequenceMonitor() {
@@ -229,9 +231,6 @@ public:
     /**
      * Test whether the difference of consecutive sequence members fulfills
      * the condition for the given 'time window' or not.
-     * Once a sequence fulfills the condition, this method returns true regardless
-     * of new elements. For further usage this object
-     * it has to be reset -> reset().
      *
      * @param v next sequence member
      */
@@ -250,10 +249,6 @@ public:
         for (unsigned int i = 0; i < this->dim; i++)
             this->prev_v[i] = new_v[i];
 
-        // if condition already fulfilled in previous steps, return true again
-        if (this->fulfilled_previously)
-            return true;
-
         // if condition is not fulfilled currently, start counter again from window size
         if (!currfulfilled) {
             resetCnt();
@@ -265,20 +260,10 @@ public:
         if (this->cnt > 0)
             return false;
 
-        // now sequence fulfilled condition long enough, remember for following steps
-        this->fulfilled_previously = true;
+        // now the sequence fulfilled the condition long enough
         return true;
     }
 
-    /**
-     * Reset monitor for new convergence test
-     */
-    void reset() {
-        fulfilled_previously = false;
-        resetCnt();
-        for (unsigned int i = 0; i < dim; i++)
-            prev_v[i] = 0;
-    }
 
 protected:
 
@@ -291,8 +276,7 @@ protected:
     MetricConditionPtr metricCondition;
 
     double* prev_v; // previous sequence element
-    int cnt; // counts how long the condition is fulfilled
-    bool fulfilled_previously; // true, if sequence has been converged and monitor has not yet been reset
+    int cnt; // counts whether the condition is fulfilled long enough
 
 };
 

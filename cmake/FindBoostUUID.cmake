@@ -5,6 +5,10 @@
 #
 # BOOSTUUID_INCLUDE_DIRS - include directories needed to use the library
 #
+# Uses:
+#
+# BOOSTUUID_ROOT - hint for the installation root of boost uuid
+#
 # Copyright (C) 2010 by Johannes Wienke <jwienke at techfak dot uni-bielefeld dot de>
 #
 # This program is free software; you can redistribute it
@@ -23,7 +27,7 @@ INCLUDE(FindPackageHandleStandardArgs)
 
 FIND_PATH(BOOSTUUID_INCLUDE_DIRS
           NAMES uuid.hpp
-          HINTS ${BOOST_ROOT}
+          HINTS ${BOOSTUUID_ROOT} ${BOOST_ROOT}
           PATH_SUFFIXES include/boost/uuid)
 
 # post-process include path

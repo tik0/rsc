@@ -19,12 +19,12 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
 #include <iostream>
-
-#include <math.h>
 #include <sstream>
 #include <stdexcept>
+#include <cmath>
+
+#include <boost/shared_ptr.hpp>
 
 namespace rsc {
 namespace math {
@@ -38,71 +38,61 @@ typedef boost::shared_ptr<Metric> MetricPtr;
 /**
  * Defines interface for vector metrics providing a calc-method that
  * calculates the metric of two vectors.
+ *
+ * @author cemmeric
  */
 class Metric {
 public:
 
-    Metric() {
-    }
-
     /**
-     * calculates the distance between v1 and v2
+     * Calculates the distance between v1 and v2.
+     *
      * @param v1 vector
      * @param v2 another vector
      * @return distance between the two vectors
      */
     virtual double calc(const double* v1, const double* v2,
             const unsigned int& dim) = 0;
+
 };
 
 /**
  * Euclidean distance between two vectors.
+ *
+ * @author cemmeric
  */
 class EuclidDist: public Metric {
 public:
 
-    EuclidDist() {
-    }
-
     /**
-     * calculates the euclidean distance between v1 and v2
+     * Calculates the Euclidean distance between v1 and v2.
+     *
      * @param v1 vector
      * @param v2 another vector
-     * @return euclidean distance between the two vectors
+     * @return Euclidean distance between the two vectors
      */
-    double calc(const double* v1, const double* v2, const unsigned int& dim) {
-        double sum = 0;
-        for (int i = dim - 1; i >= 0; i--)
-            sum += pow(v1[i] - v2[i], 2);
-        return sqrt(sum);
-    }
+    double calc(const double* v1, const double* v2, const unsigned int& dim);
+
 };
 
 /**
  * Euclidean distance between two vectors.
+ *
+ * @author cemmeric
  */
 class MaximumDist: public Metric {
 public:
 
-    MaximumDist() {
-    }
-
     /**
-     * distance between two vectors is defined as the maximum absolute componentwise value
+     * Distance between two vectors is defined as the maximum absolute
+     * component-wise value.
+     *
      * @param v1 vector
      * @param v2 another vector
-     * @return maximum absolut distance between the two vectors
+     * @return maximum absolute distance between the two vectors
      */
-    double calc(const double* v1, const double* v2, const unsigned int& dim) {
-        double currValue, maxValue = 0.0;
-        for (int i = dim - 1; i >= 0; i--) {
-            currValue = fabs(v1[i] - v2[i]);
-            if (currValue > maxValue) {
-                maxValue = currValue;
-            }
-        }
-        return maxValue;
-    }
+    double calc(const double* v1, const double* v2, const unsigned int& dim);
+
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -112,39 +102,41 @@ class MetricCondition;
 typedef boost::shared_ptr<MetricCondition> MetricConditionPtr;
 
 /**
- * Defines a interface for metric conditions. Provides a method isfulfilled.
+ * Defines a interface for metric conditions. Provides a method is fulfilled.
+ *
+ * @author cemmeric
  */
 class MetricCondition {
 public:
 
-    MetricCondition(MetricPtr m) :
-        metric(m) {
-    }
+    MetricCondition(MetricPtr m);
 
     /**
-     *  Tests whether the metric condition is fulfilled for two vectors
+     * Tests whether the metric condition is fulfilled for two vectors.
+     *
      * @param v1 a vector
      * @param v2 another vector
      * @param dim dimension of the two vectors v1 and v2
      * @return true if v1 and v2 fulfill the metric condition
      */
-    virtual bool isfulfilled(const double* v1, const double* v2,
+    virtual bool isFulfilled(const double* v1, const double* v2,
             const unsigned int& dim) = 0;
 
 protected:
     const MetricPtr metric;
+
 };
 
 /**
- * The BelowThreshold - condition tests whether a given metric of two vectors stays
- * below a given upper threshold
+ * The BelowThreshold - condition tests whether a given metric of two vectors
+ * stays below a given upper threshold.
+ *
+ * @author cemmeric
  */
 class BelowThreshold: public MetricCondition {
 public:
 
-    BelowThreshold(const MetricPtr m, const double threshold) :
-        MetricCondition(m), threshold(threshold) {
-    }
+    BelowThreshold(const MetricPtr m, const double threshold);
 
     /**
      * tests whether two vectors fulfill the BelowUpperThreshold - condition
@@ -153,25 +145,24 @@ public:
      * @param dim dimension of both given vectors
      * @return true, if metric(v1, v2) < threshold
      */
-    bool isfulfilled(const double* v1, const double* v2,
-            const unsigned int& dim) {
-        return (this->metric->calc(v1, v2, dim) < this->threshold);
-    }
+    bool isFulfilled(const double* v1, const double* v2,
+            const unsigned int& dim);
 
 protected:
     const double threshold;
+
 };
 
 /**
  * The AboveThreshold - condition tests whether a given metric of two vectors stays
- * above a given threshold
+ * above a given threshold.
+ *
+ * @author cemmeric
  */
 class AboveThreshold: public MetricCondition {
 public:
 
-    AboveThreshold(const MetricPtr m, const double threshold) :
-        MetricCondition(m), threshold(threshold) {
-    }
+    AboveThreshold(const MetricPtr m, const double threshold);
 
     /**
      * tests whether two vectors fulfill the AboveThreshold - condition
@@ -180,53 +171,45 @@ public:
      * @param dim dimension of both given vectors
      * @return true, if metric(v1, v2) > threshold
      */
-    bool isfulfilled(const double* v1, const double* v2,
-            const unsigned int& dim) {
-        return (this->metric->calc(v1, v2, dim) > this->threshold);
-    }
+    bool isFulfilled(const double* v1, const double* v2,
+            const unsigned int& dim);
 
 protected:
     const double threshold;
+
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////// SEQUENCE MONITOR //////////////////////////////////////////////////
 
 /**
- * A monitor for (vector-) sequences. Tests whether the difference of consecutive members of a sequence
- * fulfills a certain metric condition for a certain number of steps or not.
+ * A monitor for (vector-) sequences. Tests whether the difference of
+ * consecutive members of a sequence fulfills a certain metric condition for a
+ * certain number of steps or not.
  *
- * A simple application could be convergence testing: Test whether the difference between the current vector
- * and the predecessor is less than a certain threshold value. If this holds for a certain number of
- * consecutive sequence members (window size + 1), the sequence is said to be converged.
- *
+ * A simple application could be convergence testing: Test whether the
+ * difference between the current vector and the predecessor is less than a
+ * certain threshold value. If this holds for a certain number of consecutive
+ * sequence members (window size + 1), the sequence is said to be converged.
  *
  * @author cemmeric
  */
 class SequenceMonitor {
-
 public:
 
     /**
-     * Constructor 
+     * Constructor.
      *
      * @param dim dimension of the vectors of the sequence
-     * @param window number of consecutive members for which the condition should hold
-     * @param condition the condition that should be fulfilled for consecutive sequence members
-     * 
+     * @param window number of consecutive members for which the condition
+     *               should hold
+     * @param condition the condition that should be fulfilled for consecutive
+     *                  sequence members
      */
     SequenceMonitor(const unsigned int dim, const unsigned int window,
-            MetricConditionPtr condition) :
-        dim(dim), windowSize(window), metricCondition(condition) {
-        prev_v = new double[dim];
-        for (unsigned int i = 0; i < dim; i++)
-            prev_v[i] = 0;
-        resetCnt();
-    }
+            MetricConditionPtr condition);
 
-    ~SequenceMonitor() {
-        delete[] prev_v;
-    }
+    ~SequenceMonitor();
 
     /**
      * Test whether the difference of consecutive sequence members fulfills
@@ -234,49 +217,24 @@ public:
      *
      * @param v next sequence member
      */
-    bool condition_fulfilled(double* new_v, const unsigned int& dim) {
-        if (dim != this->dim) {
-            std::stringstream s;
-            s << "Given dimension " << dim
-                    << " of argument vector does not match preliminarily defined dimension "
-                    << this->dim;
-            throw std::domain_error(s.str());
-        }
-
-        // test if condition is fulfilled for this element and copy current vector for next call
-        bool currfulfilled = this->metricCondition->isfulfilled(new_v,
-                this->prev_v, dim);
-        for (unsigned int i = 0; i < this->dim; i++)
-            this->prev_v[i] = new_v[i];
-
-        // if condition is not fulfilled currently, start counter again from window size
-        if (!currfulfilled) {
-            resetCnt();
-            return false;
-        }
-
-        // test if cnt reaches zero, otherwise condition is not fulfilled long enough
-        this->cnt--;
-        if (this->cnt > 0)
-            return false;
-
-        // now the sequence fulfilled the condition long enough
-        return true;
-    }
-
+    bool condition_fulfilled(double* new_v, const unsigned int& dim);
 
 protected:
 
-    void resetCnt() {
-        cnt = windowSize;
-    }
+    void resetCnt();
 
     const unsigned int dim;
     const unsigned int windowSize;
     MetricConditionPtr metricCondition;
 
-    double* prev_v; // previous sequence element
-    int cnt; // counts whether the condition is fulfilled long enough
+    /**
+     * Previous sequence element.
+     */
+    double* prev_v;
+    /**
+     * Counts whether the condition is fulfilled long enough.
+     */
+    int cnt;
 
 };
 

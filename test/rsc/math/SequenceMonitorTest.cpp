@@ -36,8 +36,8 @@ TEST(SequenceMonitorTest, testIllegalDimension)
     MetricConditionPtr mc(mcond);
     SequenceMonitor monitor(5, 10, mc);
     double v[5] = {0, 1, 2, 3, 4};
-    EXPECT_THROW(monitor.condition_fulfilled(v, 6), std::domain_error);
-    EXPECT_THROW(monitor.condition_fulfilled(v, 4), std::domain_error);
+    EXPECT_THROW(monitor.isConditionFulfilled(v, 6), std::domain_error);
+    EXPECT_THROW(monitor.isConditionFulfilled(v, 4), std::domain_error);
 }
 
 
@@ -63,24 +63,24 @@ TEST(SequenceMonitorTest, testConvergence)
 
     for (int t=1; t<=2; t++) {
         // test different vectors
-        EXPECT_FALSE(monitor.condition_fulfilled(v, 5));
-        EXPECT_FALSE(monitor.condition_fulfilled(y, 5));
-        EXPECT_FALSE(monitor.condition_fulfilled(v, 5));
-        EXPECT_FALSE(monitor.condition_fulfilled(x, 5));
-        EXPECT_FALSE(monitor.condition_fulfilled(w, 5));
-        EXPECT_FALSE(monitor.condition_fulfilled(y, 5));
-        EXPECT_FALSE(monitor.condition_fulfilled(v, 5));
+        EXPECT_FALSE(monitor.isConditionFulfilled(v, 5));
+        EXPECT_FALSE(monitor.isConditionFulfilled(y, 5));
+        EXPECT_FALSE(monitor.isConditionFulfilled(v, 5));
+        EXPECT_FALSE(monitor.isConditionFulfilled(x, 5));
+        EXPECT_FALSE(monitor.isConditionFulfilled(w, 5));
+        EXPECT_FALSE(monitor.isConditionFulfilled(y, 5));
+        EXPECT_FALSE(monitor.isConditionFulfilled(v, 5));
 
         // test similar vectors
-        EXPECT_FALSE(monitor.condition_fulfilled(v3, 5));
-        EXPECT_FALSE(monitor.condition_fulfilled(v1, 5));
-        EXPECT_FALSE(monitor.condition_fulfilled(v4, 5));
-        EXPECT_FALSE(monitor.condition_fulfilled(v5, 5));
-        EXPECT_FALSE(monitor.condition_fulfilled(v2, 5));
-        EXPECT_TRUE(monitor.condition_fulfilled(v6, 5));
-        EXPECT_TRUE(monitor.condition_fulfilled(v1, 5));
-        EXPECT_TRUE(monitor.condition_fulfilled(v2, 5));
-        EXPECT_TRUE(monitor.condition_fulfilled(v3, 5));
+        EXPECT_FALSE(monitor.isConditionFulfilled(v3, 5));
+        EXPECT_FALSE(monitor.isConditionFulfilled(v1, 5));
+        EXPECT_FALSE(monitor.isConditionFulfilled(v4, 5));
+        EXPECT_FALSE(monitor.isConditionFulfilled(v5, 5));
+        EXPECT_FALSE(monitor.isConditionFulfilled(v2, 5));
+        EXPECT_TRUE(monitor.isConditionFulfilled(v6, 5));
+        EXPECT_TRUE(monitor.isConditionFulfilled(v1, 5));
+        EXPECT_TRUE(monitor.isConditionFulfilled(v2, 5));
+        EXPECT_TRUE(monitor.isConditionFulfilled(v3, 5));
     }
 
 
@@ -108,22 +108,22 @@ TEST(SequenceMonitorTest, testDivergence)
     double v6[5] = {0, 1, 2, 3, 4.009};
 
     // test similar vectors
-    EXPECT_FALSE(monitor.condition_fulfilled(v3, 5));
-    EXPECT_FALSE(monitor.condition_fulfilled(v1, 5));
-    EXPECT_FALSE(monitor.condition_fulfilled(v4, 5));
-    EXPECT_FALSE(monitor.condition_fulfilled(v5, 5));
-    EXPECT_FALSE(monitor.condition_fulfilled(v2, 5));
-    EXPECT_FALSE(monitor.condition_fulfilled(v6, 5));
-    EXPECT_FALSE(monitor.condition_fulfilled(v1, 5));
-    EXPECT_FALSE(monitor.condition_fulfilled(v6, 5));
+    EXPECT_FALSE(monitor.isConditionFulfilled(v3, 5));
+    EXPECT_FALSE(monitor.isConditionFulfilled(v1, 5));
+    EXPECT_FALSE(monitor.isConditionFulfilled(v4, 5));
+    EXPECT_FALSE(monitor.isConditionFulfilled(v5, 5));
+    EXPECT_FALSE(monitor.isConditionFulfilled(v2, 5));
+    EXPECT_FALSE(monitor.isConditionFulfilled(v6, 5));
+    EXPECT_FALSE(monitor.isConditionFulfilled(v1, 5));
+    EXPECT_FALSE(monitor.isConditionFulfilled(v6, 5));
 
     // test different vectors
-    EXPECT_FALSE(monitor.condition_fulfilled(v6, 5));
-    EXPECT_FALSE(monitor.condition_fulfilled(v, 5));
-    EXPECT_FALSE(monitor.condition_fulfilled(w, 5));
-    EXPECT_FALSE(monitor.condition_fulfilled(x, 5));
-    EXPECT_FALSE(monitor.condition_fulfilled(y, 5));
-    EXPECT_TRUE(monitor.condition_fulfilled(z, 5));
+    EXPECT_FALSE(monitor.isConditionFulfilled(v6, 5));
+    EXPECT_FALSE(monitor.isConditionFulfilled(v, 5));
+    EXPECT_FALSE(monitor.isConditionFulfilled(w, 5));
+    EXPECT_FALSE(monitor.isConditionFulfilled(x, 5));
+    EXPECT_FALSE(monitor.isConditionFulfilled(y, 5));
+    EXPECT_TRUE(monitor.isConditionFulfilled(z, 5));
 
 
 }

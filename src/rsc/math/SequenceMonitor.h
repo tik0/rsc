@@ -217,7 +217,7 @@ public:
      *
      * @param v next sequence member
      */
-    bool condition_fulfilled(double* new_v, const unsigned int& dim);
+    bool isConditionFulfilled(double* new_v, const unsigned int& dim);
 
 protected:
 

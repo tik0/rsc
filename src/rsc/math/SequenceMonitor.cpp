@@ -79,7 +79,7 @@ SequenceMonitor::~SequenceMonitor() {
     delete[] prev_v;
 }
 
-bool SequenceMonitor::condition_fulfilled(double* new_v,
+bool SequenceMonitor::isConditionFulfilled(double* new_v,
         const unsigned int& dim) {
     if (dim != this->dim) {
         std::stringstream s;

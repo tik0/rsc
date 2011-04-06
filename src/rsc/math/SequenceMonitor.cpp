@@ -24,7 +24,7 @@ using namespace std;
 namespace rsc {
 namespace math {
 
-double EuclidDist::calc(const double* v1, const double* v2,
+double EuclidDist::calc(const double *v1, const double *v2,
         const unsigned int& dim) {
     double sum = 0;
     for (int i = dim - 1; i >= 0; i--)
@@ -32,7 +32,7 @@ double EuclidDist::calc(const double* v1, const double* v2,
     return sqrt(sum);
 }
 
-double MaximumDist::calc(const double* v1, const double* v2,
+double MaximumDist::calc(const double *v1, const double *v2,
         const unsigned int& dim) {
     double currValue, maxValue = 0.0;
     for (int i = dim - 1; i >= 0; i--) {
@@ -52,7 +52,7 @@ BelowThreshold::BelowThreshold(const MetricPtr m, const double threshold) :
     MetricCondition(m), threshold(threshold) {
 }
 
-bool BelowThreshold::isFulfilled(const double* v1, const double* v2,
+bool BelowThreshold::isFulfilled(const double *v1, const double *v2,
         const unsigned int& dim) {
     return (this->metric->calc(v1, v2, dim) < this->threshold);
 }
@@ -61,7 +61,7 @@ AboveThreshold::AboveThreshold(const MetricPtr m, const double threshold) :
     MetricCondition(m), threshold(threshold) {
 }
 
-bool AboveThreshold::isFulfilled(const double* v1, const double* v2,
+bool AboveThreshold::isFulfilled(const double *v1, const double *v2,
         const unsigned int& dim) {
     return (this->metric->calc(v1, v2, dim) > this->threshold);
 }
@@ -79,7 +79,7 @@ SequenceMonitor::~SequenceMonitor() {
     delete[] prev_v;
 }
 
-bool SequenceMonitor::isConditionFulfilled(double* new_v,
+bool SequenceMonitor::isConditionFulfilled(double *new_v,
         const unsigned int& dim) {
     if (dim != this->dim) {
         std::stringstream s;

@@ -26,6 +26,8 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include "rsc/rscexports.h"
+
 namespace rsc {
 namespace math {
 
@@ -41,7 +43,7 @@ typedef boost::shared_ptr<Metric> MetricPtr;
  *
  * @author cemmeric
  */
-class Metric {
+class RSC_EXPORT Metric {
 public:
 
     /**
@@ -61,7 +63,7 @@ public:
  *
  * @author cemmeric
  */
-class EuclidDist: public Metric {
+class RSC_EXPORT EuclidDist: public Metric {
 public:
 
     /**
@@ -80,7 +82,7 @@ public:
  *
  * @author cemmeric
  */
-class MaximumDist: public Metric {
+class RSC_EXPORT MaximumDist: public Metric {
 public:
 
     /**
@@ -106,7 +108,7 @@ typedef boost::shared_ptr<MetricCondition> MetricConditionPtr;
  *
  * @author cemmeric
  */
-class MetricCondition {
+class RSC_EXPORT MetricCondition {
 public:
 
     MetricCondition(MetricPtr m);
@@ -133,7 +135,7 @@ protected:
  *
  * @author cemmeric
  */
-class BelowThreshold: public MetricCondition {
+class RSC_EXPORT BelowThreshold: public MetricCondition {
 public:
 
     BelowThreshold(const MetricPtr m, const double threshold);
@@ -159,7 +161,7 @@ protected:
  *
  * @author cemmeric
  */
-class AboveThreshold: public MetricCondition {
+class RSC_EXPORT AboveThreshold: public MetricCondition {
 public:
 
     AboveThreshold(const MetricPtr m, const double threshold);
@@ -194,7 +196,7 @@ protected:
  *
  * @author cemmeric
  */
-class SequenceMonitor {
+class RSC_EXPORT SequenceMonitor {
 public:
 
     /**

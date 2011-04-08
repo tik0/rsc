@@ -23,7 +23,20 @@ OPTION(BUILD_EXAMPLES "Decide if the examples shall be built or not" ON)
 
 # --- global definitions ---
 
-SET(RSC_VERSION 0.2.0)
+# version information
+SET(RSC_VERSION_MAJOR "0")
+SET(RSC_VERSION_MINOR "2")
+SET(RSC_VERSION_PATCH "0")
+SET(RSC_VERSION "${RSC_VERSION_MAJOR}.${RSC_VERSION_MINOR}.${RSC_VERSION_PATCH}")
+SET(RSC_ABI_VERSION "2")
+
+FIND_PACKAGE(Subversion)
+SET(RSC_WC_REVISION "archive")
+IF(Subversion_FOUND)
+    Subversion_WC_INFO(${CMAKE_CURRENT_SOURCE_DIR} RSC)
+    MESSAGE(STATUS "Current revision is ${RSC_WC_REVISION}")
+ENDIF(Subversion_FOUND)
+
 SET(RSC_NAME "rsc")
 SET(RSC_TEST_NAME "rsctest")
 

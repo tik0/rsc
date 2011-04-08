@@ -1,0 +1,64 @@
+/* ============================================================
+ *
+ * This file is a part of the RSC project
+ *
+ * Copyright (C) 2011 by Johannes Wienke <jwienke at techfak dot uni-bielefeld dot de>
+ *
+ * This program is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software Foundation;
+ * either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * ============================================================ */
+
+#include "RSCVersion.h"
+
+#include <sstream>
+
+using namespace std;
+
+namespace rsc {
+
+unsigned int RSCVersion::major() {
+	return @RSC_VERSION_MAJOR@;
+}
+
+unsigned int RSCVersion::minor() {
+	return @RSC_VERSION_MINOR@;
+}
+
+unsigned int RSCVersion::patch() {
+	return @RSC_VERSION_PATCH@;
+}
+
+string RSCVersion::string() {
+	ostringstream ss;
+	ss << major() << '.' << minor() << '.' << patch();
+	return ss.str();
+}
+
+unsigned int RSCVersion::abi() {
+	return @RSC_ABI_VERSION@;
+}
+
+string RSCVersion::buildId() {
+	return "@RSC_WC_REVISION@";
+}
+
+string RSCVersion::buildDate() {
+	return "@RSC_WC_LAST_CHANGED_DATE@";
+}
+
+string RSCVersion::buildString() {
+	ostringstream ss;
+	ss << buildId() << " (DATE " << buildDate() << ")";
+	return ss.str();
+}
+
+}

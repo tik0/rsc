@@ -14,7 +14,9 @@ INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/rsc/config.h DESTINATION include/rsc)
 CONFIGURE_FILE(rsc/rscexports.h.in ${CMAKE_CURRENT_BINARY_DIR}/rsc/rscexports.h @ONLY)
 INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/rsc/rscexports.h DESTINATION include/rsc)
 
-INCLUDE_DIRECTORIES(BEFORE ${CMAKE_CURRENT_BINARY_DIR})
+CONFIGURE_FILE(rsc/RSCVersion.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/rsc/RSCVersion.cpp @ONLY)
+
+INCLUDE_DIRECTORIES(BEFORE ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/rsc)
 
 FILE(GLOB SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
                   "rsc/logging/*.cpp"
@@ -23,7 +25,9 @@ FILE(GLOB SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
                   "rsc/runtime/*.cpp"
                   "rsc/patterns/*.cpp"
                   "rsc/threading/*.cpp")
-SET(SOURCES ${SOURCES} rsc/subprocess/Subprocess.cpp)
+SET(SOURCES ${SOURCES}
+            rsc/subprocess/Subprocess.cpp
+            ${CMAKE_CURRENT_BINARY_DIR}/rsc/RSCVersion.cpp)
 
 FILE(GLOB HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
                   "rsc/logging/*.h"

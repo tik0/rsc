@@ -19,8 +19,6 @@
 
 #pragma once
 
-//#include <iostream>
-
 #include <boost/bind.hpp>
 #include <boost/thread/condition.hpp>
 #include <boost/function.hpp>
@@ -30,8 +28,6 @@
 
 #include "../misc/IllegalStateException.h"
 #include "SynchronizedQueue.h"
-
-using namespace rsc::misc;
 
 namespace rsc {
 namespace threading {
@@ -50,6 +46,9 @@ namespace threading {
  *  * same subscriptions for multiple receivers unlikely, hence filtering done
  *    per receiver thread
  *
+ * Filtering and delivery of message to receivers are performed by handlers.
+ * These handlers should be stateless.
+ *
  * @author jwienke
  *
  * @tparam M type of the messages dispatched by the pool
@@ -66,14 +65,114 @@ public:
             const M &message)> deliverFunction;
 
     /**
-     * A function that filter a message for a receiver. If @c true is returned,
+     * A function that filters a message for a receiver. If @c true is returned,
      * the message is acceptable for the receiver, else it will not be
-     * delivered.
+     * delivered. Must be reentrant.
      */
     typedef boost::function<bool(boost::shared_ptr<R> &receiver,
             const M &message)> filterFunction;
 
+    /**
+     * A handler that is called whenever a message is received from the pool
+     * and should be passed to a receiver of the pool.
+     *
+     * @author jwienke
+     * @note do not use state in this class and make it reentrant
+     */
+    class DeliveryHandler {
+    public:
+
+        /**
+         * Requests this handler to deliver the message to the receiver.
+         *
+         * @param receiver receiver to pass message to
+         * @param message message to pass to the receiver
+         */
+        virtual void
+        deliver(boost::shared_ptr<R> &receiver, const M &message) = 0;
+
+    };
+
+    typedef boost::shared_ptr<DeliveryHandler> DeliveryHandlerPtr;
+
+    /**
+     * A handler that is used to filter messages for a certain receiver.
+     *
+     * @author jwienke
+     * @note do not use state in this class and make it reentrant
+     */
+    class FilterHandler {
+    public:
+
+        /**
+         * A function that filters a message for a receiver.
+         *
+         * @param receiver receiver to filter for
+         * @param message message to filter
+         * @return If @c true is returned, the message is acceptable for the
+         *         receiver, else it will not be delivered.
+         */
+        virtual bool
+        filter(boost::shared_ptr<R> &receiver, const M &message) = 0;
+
+    };
+
+    typedef boost::shared_ptr<FilterHandler> FilterHandlerPtr;
+
 private:
+
+    /**
+     * A filter that accepts every message.
+     *
+     * @author jwienke
+     */
+    class TrueFilter: public FilterHandler {
+    public:
+        bool filter(boost::shared_ptr<R> &/*receiver*/, const M &/*message*/) {
+            return true;
+        }
+    };
+
+    /**
+     * An adapter for function-based filter to the object-oriented interface.
+     *
+     * @author jwienke
+     */
+    class FilterFunctionAdapter: public FilterHandler {
+    public:
+
+        explicit FilterFunctionAdapter(filterFunction function) :
+            function(function) {
+        }
+
+        bool filter(boost::shared_ptr<R> &receiver, const M &message) {
+            return function(receiver, message);
+        }
+
+    private:
+        filterFunction function;
+    };
+
+    /**
+     * An adapter for function-based delivery handlers to the object-oriented
+     * interface.
+     *
+     * @author jwienke
+     */
+    class DeliverFunctionAdapter: public DeliveryHandler {
+    public:
+
+        explicit DeliverFunctionAdapter(deliverFunction function) :
+            function(function) {
+        }
+
+        void deliver(boost::shared_ptr<R> &receiver, const M &message) {
+            function(receiver, message);
+        }
+
+    private:
+        deliverFunction function;
+    };
 
     class Receiver {
     public:
@@ -205,8 +304,8 @@ private:
                 //                std::cout << "Worker " << workerNum << " got new job: "
                 //                        << message << " for receiver " << *(receiver->receiver)
                 //                        << std::endl;
-                if (filterFunc(receiver->receiver, message)) {
-                    delFunc(receiver->receiver, message);
+                if (filterHandler->filter(receiver->receiver, message)) {
+                    deliveryHandler->deliver(receiver->receiver, message);
                 }
                 finishedWork(receiver);
 
@@ -220,8 +319,8 @@ private:
 
     std::vector<boost::shared_ptr<boost::thread> > threadPool;
 
-    deliverFunction delFunc;
-    filterFunction filterFunc;
+    DeliveryHandlerPtr deliveryHandler;
+    FilterHandlerPtr filterHandler;
 
 public:
 
@@ -233,23 +332,66 @@ public:
      *                receivers of type R. This will most likely be a simple
      *                delegate function mapping to a concrete method call. Must
      *                be reentrant.
-     * @param filterFunc Reentrant function used to filter messages per
-     *                   receiver. Default accepts every message.
+     * @note the object-oriented interface should be preferred
      */
     OrderedQueueDispatcherPool(const unsigned int &threadPoolSize,
-            deliverFunction delFunc, filterFunction filterFunc =
-                    alwaysTrueFilter) :
-        currentPosition(0), jobsAvailable(false), interrupted(false), started(
-                false), threadPoolSize(threadPoolSize), delFunc(delFunc),
-                filterFunc(filterFunc) {
+            deliverFunction delFunc) :
+        currentPosition(0), jobsAvailable(false), interrupted(false),
+                started(false), threadPoolSize(threadPoolSize),
+                deliveryHandler(new DeliverFunctionAdapter(delFunc)),
+                filterHandler(new TrueFilter()) {
+    }
+
+    /**
+     * Constructs a new pool.
+     *
+     * @param threadPoolSize number of threads for this pool
+     * @param delFunc the strategy used to deliver messages of type M to
+     *                receivers of type R. This will most likely be a simple
+     *                delegate function mapping to a concrete method call. Must
+     *                be reentrant.
+     * @param filterFunc Reentrant function used to filter messages per
+     *                   receiver. Default accepts every message.
+     * @note the object-oriented interface should be preferred
+     */
+    OrderedQueueDispatcherPool(const unsigned int &threadPoolSize,
+            deliverFunction delFunc, filterFunction filterFunc) :
+        currentPosition(0), jobsAvailable(false), interrupted(false),
+                started(false), threadPoolSize(threadPoolSize),
+                deliveryHandler(new DeliverFunctionAdapter(delFunc)),
+                filterHandler(new FilterFunctionAdapter(filterFunc)) {
+    }
+
+    /**
+     * Constructs a new pool using the object-oriented handler interface that
+     * accepts every message.
+     *
+     * @param threadPoolSize number of threads for this pool
+     * @param deliveryHandler handler to deliver messages to receivers
+     */
+    OrderedQueueDispatcherPool(const unsigned int &threadPoolSize,
+            DeliveryHandlerPtr deliveryHandler) :
+        currentPosition(0), jobsAvailable(false), interrupted(false),
+                started(false), threadPoolSize(threadPoolSize),
+                deliveryHandler(deliveryHandler), filterHandler(new TrueFilter) {
+    }
+
+    /**
+     * Constructs a new pool using the object-oriented handler interface.
+     *
+     * @param threadPoolSize number of threads for this pool
+     * @param deliveryHandler handler to deliver messages to receivers
+     * @param filterHandler filter handler for messages
+     */
+    OrderedQueueDispatcherPool(const unsigned int &threadPoolSize,
+            DeliveryHandlerPtr deliveryHandler, FilterHandlerPtr filterHandler) :
+        currentPosition(0), jobsAvailable(false), interrupted(false),
+                started(false), threadPoolSize(threadPoolSize),
+                deliveryHandler(deliveryHandler), filterHandler(filterHandler) {
     }
 
     virtual ~OrderedQueueDispatcherPool() {
         stop();
-    }
-
-    static bool alwaysTrueFilter(boost::shared_ptr<R> &/*receiver*/, const M &/*message*/) {
-        return true;
     }
 
     /**
@@ -298,7 +440,7 @@ public:
 
         boost::mutex::scoped_lock lock(receiversMutex);
         if (started) {
-            throw IllegalStateException("Pool already running");
+            throw rsc::misc::IllegalStateException("Pool already running");
         }
 
         interrupted = false;

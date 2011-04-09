@@ -12,6 +12,7 @@ INSTALL(FILES ExtractTBBVersion.cpp.in
               FindBoostUUID.cmake
               FindCppcheck.cmake
               FindEigen2.cmake
+              Findgcovr.cmake
               FindJsonCpp.cmake
               FindLcov.cmake
               FindLog4cxx.cmake

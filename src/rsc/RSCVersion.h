@@ -25,6 +25,11 @@
 
 namespace rsc {
 
+/**
+ * Version information for the library.
+ *
+ * @author jwienke
+ */
 class RSC_EXPORT RSCVersion {
 public:
 

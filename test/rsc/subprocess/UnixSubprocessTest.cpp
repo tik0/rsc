@@ -23,6 +23,7 @@
 #include <iomanip>
 
 #include <boost/filesystem.hpp>
+#include <boost/thread.hpp>
 
 #include "rsc/subprocess/UnixSubprocess.h"
 #include "rsc/misc/langutils.h"
@@ -45,22 +46,23 @@ TEST(UnixSubprocessTest, testSubprocess)
 
     vector<string> args;
     args.push_back("-c");
-    args.push_back("\"" + TEST_ROOT + "/rsc/subprocess/killNotify\" \""
-            + startedName + "\" \"" + killedName + "\"");
+    args.push_back(
+            "\"" + TEST_ROOT + "/rsc/subprocess/killNotify\" \"" + startedName
+                    + "\" \"" + killedName + "\"");
     {
         UnixSubprocess subprocess("/bin/bash", args);
         // wait for the process to start
         cout << "Waiting for start file" << endl;
         do {
             // TODO timeouts
-            usleep(50000);
+            boost::this_thread::sleep(boost::posix_time::milliseconds(50));
         } while (!boost::filesystem::exists(startedName));
     }
 
     cout << "Waiting for kill file" << endl;
     do {
         // TODO timeouts
-        usleep(50000);
+        boost::this_thread::sleep(boost::posix_time::milliseconds(50));
     } while (!boost::filesystem::exists(killedName));
 
     boost::filesystem::remove(startedName);

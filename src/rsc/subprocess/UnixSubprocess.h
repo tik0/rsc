@@ -39,7 +39,7 @@ namespace subprocess {
 class UnixSubprocess: public Subprocess {
 public:
     UnixSubprocess(const std::string &command,
-            const std::vector<std::string> args);
+            const std::vector<std::string> &args);
     virtual ~UnixSubprocess();
 
 private:

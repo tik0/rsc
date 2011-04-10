@@ -35,7 +35,7 @@ void waitOnQueueElement(SynchronizedQueue<int> *queue, int *resultVar,
         bool *interrupted) {
     try {
         *resultVar = queue->pop();
-    } catch (InterruptedException e) {
+    } catch (InterruptedException &e) {
         *interrupted = true;
     }
 }

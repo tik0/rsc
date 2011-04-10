@@ -37,8 +37,9 @@ int main(int, char*[]) {
     int i = 1;
     std::cout << rsc::runtime::typeName(i) << std::endl;
 
-    my_base* base = new my_derived();
+    my_base *base = new my_derived();
     std::cout << rsc::runtime::typeName(*base) << std::endl;
+    delete base;
 
     return EXIT_SUCCESS;
 }

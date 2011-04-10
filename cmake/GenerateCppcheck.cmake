@@ -124,6 +124,8 @@ FILE(WRITE \"${CPPCHECK_REPORT_FILE}\" \"\${ERROR_OUT}\")
             
         ADD_CUSTOM_TARGET(${TARGET_NAME} ${CMAKE_COMMAND} -P "${CPPCHECK_WRAPPER_SCRIPT}"
                           COMMENT "Generating cppcheck result ${TARGET_NAME}")
+                          
+        MESSAGE(STATUS "Generating cppcheck target with name ${TARGET_NAME}")
 
     ENDIF()
 

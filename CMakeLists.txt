@@ -9,6 +9,7 @@ INCLUDE(CheckIncludeFile)
 INCLUDE(CheckIncludeFileCXX)
 INCLUDE(InstallFilesRecursive)
 INCLUDE(EnableCoverageReport)
+INCLUDE(EnableSlocCount)
 INCLUDE(GenerateDoxygen)
 INCLUDE(GenerateCppcheck)
 
@@ -143,3 +144,7 @@ GENERATE_DOXYGEN(VERSION "${RSC_VERSION}")
 # --- coverage ---
 
 ENABLE_COVERAGE_REPORT(TARGETS ${RSC_NAME} TESTS ${RSC_TEST_NAME} FILTER "*3rdparty*" "*test/*")
+
+# --- sloccount ---
+
+ENABLE_SLOCCOUNT(FOLDERS src test examples)

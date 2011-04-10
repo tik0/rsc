@@ -8,6 +8,7 @@ INSTALL(FILES ExtractTBBVersion.cpp.in
               CheckInitMethod.cmake
               CMakeDoxyfile.in
               EnableCoverageReport.cmake
+              EnableSlocCount.cmake
               FindBoostThreadpool.cmake
               FindBoostUUID.cmake
               FindCppcheck.cmake
@@ -18,6 +19,7 @@ INSTALL(FILES ExtractTBBVersion.cpp.in
               FindLog4cxx.cmake
               FindMongo.cmake
               FindProtocolBuffers.cmake
+              Findsloccount.cmake
               FindSpread.cmake
               FindTBB.cmake
               GenerateCppcheck.cmake

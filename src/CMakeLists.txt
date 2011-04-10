@@ -62,12 +62,3 @@ INSTALL(TARGETS ${RSC_NAME}
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib)
 INSTALL_FILES_RECURSIVE(include HEADERS)
-
-# --- cppcheck ---
-
-GENERATE_CPPCHECK(SOURCES ${SOURCES}
-                          ${HEADERS}
-                          ${CMAKE_CURRENT_BINARY_DIR}/rsc/config.h
-                          ${CMAKE_CURRENT_BINARY_DIR}/rsc/rscexports.h
-                  SUPPRESSION_FILE "cppcheck-suppressions"
-                  ENABLE_IDS style)

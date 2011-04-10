@@ -9,6 +9,9 @@
 #                   [INCLUDES <dir...>])
 #
 # Generates a target "cppcheck" that executes cppcheck on the specified sources.
+# Sources may either be file names or directories containing files where all
+# C++ files will be parsed automatically. Use directories whenever possible
+# because there is a limitation in arguments to pass to the cppcheck binary.
 # SUPPRESSION_FILE may be give additionally to specify suppressions for#
 # cppcheck. The sources mentioned in the suppression file must be in the same
 # format like given for SOURCES. This means if you specified them relative to
@@ -66,9 +69,9 @@ FUNCTION(GENERATE_CPPCHECK)
     
         # write a list file containing all sources to check for the call to
         # cppcheck
-        FILE(WRITE "${CPPCHECK_CHECKFILE}" "")
+        SET(SOURCE_ARGS "")
         FOREACH(SOURCE ${ARG_SOURCES})
-            FILE(APPEND "${CPPCHECK_CHECKFILE}" "${SOURCE}\n")
+            SET(SOURCE_ARGS "${SOURCE_ARGS} \"${SOURCE}\"")
         ENDFOREACH()
         
         # prepare a cmake wrapper to write the stderr output of cppcheck to
@@ -105,7 +108,7 @@ FUNCTION(GENERATE_CPPCHECK)
         
         FILE(WRITE ${CPPCHECK_WRAPPER_SCRIPT}
 "
-EXECUTE_PROCESS(COMMAND \"${CPPCHECK_EXECUTABLE}\" ${INCLUDE_ARGUMENTS} ${SUPPRESSION_ARGUMENT} ${SUPPRESSION_FILE} ${IDS_ARGUMENT} --xml \"--file-list=${CPPCHECK_CHECKFILE}\"
+EXECUTE_PROCESS(COMMAND \"${CPPCHECK_EXECUTABLE}\" ${INCLUDE_ARGUMENTS} ${SUPPRESSION_ARGUMENT} ${SUPPRESSION_FILE} ${IDS_ARGUMENT} --xml ${SOURCE_ARGS}
                 RESULT_VARIABLE CPPCHECK_EXIT_CODE
                 ERROR_VARIABLE ERROR_OUT
                 WORKING_DIRECTORY \"${CMAKE_CURRENT_SOURCE_DIR}\")

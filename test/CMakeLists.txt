@@ -52,10 +52,3 @@ IF(WIN32)
     SET_PROPERTY(TEST ${RSC_TEST_NAME}
                  PROPERTY ENVIRONMENT "PATH=${PATH_STRING}")
 ENDIF()
-
-# --- cppcheck ---
-
-GENERATE_CPPCHECK(SOURCES ${TEST_SOURCES}
-                  ENABLE_IDS style
-                  TARGET_NAME cppcheck-tests
-                  INCLUDES "../src")

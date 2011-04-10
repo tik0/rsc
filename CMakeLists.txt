@@ -148,3 +148,10 @@ ENABLE_COVERAGE_REPORT(TARGETS ${RSC_NAME} TESTS ${RSC_TEST_NAME} FILTER "*3rdpa
 # --- sloccount ---
 
 ENABLE_SLOCCOUNT(FOLDERS src test examples)
+
+
+# --- cppcheck ---
+
+GENERATE_CPPCHECK(SOURCES src test examples
+                          "${CMAKE_CURRENT_BINARY_DIR}/src" "${CMAKE_CURRENT_BINARY_DIR}/test" "${CMAKE_CURRENT_BINARY_DIR}/examples"
+                  ENABLE_IDS style)

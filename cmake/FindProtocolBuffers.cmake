@@ -102,7 +102,6 @@ FUNCTION(PROTOBUF_GENERATE)
         SET(BUILD_CPP TRUE)
         LIST(GET ARG_CPP 0 RESULT_CPP_SRCS)
         LIST(GET ARG_CPP 1 RESULT_CPP_HDRS)
-        MESSAGE(STATUS "Building CPP with src list ${RESULT_CPP_SRCS} and hdr list ${RESULT_CPP_HDRS}")
     ENDIF()
     
     # decide whether to build java
@@ -116,7 +115,6 @@ FUNCTION(PROTOBUF_GENERATE)
         ENDIF()
         SET(BUILD_JAVA TRUE)
         LIST(GET ARG_JAVA 0 RESULT_JAVA)
-        MESSAGE(STATUS "Building JAVA with list ${RESULT_JAVA}")
     ENDIF()
     
     # decide whether to build PYTHON
@@ -130,7 +128,6 @@ FUNCTION(PROTOBUF_GENERATE)
         ENDIF()
         SET(BUILD_PYTHON TRUE)
         LIST(GET ARG_PYTHON 0 RESULT_PYTHON)
-        MESSAGE(STATUS "Building PYTHON with list ${RESULT_PYTHON}")
     ENDIF()
     
     SET(OUTPATH ${CMAKE_CURRENT_BINARY_DIR})

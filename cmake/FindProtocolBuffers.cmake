@@ -130,6 +130,12 @@ FUNCTION(PROTOBUF_GENERATE)
         LIST(GET ARG_PYTHON 0 RESULT_PYTHON)
     ENDIF()
     
+    # create proper export macro for CPP if desired
+    IF(EXPORT_MACRO_LENGTH EQUAL 1)
+        SET(ARG_EXPORT "dllexport_decl=${ARG_EXPORT_MACRO}:")
+        MESSAGE(STATUS "Enabling export macro ${ARG_EXPORT_MACRO} for CPP")
+    ENDIF()
+    
     SET(OUTPATH ${CMAKE_CURRENT_BINARY_DIR})
     IF(OUTPATH_LENGTH EQUAL 1)
         SET(OUTPATH ${ARG_OUTPATH})

@@ -294,6 +294,13 @@ FIND_PROGRAM(PROTOBUF_PROTOC_EXECUTABLE NAMES protoc
              DOC "The Google Protocol Buffers Compiler"
 )
 
+FIND_FILE(PROTOBUF_JAVA_LIBRARY
+          NAMES ${PROTOBUF_JAVA_NAME} protobuf.jar
+          HINTS ${PROTOBUF_JAVA_ROOT}
+                "/usr/share/java"
+                "${CMAKE_INSTALL_PREFIX}/lib/java"
+                "${CMAKE_INSTALL_PREFIX}/share/java")
+
 MARK_AS_ADVANCED(PROTOBUF_INCLUDE_DIR
                  PROTOBUF_LIBRARY
                  PROTOBUF_PROTOC_LIBRARY

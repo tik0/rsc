@@ -35,7 +35,7 @@ UUID::UUID() :
     id(gen()) {
 }
 
-UUID::UUID(string uuid) {
+UUID::UUID(const string &uuid) {
     if (uuid != "") {
         boost::uuids::string_generator gen;
         id = gen(uuid);

@@ -50,7 +50,7 @@ public:
 	 * @param uuid
 	 * @throw std::runtime_error given string is not acceptable as a UUID
 	 */
-	UUID(std::string uuid);
+	explicit UUID(const std::string &uuid);
 
 	virtual ~UUID();
 

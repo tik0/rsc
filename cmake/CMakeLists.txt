@@ -28,4 +28,5 @@ INSTALL(FILES ExtractTBBVersion.cpp.in
               InstallFilesRecursive.cmake
               ParseArguments.cmake
               PedanticCompilerWarnings.cmake
+              SubversionIsWc.cmake
         DESTINATION ${CMAKE_MODULE_PATH})

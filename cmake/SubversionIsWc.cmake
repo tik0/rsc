@@ -3,6 +3,10 @@
 # whether a folder really is a working copy of subversion. This module adds
 # a function to check this.
 #
+# Subversion_IS_WC(FOLDER RESULT_VAR)
+#   Checks if FOLDER is a SVN working copy and sets the RESULT_VAR to a bool
+#   value.
+#
 # Copyright (C) 2011 by Johannes Wienke <jwienke at techfak dot uni-bielefeld dot de>
 #
 # This program is free software; you can redistribute it

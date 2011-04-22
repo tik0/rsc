@@ -74,6 +74,7 @@ void deliver(boost::shared_ptr<StubReceiver> &receiver, const int &message) {
 class DeliveryHandler: public OrderedQueueDispatcherPool<int, StubReceiver>::DeliveryHandler {
 public:
     void deliver(boost::shared_ptr<StubReceiver> &receiver, const int &message) {
+        boost::mutex::scoped_lock lock(receiver->mutex);
         receiver->messages.push_back(message);
         receiver->condition.notify_all();
     }

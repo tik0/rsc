@@ -24,7 +24,7 @@ namespace detail {
 
 void pair_style_delete(ios_base::event event_, ios_base& stream, int /*index*/) {
     if (event_ == ios_base::erase_event && stream.pword(
-        pair_style::stream_storage)) {
+            pair_style::stream_storage)) {
         delete reinterpret_cast<pair_style*> (stream.pword(
                 pair_style::stream_storage));
     }
@@ -39,7 +39,8 @@ const int pair_style::stream_storage = ios_base::xalloc();
 
 }
 
-const detail::set_pair_style<detail::pair_style> pair_default;
+const detail::set_pair_style<detail::pair_style> pair_default = {
+        detail::pair_style() };
 const detail::set_pair_style<detail::pair_style> pair_whitespace = {
         detail::pair_style("", " ", "") };
 

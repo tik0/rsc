@@ -35,6 +35,7 @@ FILE(GLOB HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
                   "rsc/misc/*.h"
                   "rsc/runtime/*.h"
                   "rsc/patterns/*.h"
+		  "rsc/patterns/detail/*.h"
                   "rsc/threading/*.h")
 SET(HEADERS ${HEADERS} rsc/subprocess/Subprocess.h)
 

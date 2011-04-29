@@ -54,9 +54,29 @@ class RSC_EXPORT Properties: public std::map<std::string, boost::any> { // TODO 
             operator<<(std::basic_ostream<Ch, Tr>& stream,
                     const Properties& properties);
 public:
+
+    /**
+     * Merge with @a other. Values from @a other replace values with
+     * identical keys.
+     *
+     * @param other New Properties which should take precedence over
+     * already present values.
+     * @return The modified Properties object.
+     */
     Properties&
     operator<<=(const Properties& other); // TODO boost::left_shiftable
 
+    /**
+     * Compare to @a other. All keys and values are checked for
+     * equality. Values can only be checked if they are of type
+     * std::string, bool, int, unsigned int or double.
+     *
+     * @param other The Properties object to which this one should be
+     * compared.
+     *
+     * @throw std::runtime_error If any value is of a type for which
+     * comparison has not been explicitly implemented.
+     */
     bool operator==(const Properties& other) const;
 
     bool
@@ -82,6 +102,15 @@ public:
     set(const std::string& name, const T& value) throw ();
 };
 
+/**
+ * Merge @a left and @a right. Values in @a right take precedence over
+ * values with identical keys in @a left.
+ *
+ * @param left Properties with lower precedence.
+ * @param right Properties with higher precedence.
+ *
+ * @return A new Properties object which contains the result of the merge.
+ */
 RSC_EXPORT Properties
 operator<<(const Properties& left, const Properties& right);
 

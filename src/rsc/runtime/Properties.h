@@ -57,6 +57,8 @@ public:
     Properties&
     operator<<=(const Properties& other); // TODO boost::left_shiftable
 
+    bool operator==(const Properties& other) const;
+
     bool
     has(const std::string& name) const throw (); // TODO check type
 

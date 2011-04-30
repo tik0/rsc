@@ -44,6 +44,9 @@ private:
     logging::LoggerPtr logger;
     
     std::istream& stream;
+    std::string currentSection;
+
+    bool getOption(std::string& name, std::string &value);
 };
 
 }

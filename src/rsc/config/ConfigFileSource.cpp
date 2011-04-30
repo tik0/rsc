@@ -19,9 +19,8 @@
 
 #include "ConfigFileSource.h"
 
+#include <boost/format.hpp>
 #include <boost/algorithm/string.hpp>
-#include <boost/program_options/detail/convert.hpp>
-#include <boost/program_options/detail/config_file.hpp>
 
 #include "../runtime/ContainerIO.h"
 
@@ -34,7 +33,17 @@ using namespace rsc::logging;
 namespace rsc {
 namespace config {
 
-typedef program_options::detail::basic_config_file_iterator<char> config_file_iterator;
+// Taken from Boost.ProgramOptions
+string trim(const string& s) {
+    string::size_type n, n2;
+    n = s.find_first_not_of(" \t\r\n");
+    if (n == string::npos) {
+        return string();
+    } else {
+        n2 = s.find_last_not_of(" \t\r\n");
+        return s.substr(n, n2-n+1);
+    }
+}
 
 ConfigFileSource::ConfigFileSource(istream &stream) :
     logger(Logger::getLogger("rsc.config.ConfigFileSource")),
@@ -42,19 +51,49 @@ ConfigFileSource::ConfigFileSource(istream &stream) :
 }
 
 void ConfigFileSource::emit(OptionHandler& handler) {
-    for (config_file_iterator it
-             = config_file_iterator(stream, set<string>(), true);
-         it != config_file_iterator(); ++it) {
+    string name;
+    string value;
+    while (getOption(name, value)) {
 
         vector<string> key;
-        split(key, it->string_key, is_any_of("."));
-        string value = it->value[0];
+        split(key, name, is_any_of("."));
 
-        RSCTRACE(logger, "Option " << key << " -> " << it->value);
+        RSCTRACE(logger, "Option " << key << " -> " << value);
 
         handler.handleOption(key, value);
     }
 }
+
+// Based on Boost.ProgramOptions
+bool ConfigFileSource::getOption(string& name, string &value) {
+    string line;
+    while (getline(this->stream, line)) {
+        // strip '#' comments and whitespace
+        string::size_type n;
+        if ((n = line.find('#')) != string::npos)
+            line = line.substr(0, n);
+        line = trim(line);
+
+        if (!line.empty()) {
+            // Handle section name
+            if (*line.begin() == '[' && *line.rbegin() == ']') {
+                currentSection = line.substr(1, line.size()-2);
+                if (*currentSection.rbegin() != '.') {
+                    currentSection += '.';
+                }
+            } else if ((n = line.find('=')) != string::npos) {
+                name = currentSection + trim(line.substr(0, n));
+                value = trim(line.substr(n+1));
+                return true;
+            } else {
+                throw invalid_argument(str(format("Syntax error in line `%1%'")
+                                           % line));
+            }
+        }
+    }
+    return false;
+  }
+
 
 }
 }

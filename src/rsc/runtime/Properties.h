@@ -138,8 +138,8 @@ T Properties::get(const std::string& name) const {
     } catch (const boost::bad_any_cast&) {
         std::cerr
                 << (boost::format(
-                        "properties: type mismatch in get: requested: %1%; actual: %2%")
-                        % typeName<T> () % typeName(it->second.type()))
+                        "properties: type mismatch in get for `%1%': requested: %2%; actual: %3%")
+                        % name % typeName<T> () % typeName(it->second.type()))
                 << std::endl;
         throw;
     }
@@ -156,8 +156,8 @@ T Properties::get(const std::string& name, const T& default_) const {
         return boost::any_cast<T>(it->second);
     } catch (const boost::bad_any_cast&) {
         std::cerr << (boost::format(
-                "properties type mismatch in get: requested: %1%; actual: %2%")
-                % typeName<T> () % typeName(it->second.type())) << std::endl;
+                "properties type mismatch in get for `%1%': requested: %2%; actual: %3%")
+                 % name % typeName<T> () % typeName(it->second.type())) << std::endl;
         throw;
     }
 }

@@ -51,24 +51,26 @@ path userConfigDirectory() {
     return userHomeDirectory() / ".config";
 }
 
-string transformName(const string &name) {
-    if ((name.size() >= 4) && (name.substr(0, 4) == "RSB_")) {
+string transformName(const string &name, const string &prefix) {
+    if (starts_with(name, prefix)) {
         string result;
-        transform(name.begin() + 4, name.end(), back_inserter(result), &::tolower);
+        transform(name.begin() + prefix.size(), name.end(),
+                  back_inserter(result), &::tolower);
         return result;
     } else {
         return "";
     }
 }
 
-EnvironmentVariableSource::EnvironmentVariableSource() :
-    logger(Logger::getLogger("rsc.config.EnvironmentVariableSource")) {
+EnvironmentVariableSource::EnvironmentVariableSource(const string &prefix) :
+    logger(Logger::getLogger("rsc.config.EnvironmentVariableSource")),
+    prefix(prefix) {
 }
 
 void EnvironmentVariableSource::emit(OptionHandler &handler) {
     for (environment_iterator it = environment_iterator(environ);
         it != environment_iterator(); ++it) {
-        string name = transformName(it->first);
+        string name = transformName(it->first, this->prefix);
         if (name.empty())
             continue;
 

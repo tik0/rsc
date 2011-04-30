@@ -19,6 +19,8 @@
 
 #pragma once
 
+#include <string>
+
 #include <boost/filesystem/path.hpp>
 
 #include <rsc/logging/Logger.h>
@@ -51,18 +53,28 @@ RSC_EXPORT boost::filesystem::path userConfigDirectory();
 
 
 /** Objects of this class analyze the environment of the current
- * process, finding environment variables which are named RSB_*. These
- * are converted to options and passed to the @ref OptionHandler.
+ * process, finding environment variables whose name starts with a
+ * specified string. The prefix is stripped from matching names and
+ * the variables are converted to options and passed to the
+ * @ref OptionHandler.
  *
  * @author jmoringe
  */
 RSC_EXPORT class EnvironmentVariableSource : public ConfigSource {
 public:
-    EnvironmentVariableSource();
+    /** Construct a source that collect environment variables whose
+     * name starts with @a prefix.
+     *
+     * @param prefix A prefix string against which all environment
+     * variables are matched.
+     */
+    EnvironmentVariableSource(const std::string &prefix = "");
 
     void emit(OptionHandler &handler);
 private:
     rsc::logging::LoggerPtr logger;
+
+    const std::string prefix;
 };
 
 }

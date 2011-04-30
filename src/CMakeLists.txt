@@ -20,6 +20,7 @@ INCLUDE_DIRECTORIES(BEFORE ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DI
 
 FILE(GLOB SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
                   "rsc/logging/*.cpp"
+                  "rsc/config/*.cpp"
                   "rsc/math/*.cpp"
                   "rsc/misc/*.cpp"
                   "rsc/runtime/*.cpp"
@@ -31,6 +32,7 @@ SET(SOURCES ${SOURCES}
 
 FILE(GLOB HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
                   "rsc/logging/*.h"
+                  "rsc/config/*.h"
                   "rsc/math/*.h"
                   "rsc/misc/*.h"
                   "rsc/runtime/*.h"

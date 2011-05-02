@@ -79,7 +79,7 @@ TEST(PrintableTest, testPrint)
         stringstream s;
         boost::shared_ptr<Printable> ptr(&p, rsc::misc::NullDeleter());
         s << ptr;
-        EXPECT_EQ("*" + name + "[CONTENTS] at ", s.str().substr(0, s.str().length() - 14));
+        EXPECT_EQ("*" + name + "[CONTENTS] at ", s.str().substr(0, 20));
     }
 
 }

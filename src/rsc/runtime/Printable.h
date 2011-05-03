@@ -45,6 +45,9 @@ namespace runtime {
  * In general it should be sufficient to override #printContents but if you want
  * to specify the whole output format, overriding print is needed.
  *
+ * It is advisable to always use virtual inheritance with this class to avoid
+ * problems with diamond-shaped inheritance later on.
+ *
  * @author jwienke
  */
 class RSC_EXPORT Printable {

@@ -174,6 +174,11 @@ private:
         deliverFunction function;
     };
 
+    /**
+     * Represents on registered receiver of the pool.
+     *
+     * @author jwienke
+     */
     class Receiver {
     public:
 

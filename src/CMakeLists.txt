@@ -27,6 +27,7 @@ FILE(GLOB SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
                   "rsc/patterns/*.cpp"
                   "rsc/threading/*.cpp")
 SET(SOURCES ${SOURCES}
+            rsc/debug/DebugTools.cpp
             rsc/subprocess/Subprocess.cpp
             ${CMAKE_CURRENT_BINARY_DIR}/rsc/RSCVersion.cpp)
 
@@ -37,9 +38,11 @@ FILE(GLOB HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
                   "rsc/misc/*.h"
                   "rsc/runtime/*.h"
                   "rsc/patterns/*.h"
-		  "rsc/patterns/detail/*.h"
+                  "rsc/patterns/detail/*.h"
                   "rsc/threading/*.h")
-SET(HEADERS ${HEADERS} rsc/subprocess/Subprocess.h)
+SET(HEADERS ${HEADERS}
+            rsc/debug/DebugTools.h
+            rsc/subprocess/Subprocess.h)
 
 # subprocess choice
 IF(UNIX)
@@ -52,6 +55,14 @@ ELSEIF(WIN32)
     SET(SOURCES ${SOURCES} rsc/subprocess/WindowsSubprocess.cpp)
     SET(HEADERS ${HEADERS} rsc/subprocess/WindowsSubprocess.h)
     ADD_DEFINITIONS(-DSUBPROCESS_WINDOWS)
+ENDIF()
+
+# debug tools selection
+IF(UNIX)
+    MESSAGE(STATUS "Selected LinuxDebugTools")
+    SET(SOURCES ${SOURCES} rsc/debug/LinuxDebugTools.cpp)
+    SET(HEADERS ${HEADERS} rsc/debug/LinuxDebugTools.h)
+    ADD_DEFINITIONS(-DDEBUGTOOLS_LINUX)
 ENDIF()
 
 ADD_LIBRARY(${RSC_NAME} SHARED ${SOURCES} ${HEADERS} ${CMAKE_CURRENT_BINARY_DIR}/rsc/config.h ${CMAKE_CURRENT_BINARY_DIR}/rsc/rscexports.h)

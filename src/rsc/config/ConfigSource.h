@@ -20,6 +20,7 @@
 #pragma once
 
 #include "OptionHandler.h"
+#include "rsc/rscexports.h"
 
 namespace rsc {
 namespace config {
@@ -30,7 +31,7 @@ namespace config {
  *
  * @author jmoringe
  */
-class ConfigSource {
+class RSC_EXPORT ConfigSource {
  public:
     /** Implementations should pass all configuration options to
      * @a handler.

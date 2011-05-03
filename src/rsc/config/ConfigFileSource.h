@@ -35,14 +35,14 @@ namespace config {
  *
  * @author jmoringe
  */
-RSC_EXPORT class ConfigFileSource : public ConfigSource{
+class RSC_EXPORT ConfigFileSource : public ConfigSource{
 public:
     ConfigFileSource(std::istream &stream);
 
     void emit(OptionHandler& handler);
 private:
     logging::LoggerPtr logger;
-    
+
     std::istream& stream;
     std::string currentSection;
 

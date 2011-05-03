@@ -60,7 +60,7 @@ RSC_EXPORT boost::filesystem::path userConfigDirectory();
  *
  * @author jmoringe
  */
-RSC_EXPORT class EnvironmentVariableSource : public ConfigSource {
+class RSC_EXPORT EnvironmentVariableSource : public ConfigSource {
 public:
     /** Construct a source that collect environment variables whose
      * name starts with @a prefix.

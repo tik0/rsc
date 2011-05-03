@@ -22,6 +22,7 @@
 #include "../runtime/Properties.h"
 
 #include "OptionHandler.h"
+#include "rsc/rscexports.h"
 
 namespace rsc {
 namespace config {
@@ -31,13 +32,13 @@ namespace config {
  *
  * @author jmoringe
  */
-class PropertyHandler : public OptionHandler {
+class RSC_EXPORT PropertyHandler : public OptionHandler {
 public:
     void handleOption(const std::vector<std::string> &key,
                       const std::string &value);
     /** Returns the @ref runtime::Properties object constructed by
      * this handler.
-     * 
+     *
      * @return A constant reference to the properties.
      */
     const runtime::Properties& getProperties() const;

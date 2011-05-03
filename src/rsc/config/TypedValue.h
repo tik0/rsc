@@ -23,6 +23,8 @@
 
 #include <boost/any.hpp>
 
+#include "rsc/rscexports.h"
+
 namespace rsc {
 namespace config {
 
@@ -38,7 +40,7 @@ namespace config {
  *
  * @author jmoringe
  */
-boost::any parseTypedValue(const std::string &value);
+RSC_EXPORT boost::any parseTypedValue(const std::string &value);
 
 }
 }

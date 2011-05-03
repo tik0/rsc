@@ -22,6 +22,8 @@
 #include <string>
 #include <vector>
 
+#include "rsc/rscexports.h"
+
 namespace rsc {
 namespace config {
 
@@ -31,7 +33,7 @@ namespace config {
  *
  * @author jmoringe
  */
-class OptionHandler {
+class RSC_EXPORT OptionHandler {
 public:
     /** This method is called once for each individual option
      * available from a given @ref ConfigSource.

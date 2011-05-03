@@ -41,13 +41,12 @@ string trim(const string& s) {
         return string();
     } else {
         n2 = s.find_last_not_of(" \t\r\n");
-        return s.substr(n, n2-n+1);
+        return s.substr(n, n2 - n + 1);
     }
 }
 
 ConfigFileSource::ConfigFileSource(istream &stream) :
-    logger(Logger::getLogger("rsc.config.ConfigFileSource")),
-    stream(stream) {
+    logger(Logger::getLogger("rsc.config.ConfigFileSource")), stream(stream) {
 }
 
 void ConfigFileSource::emit(OptionHandler& handler) {
@@ -77,23 +76,22 @@ bool ConfigFileSource::getOption(string& name, string &value) {
         if (!line.empty()) {
             // Handle section name
             if (*line.begin() == '[' && *line.rbegin() == ']') {
-                currentSection = line.substr(1, line.size()-2);
+                currentSection = line.substr(1, line.size() - 2);
                 if (*currentSection.rbegin() != '.') {
                     currentSection += '.';
                 }
             } else if ((n = line.find('=')) != string::npos) {
                 name = currentSection + trim(line.substr(0, n));
-                value = trim(line.substr(n+1));
+                value = trim(line.substr(n + 1));
                 return true;
             } else {
-                throw invalid_argument(str(format("Syntax error in line `%1%'")
-                                           % line));
+                throw invalid_argument(
+                        str(format("Syntax error in line `%1%'") % line));
             }
         }
     }
     return false;
-  }
-
+}
 
 }
 }

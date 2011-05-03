@@ -49,7 +49,7 @@ public:
     map<string, any> collected;
 };
 
-TEST(ConfigFileSource, testSmoke)
+TEST(ConfigFileSourceTest, testSmoke)
 {
     CollectingHandler handler;
     ifstream stream(str(format("%1%/smoke.conf") % TEST_ROOT).c_str());

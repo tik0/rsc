@@ -186,10 +186,15 @@ private:
         // all message dispatching to worker threads is synchronized
         SynchronizedQueue<M> queue;
 
+        boost::condition processingCondition;
+
         /**
          * Indicates whether a job for this worker is currently being processed
          * and this receiver hence cannot be addressed by another thread even
          * though there may be more messages to process.
+         *
+         * All changes to this flag are already locked by the global
+         * recieversMutex.
          */
         volatile bool processing;
 
@@ -282,6 +287,10 @@ private:
         // globally synchronized nextJob method to determine if a job is
         // available
         receiver->processing = false;
+        receiver->processingCondition.notify_all();
+        // maybe avoid informing other threads about new jobs of the receiver
+        // will be removed by adding a flag? Right now they will start to search
+        // for a new job and may not find one.
         if (!receiver->queue.empty()) {
             jobsAvailable = true;
             lock.unlock();
@@ -336,10 +345,10 @@ public:
      */
     OrderedQueueDispatcherPool(const unsigned int &threadPoolSize,
             deliverFunction delFunc) :
-        currentPosition(0), jobsAvailable(false), interrupted(false),
-                started(false), threadPoolSize(threadPoolSize),
-                deliveryHandler(new DeliverFunctionAdapter(delFunc)),
-                filterHandler(new TrueFilter()) {
+        currentPosition(0), jobsAvailable(false), interrupted(false), started(
+                false), threadPoolSize(threadPoolSize), deliveryHandler(
+                new DeliverFunctionAdapter(delFunc)), filterHandler(
+                new TrueFilter()) {
     }
 
     /**
@@ -356,10 +365,10 @@ public:
      */
     OrderedQueueDispatcherPool(const unsigned int &threadPoolSize,
             deliverFunction delFunc, filterFunction filterFunc) :
-        currentPosition(0), jobsAvailable(false), interrupted(false),
-                started(false), threadPoolSize(threadPoolSize),
-                deliveryHandler(new DeliverFunctionAdapter(delFunc)),
-                filterHandler(new FilterFunctionAdapter(filterFunc)) {
+        currentPosition(0), jobsAvailable(false), interrupted(false), started(
+                false), threadPoolSize(threadPoolSize), deliveryHandler(
+                new DeliverFunctionAdapter(delFunc)), filterHandler(
+                new FilterFunctionAdapter(filterFunc)) {
     }
 
     /**
@@ -371,9 +380,9 @@ public:
      */
     OrderedQueueDispatcherPool(const unsigned int &threadPoolSize,
             DeliveryHandlerPtr deliveryHandler) :
-        currentPosition(0), jobsAvailable(false), interrupted(false),
-                started(false), threadPoolSize(threadPoolSize),
-                deliveryHandler(deliveryHandler), filterHandler(new TrueFilter) {
+        currentPosition(0), jobsAvailable(false), interrupted(false), started(
+                false), threadPoolSize(threadPoolSize), deliveryHandler(
+                deliveryHandler), filterHandler(new TrueFilter) {
     }
 
     /**
@@ -385,9 +394,9 @@ public:
      */
     OrderedQueueDispatcherPool(const unsigned int &threadPoolSize,
             DeliveryHandlerPtr deliveryHandler, FilterHandlerPtr filterHandler) :
-        currentPosition(0), jobsAvailable(false), interrupted(false),
-                started(false), threadPoolSize(threadPoolSize),
-                deliveryHandler(deliveryHandler), filterHandler(filterHandler) {
+        currentPosition(0), jobsAvailable(false), interrupted(false), started(
+                false), threadPoolSize(threadPoolSize), deliveryHandler(
+                deliveryHandler), filterHandler(filterHandler) {
     }
 
     virtual ~OrderedQueueDispatcherPool() {
@@ -404,7 +413,7 @@ public:
      * @param receiver new receiver
      */
     void registerReceiver(boost::shared_ptr<R> receiver) {
-        boost::mutex::scoped_lock(receiversMutex);
+        boost::mutex::scoped_lock lock(receiversMutex);
         boost::shared_ptr<Receiver> rec(new Receiver(receiver));
         receivers.push_back(rec);
     }
@@ -417,12 +426,16 @@ public:
      */
     bool unregisterReceiver(boost::shared_ptr<R> receiver) {
 
-        boost::mutex::scoped_lock(receiversMutex);
+        boost::mutex::scoped_lock lock(receiversMutex);
 
         for (typename std::vector<boost::shared_ptr<Receiver> >::iterator it =
                 receivers.begin(); it != receivers.end(); ++it) {
-            if ((*it)->receiver == receiver) {
+            boost::shared_ptr<Receiver> rec = *it;
+            if (rec->receiver == receiver) {
                 it = receivers.erase(it);
+                while (rec->processing) {
+                    rec ->processingCondition.wait(lock);
+                }
                 return true;
             }
         }
@@ -485,7 +498,7 @@ public:
 
         //        std::cout << "new job " << message << std::endl;
         {
-            boost::mutex::scoped_lock(receiversMutex);
+            boost::mutex::scoped_lock lock(receiversMutex);
             for (typename std::vector<boost::shared_ptr<Receiver> >::iterator
                     it = receivers.begin(); it != receivers.end(); ++it) {
                 (*it)->queue.push(message);

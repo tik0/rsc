@@ -25,6 +25,8 @@
 #include "WindowsDebugTools.h"
 #endif
 
+using namespace std;
+
 namespace rsc {
 namespace debug {
 
@@ -40,6 +42,15 @@ DebugToolsPtr DebugTools::newInstance() {
 #elif defined(SUBPROCESS_WINDOWS)
     return DebugToolsPtr(new WindowsDebugTools);
 #endif
+}
+
+string DebugTools::formatBacktrace(const vector<string> &trace) {
+    stringstream s;
+    for (std::vector<std::string>::const_iterator traceIt = trace.begin(); traceIt
+            != trace.end(); ++traceIt) {
+        s << "\t" << *traceIt << std::endl;
+    }
+    return s.str();
 }
 
 }

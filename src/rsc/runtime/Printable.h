@@ -26,6 +26,7 @@
 #include <vector>
 
 #include <boost/shared_ptr.hpp>
+#include <boost/weak_ptr.hpp>
 
 #include "rsc/rscexports.h"
 
@@ -82,7 +83,8 @@ public:
  * @param printable Printable to print
  * @return the \c stream
  */
-RSC_EXPORT std::ostream &operator<<(std::ostream &stream, const Printable &printable);
+RSC_EXPORT std::ostream &operator<<(std::ostream &stream,
+        const Printable &printable);
 
 /**
  * Output operator on std::ostream for pointer Printables.
@@ -91,7 +93,21 @@ RSC_EXPORT std::ostream &operator<<(std::ostream &stream, const Printable &print
  * @param printable Printable to print
  * @return the \c stream
  */
-RSC_EXPORT std::ostream &operator<<(std::ostream &stream, const Printable *printable);
+RSC_EXPORT std::ostream &operator<<(std::ostream &stream,
+        const Printable *printable);
+
+/**
+ * It seems boost::weak_ptr's do not have a stream operator. So provide one.
+ *
+ * @param stream stream to print on
+ * @param p pointer to print
+ * @return the stream that was printed on
+ * @tparam Y pointee type
+ */
+template<class Y>
+std::ostream & operator<<(std::ostream & stream, boost::weak_ptr<Y> const & p) {
+    return stream << p.lock().get();
+}
 
 }
 }

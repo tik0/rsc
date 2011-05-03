@@ -17,36 +17,13 @@
  *
  * ============================================================ */
 
-#pragma once
-
-#include <string>
-#include <vector>
-
-#include "rsc/rscexports.h"
+#include "OptionHandler.h"
 
 namespace rsc {
 namespace config {
 
-/** Implementations of this interface receive options from @ref
- * ConfigSource objects. Options are represented as key-value pairs
- * and individually passed to the handler.
- *
- * @author jmoringe
- */
-class RSC_EXPORT OptionHandler {
-public:
-    virtual ~OptionHandler();
-
-    /** This method is called once for each individual option
-     * available from a given @ref ConfigSource.
-     *
-     * @param key A list of hierarchical key components that identify
-     * the option.
-     * @param value The value of the option.
-     */
-    virtual void handleOption(const std::vector<std::string> &key,
-                              const std::string &value) = 0;
-};
+OptionHandler::~OptionHandler() {
+}
 
 }
 }

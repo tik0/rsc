@@ -21,6 +21,7 @@ TARGET_LINK_LIBRARIES(${REGISTREE_TEST_LIB_NAME} ${REGISTRY_TEST_LIB_NAME})
 FILE(GLOB TEST_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
                        "rsc/debug/*.cpp"
                        "rsc/logging/*.cpp"
+                       "rsc/config/*.cpp"
                        "rsc/math/*.cpp"
                        "rsc/threading/*.cpp"
                        "rsc/runtime/*.cpp"

@@ -33,7 +33,7 @@ using namespace std;
 using namespace boost;
 using namespace rsc::config;
 
-class CollectingHandler : public OptionHandler {
+class CollectingHandler: public OptionHandler {
 public:
     void handleOption(const vector<string> &key, const string &value) {
         string name;
@@ -64,9 +64,12 @@ TEST(ConfigFileSourceTest, testSyntaxErrors)
 {
     CollectingHandler handler;
     for (unsigned int i = 1; i <= 3; ++i) {
-        ifstream stream(str(format("%1%/syntax-errors-%2%.conf")
-	                % TEST_ROOT % i).c_str());
-	ConfigFileSource source(stream);
-	EXPECT_THROW(source.emit(handler), invalid_argument);
+        ifstream
+                stream(
+                        str(
+                                format("%1%/syntax-errors-%2%.conf")
+                                        % TEST_ROOT % i).c_str());
+        ConfigFileSource source(stream);
+        EXPECT_THROW(source.emit(handler), invalid_argument);
     }
 }

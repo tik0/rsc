@@ -26,6 +26,7 @@
 
 #include <boost/any.hpp>
 #include <boost/format.hpp>
+#include <boost/operators.hpp>
 
 #include "rsc/rscexports.h"
 
@@ -45,7 +46,8 @@ namespace runtime {
  *
  * @author Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  */
-class RSC_EXPORT Properties: public std::map<std::string, boost::any> { // TODO left_shiftable from Boost.Operators
+  class RSC_EXPORT Properties: public std::map<std::string, boost::any>,
+                               public boost::equality_comparable<Properties> { // TODO left_shiftable from Boost.Operators
     friend RSC_EXPORT Properties
     operator<<(const Properties& properties1, const Properties& properties2);
     template<typename Ch, typename Tr>

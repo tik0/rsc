@@ -32,7 +32,7 @@ namespace config {
  * @author jmoringe
  */
 class RSC_EXPORT ConfigSource {
- public:
+public:
     /** Implementations should pass all configuration options to
      * @a handler.
      *

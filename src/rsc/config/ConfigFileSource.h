@@ -39,14 +39,14 @@ class RSC_EXPORT ConfigFileSource : public ConfigSource{
 public:
     ConfigFileSource(std::istream &stream);
 
-    void emit(OptionHandler& handler);
+    void emit(OptionHandler &handler);
 private:
     logging::LoggerPtr logger;
 
-    std::istream& stream;
+    std::istream &stream;
     std::string currentSection;
 
-    bool getOption(std::string& name, std::string &value);
+    bool getOption(std::string &name, std::string &value);
 };
 
 }

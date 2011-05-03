@@ -21,9 +21,11 @@
 
 #include <string>
 #include <vector>
+#include <sstream>
 
 #include <boost/shared_ptr.hpp>
 
+#include "../runtime/TypeStringTools.h"
 #include "rsc/rscexports.h"
 
 namespace rsc {
@@ -50,6 +52,28 @@ public:
      */
     virtual std::vector<std::string> createBacktrace(
             const unsigned int &maxElements = 20) = 0;
+
+    /**
+     * Generates a string giving verbose information about an exception in the
+     * given context. Use this immediately after catching the exception.
+     *
+     * @param e the exception to analyze
+     * @tparam ExceptionType type of the caught exception
+     */
+    template<class ExceptionType>
+    std::string exceptionInfo(const ExceptionType &e) {
+
+        std::stringstream s;
+        s << "Exception of type: " << rsc::runtime::typeName(e) << std::endl;
+        s << "Backtrace:" << std::endl;
+        std::vector<std::string> trace = createBacktrace();
+        for (std::vector<std::string>::const_iterator traceIt = trace.begin(); traceIt
+                != trace.end(); ++traceIt) {
+            s << "\t" << *traceIt << std::endl;
+        }
+        return s.str();
+
+    }
 
 protected:
 

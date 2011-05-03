@@ -32,11 +32,10 @@ LinuxDebugTools::LinuxDebugTools() {
 LinuxDebugTools::~LinuxDebugTools() {
 }
 
-vector<string> LinuxDebugTools::createBacktrace() {
+vector<string> LinuxDebugTools::createBacktrace(const unsigned int &maxElements) {
 
-    static const int numElements = 50;
-    void *arr[numElements];
-    int nSize = backtrace(arr, numElements);
+    void **arr = (void**) malloc(maxElements * sizeof(void*));
+    int nSize = backtrace(arr, maxElements);
     char **sym = backtrace_symbols(arr, nSize);
 
     vector<string> result;
@@ -45,6 +44,7 @@ vector<string> LinuxDebugTools::createBacktrace() {
     }
 
     free(sym);
+    free(arr);
 
     return result;
 

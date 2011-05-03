@@ -17,30 +17,29 @@
  *
  * ============================================================ */
 
-#include "DebugTools.h"
+#pragma once
 
-#if defined(DEBUGTOOLS_LINUX)
-#include "LinuxDebugTools.h"
-#elif defined(SUBPROCESS_WINDOWS)
-#include "WindowsDebugTools.h"
-#endif
+#include "DebugTools.h"
+#include "rsc/rscexports.h"
 
 namespace rsc {
 namespace debug {
 
-DebugTools::DebugTools() {
+/**
+ * Windows implementation for debug tools.
+ *
+ * @author jwienke
+ */
+class RSC_EXPORT WindowsDebugTools: public DebugTools {
+public:
+
+    WindowsDebugTools();
+    virtual ~WindowsDebugTools();
+
+    std::vector<std::string> createBacktrace(const unsigned int &maxElements);
+
+};
+
+}
 }
 
-DebugTools::~DebugTools() {
-}
-
-DebugToolsPtr DebugTools::newInstance() {
-#if defined(DEBUGTOOLS_LINUX)
-    return DebugToolsPtr(new LinuxDebugTools);
-#elif defined(SUBPROCESS_WINDOWS)
-    return DebugToolsPtr(new WindowsDebugTools);
-#endif
-}
-
-}
-}

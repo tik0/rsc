@@ -46,9 +46,10 @@ public:
     /**
      * Generates a string representation of the current thread's backtrace.
      *
-     * @return backtrace string as vector of method class
+     * @return backtrace string as vector of method calls
      */
-    virtual std::vector<std::string> createBacktrace() = 0;
+    virtual std::vector<std::string> createBacktrace(
+            const unsigned int &maxElements = 20) = 0;
 
 protected:
 

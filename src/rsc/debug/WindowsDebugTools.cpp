@@ -17,29 +17,22 @@
  *
  * ============================================================ */
 
-#include "DebugTools.h"
-
-#if defined(DEBUGTOOLS_LINUX)
-#include "LinuxDebugTools.h"
-#elif defined(SUBPROCESS_WINDOWS)
 #include "WindowsDebugTools.h"
-#endif
+
+using namespace std;
 
 namespace rsc {
 namespace debug {
 
-DebugTools::DebugTools() {
+WindowsDebugTools::WindowsDebugTools() {
+
 }
 
-DebugTools::~DebugTools() {
+WindowsDebugTools::~WindowsDebugTools() {
 }
 
-DebugToolsPtr DebugTools::newInstance() {
-#if defined(DEBUGTOOLS_LINUX)
-    return DebugToolsPtr(new LinuxDebugTools);
-#elif defined(SUBPROCESS_WINDOWS)
-    return DebugToolsPtr(new WindowsDebugTools);
-#endif
+vector<string> createBacktrace(const unsigned int &maxElements) {
+    return vector<string> ();
 }
 
 }

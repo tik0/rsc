@@ -34,7 +34,7 @@ public:
     LinuxDebugTools();
     virtual ~LinuxDebugTools();
 
-    std::vector<std::string> createBacktrace();
+    std::vector<std::string> createBacktrace(const unsigned int &maxElements);
 
 };
 

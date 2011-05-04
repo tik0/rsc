@@ -33,7 +33,6 @@ using namespace rsc::debug;
 TEST(DebugToolsTest, testNewInstance)
 {
     EXPECT_TRUE(DebugTools::newInstance());
-    FAIL();
 }
 
 TEST(DebugToolsTest, testCreateBacktrace)

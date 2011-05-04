@@ -17,40 +17,33 @@
  *
  * ============================================================ */
 
-#include <string>
-#include <vector>
-#include <iostream>
+#include <fstream>
 
-#include <boost/static_assert.hpp>
+#include <boost/format.hpp>
 
 #include <gtest/gtest.h>
 
-#include <rsc/debug/DebugTools.h>
+#include "rsc/config/Environment.h"
 
 using namespace std;
-using namespace rsc::debug;
+using namespace boost;
+using namespace rsc::config;
 
-TEST(DebugToolsTest, testNewInstance)
+TEST(EnvironmentTest, testUserHomeDirectory)
 {
-    EXPECT_TRUE(DebugTools::newInstance());
-    FAIL();
-}
-
-TEST(DebugToolsTest, testCreateBacktrace)
-{
-    vector<string> trace = DebugTools::newInstance()->createBacktrace();
-    for (vector<string>::const_iterator it = trace.begin(); it != trace.end(); ++it) {
-        cout << *it << endl;
-    }
-}
-
-TEST(DebugToolsTest, testExceptionInfo)
-{
-
     try {
-        throw invalid_argument("This is a message");
-    } catch (exception &e) {
-        cout << DebugTools::newInstance()->exceptionInfo(e);
+        userHomeDirectory();
+    } catch (runtime_error &e) {
+        // may happen if windows service
     }
-
 }
+
+TEST(EnvironmentTest, testUserConfigDirectory)
+{
+    try {
+        userConfigDirectory();
+    } catch (runtime_error &e) {
+        // may happen if windows service
+    }
+}
+

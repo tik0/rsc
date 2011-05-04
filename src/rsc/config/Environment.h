@@ -31,28 +31,33 @@
 namespace rsc {
 namespace config {
 
-/** Return the home directory of the user associated with the current
+/**
+ * Return the home directory of the user associated with the current
  * process.
  *
  * @return A @ref boost::filesystem::path object representing the home
- * directory of the user.
+ *         directory of the user.
+ * @throw std::runtime_error if no home directory for the user is available
  *
  * @author jmoringe
  */
 RSC_EXPORT boost::filesystem::path userHomeDirectory();
 
-/** Return the canonical directory for configuration files of the user
+/**
+ * Return the canonical directory for configuration files of the user
  * associated with the current process.
  *
  * @return A @ref boost::filesystem::path object representing the
- * configuration directory of the user.
+ *         configuration directory of the user.
+ * @throw std::runtime_error if no config directory for the user is available
  *
  * @author jmoringe
  */
 RSC_EXPORT boost::filesystem::path userConfigDirectory();
 
 
-/** Objects of this class analyze the environment of the current
+/**
+ * Objects of this class analyze the environment of the current
  * process, finding environment variables whose name starts with a
  * specified string. The prefix is stripped from matching names and
  * the variables are converted to options and passed to the
@@ -62,11 +67,12 @@ RSC_EXPORT boost::filesystem::path userConfigDirectory();
  */
 class RSC_EXPORT EnvironmentVariableSource : public ConfigSource {
 public:
-    /** Construct a source that collect environment variables whose
+    /**
+     * Construct a source that collect environment variables whose
      * name starts with @a prefix.
      *
      * @param prefix A prefix string against which all environment
-     * variables are matched.
+     *               variables are matched.
      */
     EnvironmentVariableSource(const std::string &prefix = "");
 

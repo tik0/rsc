@@ -40,9 +40,21 @@ namespace config {
 
 path userHomeDirectory() {
 #ifndef WIN32
-    string home = getenv("HOME") + string("/");
+    char *rawHome = getenv("HOME");
+    if (!rawHome) {
+        throw runtime_error("Home directory not defined in HOME variable.");
+    }
+    string home = string(rawHome) + string("/");
 #else
-    string home = string(getenv("HOMEDRIVE")) + string(getenv("HOMEPATH")) + string("\\");
+    char * rawHomeDrive = getenv("HOMEDRIVE");
+    if (!rawHomeDrive) {
+        throw runtime_error("HOMEDRIVE variable not set.");
+    }
+    char *rawHomePath = getenv("HOMEPATH");
+    if (!rawHomePath) {
+        throw runtime_error("HOMEPATH variable not set.");
+    }
+    string home = string(rawHomeDrive) + string(rawHomePath) + string("\\");
 #endif
     return home;
 }
@@ -54,8 +66,8 @@ path userConfigDirectory() {
 string transformName(const string &name, const string &prefix) {
     if (starts_with(name, prefix)) {
         string result;
-        transform(name.begin() + prefix.size(), name.end(),
-                  back_inserter(result), &::tolower);
+        transform(name.begin() + prefix.size(), name.end(), back_inserter(
+                result), &::tolower);
         return result;
     } else {
         return "";
@@ -63,13 +75,13 @@ string transformName(const string &name, const string &prefix) {
 }
 
 EnvironmentVariableSource::EnvironmentVariableSource(const string &prefix) :
-    logger(Logger::getLogger("rsc.config.EnvironmentVariableSource")),
-    prefix(prefix) {
+    logger(Logger::getLogger("rsc.config.EnvironmentVariableSource")), prefix(
+            prefix) {
 }
 
 void EnvironmentVariableSource::emit(OptionHandler &handler) {
-    for (environment_iterator it = environment_iterator(environ);
-        it != environment_iterator(); ++it) {
+    for (environment_iterator it = environment_iterator(environ); it
+            != environment_iterator(); ++it) {
         string name = transformName(it->first, this->prefix);
         if (name.empty())
             continue;

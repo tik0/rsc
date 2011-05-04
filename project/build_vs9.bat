@@ -37,7 +37,7 @@ echo [build successful and tests executed]
 
 echo [creating package]
 
-cpack -G zip
+cpack -G ZIP
 IF %ERRORLEVEL% NEQ 0 (
 	echo [package error]
 	goto :error

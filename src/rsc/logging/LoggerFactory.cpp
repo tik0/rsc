@@ -68,8 +68,6 @@ void LoggerFactory::reselectLoggingSystem(const std::string &nameHint) {
     boost::recursive_mutex::scoped_lock lock(mutex);
 
 	loggingSystem = loggingSystemRegistry()->getRegistree(systemName);
-    LoggerPtr loggingLogger = loggingSystem->createLogger("rsc.logging");
-    loggingLogger->info("Selected logging system with name " + systemName);
 
 }
 

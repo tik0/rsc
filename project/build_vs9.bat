@@ -35,11 +35,11 @@ ctest -V
 
 echo [build successful and tests executed]
 
-echo [installing project]
+echo [creating package]
 
-nmake install
+cpack -G zip
 IF %ERRORLEVEL% NEQ 0 (
-	echo [install error]
+	echo [package error]
 	goto :error
 )
 

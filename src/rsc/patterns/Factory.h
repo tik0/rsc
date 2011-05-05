@@ -316,9 +316,13 @@ void Factory<Key, Interface>::unregister(const Key& key) {
     //
     typename ImplMap::iterator it;
     if ((it = this->impl_map_.find(key)) == this->impl_map_.end()) {
-        throw NoSuchImpl(runtime::typeString(
-                "no implementation found for specified key `%1%'",
-                "no implementation found for specified key", key));
+        throw NoSuchImpl(
+                boost::str(
+                        boost::format(
+                                runtime::typeString(
+                                        "no implementation of interface `%%1%%' found for specified key `%1%'",
+                                        "no implementation of interface `%%1%%' found for specified key",
+                                        key)) % runtime::typeName<Interface>()));
     }
 
     //
@@ -341,9 +345,13 @@ Factory<Key, Interface>::createInst(const Key& key,
     // Try to find the implementation specified by key.
     typename ImplMap::const_iterator it;
     if ((it = this->impl_map_.find(key)) == this->impl_map_.end()) {
-        throw NoSuchImpl(runtime::typeString(
-                "no implementation found for specified key `%1%'",
-                "no implementation found for specified key", key));
+        throw NoSuchImpl(
+                boost::str(
+                        boost::format(
+                                runtime::typeString(
+                                        "no implementation of interface `%%1%%' found for specified key `%1%'",
+                                        "no implementation of interface `%%1%%' found for specified key",
+                                        key)) % runtime::typeName<Interface>()));
     }
 
     // Try to create an instance of that implementation.
@@ -353,7 +361,7 @@ Factory<Key, Interface>::createInst(const Key& key,
     } catch (const std::exception& exception_) {
         throw ConstructError(runtime::typeName(typeid(exception_)) + ": "
                 + exception_.what());
-	// TODO use boost exception stuff and rethrow
+        // TODO use boost exception stuff and rethrow
     } catch (...) {
         throw ConstructError(runtime::typeString(
                 "could not construct implementation instance for key `%1%'",
@@ -377,8 +385,7 @@ std::basic_ostream<Ch, Tr>&
 operator<<(std::basic_ostream<Ch, Tr>& stream,
         const Factory<Key, Interface>& factory) {
     typedef Factory<Key, Interface> Factory_type;
-    typedef typename Factory<Key, Interface>::ImplMapProxy
-            impl_map_proxy_type;
+    typedef typename Factory<Key, Interface>::ImplMapProxy impl_map_proxy_type;
 
     //
     stream << (boost::format("implementations of interface %1%:\n")
@@ -388,7 +395,7 @@ operator<<(std::basic_ostream<Ch, Tr>& stream,
     const impl_map_proxy_type& impls = factory.impls();
 
     for (typename impl_map_proxy_type::const_iterator it = impls.begin(); it
-	   != impls.end(); ++it) {
+            != impls.end(); ++it) {
         stream << (boost::format("* %1%\n") % it->first);
     }
 

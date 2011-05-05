@@ -79,10 +79,10 @@ public:
      * @throw std::runtime_error If any value is of a type for which
      * comparison has not been explicitly implemented.
      */
-    bool operator==(const Properties& other) const;
+    bool operator==(const Properties &other) const;
 
     bool
-    has(const std::string& name) const throw (); // TODO check type
+    has(const std::string &name) const throw (); // TODO check type
 
     /**
      * @throw NoSuchObject
@@ -90,18 +90,27 @@ public:
      */
     template<typename T>
     T
-    get(const std::string& name) const;
+    get(const std::string &name) const;
 
     /**
      * @throw boost::bad_any_cast
      */
     template<typename T>
     T
-    get(const std::string& name, const T& default_) const;
+    get(const std::string &name, const T &default_) const;
 
+    /**
+     * Sets a new property in the map. If a property with this name exits, the
+     * new one will not be inserted. The old property has to be removed first.
+     *
+     * @param name name of the property to set
+     * @param value value to set
+     * @return @c true of the property was inserted, @c false if a property with
+     *         the given name existed and nothing was changed
+     */
     template<typename Target, typename T>
     bool
-    set(const std::string& name, const T& value) throw ();
+    set(const std::string &name, const T &value) throw ();
 };
 
 /**

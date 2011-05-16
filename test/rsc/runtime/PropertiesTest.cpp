@@ -30,6 +30,7 @@ class PropertiesTest: public ::testing::Test {
 public:
     Properties p1;
     Properties p2;
+    Properties onlyStrings;
 
     virtual void SetUp() {
 	this->p1["foo"] = 1;
@@ -37,8 +38,25 @@ public:
 
         this->p2["foo"] = 2;
         this->p2["woob"] = 1.5;
+
+        this->onlyStrings["foo"] = string("1");
+	this->onlyStrings["bar"] = string("baz");
+        this->onlyStrings["woob"] = string("1.5");
     }
 };
+
+TEST_F(PropertiesTest, testGetAs)
+{
+    EXPECT_EQ(onlyStrings.getAs<int>   ("foo"),  1);
+    EXPECT_EQ(onlyStrings.getAs<string>("bar"),  "baz");
+    EXPECT_EQ(onlyStrings.getAs<double>("woob"), 1.5);
+
+    EXPECT_EQ(onlyStrings.getAs<double>("no-such-property", 5.0), 5.0);
+
+    EXPECT_THROW(onlyStrings.getAs<double>("no-such-property"), NoSuchObject);
+
+    EXPECT_THROW(onlyStrings.getAs<double>("bar"), bad_cast);
+}
 
 TEST_F(PropertiesTest, testMerge)
 {

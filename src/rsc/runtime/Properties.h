@@ -25,6 +25,7 @@
 #include <iostream>
 
 #include <boost/any.hpp>
+#include <boost/lexical_cast.hpp>
 #include <boost/format.hpp>
 #include <boost/operators.hpp>
 
@@ -46,8 +47,8 @@ namespace runtime {
  *
  * @author Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  */
-  class RSC_EXPORT Properties: public std::map<std::string, boost::any>,
-                               public boost::equality_comparable<Properties> { // TODO left_shiftable from Boost.Operators
+class RSC_EXPORT Properties: public std::map<std::string, boost::any>,
+                             public boost::equality_comparable<Properties> { // TODO left_shiftable from Boost.Operators
     friend RSC_EXPORT Properties
     operator<<(const Properties& properties1, const Properties& properties2);
     template<typename Ch, typename Tr>
@@ -99,6 +100,35 @@ public:
     T
     get(const std::string &name, const T &default_) const;
 
+    /** Parse the value of the property @a name as type @a T and
+     * return the parsed value.
+     *
+     * This assumes that the stored value is of type @ref std::string.
+     *
+     * @tparam T Desired target type of the conversion.
+     * @param name Name of the property.
+     * @throw NoSuchObject If there is no propery named @a name.
+     * @throw std::bad_cast If the string value of the property cannot
+     * be converted to the desired target type.
+     */
+    template<typename T>
+    T getAs(const std::string& name) const;
+
+    /** Parse the value of the property @a name as type @a T and
+     * return the parsed value.
+     *
+     * This assumes that the stored value is of type @ref std::string.
+     *
+     * @tparam T Desired target type of the conversion.
+     * @param name Name of the property.
+     * @param default_ A fallback value which is returned when there
+     * is no property named @a name.
+     * @throw std::bad_cast If the string value of the property cannot
+     * be converted to the desired target type.
+     */
+    template<typename T>
+    T getAs(const std::string& name, const T& default_) const;
+
     /**
      * Sets a new property in the map. If a property with this name exits, the
      * new one will not be inserted. The old property has to be removed first.
@@ -145,7 +175,7 @@ T Properties::get(const std::string& name) const {
     }
 
     try {
-        return boost::any_cast<T>(it->second); // TODO could try lexical_cast if any_cast fails
+        return boost::any_cast<T>(it->second);
     } catch (const boost::bad_any_cast&) {
         std::cerr
                 << (boost::format(
@@ -173,8 +203,33 @@ T Properties::get(const std::string& name, const T& default_) const {
     }
 }
 
+template<typename T>
+T Properties::getAs(const std::string &name) const {
+    std::string value = get<std::string>(name);
+    try {
+        return boost::lexical_cast<T>(value);
+    } catch (const std::bad_cast&) {
+        std::cerr
+            << (boost::format(
+                    "properties: type conversion failure in getAs for `%1%': requested: %2%; value: \"%3%\"")
+                % name % typeName<T> () % value)
+            << std::endl;
+        throw;
+    }
+}
+
+template<typename T>
+T Properties::getAs(const std::string &name, const T &default_) const {
+    if (has(name)) {
+        return getAs<T>(name);
+    } else {
+        return default_;
+    }
+}
+
 template<typename Target, typename T>
 bool Properties::set(const std::string& name, const T& value) throw () {
+    erase(name);
     return insert(std::make_pair(name, static_cast<Target> (value))).second;
 }
 

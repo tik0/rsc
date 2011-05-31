@@ -52,6 +52,13 @@ public:
 	 */
 	explicit UUID(const std::string &uuid);
 
+	/**
+	 * Generates a uuid from the given 16 byte representation.
+	 *
+	 * @param data 16 byte representation of a uuid
+	 */
+	explicit UUID(boost::uint8_t *data);
+
 	virtual ~UUID();
 
 	/**

@@ -42,6 +42,10 @@ UUID::UUID(const string &uuid) {
     }
 }
 
+UUID::UUID(boost::uint8_t *data) {
+    memcpy(id.data, data, 16);
+}
+
 UUID::~UUID() {
 }
 

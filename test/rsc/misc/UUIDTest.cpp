@@ -33,6 +33,13 @@ TEST(UUIDTest, testRandomCreate)
     EXPECT_TRUE(UUID().getId() != UUID().getId());
 }
 
+TEST(UUIDTest, testByteCreate)
+{
+    UUID id1;
+    UUID id2(id1.getId().data);
+    EXPECT_EQ(id1, id2);
+}
+
 TEST(UUIDTest, testComparisonOperators)
 {
 

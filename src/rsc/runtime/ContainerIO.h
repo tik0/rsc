@@ -160,6 +160,22 @@ operator<<(basic_ostream<Ch, Tr>& stream, const map<R, S>& container) {
     return stream;
 }
 
+template<typename Ch, typename Tr, typename R, typename S>
+basic_ostream<Ch, Tr>&
+operator<<(basic_ostream<Ch, Tr>& stream, const multimap<R, S>& container) {
+    typedef multimap<R, S> container_type;
+
+    stream << "{";
+    for (typename container_type::const_iterator it = container.begin(); it
+            != container.end();) {
+        stream << it->first << ": " << it->second;
+        if (++it != container.end())
+            stream << ", ";
+    }
+    stream << "}";
+    return stream;
+}
+
 template<typename Ch, typename Tr, typename T>
 basic_ostream<Ch, Tr>&
 operator<<(basic_ostream<Ch, Tr>& stream, const valarray<T>& container) {

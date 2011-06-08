@@ -239,7 +239,7 @@ template<typename Key, typename Interface>
 class SingletonFactory: public Singleton<SingletonFactory<Key, Interface> > ,
         public Factory<Key, Interface> {
     friend class Singleton<SingletonFactory<Key, Interface> > ;
-private:
+protected:
     SingletonFactory();
 };
 

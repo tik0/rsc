@@ -21,6 +21,8 @@
 
 #include "RepetitiveTask.h"
 
+#include <rsc/misc/langutils.h>
+
 #include <iostream>
 
 namespace rsc {
@@ -33,6 +35,7 @@ namespace threading {
  *
  * @author swrede
  * @author jwienke
+ * @author anordman
  */
 class RSC_EXPORT PeriodicTask: public RepetitiveTask {
 public:
@@ -43,8 +46,10 @@ public:
      *
      * @param ms time to wait between iterations. No overall-fixed interval
      *           is guaranteed by the implementation. Time is in milliseconds.
+     * @param accountProcTime subtracts the processing time from sleep time in
+     *           order to guarantee a fixed scheduling interval
      */
-    PeriodicTask(const unsigned int &ms);
+    PeriodicTask(const unsigned int &ms, bool accountProcTime = true);
 
     virtual ~PeriodicTask();
 
@@ -58,9 +63,17 @@ public:
 
 private:
 
+    /**
+     * Logs time at processing start in order to calculate processing time. Also
+     * calls pre method of super-class RepetitiveTask.
+     */
+    virtual void pre();
+
     unsigned int cycleTime;
     rsc::logging::LoggerPtr logger;
-
+    bool fixedScheduling;
+    boost::uint64_t processingStart;
+    boost::uint64_t processingDuration;
 };
 
 }

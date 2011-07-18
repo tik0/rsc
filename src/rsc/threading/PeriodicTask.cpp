@@ -24,9 +24,11 @@ using namespace std;
 namespace rsc {
 namespace threading {
 
-PeriodicTask::PeriodicTask(const unsigned int &ms) :
-    cycleTime(ms), logger(rsc::logging::Logger::getLogger(
-            "rsc.threading.PeriodicTask")) {
+PeriodicTask::PeriodicTask(const unsigned int &ms, bool accountProcTime) :
+            cycleTime(ms), logger(rsc::logging::Logger::getLogger(
+                            "rsc.threading.PeriodicTask")),
+            fixedScheduling(accountProcTime), processingStart(),
+            processingDuration(0) {
 }
 
 PeriodicTask::~PeriodicTask() {
@@ -42,12 +44,15 @@ bool PeriodicTask::continueExec() {
 
     // wait, give others a chance
     if (cycleTime != 0) {
-        // TODO this does not really guarantee a fixed scheduling interval
-        // we need to store the last time as a class member and constantly
-        // increase it
         boost::xtime time;
         xtime_get(&time, boost::TIME_UTC);
-        time.nsec += cycleTime * 1000000;
+
+        if (this->fixedScheduling) {
+            this->processingDuration = rsc::misc::currentTimeMicros()
+                    - this->processingStart;
+        }
+
+        time.nsec += cycleTime * 1000000 - this->processingDuration * 1000;
         // TODO provide option to interrupt in cancel using boost::this_thread
         try {
             RSCTRACE(logger, "PeriodicTask()::continueExec() before thread sleep, sleeping " << cycleTime << " ms");
@@ -63,7 +68,13 @@ bool PeriodicTask::continueExec() {
     RSCTRACE(logger, "PeriodicTask()::continueExec() before lock");
 
     return true;
+}
 
+void PeriodicTask::pre() {
+    if (this->fixedScheduling) {
+        this->processingStart = rsc::misc::currentTimeMicros();
+    }
+    RepetitiveTask::pre();
 }
 
 }

@@ -22,7 +22,7 @@
 #include <sstream>
 
 #include <boost/uuid/uuid_io.hpp>
-#include <boost/uuid/name_generator.hpp>
+#include <boost/uuid/uuid_generators.hpp>
 
 using namespace std;
 

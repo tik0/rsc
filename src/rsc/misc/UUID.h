@@ -42,50 +42,58 @@ public:
     /**
      * Creates a random UUID.
      */
-	UUID();
+    UUID();
 
-	/**
-	 * Parses a UUID from a string. Various default formats are accepted.
-	 *
-	 * @param uuid
-	 * @throw std::runtime_error given string is not acceptable as a UUID
-	 */
-	explicit UUID(const std::string &uuid);
+    /**
+     * Parses a UUID from a string. Various default formats are accepted.
+     *
+     * @param uuid
+     * @throw std::runtime_error given string is not acceptable as a UUID
+     */
+    explicit UUID(const std::string &uuid);
 
-	/**
-	 * Generates a uuid from the given 16 byte representation.
-	 *
-	 * @param data 16 byte representation of a uuid
-	 */
-	explicit UUID(boost::uint8_t *data);
+    /**
+     * Generates a uuid from the given 16 byte representation.
+     *
+     * @param data 16 byte representation of a uuid
+     */
+    explicit UUID(boost::uint8_t *data);
 
-	virtual ~UUID();
+    /**
+     * Generates a uuid for @a name in namespace @a ns.
+     *
+     * @param ns Namespace in which @a name should be placed.
+     * @param name A unique name within namespace @a ns.
+     */
+    UUID(const UUID &ns, const std::string &name);
 
-	/**
-	 * Returns the contained UUID on boost format.
-	 *
-	 * @return uuid in boost format.
-	 */
-	boost::uuids::uuid getId();
+    virtual ~UUID();
 
-	/**
-	 * Returns a string representing the UUID.
-	 *
-	 * @return string representation of the UUID
-	 */
-	std::string getIdAsString() const;
+    /**
+     * Returns the contained UUID on boost format.
+     *
+     * @return uuid in boost format.
+     */
+    boost::uuids::uuid getId() const;
 
-	bool operator==(const UUID &other) const;
-	bool operator!=(const UUID &other) const;
-	bool operator<(const UUID &other) const;
+    /**
+     * Returns a string representing the UUID.
+     *
+     * @return string representation of the UUID
+     */
+    std::string getIdAsString() const;
 
-	friend RSC_EXPORT std::ostream &operator<<(std::ostream &stream, const UUID &id);
+    bool operator==(const UUID &other) const;
+    bool operator!=(const UUID &other) const;
+    bool operator<(const UUID &other) const;
+
+    friend RSC_EXPORT std::ostream &operator<<(std::ostream &stream, const UUID &id);
 
 private:
 
-	boost::uuids::uuid id;
-	 // TODO refactor to singleton
-	static boost::uuids::basic_random_generator<boost::mt19937> gen;
+    boost::uuids::uuid id;
+    // TODO refactor to singleton
+    static boost::uuids::basic_random_generator<boost::mt19937> gen;
 
 };
 
@@ -95,4 +103,3 @@ RSC_EXPORT std::ostream &operator<<(std::ostream &stream, const UUID &id);
 
 }
 }
-

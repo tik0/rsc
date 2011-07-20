@@ -22,6 +22,7 @@
 #include <sstream>
 
 #include <boost/uuid/uuid_io.hpp>
+#include <boost/uuid/name_generator.hpp>
 
 using namespace std;
 
@@ -46,10 +47,14 @@ UUID::UUID(boost::uint8_t *data) {
     memcpy(id.data, data, 16);
 }
 
+UUID::UUID(const UUID &ns, const string &name) :
+    id(boost::uuids::name_generator(ns.getId())(name)) {
+}
+
 UUID::~UUID() {
 }
 
-boost::uuids::uuid UUID::getId() {
+boost::uuids::uuid UUID::getId() const {
     return id;
 }
 

@@ -40,6 +40,16 @@ TEST(UUIDTest, testByteCreate)
     EXPECT_EQ(id1, id2);
 }
 
+TEST(UUIDTest, testNameCreate)
+{
+    UUID ns("d37bae80-b279-11e0-a06a-001aa0342d7d");
+    UUID id1(ns, "my name");
+    UUID id2(ns, "my name");
+    EXPECT_EQ(id1, id2);
+    UUID id3(ns, "some other name");
+    EXPECT_NE(id1, id3);
+}
+
 TEST(UUIDTest, testComparisonOperators)
 {
 

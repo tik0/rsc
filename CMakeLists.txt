@@ -99,7 +99,7 @@ IF(BOOST_ROOT)
   SET(Boost_NO_SYSTEM_PATHS ON)
 ENDIF()
 
-FIND_PACKAGE(Boost ${Boost_USE_VERSION} REQUIRED thread filesystem signals program_options)
+FIND_PACKAGE(Boost ${Boost_USE_VERSION} REQUIRED thread filesystem signals program_options system)
 FIND_PACKAGE(BoostUUID REQUIRED)
 INCLUDE_DIRECTORIES(BEFORE SYSTEM ${Boost_INCLUDE_DIRS}
   ${BOOSTUUID_INCLUDE_DIRS})

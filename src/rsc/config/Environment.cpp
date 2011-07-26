@@ -22,6 +22,14 @@
 #include <algorithm>
 #include <iterator>
 
+// For dynamic libs the environ variable is not available
+// on MacOS, hence a workaround is needed. See also:
+// http://article.gmane.org/gmane.comp.lib.boost.devel/103843
+#ifdef __APPLE__  && __DYNAMIC__
+#include <crt_externs.h>
+#define environ (*_NSGetEnviron())
+#endif
+
 #include <boost/algorithm/string.hpp>
 #include <boost/program_options.hpp>
 #include <boost/program_options/environment_iterator.hpp>

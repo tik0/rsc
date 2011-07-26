@@ -220,7 +220,7 @@ FUNCTION(PROTOBUF_GENERATE)
                 COMMAND ${CMAKE_COMMAND} -E make_directory ${OUTPATH}
                 COMMAND ${PROTOBUF_PROTOC_EXECUTABLE}
                 ARGS "--cpp_out=${ARG_EXPORT}${OUTPATH}" --proto_path "${PROTOROOT}" "${MATCH_PATH}"
-                DEPENDS ${ABS_FIL}
+                DEPENDS ${ABS_FILE}
                 COMMENT "Running C++ protocol buffer compiler on ${MATCH_PATH} with root ${PROTOROOT}, generating: ${CPP_FILE}"
                 VERBATIM)
         ENDIF()
@@ -233,7 +233,7 @@ FUNCTION(PROTOBUF_GENERATE)
                 COMMAND ${CMAKE_COMMAND} -E make_directory ${OUTPATH}
                 COMMAND ${PROTOBUF_PROTOC_EXECUTABLE}
                 ARGS "--java_out=${OUTPATH}" --proto_path "${PROTOROOT}" "${MATCH_PATH}"
-                DEPENDS ${ABS_FIL}
+                DEPENDS ${ABS_FILE}
                 COMMENT "Running Java protocol buffer compiler on ${MATCH_PATH} with root ${PROTOROOT}, generating: ${JAVA_FILE}"
                 VERBATIM)
         ENDIF()
@@ -246,7 +246,7 @@ FUNCTION(PROTOBUF_GENERATE)
                 COMMAND ${CMAKE_COMMAND} -E make_directory ${OUTPATH}
                 COMMAND ${PROTOBUF_PROTOC_EXECUTABLE}
                 ARGS "--python_out=${OUTPATH}" --proto_path "${PROTOROOT}" "${MATCH_PATH}"
-                DEPENDS ${ABS_FIL}
+                DEPENDS ${ABS_FILE}
                 COMMENT "Running Python protocol buffer compiler on ${MATCH_PATH} with root ${PROTOROOT}, generating: ${PYTHON_FILE}"
                 VERBATIM)
         ENDIF()

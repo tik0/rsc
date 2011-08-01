@@ -82,10 +82,6 @@ TEST(LoggerFactoryTest, testReselectLoggingSystem)
             randAlnumStr(25));
     loggingSystemRegistry()->addRegistree(l2);
 
-    // TODO why does l2 leak???
-    Mock::AllowLeak(l1);
-    Mock::AllowLeak(l2);
-
     // force default
     LoggerFactory::getInstance()->reselectLoggingSystem(
             LoggerFactory::DEFAULT_LOGGING_SYSTEM);
@@ -95,7 +91,6 @@ TEST(LoggerFactoryTest, testReselectLoggingSystem)
     LoggerPtr logger(LoggerFactory::getInstance()->getLogger(randAlnumStr(130)));
 
     // force hint
-    EXPECT_CALL(*l2, createLogger("rsc.logging")).Times(1).WillOnce(Return(LoggerPtr(new NiceMock<MockLogger>)));
     string name = randAlnumStr(10);
     EXPECT_CALL(*l2, createLogger(name)).Times(1).WillOnce(Return(LoggerPtr(new NiceMock<MockLogger>)));
     LoggerFactory::getInstance()->reselectLoggingSystem(
@@ -109,7 +104,6 @@ TEST(LoggerFactoryTest, testReselectLoggingSystem)
 
     // wrong hint, fallback to other available system
     string newName = randAlnumStr(12);
-    EXPECT_CALL(*l2, createLogger("rsc.logging")).Times(1).WillOnce(Return(LoggerPtr(new NiceMock<MockLogger>)));
     EXPECT_CALL(*l2, createLogger(newName)).Times(1).WillOnce(Return(LoggerPtr(new NiceMock<MockLogger>)));
     LoggerFactory::getInstance()->reselectLoggingSystem(
             randAlnumStr(123));

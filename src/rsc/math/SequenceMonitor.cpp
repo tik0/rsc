@@ -24,6 +24,9 @@ using namespace std;
 namespace rsc {
 namespace math {
 
+Metric::~Metric() {
+}
+
 double EuclidDist::calc(const double *v1, const double *v2,
         const unsigned int& dim) {
     double sum = 0;
@@ -46,6 +49,9 @@ double MaximumDist::calc(const double *v1, const double *v2,
 
 MetricCondition::MetricCondition(MetricPtr m) :
     metric(m) {
+}
+
+MetricCondition::~MetricCondition() {
 }
 
 BelowThreshold::BelowThreshold(const MetricPtr m, const double threshold) :

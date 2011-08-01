@@ -22,6 +22,5 @@
 namespace rsc{
 namespace threading {
 
-
 }
 }

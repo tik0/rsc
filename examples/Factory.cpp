@@ -23,6 +23,8 @@
 #include "rsc/patterns/Factory.h"
 
 struct MyInterface {
+    virtual ~MyInterface() {
+    }
     virtual void
     doStuff() = 0;
 };

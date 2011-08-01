@@ -28,6 +28,9 @@ using namespace std;
 namespace rsc {
 namespace runtime {
 
+Printable::~Printable() {
+}
+
 void Printable::printContents(ostream &/*stream*/) const {
     // nothing to do here as a default
 }

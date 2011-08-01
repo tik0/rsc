@@ -82,6 +82,9 @@ public:
     class DeliveryHandler {
     public:
 
+        virtual ~DeliveryHandler() {
+        }
+
         /**
          * Requests this handler to deliver the message to the receiver.
          *
@@ -103,6 +106,9 @@ public:
      */
     class FilterHandler {
     public:
+
+        virtual ~FilterHandler() {
+        }
 
         /**
          * A function that filters a message for a receiver.

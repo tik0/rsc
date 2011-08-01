@@ -46,6 +46,8 @@ typedef boost::shared_ptr<Metric> MetricPtr;
 class RSC_EXPORT Metric {
 public:
 
+    virtual ~Metric();
+
     /**
      * Calculates the distance between v1 and v2.
      *
@@ -112,6 +114,7 @@ class RSC_EXPORT MetricCondition {
 public:
 
     MetricCondition(MetricPtr m);
+    virtual ~MetricCondition();
 
     /**
      * Tests whether the metric condition is fulfilled for two vectors.

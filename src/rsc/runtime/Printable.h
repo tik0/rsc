@@ -53,6 +53,8 @@ namespace runtime {
 class RSC_EXPORT Printable {
 public:
 
+    virtual ~Printable();
+
     /**
      * Implement this method and return a human-readable class name. This method
      * should always return the same class name. Its existence is an admission

@@ -37,6 +37,8 @@ namespace logging {
 class RSC_EXPORT LoggingSystem {
 public:
 
+    virtual ~LoggingSystem();
+
     /**
      * Returns a unique key describing the name of the logging system.
      *

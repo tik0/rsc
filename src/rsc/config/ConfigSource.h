@@ -33,6 +33,7 @@ namespace config {
  */
 class RSC_EXPORT ConfigSource {
 public:
+    virtual ~ConfigSource();
     /** Implementations should pass all configuration options to
      * @a handler.
      *

@@ -1,8 +1,8 @@
 /* ============================================================
  *
- * This file is part of the RSC project
+ * This file is a part of the RSC project.
  *
- * Copyright (C) 2010, 2011 Jan Moringen
+ * Copyright (C) 2011 by Johannes Wienke <jwienke at techfak dot uni-bielefeld dot de>
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -17,31 +17,13 @@
  *
  * ============================================================ */
 
-#include <iostream>
+#include "ConfigSource.h"
 
-#include <rsc/runtime/TypeStringTools.h>
+namespace rsc {
+namespace config {
 
-struct my_base {
-    virtual ~my_base() {
-    }
-    virtual void
-    f() = 0;
-};
+ConfigSource::~ConfigSource() {
+}
 
-struct my_derived: my_base {
-    void f() {
-    }
-};
-
-int main(int, char*[]) {
-    std::cout << rsc::runtime::typeName<int>() << std::endl;
-
-    int i = 1;
-    std::cout << rsc::runtime::typeName(i) << std::endl;
-
-    my_base *base = new my_derived();
-    std::cout << rsc::runtime::typeName(*base) << std::endl;
-    delete base;
-
-    return EXIT_SUCCESS;
+}
 }

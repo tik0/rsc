@@ -22,22 +22,31 @@
 #include <sstream>
 
 #include <boost/uuid/uuid_io.hpp>
-#include <boost/uuid/uuid_generators.hpp>
 
 using namespace std;
 
 namespace rsc {
 namespace misc {
 
-boost::uuids::basic_random_generator<boost::mt19937> UUID::gen =
+boost::uuids::nil_generator UUID::nilGen =
+    boost::uuids::nil_generator();
+
+boost::uuids::basic_random_generator<boost::mt19937> UUID::randomGen =
         boost::uuids::basic_random_generator<boost::mt19937>();
 
-UUID::UUID() :
-    id(gen()) {
+UUID::UUID(bool random) :
+    id(random ? randomGen() : nilGen()) {
 }
 
 UUID::UUID(const string &uuid) {
     if (uuid != "") {
+        boost::uuids::string_generator gen;
+        id = gen(uuid);
+    }
+}
+
+UUID::UUID(const char *uuid) {
+    if (uuid != string("")) {
         boost::uuids::string_generator gen;
         id = gen(uuid);
     }

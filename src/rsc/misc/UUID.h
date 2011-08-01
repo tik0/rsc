@@ -40,17 +40,33 @@ class RSC_EXPORT UUID {
 public:
 
     /**
-     * Creates a random UUID.
+     * Creates a new UUID object that is either random or the nil
+     * UUID.
+     *
+     * @param random If @c true, a random UUID is created. Otherwise
+     * the nil UUID is created.
      */
-    UUID();
+    explicit UUID(bool random = true);
 
     /**
-     * Parses a UUID from a string. Various default formats are accepted.
+     * Parses a UUID from a string. Various default formats are
+     * accepted.
      *
-     * @param uuid
-     * @throw std::runtime_error given string is not acceptable as a UUID
+     * @param uuid A string representation of the desired UUID.
+     * @throw std::runtime_error given string is not acceptable as a
+     * UUID
      */
     explicit UUID(const std::string &uuid);
+
+    /**
+     * Parses a UUID from a string. Various default formats are
+     * accepted.
+     *
+     * @param uuid A string representation of the desired UUID.
+     * @throw std::runtime_error given string is not acceptable as a
+     * UUID
+     */
+    explicit UUID(const char *uuid);
 
     /**
      * Generates a uuid from the given 16 byte representation.
@@ -93,7 +109,8 @@ private:
 
     boost::uuids::uuid id;
     // TODO refactor to singleton
-    static boost::uuids::basic_random_generator<boost::mt19937> gen;
+    static boost::uuids::nil_generator nilGen;
+    static boost::uuids::basic_random_generator<boost::mt19937> randomGen;
 
 };
 

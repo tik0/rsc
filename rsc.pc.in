@@ -6,4 +6,4 @@ Name: Robotics Systems Commons
 Description: RSC is a Code.CoR-Lab project focused on all aspects of reusable library functions in robotics systems.
 Version: @RSC_VERSION@
 Libs: -L${libdir} -l@RSC_NAME@
-Cflags: -I${includedir}
+Cflags: -I${includedir} @EXTERNAL_INCLUDE_COMMANDS@

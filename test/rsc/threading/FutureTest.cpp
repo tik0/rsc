@@ -61,6 +61,15 @@ TEST(FutureTest, testGetSingleThreaded)
 
 }
 
+TEST(FutureTest, testGetException)
+{
+
+    Future<int> f;
+    f.setError("damn");
+    EXPECT_THROW(f.get(), FutureTaskExecutionException);
+
+}
+
 void setter(const int &result, Future<int> &future) {
     boost::this_thread::sleep(boost::posix_time::milliseconds(300));
     future.set(result);

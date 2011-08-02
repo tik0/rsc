@@ -44,9 +44,7 @@ public:
      *
      * @param msg error message
      */
-    explicit FutureTaskExecutionException(const std::string &msg) :
-        std::runtime_error(msg) {
-    }
+    explicit FutureTaskExecutionException(const std::string &msg);
 
 };
 

@@ -52,22 +52,37 @@ TEST(FutureTest, testIsDone)
 
 TEST(FutureTest, testGetSingleThreaded)
 {
-
-    Future<int> f;
     const int result = 10;
-    f.set(result);
-    EXPECT_EQ(result, f.get());
-    EXPECT_EQ(result, f.get()) << "Repeated calls to get must be possible.";
-
+    {
+        Future<int> f;
+        f.set(result);
+        EXPECT_EQ(result, f.get());
+        EXPECT_EQ(result, f.get()) << "Repeated calls to get must be possible.";
+    }
+    {
+        Future<int> f;
+        f.set(result);
+        EXPECT_EQ(result, f.get(1.0));
+        EXPECT_EQ(result, f.get(1.0)) << "Repeated calls to get must be possible.";
+    }
 }
 
 TEST(FutureTest, testGetException)
 {
 
-    Future<int> f;
-    f.setError("damn");
-    EXPECT_THROW(f.get(), FutureTaskExecutionException);
+    {
+        Future<int> f;
+        f.setError("damn");
+        EXPECT_THROW(f.get(), FutureTaskExecutionException); // without timeout first
+        EXPECT_THROW(f.get(1.0), FutureTaskExecutionException);
+    }
 
+    {
+        Future<int> f;
+        f.setError("damn");
+        EXPECT_THROW(f.get(1.0), FutureTaskExecutionException); // with timeout first
+        EXPECT_THROW(f.get(), FutureTaskExecutionException);
+    }
 }
 
 void setter(const int &result, Future<int> &future) {
@@ -84,5 +99,11 @@ TEST(FutureTest, testGetAsynchronous)
     boost::thread t(boost::bind(&setter, boost::ref(result), boost::ref(f)));
 
     EXPECT_EQ(result, f.get());
+    EXPECT_EQ(result, f.get(1.0));
+}
 
+TEST(FutureTest, testTimeout)
+{
+    Future<int> f;
+    EXPECT_THROW(f.get(0.3), FutureTimeoutException);
 }

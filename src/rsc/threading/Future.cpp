@@ -19,12 +19,21 @@
 
 #include "Future.h"
 
+using namespace std;
+
 namespace rsc {
 namespace threading {
 
-FutureTaskExecutionException::FutureTaskExecutionException(
-        const std::string &msg) :
-        std::runtime_error(msg) {
+FutureException::FutureException(const string &message):
+    runtime_error(message) {
+}
+
+FutureTaskExecutionException::FutureTaskExecutionException(const string &msg) :
+    FutureException(msg) {
+}
+
+FutureTimeoutException::FutureTimeoutException(const string &message):
+    FutureException(message) {
 }
 
 }

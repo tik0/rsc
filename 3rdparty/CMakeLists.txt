@@ -9,4 +9,9 @@ IF(BUILD_TESTS)
     ADD_LIBRARY(${GMOCK_LIBRARY_NAME} STATIC gmock/gtest/src/gtest-all.cc
                                              gmock/src/gmock-all.cc)
 
-ENDIF(BUILD_TESTS)
+ENDIF()
+
+IF(USE_INTERNAL_BOOST_UUID)
+    FILE(GLOB_RECURSE UUID_FILES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" *.hpp)
+    INSTALL(FILES ${UUID_FILES} DESTINATION include/rsc/3rdparty/boost.uuid/boost/uuid)
+ENDIF()

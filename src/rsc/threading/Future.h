@@ -117,10 +117,9 @@ public:
      * If necessary, this method waits for the operation to complete,
      * and then retrieves its result.
      *
-     * @return The result of the operation if it did complete
-     * successfully.
-     * @throw FutureTaskExecutionException If the operation
-     * represented by the Future object failed.
+     * @return The result of the operation if it did complete successfully.
+     * @throw FutureTaskExecutionException If the operation represented by the
+     *        Future object failed.
      */
     R get() {
         return get(0);
@@ -135,13 +134,14 @@ public:
      * within this time a @ref FutureTimeoutException is thrown.
      *
      * @param timeout The amount of time in seconds in which the
-     * operation has to complete.
+     *                operation has to complete.
      * @return The result of the operation if it did complete
-     * successfully within the given amount of time.
-     * @throw FutureTaskExecutionException If the operation
-     * represented by the Future object failed.
-     * @throw FutureTimeoutException If the result does not become
-     * available within the amount of time specified via @a timeout.
+     *         successfully within the given amount of time.
+     * @throw FutureTaskExecutionException If the operation represented by the
+     *                                     Future object failed.
+     * @throw FutureTimeoutException If the result does not become available
+     *                               within the amount of time specified via
+     *                               @a timeout.
      */
     R get(double timeout) {
         MutexType::scoped_lock lock(mutex);

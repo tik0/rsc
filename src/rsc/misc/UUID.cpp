@@ -34,8 +34,11 @@ boost::uuids::nil_generator UUID::nilGen =
 boost::uuids::basic_random_generator<boost::mt19937> UUID::randomGen =
         boost::uuids::basic_random_generator<boost::mt19937>();
 
-UUID::UUID(bool random) :
-    id(random ? randomGen() : nilGen()) {
+UUID::UUID(const bool &random) :
+    id(nilGen()) {
+    if (random) {
+        id = randomGen();
+    }
 }
 
 UUID::UUID(const string &uuid) {

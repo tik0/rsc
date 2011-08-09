@@ -107,7 +107,7 @@ public:
      * thus suitable for representing an in-progress computation.
      */
     Future() :
-        taskFinished(false), taskError(false) {
+            taskFinished(false), taskError(false) {
     }
 
     /**
@@ -154,8 +154,10 @@ public:
                 xt.sec += timeout;
                 if (!condition.timed_wait(lock, xt)) {
                     throw FutureTimeoutException(
-                        boost::str(boost::format("Timeout while waiting for result. Waited %1% seconds.")
-                                   % timeout));
+                            boost::str(
+                                    boost::format(
+                                            "Timeout while waiting for result. Waited %1% seconds.")
+                                            % timeout));
                 }
             }
         }

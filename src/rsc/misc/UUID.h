@@ -46,7 +46,7 @@ public:
      * @param random If @c true, a random UUID is created. Otherwise
      * the nil UUID is created.
      */
-    explicit UUID(bool random = true);
+    explicit UUID(const bool &random = true);
 
     /**
      * Parses a UUID from a string. Various default formats are

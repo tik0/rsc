@@ -22,6 +22,7 @@
 #include <cstdlib>
 #include <cctype>
 #include <algorithm>
+#include <iterator>
 
 #ifndef WIN32
 #include <sys/time.h>

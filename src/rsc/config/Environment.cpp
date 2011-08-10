@@ -91,8 +91,9 @@ void EnvironmentVariableSource::emit(OptionHandler &handler) {
     for (environment_iterator it = environment_iterator(environ); it
             != environment_iterator(); ++it) {
         string name = transformName(it->first, this->prefix);
-        if (name.empty())
+        if (name.empty()) {
             continue;
+        }
 
         vector<string> key;
         split(key, name, is_any_of("_"));

@@ -34,51 +34,51 @@ LoggerPtr Logger::getLogger(const std::string &name) {
 }
 
 void Logger::trace(const string &msg) {
-    this->log(TRACE, msg);
+    this->log(LEVEL_TRACE, msg);
 }
 
 void Logger::debug(const string &msg) {
-    this->log(DEBUG, msg);
+    this->log(LEVEL_DEBUG, msg);
 }
 
 void Logger::info(const string &msg) {
-    this->log(INFO, msg);
+    this->log(LEVEL_INFO, msg);
 }
 
 void Logger::warn(const string &msg) {
-    this->log(WARN, msg);
+    this->log(LEVEL_WARN, msg);
 }
 
 void Logger::error(const string &msg) {
-    this->log(ERROR, msg);
+    this->log(LEVEL_ERROR, msg);
 }
 
 void Logger::fatal(const string &msg) {
-    this->log(FATAL, msg);
+    this->log(LEVEL_FATAL, msg);
 }
 
 bool Logger::isTraceEnabled() const {
-    return isEnabledFor(TRACE);
+    return isEnabledFor(LEVEL_TRACE);
 }
 
 bool Logger::isDebugEnabled() const {
-    return isEnabledFor(DEBUG);
+    return isEnabledFor(LEVEL_DEBUG);
 }
 
 bool Logger::isInfoEnabled() const {
-    return isEnabledFor(INFO);
+    return isEnabledFor(LEVEL_INFO);
 }
 
 bool Logger::isWarnEnabled() const {
-    return isEnabledFor(WARN);
+    return isEnabledFor(LEVEL_WARN);
 }
 
 bool Logger::isErrorEnabled() const {
-    return isEnabledFor(ERROR);
+    return isEnabledFor(LEVEL_ERROR);
 }
 
 bool Logger::isFatalEnabled() const {
-    return isEnabledFor(FATAL);
+    return isEnabledFor(LEVEL_FATAL);
 }
 
 bool Logger::isEnabledFor(const Level &level) const {
@@ -87,29 +87,29 @@ bool Logger::isEnabledFor(const Level &level) const {
 
 ostream &operator<<(ostream &stream, const Logger::Level &level) {
     switch (level) {
-    case Logger::ALL:
-        stream << "ALL";
+    case Logger::LEVEL_ALL:
+        stream << "LEVEL_ALL";
         break;
-    case Logger::TRACE:
-        stream << "TRACE";
+    case Logger::LEVEL_TRACE:
+        stream << "LEVEL_TRACE";
         break;
-    case Logger::DEBUG:
-        stream << "DEBUG";
+    case Logger::LEVEL_DEBUG:
+        stream << "LEVEL_DEBUG";
         break;
-    case Logger::INFO:
-        stream << "INFO";
+    case Logger::LEVEL_INFO:
+        stream << "LEVEL_INFO";
         break;
-    case Logger::WARN:
-        stream << "WARN";
+    case Logger::LEVEL_WARN:
+        stream << "LEVEL_WARN";
         break;
-    case Logger::ERROR:
-        stream << "ERROR";
+    case Logger::LEVEL_ERROR:
+        stream << "LEVEL_ERROR";
         break;
-    case Logger::FATAL:
-        stream << "FATAL";
+    case Logger::LEVEL_FATAL:
+        stream << "LEVEL_FATAL";
         break;
-    case Logger::OFF:
-        stream << "OFF";
+    case Logger::LEVEL_OFF:
+        stream << "LEVEL_OFF";
         break;
     default:
         assert(false);

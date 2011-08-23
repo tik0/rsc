@@ -43,22 +43,22 @@ TEST(LoggerFactoryTest, testLogMacros)
     string expect = "one 2 three";
 
     map<Logger::Level, unsigned int> levelCalls;
-    levelCalls.insert(pair<Logger::Level, unsigned int> (Logger::ALL, 0));
-    levelCalls.insert(pair<Logger::Level, unsigned int> (Logger::TRACE, 0));
-    levelCalls.insert(pair<Logger::Level, unsigned int> (Logger::DEBUG, 1));
-    levelCalls.insert(pair<Logger::Level, unsigned int> (Logger::INFO, 2));
-    levelCalls.insert(pair<Logger::Level, unsigned int> (Logger::WARN, 3));
-    levelCalls.insert(pair<Logger::Level, unsigned int> (Logger::ERROR, 4));
-    levelCalls.insert(pair<Logger::Level, unsigned int> (Logger::FATAL, 5));
-    levelCalls.insert(pair<Logger::Level, unsigned int> (Logger::OFF, 6));
+    levelCalls.insert(pair<Logger::Level, unsigned int> (Logger::LEVEL_ALL, 0));
+    levelCalls.insert(pair<Logger::Level, unsigned int> (Logger::LEVEL_TRACE, 0));
+    levelCalls.insert(pair<Logger::Level, unsigned int> (Logger::LEVEL_DEBUG, 1));
+    levelCalls.insert(pair<Logger::Level, unsigned int> (Logger::LEVEL_INFO, 2));
+    levelCalls.insert(pair<Logger::Level, unsigned int> (Logger::LEVEL_WARN, 3));
+    levelCalls.insert(pair<Logger::Level, unsigned int> (Logger::LEVEL_ERROR, 4));
+    levelCalls.insert(pair<Logger::Level, unsigned int> (Logger::LEVEL_FATAL, 5));
+    levelCalls.insert(pair<Logger::Level, unsigned int> (Logger::LEVEL_OFF, 6));
 
     vector<Logger::Level> expectedLevels;
-    expectedLevels.push_back(Logger::TRACE);
-    expectedLevels.push_back(Logger::DEBUG);
-    expectedLevels.push_back(Logger::INFO);
-    expectedLevels.push_back(Logger::WARN);
-    expectedLevels.push_back(Logger::ERROR);
-    expectedLevels.push_back(Logger::FATAL);
+    expectedLevels.push_back(Logger::LEVEL_TRACE);
+    expectedLevels.push_back(Logger::LEVEL_DEBUG);
+    expectedLevels.push_back(Logger::LEVEL_INFO);
+    expectedLevels.push_back(Logger::LEVEL_WARN);
+    expectedLevels.push_back(Logger::LEVEL_ERROR);
+    expectedLevels.push_back(Logger::LEVEL_FATAL);
 
     for (map<Logger::Level, unsigned int>::iterator it = levelCalls.begin(); it
             != levelCalls.end(); ++it) {

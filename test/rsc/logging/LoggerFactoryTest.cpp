@@ -46,29 +46,29 @@ TEST(LoggerFactoryTest, testSingleton)
 
 TEST(LoggerFactoryTest, testSingletonLoggers)
 {
-    LoggerFactory::getInstance()->reconfigure(Logger::WARN);
+    LoggerFactory::getInstance()->reconfigure(Logger::LEVEL_WARN);
     stringstream name;
     name << rand();
     LoggerPtr logger = LoggerFactory::getInstance()->getLogger(name.str());
-    EXPECT_EQ(Logger::WARN, logger->getLevel());
+    EXPECT_EQ(Logger::LEVEL_WARN, logger->getLevel());
     EXPECT_EQ(logger, LoggerFactory::getInstance()->getLogger(name.str()));
     EXPECT_NE(logger, LoggerFactory::getInstance()->getLogger(name.str() + "blubb"));
 }
 
 TEST(LoggerFactoryTest, testReconfigure)
 {
-    LoggerFactory::getInstance()->reconfigure(Logger::ERROR);
+    LoggerFactory::getInstance()->reconfigure(Logger::LEVEL_ERROR);
     stringstream name;
     name << rand();
     LoggerPtr logger = LoggerFactory::getInstance()->getLogger(name.str());
-    EXPECT_EQ(Logger::ERROR, logger->getLevel());
+    EXPECT_EQ(Logger::LEVEL_ERROR, logger->getLevel());
 
-    LoggerFactory::getInstance()->reconfigure(Logger::TRACE);
-    EXPECT_EQ(Logger::TRACE, logger->getLevel());
+    LoggerFactory::getInstance()->reconfigure(Logger::LEVEL_TRACE);
+    EXPECT_EQ(Logger::LEVEL_TRACE, logger->getLevel());
     stringstream name2;
     name2 << rand();
     LoggerPtr logger2 = LoggerFactory::getInstance()->getLogger(name2.str());
-    EXPECT_EQ(Logger::TRACE, logger2->getLevel());
+    EXPECT_EQ(Logger::LEVEL_TRACE, logger2->getLevel());
 }
 
 TEST(LoggerFactoryTest, testReselectLoggingSystem)

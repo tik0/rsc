@@ -86,7 +86,7 @@ TEST(TaskTest, testExecution)
 {
 
     rsc::logging::LoggerFactory::getInstance()->reconfigure(
-            rsc::logging::Logger::ALL);
+            rsc::logging::Logger::LEVEL_ALL);
 
     boost::shared_ptr<PeriodicTaskTest> p =
             boost::shared_ptr<PeriodicTaskTest>(new PeriodicTaskTest());

@@ -31,7 +31,7 @@ const string LoggerFactory::DEFAULT_LOGGING_SYSTEM =
         ConsoleLoggingSystem::getLoggerName();
 
 LoggerFactory::LoggerFactory() :
-    currentLevel(Logger::WARN) {
+    currentLevel(Logger::LEVEL_WARN) {
     reselectLoggingSystem();
 }
 

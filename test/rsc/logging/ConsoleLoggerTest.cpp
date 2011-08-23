@@ -36,22 +36,22 @@ TEST(ConsoleLoggerTest, testLog)
 {
 
     vector<Logger::Level> loggerLevels;
-    loggerLevels.push_back(Logger::ALL);
-    loggerLevels.push_back(Logger::TRACE);
-    loggerLevels.push_back(Logger::DEBUG);
-    loggerLevels.push_back(Logger::INFO);
-    loggerLevels.push_back(Logger::WARN);
-    loggerLevels.push_back(Logger::ERROR);
-    loggerLevels.push_back(Logger::FATAL);
-    loggerLevels.push_back(Logger::OFF);
+    loggerLevels.push_back(Logger::LEVEL_ALL);
+    loggerLevels.push_back(Logger::LEVEL_TRACE);
+    loggerLevels.push_back(Logger::LEVEL_DEBUG);
+    loggerLevels.push_back(Logger::LEVEL_INFO);
+    loggerLevels.push_back(Logger::LEVEL_WARN);
+    loggerLevels.push_back(Logger::LEVEL_ERROR);
+    loggerLevels.push_back(Logger::LEVEL_FATAL);
+    loggerLevels.push_back(Logger::LEVEL_OFF);
 
     vector<Logger::Level> testLevels;
-    testLevels.push_back(Logger::TRACE);
-    testLevels.push_back(Logger::DEBUG);
-    testLevels.push_back(Logger::INFO);
-    testLevels.push_back(Logger::WARN);
-    testLevels.push_back(Logger::ERROR);
-    testLevels.push_back(Logger::FATAL);
+    testLevels.push_back(Logger::LEVEL_TRACE);
+    testLevels.push_back(Logger::LEVEL_DEBUG);
+    testLevels.push_back(Logger::LEVEL_INFO);
+    testLevels.push_back(Logger::LEVEL_WARN);
+    testLevels.push_back(Logger::LEVEL_ERROR);
+    testLevels.push_back(Logger::LEVEL_FATAL);
 
     for (vector<Logger::Level>::iterator loggerLevelIt = loggerLevels.begin(); loggerLevelIt
             != loggerLevels.end(); ++loggerLevelIt) {

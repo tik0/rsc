@@ -50,14 +50,14 @@ public:
      * @author jwienke
      */
     enum Level {
-        ALL = 0x11111111,
-        TRACE = 60,
-        DEBUG = 50,
-        INFO = 40,
-        WARN = 30,
-        ERROR = 20,
-        FATAL = 10,
-        OFF = 0
+        LEVEL_ALL = 0x11111111,
+        LEVEL_TRACE = 60,
+        LEVEL_DEBUG = 50,
+        LEVEL_INFO = 40,
+        LEVEL_WARN = 30,
+        LEVEL_ERROR = 20,
+        LEVEL_FATAL = 10,
+        LEVEL_OFF = 0
     };
 
     virtual ~Logger();

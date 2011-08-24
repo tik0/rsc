@@ -167,6 +167,11 @@ public:
         return queue.empty();
     }
 
+    /**
+     * Return element count of the cue.
+     *
+     * @return The number of elements currently stored in the queue.
+     */
     std::size_t size() const {
         boost::recursive_mutex::scoped_lock lock(mutex);
         return this->queue.size();

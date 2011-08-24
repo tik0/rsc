@@ -60,7 +60,7 @@ private:
 
     volatile bool interrupted;
     std::queue<M> queue;
-    boost::recursive_mutex mutex;
+    mutable boost::recursive_mutex mutex;
     boost::condition condition;
     unsigned int sizeLimit;
     dropHandlerType dropHandler;
@@ -162,9 +162,14 @@ public:
      *
      * @return @c true if empty, else @c false
      */
-    bool empty() {
+    bool empty() const {
         boost::recursive_mutex::scoped_lock lock(mutex);
         return queue.empty();
+    }
+
+    std::size_t size() const {
+        boost::recursive_mutex::scoped_lock lock(mutex);
+        return this->queue.size();
     }
 
     /**
@@ -183,4 +188,3 @@ public:
 
 }
 }
-

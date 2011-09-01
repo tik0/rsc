@@ -7,6 +7,7 @@
 # Will react on:
 #  SPREAD_ROOT, additional directory to search for spread
 #  SPREAD_USE_STATIC, if enabled, search for static lib instead of shared, default OFF
+#  SPREAD_IGNORE_EXECUTABLE, if set to true, a missing spread executable will be ignored, default OFF 
 #
 # Copyright (C) 2010 by Johannes Wienke <jwienke at techfak dot uni-bielefeld dot de>
 #
@@ -48,6 +49,10 @@ FIND_LIBRARY(SPREAD_LIBRARIES
                    "${SPREAD_ROOT}/bin"
                    "$ENV{HOME}/lib")
 
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(Spread DEFAULT_MSG SPREAD_LIBRARIES SPREAD_INCLUDE_DIRS SPREAD_EXECUTABLE)
+IF(SPREAD_IGNORE_EXECUTABLE)
+    FIND_PACKAGE_HANDLE_STANDARD_ARGS(Spread DEFAULT_MSG SPREAD_LIBRARIES SPREAD_INCLUDE_DIRS)
+ELSE()
+    FIND_PACKAGE_HANDLE_STANDARD_ARGS(Spread DEFAULT_MSG SPREAD_LIBRARIES SPREAD_INCLUDE_DIRS SPREAD_EXECUTABLE)
+ENDIF()
 
 MARK_AS_ADVANCED(SPREAD_INCLUDE_DIRS SPREAD_LIBNAME SPREAD_LIBRARIES SPREAD_EXECUTABLE)

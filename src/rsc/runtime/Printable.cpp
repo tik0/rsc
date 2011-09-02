@@ -21,7 +21,8 @@
 
 #include <iostream>
 #include <string>
-#include <typeinfo>
+
+#include "TypeStringTools.h"
 
 using namespace std;
 
@@ -30,6 +31,11 @@ namespace runtime {
 
 Printable::~Printable() {
 }
+
+string Printable::getClassName() const {
+    return typeName(*this);
+}
+
 
 void Printable::printContents(ostream &/*stream*/) const {
     // nothing to do here as a default

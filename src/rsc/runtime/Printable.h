@@ -62,7 +62,7 @@ public:
      *
      * @return human-readable name of the class.
      */
-    virtual std::string getClassName() const = 0;
+    virtual std::string getClassName() const;
 
     /**
      * This method does the actual printing of class debug information and
@@ -116,4 +116,3 @@ std::ostream & operator<<(std::ostream & stream, boost::weak_ptr<Y> const & p) {
 
 }
 }
-

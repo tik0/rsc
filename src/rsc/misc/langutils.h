@@ -77,6 +77,24 @@ RSC_EXPORT char randAlnumChar();
  */
 RSC_EXPORT std::string randAlnumStr(const std::string::size_type &length);
 
+// This macro allows you to mark a function as being deprecated. Please note
+// that if your return type contains a comma (template) you need to typedef it.
+// Otherwise the commas are interpreted as arguments to this macro.
+// Usage:
+// DEPRECATED(void deprecatedFunction(int foo));
+// void deprecatedFunction(int foo) {
+//     int bla = foo + 1;
+//     bla = bla + 1;
+// }
+#ifdef __GNUC__
+#define DEPRECATED(func) func __attribute__ ((deprecated))
+#elif defined(_MSC_VER)
+#define DEPRECATED(func) __declspec(deprecated) func
+#else
+#pragma message("WARNING: You need to implement DEPRECATED for this compiler")
+#define DEPRECATED(func) func
+#endif
+
 }
 }
 

@@ -28,7 +28,7 @@ FILE(GLOB TEST_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
                        "rsc/runtime/*.cpp"
                        "rsc/patterns/*.cpp")
 SET(TEST_SOURCES ${TEST_SOURCES} "rsc/RscTestSuite.cpp")
-LIST(APPEND TEST_SOURCES "rsc/misc/UUIDTest.cpp" "rsc/misc/RegistryTest.cpp")
+LIST(APPEND TEST_SOURCES "rsc/misc/UUIDTest.cpp" "rsc/misc/RegistryTest.cpp" "rsc/misc/langutilsTest.cpp")
 
 # subprocess
 IF(UNIX)

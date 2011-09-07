@@ -88,28 +88,28 @@ bool Logger::isEnabledFor(const Level &level) const {
 ostream &operator<<(ostream &stream, const Logger::Level &level) {
     switch (level) {
     case Logger::LEVEL_ALL:
-        stream << "LEVEL_ALL";
+        stream << "ALL";
         break;
     case Logger::LEVEL_TRACE:
-        stream << "LEVEL_TRACE";
+        stream << "TRACE";
         break;
     case Logger::LEVEL_DEBUG:
-        stream << "LEVEL_DEBUG";
+        stream << "DEBUG";
         break;
     case Logger::LEVEL_INFO:
-        stream << "LEVEL_INFO";
+        stream << "INFO";
         break;
     case Logger::LEVEL_WARN:
-        stream << "LEVEL_WARN";
+        stream << "WARN";
         break;
     case Logger::LEVEL_ERROR:
-        stream << "LEVEL_ERROR";
+        stream << "ERROR";
         break;
     case Logger::LEVEL_FATAL:
-        stream << "LEVEL_FATAL";
+        stream << "FATAL";
         break;
     case Logger::LEVEL_OFF:
-        stream << "LEVEL_OFF";
+        stream << "OFF";
         break;
     default:
         assert(false);

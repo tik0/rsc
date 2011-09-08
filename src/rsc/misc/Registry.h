@@ -59,18 +59,21 @@ public:
      * ownership of the pointer and manages deleting the pointer when needed.
      *
      * @param r new registree to register
+     * @param errorDescription optional string to add to the message of the
+     *                         exception which is raised when a registree with
+     *                         a same key already exists.
      * @throw std::invalid_argument if a registree with the same key is already
      *                              registered. In this case @c r is not owned
      *                              by this registry
      */
-    void addRegistree(R *r) {
+    void addRegistree(R *r, const std::string &errorDescription = "") {
 
         boost::recursive_mutex::scoped_lock lock(mutex);
 
         if (registreesByName.count(r->getRegistryKey())) {
             throw std::invalid_argument(
                     "There already is a registree with key '"
-                            + r->getRegistryKey() + "'.");
+                            + r->getRegistryKey() + "'. " + errorDescription);
         }
 
         registreesByName[r->getRegistryKey()] = boost::shared_ptr<R>(r);
@@ -88,11 +91,11 @@ public:
 
         boost::recursive_mutex::scoped_lock lock(mutex);
 
-        typename std::map<std::string, boost::shared_ptr<R> >::const_iterator
-                it = registreesByName.find(key);
+        typename std::map<std::string, boost::shared_ptr<R> >::const_iterator it =
+                registreesByName.find(key);
         if (it == registreesByName.end()) {
-            throw std::invalid_argument("There is no registree with key '"
-                    + key + "'.");
+            throw std::invalid_argument(
+                    "There is no registree with key '" + key + "'.");
         }
 
         return it->second;
@@ -109,9 +112,9 @@ public:
         boost::recursive_mutex::scoped_lock lock(mutex);
 
         std::set<std::string> keys;
-        typename std::map<std::string, boost::shared_ptr<R> >::const_iterator
-                it;
-        for (it = registreesByName.begin(); it != registreesByName.end(); ++it) {
+        typename std::map<std::string, boost::shared_ptr<R> >::const_iterator it;
+        for (it = registreesByName.begin(); it != registreesByName.end();
+                ++it) {
             keys.insert(it->first);
         }
         return keys;
@@ -165,6 +168,29 @@ private:
     public: \
         Starter##uniqueName() { \
         (registry)->addRegistree(registree); \
+        } \
+    }; \
+    Starter##uniqueName uniqueName##Starter;
+
+/**
+ * Creates an object that globally registers in the Registry. This method only
+ * works directly in binaries or shared libraries, no static libraries.
+ *
+ * Class names for this macro must be given without namespaces and templates.
+ * Create typedefs as required to match these restrictions.
+ *
+ * @note be aware of the static initialization order fiasco and do not return
+ *       static members for the registry key
+ * @param registry registry to register in
+ * @param registree registree to register
+ * @param msg error message to display on registration failure
+ * @param uniqueName a unique name to generate a register function
+ */
+#define CREATE_GLOBAL_REGISTREE_MSG(registry, registree, uniqueName, msg) \
+    class Starter##uniqueName { \
+    public: \
+        Starter##uniqueName() { \
+        (registry)->addRegistree(registree, msg); \
         } \
     }; \
     Starter##uniqueName uniqueName##Starter;

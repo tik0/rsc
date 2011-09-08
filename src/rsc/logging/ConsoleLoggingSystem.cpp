@@ -43,7 +43,7 @@ LoggerPtr ConsoleLoggingSystem::createLogger(const std::string &name) {
     return LoggerPtr(new ConsoleLogger(name));
 }
 
-CREATE_GLOBAL_REGISTREE(loggingSystemRegistry(), new ConsoleLoggingSystem, ConsoleLoggingSystem)
+CREATE_GLOBAL_REGISTREE_MSG(loggingSystemRegistry(), new ConsoleLoggingSystem, ConsoleLoggingSystem, "Could it be that you have linked two different versions of RSC in your program?")
 ;
 
 }

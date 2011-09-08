@@ -49,7 +49,7 @@ ConfigFileSource::ConfigFileSource(istream &stream) :
     logger(Logger::getLogger("rsc.config.ConfigFileSource")), stream(stream) {
 }
 
-void ConfigFileSource::emit(OptionHandler& handler) {
+void ConfigFileSource::provideOptions(OptionHandler& handler) {
     string name;
     string value;
     while (getOption(name, value)) {

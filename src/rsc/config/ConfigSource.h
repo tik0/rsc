@@ -39,7 +39,7 @@ public:
      *
      * \param handler The handler to which all option should be passed.
      */
-    virtual void emit(OptionHandler& handler) = 0;
+    virtual void provideOptions(OptionHandler& handler) = 0;
 };
 
 }

@@ -56,7 +56,7 @@ TEST(ConfigFileSourceTest, testSmoke)
     CollectingHandler handler;
     ifstream stream(str(format("%1%/smoke.conf") % TEST_ROOT).c_str());
     ConfigFileSource source(stream);
-    source.emit(handler);
+    source.provideOptions(handler);
     EXPECT_EQ(any_cast<int>(handler.collected["global"]), 5);
     EXPECT_EQ(any_cast<string>(handler.collected["string"]), "string");
     EXPECT_EQ(any_cast<double>(handler.collected["section1.option"]), 1.5);
@@ -72,7 +72,7 @@ TEST(ConfigFileSourceTest, testSyntaxErrors)
                                 format("%1%/syntax-errors-%2%.conf")
                                         % TEST_ROOT % i).c_str());
         ConfigFileSource source(stream);
-        EXPECT_THROW(source.emit(handler), invalid_argument);
+        EXPECT_THROW(source.provideOptions(handler), invalid_argument);
     }
 }
 #endif

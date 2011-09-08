@@ -76,7 +76,7 @@ public:
      */
     EnvironmentVariableSource(const std::string &prefix = "");
 
-    void emit(OptionHandler &handler);
+    void provideOptions(OptionHandler &handler);
 private:
     rsc::logging::LoggerPtr logger;
 

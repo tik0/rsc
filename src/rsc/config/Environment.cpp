@@ -87,7 +87,7 @@ EnvironmentVariableSource::EnvironmentVariableSource(const string &prefix) :
             prefix) {
 }
 
-void EnvironmentVariableSource::emit(OptionHandler &handler) {
+void EnvironmentVariableSource::provideOptions(OptionHandler &handler) {
     for (environment_iterator it = environment_iterator(environ); it
             != environment_iterator(); ++it) {
         string name = transformName(it->first, this->prefix);

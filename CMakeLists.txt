@@ -15,8 +15,6 @@ INCLUDE(EnableSlocCount)
 INCLUDE(GenerateDoxygen)
 INCLUDE(GenerateCppcheck)
 
-SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-
 # --- user options ---
 
 OPTION(BUILD_TESTS "Decide if the test suite shall be built or not" ON)

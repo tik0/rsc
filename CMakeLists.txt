@@ -155,6 +155,10 @@ INSTALL(FILES ${CMAKE_BINARY_DIR}/RSCConfig.cmake DESTINATION share/rsc)
 CONFIGURE_FILE(RSCConfigVersion.cmake.in ${CMAKE_BINARY_DIR}/RSCConfigVersion.cmake @ONLY)
 INSTALL(FILES ${CMAKE_BINARY_DIR}/RSCConfigVersion.cmake DESTINATION share/rsc)
 
+EXPORT(TARGETS ${RSC_NAME} FILE "${CMAKE_BINARY_DIR}/RSCDepends.cmake")
+INSTALL(EXPORT RSCDepends
+        DESTINATION "share/rsc")
+
 # --- enable unit tests if desired ---
 
 IF(BUILD_TESTS)

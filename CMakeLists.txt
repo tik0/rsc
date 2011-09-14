@@ -144,7 +144,7 @@ ENDIF()
 CONFIGURE_FILE(rsc.pc.in ${CMAKE_BINARY_DIR}/rsc.pc @ONLY)
 INSTALL(FILES ${CMAKE_BINARY_DIR}/rsc.pc DESTINATION lib/pkgconfig)
 
-# --- cmake config file ---
+# --- cmake config files ---
 
 SET(LIB_SUFFIX ${CMAKE_SHARED_LIBRARY_SUFFIX})
 IF(CMAKE_LINK_LIBRARY_SUFFIX)
@@ -152,6 +152,8 @@ IF(CMAKE_LINK_LIBRARY_SUFFIX)
 ENDIF()
 CONFIGURE_FILE(RSCConfig.cmake.in ${CMAKE_BINARY_DIR}/RSCConfig.cmake @ONLY)
 INSTALL(FILES ${CMAKE_BINARY_DIR}/RSCConfig.cmake DESTINATION share/rsc)
+CONFIGURE_FILE(RSCConfigVersion.cmake.in ${CMAKE_BINARY_DIR}/RSCConfigVersion.cmake @ONLY)
+INSTALL(FILES ${CMAKE_BINARY_DIR}/RSCConfigVersion.cmake DESTINATION share/rsc)
 
 # --- enable unit tests if desired ---
 

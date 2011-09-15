@@ -37,7 +37,8 @@ FIND_PROGRAM(SPREAD_EXECUTABLE
                    "sbin")
 
 SET(SPREAD_LIBNAME "libspread${CMAKE_SHARED_LIBRARY_SUFFIX}")
-IF(SPREAD_USE_STATIC)
+IF(SPREAD_USE_STATIC OR MSVC)
+    # the dfeault spread project for MSVC generates a static lib
     SET(SPREAD_LIBNAME "libspread${CMAKE_STATIC_LIBRARY_SUFFIX}")
 ENDIF()
 

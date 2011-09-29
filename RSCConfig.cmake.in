@@ -8,6 +8,12 @@ IF(NOT RSC_CONFIG_PROCESSED)
     SET(RSC_RUNTIME_LIBRARY_DIRS "${RSC_CONFIG_DIR}/../../bin")
     SET(RSC_CMAKE_MODULE_PATH "${RSC_CONFIG_DIR}/../../@RSC_CMAKE_MODULE_PATH@")
     SET(RSC_INTERNAL_BOOST_UUID @USE_INTERNAL_BOOST_UUID@)
+    
+    SET(CMAKE_MODULE_PATH ${RSC_CMAKE_MODULE_PATH} ${CMAKE_MODULE_PATH})
+    IF(RSC_INTERNAL_BOOST_UUID)
+        SET(BOOSTUUID_ROOT "@BOOSTUUID_ROOT@" CACHE PATH "Boost.UUID location hint")
+        FIND_PACKAGE(BoostUUID REQUIRED)
+    ENDIF()
 
     # Expose rsc library as an imported target (from the point of view
     # of the downstream project)

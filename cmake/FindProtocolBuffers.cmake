@@ -200,8 +200,53 @@ FUNCTION(PROTOBUF_GENERATE)
         
         SET(CPP_FILE "${OUTPATH}/${EXT_CLEANED_FILE}.pb.cc")
         SET(HDR_FILE "${OUTPATH}/${EXT_CLEANED_FILE}.pb.h")
-        SET(JAVA_FILE "${OUTPATH}/${EXT_CLEANED_FILE}.java")
         SET(PYTHON_FILE "${OUTPATH}/${EXT_CLEANED_FILE}_pb2.py")
+        
+        # determine the java file name
+        FILE(READ ${PROTOFILE} PROTO_CONTENT)
+        
+        # first the package
+        # TODO jwienke: ignore comments... see below TODO
+        SET(JAVA_PACKAGE_REGEX "package[\t ]+([^;\n\r]+);")
+        STRING(REGEX MATCH ${JAVA_PACKAGE_REGEX} JAVA_PACKAGE_LINE ${PROTO_CONTENT})
+        IF(ARG_DEBUG)
+            MESSAGE("  JAVA_PACKAGE_LINE=${JAVA_PACKAGE_LINE}")
+        ENDIF()
+        SET(JAVA_PACKAGE "")
+        IF(JAVA_PACKAGE_LINE)
+            STRING(REGEX REPLACE ${JAVA_PACKAGE_REGEX} "\\1" JAVA_PACKAGE ${JAVA_PACKAGE_LINE})
+        ENDIF()
+        STRING(REPLACE "." "/" JAVA_PACKAGE_PATH "${JAVA_PACKAGE}")
+        IF(ARG_DEBUG)
+            MESSAGE("  JAVA_PACKAGE=${JAVA_PACKAGE}")
+            MESSAGE("  JAVA_PACKAGE_PATH=${JAVA_PACKAGE_PATH}")
+        ENDIF()
+        
+        # then the java class name
+        
+        # this is the default
+        # TODO jwienke: how to integrate that this line must not start with //?
+        #               cmake regex are strange, because ^ and $ match beginning
+        #               and end of file and not of each line
+        SET(JAVA_CLASS_REGEX "option[\t ]+java_outer_classname[\t ]+=[\t ]+\"([^\"]+)\"")
+        STRING(REGEX MATCH ${JAVA_CLASS_REGEX} JAVA_CLASS_LINE ${PROTO_CONTENT})
+        IF(ARG_DEBUG)
+            MESSAGE("  JAVA_CLASS_LINE=${JAVA_CLASS_LINE}")
+        ENDIF()
+        SET(JAVA_CLASS ${FILE_WE})
+        IF(JAVA_CLASS_LINE)
+            STRING(REGEX REPLACE ${JAVA_CLASS_REGEX} "\\1" JAVA_CLASS ${JAVA_CLASS_LINE})
+            # Now that we have the real java class name, this must be replaced
+            # in the original file name proposal. However, the subpath in the
+            # file system is also part of EXT_CLEANED_FILE. Hence, we need to
+            # do some replace logic again...
+        ENDIF()
+        IF(ARG_DEBUG)
+            MESSAGE("  JAVA_CLASS=${JAVA_CLASS}")
+        ENDIF()
+        
+        # finally deduce the real java name
+        SET(JAVA_FILE "${OUTPATH}/${JAVA_PACKAGE_PATH}/${JAVA_CLASS}.java")
         
         IF(ARG_DEBUG)
             MESSAGE("  CPP_FILE=${CPP_FILE}")

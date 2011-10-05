@@ -304,6 +304,7 @@ FIND_FILE(PROTOBUF_JAVA_LIBRARY
           NAMES ${PROTOBUF_JAVA_NAME} protobuf.jar
           HINTS ${PROTOBUF_JAVA_ROOT}
                 "/usr/share/java"
+                "/usr/share/java/protobuf-java"
                 "${CMAKE_INSTALL_PREFIX}/lib/java"
                 "${CMAKE_INSTALL_PREFIX}/share/java")
 

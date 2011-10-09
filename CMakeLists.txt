@@ -186,10 +186,19 @@ GENERATE_CPPCHECK(SOURCES src test examples
 
 # --- package ---
 
+SET(CPACK_DEBIAN_PACKAGE_NAME "rsc")
 SET(CPACK_PACKAGE_VENDOR "CoR-Lab Bielefeld University")
 SET(CPACK_PACKAGE_VERSION_MAJOR ${RSC_VERSION_MAJOR})
 SET(CPACK_PACKAGE_VERSION_MINOR ${RSC_VERSION_MINOR})
 SET(CPACK_PACKAGE_VERSION_PATCH ${RSC_VERSION_PATCH})
 SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/COPYING.txt")
+
+SET (${RSC_VERSION_MAJOR}.${RSC_VERSION_MINOR} CPACK_DEBIAN_PACKAGE_VERSION)
+SET (CPACK_DEBIAN_PACKAGE_MAINTAINER "Sebastian Wrede (swrede@techfak.uni-bielefeld.de)")
+SET (CPACK_DEBIAN_PACKAGE_DESCRIPTION "RSC is a project focused on all aspects of reusable library functions in robotics systems. RSC is meant to improve the C++ std lib for robotic systems without pulling in many additional dependencies.")
+SET (CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
+SET (CPACK_DEBIAN_PACKAGE_SECTION "devel")
+SET (CPACK_DEBIAN_ARCHITECTURE ${CMAKE_SYSTEM_PROCESSOR})
+SET (CPACK_DEBIAN_PACKAGE_DEPENDS "libboost-signals-dev, cmake-data, cmake, libc6-i686, libboost-program-options-dev, libboost-filesystem-dev, libboost-thread-dev")
 
 INCLUDE(CPack)

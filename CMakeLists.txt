@@ -199,6 +199,7 @@ SET (CPACK_DEBIAN_PACKAGE_DESCRIPTION "RSC is a project focused on all aspects o
 SET (CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
 SET (CPACK_DEBIAN_PACKAGE_SECTION "devel")
 SET (CPACK_DEBIAN_ARCHITECTURE ${CMAKE_SYSTEM_PROCESSOR})
-SET (CPACK_DEBIAN_PACKAGE_DEPENDS "libboost-signals-dev, cmake-data, cmake, libc6-i686, libboost-program-options-dev, libboost-filesystem-dev, libboost-thread-dev")
+SET (CPACK_DEBIAN_PACKAGE_DEPENDS "libboost-signals-dev, cmake-data, cmake, libc6, libboost-program-options-dev, libboost-filesystem-dev, libboost-thread-dev")
+SET (CPACK_DEBIAN_PACKAGE_SUGGESTS "doxygen, cppcheck, sloccount, lcov")
 
 INCLUDE(CPack)

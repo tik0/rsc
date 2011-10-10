@@ -193,7 +193,7 @@ SET(CPACK_PACKAGE_VERSION_MINOR ${RSC_VERSION_MINOR})
 SET(CPACK_PACKAGE_VERSION_PATCH ${RSC_VERSION_PATCH})
 SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/COPYING.txt")
 
-SET (${RSC_VERSION_MAJOR}.${RSC_VERSION_MINOR} CPACK_DEBIAN_PACKAGE_VERSION)
+SET (CPACK_DEBIAN_PACKAGE_VERSION ${RSC_VERSION_MAJOR}.${RSC_VERSION_MINOR})
 SET (CPACK_DEBIAN_PACKAGE_MAINTAINER "Sebastian Wrede (swrede@techfak.uni-bielefeld.de)")
 SET (CPACK_DEBIAN_PACKAGE_DESCRIPTION "RSC is a project focused on all aspects of reusable library functions in robotics systems. RSC is meant to improve the C++ std lib for robotic systems without pulling in many additional dependencies.")
 SET (CPACK_DEBIAN_PACKAGE_PRIORITY "optional")

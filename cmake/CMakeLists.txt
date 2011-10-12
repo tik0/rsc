@@ -26,6 +26,7 @@ INSTALL(FILES ExtractTBBVersion.cpp.in
               GenerateDoxygen.cmake
               IgnoreReturnCode.cmake
               InstallFilesRecursive.cmake
+              PadString.cmake
               ParseArguments.cmake
               PedanticCompilerWarnings.cmake
               SubversionIsWc.cmake

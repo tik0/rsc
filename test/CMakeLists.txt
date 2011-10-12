@@ -42,7 +42,6 @@ TARGET_LINK_LIBRARIES(${RSC_TEST_NAME}
                       ${REGISTRY_TEST_LIB_NAME}
 					  ${REGISTREE_TEST_LIB_NAME}
                       ${RSC_NAME}
-                      ${Boost_LIBRARIES}
                       ${GMOCK_LIBRARY_NAME})
 
 ADD_TEST(${RSC_TEST_NAME} ${EXECUTABLE_OUTPUT_PATH}/${RSC_TEST_NAME} "--gtest_output=xml:${TEST_RESULT_DIR}/")

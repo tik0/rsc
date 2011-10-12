@@ -26,15 +26,19 @@ using namespace std;
 namespace rsc {
 
 unsigned int RSCVersion::major() {
-	return @RSC_VERSION_MAJOR@;
+	return RSC_VERSION_MAJOR;
 }
 
 unsigned int RSCVersion::minor() {
-	return @RSC_VERSION_MINOR@;
+	return RSC_VERSION_MINOR;
 }
 
 unsigned int RSCVersion::patch() {
-	return @RSC_VERSION_PATCH@;
+	return RSC_VERSION_PATCH;
+}
+
+unsigned int RSCVersion::numeric() {
+	return RSC_VERSION_NUMERIC;
 }
 
 string RSCVersion::string() {
@@ -44,7 +48,7 @@ string RSCVersion::string() {
 }
 
 unsigned int RSCVersion::abi() {
-	return @RSC_ABI_VERSION@;
+	return RSC_ABI_VERSION;
 }
 
 string RSCVersion::buildId() {

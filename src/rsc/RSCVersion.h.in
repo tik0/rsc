@@ -23,6 +23,14 @@
 
 #include "rsc/rscexports.h"
 
+#define RSC_VERSION_MAJOR @RSC_VERSION_MAJOR@
+#define RSC_VERSION_MINOR @RSC_VERSION_MINOR@
+#define RSC_VERSION_PATCH @RSC_VERSION_PATCH@
+
+#define RSC_VERSION_NUMERIC @RSC_VERSION_NUMERIC@
+
+#define RSC_ABI_VERSION @RSC_ABI_VERSION@
+
 namespace rsc {
 
 /**
@@ -36,6 +44,8 @@ public:
     static unsigned int major();
     static unsigned int minor();
     static unsigned int patch();
+    
+    static unsigned int numeric();
 
     static std::string string();
 

@@ -27,7 +27,7 @@ INCLUDE(FindPackageHandleStandardArgs)
 
 FIND_PATH(BOOSTUUID_INCLUDE_DIRS
           NAMES uuid.hpp
-          HINTS ${BOOSTUUID_ROOT} ${BOOST_ROOT} ${CMAKE_INSTALL_PATH}
+          HINTS ${BOOSTUUID_ROOT} ${BOOST_ROOT} ${CMAKE_INSTALL_PREFIX}
           PATH_SUFFIXES include/boost/uuid)
 
 # post-process include path

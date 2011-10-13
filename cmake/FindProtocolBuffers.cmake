@@ -68,7 +68,7 @@ INCLUDE(ParseArguments)
 FUNCTION(PROTOBUF_GENERATE)
 
     # argument parsing
-    PARSE_ARGUMENTS(ARG "PROTOROOT;PROTOFILES;OUTPATH;EXPORT_MACRO;CPP;JAVA;PYTHON" "DEBUG" ${ARGN})
+    PARSE_ARGUMENTS(ARG "PROTOROOT;PROTOFILES;OUTPATH;INCLUDES;EXPORT_MACRO;CPP;JAVA;PYTHON" "DEBUG" ${ARGN})
 
     IF(NOT ARG_PROTOFILES)
         MESSAGE(SEND_ERROR "Error: PROTOBUF_GENERATE() called without any proto files")
@@ -150,9 +150,16 @@ FUNCTION(PROTOBUF_GENERATE)
         SET(ARG_EXPORT "dllexport_decl=${ARG_EXPORT_MACRO}:")
     ENDIF()
     
+    # build command line for additional includes paths
+    SET(INCLUDE_CMD_LINE)
+    FOREACH(P ${ARG_INCLUDES})
+        LIST(APPEND INCLUDE_CMD_LINE "--proto_path" ${P})
+    ENDFOREACH()
+    
     IF(ARG_DEBUG)
         MESSAGE("OUTPATH: ${OUTPATH}")
         MESSAGE("PROTOROOT: ${PROTOROOT}")
+        MESSAGE("INCLUDE_CMD_LINE: ${INCLUDE_CMD_LINE}")
     ENDIF()
 
     FOREACH(PROTOFILE ${ARG_PROTOFILES})
@@ -264,7 +271,7 @@ FUNCTION(PROTOBUF_GENERATE)
                        "${HDR_FILE}"
                 COMMAND ${CMAKE_COMMAND} -E make_directory ${OUTPATH}
                 COMMAND ${PROTOBUF_PROTOC_EXECUTABLE}
-                ARGS "--cpp_out=${ARG_EXPORT}${OUTPATH}" --proto_path "${PROTOROOT}" "${MATCH_PATH}"
+                ARGS "--cpp_out=${ARG_EXPORT}${OUTPATH}" --proto_path "${PROTOROOT}" ${INCLUDE_CMD_LINE} "${MATCH_PATH}"
                 DEPENDS ${ABS_FILE}
                 COMMENT "Running C++ protocol buffer compiler on ${MATCH_PATH} with root ${PROTOROOT}, generating: ${CPP_FILE}"
                 VERBATIM)
@@ -277,7 +284,7 @@ FUNCTION(PROTOBUF_GENERATE)
                 OUTPUT "${JAVA_FILE}"
                 COMMAND ${CMAKE_COMMAND} -E make_directory ${OUTPATH}
                 COMMAND ${PROTOBUF_PROTOC_EXECUTABLE}
-                ARGS "--java_out=${OUTPATH}" --proto_path "${PROTOROOT}" "${MATCH_PATH}"
+                ARGS "--java_out=${OUTPATH}" --proto_path "${PROTOROOT}" ${INCLUDE_CMD_LINE} "${MATCH_PATH}"
                 DEPENDS ${ABS_FILE}
                 COMMENT "Running Java protocol buffer compiler on ${MATCH_PATH} with root ${PROTOROOT}, generating: ${JAVA_FILE}"
                 VERBATIM)
@@ -290,7 +297,7 @@ FUNCTION(PROTOBUF_GENERATE)
                 OUTPUT "${PYTHON_FILE}"
                 COMMAND ${CMAKE_COMMAND} -E make_directory ${OUTPATH}
                 COMMAND ${PROTOBUF_PROTOC_EXECUTABLE}
-                ARGS "--python_out=${OUTPATH}" --proto_path "${PROTOROOT}" "${MATCH_PATH}"
+                ARGS "--python_out=${OUTPATH}" --proto_path "${PROTOROOT}" ${INCLUDE_CMD_LINE} "${MATCH_PATH}"
                 DEPENDS ${ABS_FILE}
                 COMMENT "Running Python protocol buffer compiler on ${MATCH_PATH} with root ${PROTOROOT}, generating: ${PYTHON_FILE}"
                 VERBATIM)

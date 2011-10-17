@@ -51,9 +51,9 @@ TEST_F(ObservableFactoryTest, testSignals)
     vector<string> added;
     vector<string> removed;
 
-    factory.signalImplAdded().connect(bind(&vector<string>::push_back, ref(
+    factory.signalImplAdded().connect(boost::bind(&vector<string>::push_back, ref(
             added), _1));
-    factory.signalImplRemoved().connect(bind(&vector<string>::push_back, ref(
+    factory.signalImplRemoved().connect(boost::bind(&vector<string>::push_back, ref(
             removed), _1));
 
     factory.impls().unregister("Impl1");

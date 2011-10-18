@@ -26,7 +26,7 @@ namespace threading {
 
 RepetitiveTask::RepetitiveTask() :
     cancelRequest(false), cancelled(false), done(false), logger(
-            rsc::logging::Logger::getLogger("rsc.threading.Task")) {
+            rsc::logging::Logger::getLogger("rsc.threading.RepetitiveTask")) {
 }
 
 RepetitiveTask::~RepetitiveTask() {
@@ -94,7 +94,7 @@ void RepetitiveTask::timerBeforeCycle() {
 
 void RepetitiveTask::timerAfterCycle() {
     // calculate processing time for last cycle, last n cycle, variance...
-    RSCINFO(logger, "Times (last cycle = " << timer.elapsed() << "s)");
+    RSCTRACE(logger, "Times (last cycle = " << timer.elapsed() << "s)");
 }
 
 ostream &operator<<(ostream &out, const RepetitiveTask &t) {

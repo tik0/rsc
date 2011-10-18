@@ -46,17 +46,20 @@ protected:
     }
 };
 
-TEST_F(ObservableFactoryTest, testSignals)
-{
+TEST_F(ObservableFactoryTest, testSignals) {
     vector<string> added;
     vector<string> removed;
 
-    factory.signalImplAdded().connect(boost::bind(static_cast<void (std::vector<string>::*)( const string& )>
-  (&std::vector<string>::push_back), boost::ref(
-            added), _1));
-    factory.signalImplRemoved().connect(boost::bind(static_cast<void (std::vector<string>::*)( const string& )>
-  (&std::vector<string>::push_back), boost::ref(
-            removed), _1));
+    // as with tr1 vector now has an overloaded push_back method, we need to
+    // convince bind to use a specific version (e.g. for msvc 2010)
+    factory.signalImplAdded().connect(
+            boost::bind(static_cast<void(std::vector<string>::*)(const string&)>
+            (&std::vector<string>::push_back), boost::ref(
+                    added), _1));
+    factory.signalImplRemoved().connect(
+            boost::bind(static_cast<void(std::vector<string>::*)(const string&)>
+            (&std::vector<string>::push_back), boost::ref(
+                    removed), _1));
 
     factory.impls().unregister("Impl1");
     EXPECT_EQ(added.size(), size_t(0));

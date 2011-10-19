@@ -19,33 +19,49 @@
 
 #pragma once
 
-#include "TaskExecutor.h"
+#include <boost/thread/recursive_mutex.hpp>
+#include <boost/thread/condition.hpp>
+
+#include "Task.h"
 
 namespace rsc {
 namespace threading {
 
 /**
- * A very simple TaskExecutor that uses a new thread for each incomming task.
+ * A Task subclass which maintains interruption through a volatile boolean flag
+ * which should be processed by the user code.
+ *
+ * Implementations of #run must call #markDone whenever they stop working. This
+ * is either because their job finished or they were canceled.
  *
  * @author jwienke
- * @author swrede
  */
-class RSC_EXPORT ThreadedTaskExecutor: public TaskExecutor {
+class SimpleTask: public Task {
 public:
 
-    ThreadedTaskExecutor();
-    virtual ~ThreadedTaskExecutor();
+    SimpleTask();
+    virtual ~SimpleTask();
 
-    void schedule(TaskPtr t);
-    void schedule(TaskPtr t, const boost::uint64_t &delayMus);
+    virtual void cancel();
+
+    virtual bool isCancelRequested();
+
+    virtual void waitDone();
+
+    virtual bool isDone();
+
+protected:
+    void markDone();
 
 private:
 
-    static void executeTask(TaskPtr task, const boost::uint64_t &delayMus);
+    mutable boost::recursive_mutex mutex;
+    boost::condition condition;
+
+    volatile bool canceled;
+    volatile bool done;
 
 };
 
 }
-
 }
-

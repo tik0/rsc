@@ -107,6 +107,7 @@ public:
     void run();
 
     virtual void waitDone();
+    virtual bool isDone();
 
     friend std::ostream &operator<<(std::ostream &out, const RepetitiveTask &t);
 
@@ -116,6 +117,8 @@ protected:
     boost::condition doneCondition;
 
 private:
+
+    void markDone();
 
     void timerBeforeCycle();
 

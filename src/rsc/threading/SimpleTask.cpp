@@ -17,35 +17,47 @@
  *
  * ============================================================ */
 
-#pragma once
-
-#include "TaskExecutor.h"
+#include "SimpleTask.h"
 
 namespace rsc {
 namespace threading {
 
-/**
- * A very simple TaskExecutor that uses a new thread for each incomming task.
- *
- * @author jwienke
- * @author swrede
- */
-class RSC_EXPORT ThreadedTaskExecutor: public TaskExecutor {
-public:
+SimpleTask::SimpleTask() :
+        canceled(false), done(false) {
+}
 
-    ThreadedTaskExecutor();
-    virtual ~ThreadedTaskExecutor();
+SimpleTask::~SimpleTask() {
+}
 
-    void schedule(TaskPtr t);
-    void schedule(TaskPtr t, const boost::uint64_t &delayMus);
+void SimpleTask::cancel() {
+    boost::recursive_mutex::scoped_lock lock(mutex);
+    canceled = true;
+}
 
-private:
+bool SimpleTask::isCancelRequested() {
+    boost::recursive_mutex::scoped_lock lock(mutex);
+    return canceled;
+}
 
-    static void executeTask(TaskPtr task, const boost::uint64_t &delayMus);
+void SimpleTask::waitDone() {
+    boost::recursive_mutex::scoped_lock lock(mutex);
+    while (!done) {
+        condition.wait(lock);
+    }
+}
 
-};
+void SimpleTask::markDone() {
+    {
+        boost::recursive_mutex::scoped_lock lock(mutex);
+        done = true;
+    }
+    condition.notify_all();
+}
 
+bool SimpleTask::isDone() {
+    boost::recursive_mutex::scoped_lock lock(mutex);
+    return done;
 }
 
 }
-
+}

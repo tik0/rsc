@@ -19,6 +19,10 @@
 
 #include "ThreadedTaskExecutor.h"
 
+#include <stdexcept>
+
+using namespace std;
+
 namespace rsc {
 namespace threading {
 
@@ -29,13 +33,26 @@ ThreadedTaskExecutor::~ThreadedTaskExecutor() {
 }
 
 void ThreadedTaskExecutor::schedule(TaskPtr t) {
-    boost::thread taskThread(boost::bind(ThreadedTaskExecutor::executeTask, t));
+    this->schedule(t, 0);
+}
+
+void ThreadedTaskExecutor::schedule(TaskPtr t,
+        const boost::uint64_t &delayMus) {
+    if (t->isCancelRequested()) {
+        throw std::invalid_argument("Task already canceled.");
+    }
+    boost::thread taskThread(
+            boost::bind(ThreadedTaskExecutor::executeTask, t, delayMus));
     // detach the thread because all further operations can be done on the
     // task object and this executor does not have to care about the thread
     taskThread.detach();
 }
 
-void ThreadedTaskExecutor::executeTask(TaskPtr task) {
+void ThreadedTaskExecutor::executeTask(TaskPtr task,
+        const boost::uint64_t &delayMus) {
+    if (delayMus > 0) {
+        boost::this_thread::sleep(boost::posix_time::microseconds(delayMus));
+    }
     task->run();
 }
 

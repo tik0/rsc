@@ -31,6 +31,12 @@ namespace threading {
 /**
  * Interface for different scheduling strategies for Task instances.
  *
+ * Implementations must not schedule the task if it is already canceled when
+ * being scheduled.
+ *
+ * Implementations must execute the task even if it is canceled before within
+ * the time of the specified delay.
+ *
  * @author swrede
  * @author jwienke
  */
@@ -41,9 +47,21 @@ public:
      * Schedules the new task.
      *
      * @param t the new task to schedule
-     * @todo exception specification, which errors can occur?
+     * @throw std::invalid_argument task to schedule is already canceled
      */
     virtual void schedule(TaskPtr t) = 0;
+
+    /**
+     * Schedules a new task to be executed after the specified delay.
+     *
+     * @param t new task to schedule
+     * @param delayMus the delay after which the task should start
+     * @throw rsc::misc::UnsupportedOperationException
+     *             implementations may throw this exception to indicate that a
+     *             scheduling of tasks with a specified delay is not supported
+     * @throw std::invalid_argument task to schedule is already canceled
+     */
+    virtual void schedule(TaskPtr t, const boost::uint64_t &delayMus) = 0;
 
 };
 

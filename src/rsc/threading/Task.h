@@ -22,6 +22,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include "../logging/Logger.h"
+#include "../misc/langutils.h"
 #include "rsc/rscexports.h"
 
 namespace rsc {
@@ -32,19 +33,28 @@ namespace threading {
  * thread. Tasks can be canceled and interested clients can wait until a task
  * has finished its work.
  *
+ * In this context a task is done whenever it's execution finished. This
+ * includes cancellation.
+ *
+ * If your interruption logic does not requires asynchronous method invocations
+ * and determining the done state is easy, you can use SimpleTask.
+ *
  * @author swrede
  * @author jwienke
  */
 class RSC_EXPORT Task {
 public:
 
+    virtual ~Task();
+
     /**
-     * Interrupts the task as soon as possible.
+     * Interrupts the task as soon as possible. Will, at some time, wake up
+     * waiting threads in #waitDone.
      */
     virtual void cancel() = 0;
 
     /**
-     * Tells whether the task was interrupted by a call to #cancel.n.
+     * Tells whether the task was interrupted by a call to #cancel.
      *
      * @return @c true if #cancel was called, else @c false
      */
@@ -52,13 +62,32 @@ public:
 
     /**
      * Performs the real task work. Should check for canceling as often as
-     * possible.
+     * possible. After completion or cancellation, #isDone must return @true and
+     * waiting threads in #waitDone must be waked up.
+     *
+     * It is a good practice to check for cancellation as a first step in the
+     * implementation of this method in order to exit fast if the task was
+     * canceled before it actually started running.
      */
     virtual void run() = 0;
 
     /**
-     * Waits for the execution of this task to finish. This method must block
-     * until #run exits.
+     * Indicates whether the task finished execution, either through being
+     * canceled or through successfully ending. If @c true is returned, the
+     * #run method of this task will not perform anything anymore.
+     *
+     * @return @c true if run will not perform anything anymore
+     */
+    virtual bool isDone() = 0;
+
+    /**
+     * Waits for the execution of this task to finish. This may either be caused
+     * by a successful completion of the task or by being canceled. This method
+     * must block until #run exits or it is sure that #run will not be called
+     * anymore.
+     *
+     * Undefined behavior might occur if this method is called before the task
+     * is scheduled. I.e. a calling thread might block infinitely.
      */
     virtual void waitDone() = 0;
 

@@ -25,8 +25,8 @@ namespace rsc {
 namespace threading {
 
 RepetitiveTask::RepetitiveTask() :
-    cancelRequest(false), cancelled(false), done(false), logger(
-            rsc::logging::Logger::getLogger("rsc.threading.RepetitiveTask")) {
+        cancelRequest(false), cancelled(false), done(false), logger(
+                rsc::logging::Logger::getLogger("rsc.threading.RepetitiveTask")) {
 }
 
 RepetitiveTask::~RepetitiveTask() {
@@ -54,9 +54,14 @@ bool RepetitiveTask::continueExec() {
 
 void RepetitiveTask::run() {
 
-    done = false;
+    // ensure that nothing happens in this task if we are canceled before
+    // actually being called
+    if (isCancelRequested()) {
+        markDone();
+        return;
+    }
 
-    RSCTRACE(logger, "run() entered");
+    RSCDEBUG(logger, "run() entered");
     do {
 
         // TODO add exception handling
@@ -71,11 +76,16 @@ void RepetitiveTask::run() {
 
     } while (continueExec());
 
+    markDone();
+
+    RSCDEBUG(logger, "task finished");
+
+}
+
+void RepetitiveTask::markDone() {
     boost::recursive_mutex::scoped_lock lock(doneMutex);
-    RSCINFO(logger, "run() finished");
     done = true;
     this->doneCondition.notify_all();
-
 }
 
 void RepetitiveTask::waitDone() {
@@ -86,6 +96,10 @@ void RepetitiveTask::waitDone() {
         this->doneCondition.wait(lock);
     }
     RSCDEBUG(logger, "waitDone() finished");
+}
+
+bool RepetitiveTask::isDone() {
+    return done;
 }
 
 void RepetitiveTask::timerBeforeCycle() {

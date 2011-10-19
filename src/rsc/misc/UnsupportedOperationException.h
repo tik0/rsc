@@ -19,33 +19,22 @@
 
 #pragma once
 
-#include "TaskExecutor.h"
+#include <stdexcept>
 
 namespace rsc {
-namespace threading {
+namespace misc {
 
 /**
- * A very simple TaskExecutor that uses a new thread for each incomming task.
+ * An exception which indicates that a certain operation is not supported by
+ * the target.
  *
  * @author jwienke
- * @author swrede
  */
-class RSC_EXPORT ThreadedTaskExecutor: public TaskExecutor {
+class UnsupportedOperationException: public std::runtime_error {
 public:
-
-    ThreadedTaskExecutor();
-    virtual ~ThreadedTaskExecutor();
-
-    void schedule(TaskPtr t);
-    void schedule(TaskPtr t, const boost::uint64_t &delayMus);
-
-private:
-
-    static void executeTask(TaskPtr task, const boost::uint64_t &delayMus);
-
+    UnsupportedOperationException(const std::string &description);
+    virtual ~UnsupportedOperationException() throw();
 };
 
 }
-
 }
-

@@ -40,6 +40,8 @@ template<typename T>
 class Singleton: private boost::noncopyable {
 public:
 
+    virtual ~Singleton();
+
     /**
      * Retrieve the singleton instance, creating it if necessary.
      *
@@ -76,6 +78,10 @@ Singleton<T>::getInstance() {
     }
 
     return *instance;
+}
+
+template<typename T>
+Singleton<T>::~Singleton() {
 }
 
 template<typename T>

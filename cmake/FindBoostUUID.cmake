@@ -25,9 +25,11 @@
 
 INCLUDE(FindPackageHandleStandardArgs)
 
+# we use a result of FindBoost as a hint for searching the uuid paths
+FIND_PACKAGE(Boost)
 FIND_PATH(BOOSTUUID_INCLUDE_DIRS
           NAMES boost/uuid/uuid.hpp
-          HINTS ${BOOSTUUID_ROOT} ${BOOST_ROOT} ${CMAKE_INSTALL_PREFIX}
+          HINTS ${BOOSTUUID_ROOT} ${BOOST_ROOT} ${CMAKE_INSTALL_PREFIX} ${Boost_INCLUDE_DIRS}
           PATH_SUFFIXES include)
 
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(BoostUUID DEFAULT_MSG BOOSTUUID_INCLUDE_DIRS)

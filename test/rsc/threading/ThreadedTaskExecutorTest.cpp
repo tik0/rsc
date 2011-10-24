@@ -83,7 +83,7 @@ TEST_F(ThreadedTaskExecutorTest, testScheduleDelayed) {
     boost::uint64_t scheduleTime = currentTimeMicros();
     executor.schedule(t, delay);
     t->waitDone();
-    const boost::uint64_t allowedPrecision = 10000;
+    const boost::uint64_t allowedPrecision = 100000;
     EXPECT_GE(t->runTime, scheduleTime + delay - allowedPrecision);
     EXPECT_LE(t->runTime, scheduleTime + delay + allowedPrecision);
 

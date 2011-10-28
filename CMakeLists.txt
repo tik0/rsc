@@ -198,7 +198,7 @@ SET(CPACK_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSIO
 SET(CPACK_PACKAGE_FILE_NAME ${CMAKE_PROJECT_NAME}-${CPACK_PACKAGE_VERSION}_${LSB_CODENAME}_${LSB_PROCESSOR_ARCH})
 # --------------------------------------------------------------------
 
-SET(CPACK_GENERATOR "STGZ;TGZ;TZ")
+SET(CPACK_GENERATOR "TGZ")
 SET(CPACK_PACKAGE_VENDOR "CoR-Lab Bielefeld University")
 SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/COPYING.txt")
 
@@ -212,8 +212,8 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     SET(CPACK_DEBIAN_PACKAGE_SECTION "devel")
     SET(CPACK_DEBIAN_PACKAGE_CONFLICTS "rsc-0.5.0, rsc-0.4.0")
     SET(CPACK_DEBIAN_ARCHITECTURE ${CMAKE_SYSTEM_PROCESSOR})
-    SET(CPACK_DEBIAN_PACKAGE_DEPENDS "libboost-signals-dev, cmake-data, cmake, libc6, libboost-program-options-dev, libboost-filesystem-dev, libboost-thread-dev")
-    SET(CPACK_DEBIAN_PACKAGE_SUGGESTS "doxygen, cppcheck, sloccount, lcov")
+    SET(CPACK_DEBIAN_PACKAGE_DEPENDS "libboost-signals-dev, libc6, libboost-program-options-dev, libboost-filesystem-dev, libboost-thread-dev")
+    SET(CPACK_DEBIAN_PACKAGE_SUGGESTS "cmake-data, cmake, doxygen, cppcheck, sloccount, lcov")
 ENDIF(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 
 INCLUDE(CPack)

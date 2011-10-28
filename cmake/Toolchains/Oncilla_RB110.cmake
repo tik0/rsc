@@ -2,7 +2,7 @@ MESSAGE(STATUS "Loading toolchain for Oncilla system")
 
 # System description
 SET(CMAKE_SYSTEM_NAME "Linux")
-SET(CMAKE_SYSTEM_PROCESSOR "Vortex86DX, a 32bit x86 CPU running at 1000MHz")
+SET(CMAKE_SYSTEM_PROCESSOR "i586")
 SET(UNIX "True")
 SET(CMAKE_COMPILER_IS_GNUCXX "True")
 

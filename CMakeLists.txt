@@ -19,6 +19,7 @@ INCLUDE(GenerateCppcheck)
 
 OPTION(BUILD_TESTS "Decide if the test suite shall be built or not" ON)
 OPTION(BUILD_EXAMPLES "Decide if the examples shall be built or not" ON)
+OPTION(INSTALL_TOOLCHAINS "Decide if cmake toolchain files should be installed" ON)
 
 # --- global definitions ---
 

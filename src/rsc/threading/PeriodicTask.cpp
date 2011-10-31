@@ -25,10 +25,9 @@ namespace rsc {
 namespace threading {
 
 PeriodicTask::PeriodicTask(const unsigned int &ms, bool accountProcTime) :
-            cycleTime(ms), logger(rsc::logging::Logger::getLogger(
-                            "rsc.threading.PeriodicTask")),
-            fixedScheduling(accountProcTime), processingStart(),
-            processingDuration(0) {
+            cycleTime(ms),
+            logger(rsc::logging::Logger::getLogger("rsc.threading.PeriodicTask")),
+            fixedScheduling(accountProcTime), nextProcessingStart(0) {
 }
 
 PeriodicTask::~PeriodicTask() {
@@ -42,39 +41,38 @@ bool PeriodicTask::continueExec() {
         return false;
     }
 
+    if (nextProcessingStart == 0) {
+        nextProcessingStart = rsc::misc::currentTimeMicros() + cycleTime * 1000;
+        return true;
+    }
+
     // wait, give others a chance
     if (cycleTime != 0) {
-        boost::xtime time;
-        xtime_get(&time, boost::TIME_UTC);
-
-        if (this->fixedScheduling) {
-            this->processingDuration = rsc::misc::currentTimeMicros()
-                    - this->processingStart;
-        }
-
-        time.nsec += cycleTime * 1000000 - this->processingDuration * 1000;
         // TODO provide option to interrupt in cancel using boost::this_thread
         try {
             RSCTRACE(logger, "PeriodicTask()::continueExec() before thread sleep, sleeping " << cycleTime << " ms");
-            boost::this_thread::sleep(time);
-        } catch (const boost::thread_interrupted &e) {
-            // TODO handle interruption somewhere directly in task. This is
-            // something all tasks should benefit of, see above TODO.
-            RSCWARN(logger, "PeriodicTask()::continueExec() caught boost::thread_interrupted exception");
-            return false;
+            if (fixedScheduling) {
+boost            ::this_thread::sleep(
+                    boost::posix_time::microseconds(
+                            nextProcessingStart
+                            - rsc::misc::currentTimeMicros()));
+        } else {
+            boost::this_thread::sleep(
+                    boost::posix_time::microseconds(cycleTime * 1000));
         }
-        RSCTRACE(logger, "PeriodicTask()::continueExec() thread woke up");
+    } catch (const boost::thread_interrupted &e) {
+        // TODO handle interruption somewhere directly in task. This is
+        // something all tasks should benefit of, see above TODO.
+        RSCWARN(logger, "PeriodicTask()::continueExec() caught boost::thread_interrupted exception");
+        return false;
     }
-    RSCTRACE(logger, "PeriodicTask()::continueExec() before lock");
-
-    return true;
+    RSCTRACE(logger, "PeriodicTask()::continueExec() thread woke up");
 }
+RSCTRACE(logger, "PeriodicTask()::continueExec() before lock");
 
-void PeriodicTask::pre() {
-    if (this->fixedScheduling) {
-        this->processingStart = rsc::misc::currentTimeMicros();
-    }
-    RepetitiveTask::pre();
+nextProcessingStart += cycleTime * 1000;
+
+return true;
 }
 
 }

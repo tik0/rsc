@@ -62,18 +62,10 @@ public:
     virtual bool continueExec();
 
 private:
-
-    /**
-     * Logs time at processing start in order to calculate processing time. Also
-     * calls pre method of super-class RepetitiveTask.
-     */
-    virtual void pre();
-
     unsigned int cycleTime;
     rsc::logging::LoggerPtr logger;
     bool fixedScheduling;
-    boost::uint64_t processingStart;
-    boost::uint64_t processingDuration;
+    boost::uint64_t nextProcessingStart;
 };
 
 }

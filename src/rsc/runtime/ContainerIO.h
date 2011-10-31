@@ -154,7 +154,7 @@ operator<<(basic_ostream<Ch, Tr>& stream, const map<R, S>& container) {
             != container.end();) {
         stream << it->first << ": " << it->second;
         if (++it != container.end())
-            stream << ", ";
+            stream << "\n";
     }
     stream << "}";
     return stream;
@@ -170,7 +170,7 @@ operator<<(basic_ostream<Ch, Tr>& stream, const multimap<R, S>& container) {
             != container.end();) {
         stream << it->first << ": " << it->second;
         if (++it != container.end())
-            stream << ", ";
+            stream << "\n";
     }
     stream << "}";
     return stream;

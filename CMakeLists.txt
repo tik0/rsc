@@ -43,7 +43,9 @@ ENDIF()
 SET(RSC_NAME "rsc")
 SET(RSC_TEST_NAME "rsctest")
 
-SET(RSC_CMAKE_MODULE_PATH "share/cmake/Modules")
+SET(RSC_CMAKE_PATH "share/cmake")
+SET(RSC_CMAKE_MODULE_PATH "${RSC_CMAKE_PATH}/Modules")
+SET(RSC_CMAKE_TOOLCHAIN_PATH "${RSC_CMAKE_PATH}/Toolchains")
 
 SET(GTEST_DIR "${CMAKE_SOURCE_DIR}/3rdparty/gmock/gtest")
 SET(GTEST_INCLUDE_DIR "${GTEST_DIR}/include")

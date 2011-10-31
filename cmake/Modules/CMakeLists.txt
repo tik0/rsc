@@ -6,7 +6,7 @@ INSTALL(FILES ExtractTBBVersion.cpp.in
               TestAttributeConstructor.cpp
               TestCRTInit.cpp
               CheckInitMethod.cmake
-	      CheckLSBTypes.cmake
+              CheckLSBTypes.cmake
               CMakeDoxyfile.in
               EnableCoverageReport.cmake
               EnableSlocCount.cmake

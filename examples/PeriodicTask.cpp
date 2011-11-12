@@ -36,18 +36,23 @@ using namespace rsc::threading;
 /**
  * FibonacciCalculator inheriting from perdiodic task
  * and calculating random fibonacci numbers in each cycle.
+ *
+ * @author anordman
  */
 class FibonacciCalculator: public PeriodicTask {
 public:
     FibonacciCalculator(unsigned int cycleTimeMs) :
-        PeriodicTask(cycleTimeMs), number(0), start(), lastStart(),
-                cycleTime(cycleTimeMs) {
+            PeriodicTask(cycleTimeMs), number(0), start(), lastStart(), cycleTime(
+                    cycleTimeMs) {
         srand(1);
     }
     void execute() {
         start = currentTimeMicros();
-        std::cout << "\t- jitter (us): " << fabs(
-                cycleTime * 1000 - fabs(start - lastStart));
+        std::cout
+                << "\t- jitter (us): "
+                << fabs(
+                        cycleTime * 1000
+                                - fabs(static_cast<double>(start - lastStart)));
         number = (rand() % 20);
         std::cout << std::endl << number << ": " << fibonacciOf(number);
         lastStart = start;

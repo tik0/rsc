@@ -40,7 +40,7 @@ namespace runtime {
  *
  * @author Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  */
-RSC_EXPORT std::string demangle(const char *mangledSymbol);
+RSC_EXPORT std::string demangle(const char* mangledSymbol);
 
 /**
  * This function takes the mangled name of a symbol and returns the demangled

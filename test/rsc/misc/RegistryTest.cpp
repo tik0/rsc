@@ -32,8 +32,8 @@ using namespace std;
 using namespace testing;
 using namespace rsc::misc;
 
-rsc::misc::Registry<TestRegistree> *testRegistry() {
-    static rsc::misc::Registry< TestRegistree > *registry = new ::rsc::misc::Registry<TestRegistree>;
+rsc::misc::Registry<TestRegistree>* testRegistry() {
+    static rsc::misc::Registry< TestRegistree >* registry = new ::rsc::misc::Registry<TestRegistree>;
     return registry;
 }
 
@@ -62,14 +62,14 @@ TEST(RegistryTest, testRegistration)
     EXPECT_THROW(testRegistry()->getRegistree(dummyName1), invalid_argument);
     EXPECT_TRUE(testRegistry()->getKnownRegistryKeys().empty());
 
-    TestRegistree *f = new TestRegistree(dummyName1);
+    TestRegistree* f = new TestRegistree(dummyName1);
     testRegistry()->addRegistree(f);
     EXPECT_EQ(f, testRegistry()->getRegistree(dummyName1).get());
 
-    EXPECT_TRUE(testRegistry()->getKnownRegistryKeys().count(dummyName1));
+    EXPECT_TRUE(testRegistry()->getKnownRegistryKeys().count(dummyName1) > 0);
     EXPECT_EQ((size_t) 1, testRegistry()->getKnownRegistryKeys().size());
 
-    TestRegistree *f2 = new TestRegistree(dummyName1);
+    TestRegistree* f2 = new TestRegistree(dummyName1);
     EXPECT_THROW(testRegistry()->addRegistree(f2), invalid_argument);
     delete f2;
 
@@ -79,11 +79,11 @@ TEST(RegistryTest, testRemove)
 {
 
     string dummyName1 = randAlnumStr(20);
-    TestRegistree *r = new TestRegistree(dummyName1);
+    TestRegistree* r = new TestRegistree(dummyName1);
     testRegistry()->addRegistree(r);
-    EXPECT_TRUE(testRegistry()->getKnownRegistryKeys().count(dummyName1));
+    EXPECT_TRUE(testRegistry()->getKnownRegistryKeys().count(dummyName1) > 0);
     EXPECT_TRUE(testRegistry()->removeRegistree(dummyName1));
-    EXPECT_FALSE(testRegistry()->getKnownRegistryKeys().count(dummyName1));
+    EXPECT_FALSE(testRegistry()->getKnownRegistryKeys().count(dummyName1) > 0);
     EXPECT_FALSE(testRegistry()->removeRegistree(dummyName1));
 
 }

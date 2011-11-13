@@ -99,7 +99,7 @@ RSC_EXPORT std::ostream &operator<<(std::ostream &stream,
  * @return the \c stream
  */
 RSC_EXPORT std::ostream &operator<<(std::ostream &stream,
-        const Printable *printable);
+        const Printable* printable);
 
 /**
  * It seems boost::weak_ptr's do not have a stream operator. So provide one.

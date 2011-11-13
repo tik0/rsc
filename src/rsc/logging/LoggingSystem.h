@@ -59,7 +59,7 @@ public:
 
 };
 
-RSC_EXPORT rsc::misc::Registry<LoggingSystem> *loggingSystemRegistry();
+RSC_EXPORT rsc::misc::Registry<LoggingSystem>* loggingSystemRegistry();
 
 }
 }

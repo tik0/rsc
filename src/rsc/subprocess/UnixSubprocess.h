@@ -50,7 +50,7 @@ private:
 
     pid_t pid;
 
-    char **args;
+    char** args;
     size_t argLen;
 
 };

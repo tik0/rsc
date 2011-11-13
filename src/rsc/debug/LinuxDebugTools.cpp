@@ -34,9 +34,9 @@ LinuxDebugTools::~LinuxDebugTools() {
 
 vector<string> LinuxDebugTools::createBacktrace(const unsigned int &maxElements) {
 
-    void **arr = (void**) malloc(maxElements * sizeof(void*));
+    void** arr = (void**) malloc(maxElements * sizeof(void*));
     int nSize = backtrace(arr, maxElements);
-    char **sym = backtrace_symbols(arr, nSize);
+    char** sym = backtrace_symbols(arr, nSize);
 
     vector<string> result;
     for (int i = 0; i < nSize; i++) {

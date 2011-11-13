@@ -71,8 +71,8 @@ void LoggerFactory::reselectLoggingSystem(const std::string &nameHint) {
 
 }
 
-LoggerFactory *LoggerFactory::getInstance() {
-    static LoggerFactory *instance = new LoggerFactory();
+LoggerFactory* LoggerFactory::getInstance() {
+    static LoggerFactory* instance = new LoggerFactory();
     return instance;
 }
 

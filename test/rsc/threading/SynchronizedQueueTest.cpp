@@ -31,8 +31,8 @@ using namespace std;
 using namespace rsc;
 using namespace rsc::threading;
 
-void waitOnQueueElement(SynchronizedQueue<int> *queue, int *resultVar,
-        bool *interrupted) {
+void waitOnQueueElement(SynchronizedQueue<int>* queue, int* resultVar,
+        bool* interrupted) {
     try {
         *resultVar = queue->pop();
     } catch (InterruptedException &e) {
@@ -166,7 +166,7 @@ TEST(SynchronizedQueueTest, testSizeLimit)
 
 }
 
-void drop(const int &dropped, vector<int> *results) {
+void drop(const int &dropped, vector<int>* results) {
     results->push_back(dropped);
 }
 

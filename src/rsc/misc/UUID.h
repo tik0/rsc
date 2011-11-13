@@ -66,14 +66,14 @@ public:
      * @throw std::runtime_error given string is not acceptable as a
      * UUID
      */
-    explicit UUID(const char *uuid);
+    explicit UUID(const char* uuid);
 
     /**
      * Generates a uuid from the given 16 byte representation.
      *
      * @param data 16 byte representation of a uuid
      */
-    explicit UUID(boost::uint8_t *data);
+    explicit UUID(boost::uint8_t* data);
 
     /**
      * Generates a uuid for @a name in namespace @a ns.

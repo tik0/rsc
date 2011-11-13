@@ -75,10 +75,10 @@ TEST(LoggerFactoryTest, testReselectLoggingSystem)
 {
 
     // ensure that there are other logging systems
-    StrictMock<MockLoggingSystem> *l1 = new StrictMock<MockLoggingSystem> (
+    StrictMock<MockLoggingSystem>* l1 = new StrictMock<MockLoggingSystem> (
             randAlnumStr(25));
     loggingSystemRegistry()->addRegistree(l1);
-    StrictMock<MockLoggingSystem> *l2 = new StrictMock<MockLoggingSystem> (
+    StrictMock<MockLoggingSystem>* l2 = new StrictMock<MockLoggingSystem> (
             randAlnumStr(25));
     loggingSystemRegistry()->addRegistree(l2);
 

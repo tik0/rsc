@@ -48,14 +48,14 @@ UUID::UUID(const string &uuid) {
     }
 }
 
-UUID::UUID(const char *uuid) {
+UUID::UUID(const char* uuid) {
     if (uuid != string("")) {
         boost::uuids::string_generator gen;
         id = gen(uuid);
     }
 }
 
-UUID::UUID(boost::uint8_t *data) {
+UUID::UUID(boost::uint8_t* data) {
     memcpy(id.data, data, 16);
 }
 

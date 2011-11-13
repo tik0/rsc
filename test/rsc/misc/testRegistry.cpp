@@ -19,8 +19,8 @@
  
  #include "testRegistry.h"
  
- rsc::misc::Registry<TestRegistree> *globalTestRegistry() {
-    static rsc::misc::Registry< TestRegistree > *registry = new ::rsc::misc::Registry<TestRegistree>;
+ rsc::misc::Registry<TestRegistree>* globalTestRegistry() {
+    static rsc::misc::Registry< TestRegistree >* registry = new ::rsc::misc::Registry<TestRegistree>;
     return registry;
 }
 

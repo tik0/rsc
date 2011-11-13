@@ -48,17 +48,17 @@ namespace config {
 
 path userHomeDirectory() {
 #ifndef WIN32
-    char *rawHome = getenv("HOME");
+    char* rawHome = getenv("HOME");
     if (!rawHome) {
         throw runtime_error("Home directory not defined in HOME variable.");
     }
     string home = string(rawHome) + string("/");
 #else
-    char * rawHomeDrive = getenv("HOMEDRIVE");
+    char* rawHomeDrive = getenv("HOMEDRIVE");
     if (!rawHomeDrive) {
         throw runtime_error("HOMEDRIVE variable not set.");
     }
-    char *rawHomePath = getenv("HOMEPATH");
+    char* rawHomePath = getenv("HOMEPATH");
     if (!rawHomePath) {
         throw runtime_error("HOMEPATH variable not set.");
     }

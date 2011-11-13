@@ -66,7 +66,7 @@ public:
      *                              registered. In this case @c r is not owned
      *                              by this registry
      */
-    void addRegistree(R *r, const std::string &errorDescription = "") {
+    void addRegistree(R* r, const std::string &errorDescription = "") {
 
         boost::recursive_mutex::scoped_lock lock(mutex);
 
@@ -139,7 +139,7 @@ public:
      *
      * @return mutex internally used by this class
      */
-    boost::recursive_mutex *getMutex() {
+    boost::recursive_mutex* getMutex() {
         return &mutex;
     }
 

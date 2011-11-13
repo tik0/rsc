@@ -25,8 +25,8 @@ namespace logging {
 LoggingSystem::~LoggingSystem() {
 }
 
-rsc::misc::Registry<LoggingSystem> *loggingSystemRegistry() {
-    static rsc::misc::Registry<LoggingSystem> *registry =
+rsc::misc::Registry<LoggingSystem>* loggingSystemRegistry() {
+    static rsc::misc::Registry<LoggingSystem>* registry =
             new ::rsc::misc::Registry<LoggingSystem>;
     return registry;
 }

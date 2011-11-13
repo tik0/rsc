@@ -53,7 +53,7 @@ UnixSubprocess::UnixSubprocess(const string &command, const vector<string> &args
     }
 
     // convert arguments to char pointer array
-    this->args = new char *[argLen];
+    this->args = new char* [argLen];
     this->args[0] = new char[strlen(command.c_str()) + 1];
     strcpy(this->args[0], command.c_str());
     for (size_t i = 0; i < args.size(); ++i) {

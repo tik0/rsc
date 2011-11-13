@@ -28,7 +28,7 @@
 namespace rsc {
 namespace runtime {
 
-std::string demangle(const char *mangledSymbol) {
+std::string demangle(const char* mangledSymbol) {
 
     // Try to demangle the symbol.
     int status;
@@ -63,7 +63,7 @@ std::string demangle(const char *mangledSymbol) {
 namespace rsc {
 namespace runtime {
 
-std::string demangle(const char *mangled_symbol) {
+std::string demangle(const char* mangled_symbol) {
     // MSVC does everything on its own with typeid.
     return mangled_symbol;
 }
@@ -76,7 +76,7 @@ std::string demangle(const char *mangled_symbol) {
 namespace rsc {
 namespace runtime {
 
-std::string demangle(const char *mangled_symbol) {
+std::string demangle(const char* mangled_symbol) {
     return std::string(boost::str(boost::format("<cannot demangle %1%>")
 			% mangled_symbol));
 }

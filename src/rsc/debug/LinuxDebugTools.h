@@ -25,7 +25,7 @@ namespace rsc {
 namespace debug {
 
 /**
- *Linux GCC based implementation of DebugTools.
+ * Linux GCC based implementation of DebugTools.
  *
  * @author jwienke
  */

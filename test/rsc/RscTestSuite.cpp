@@ -27,7 +27,7 @@ using namespace testing;
 using namespace rsc;
 using namespace rsc::logging;
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
 
     LoggerFactory::getInstance()->reconfigure(Logger::LEVEL_TRACE);
 

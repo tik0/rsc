@@ -44,7 +44,7 @@ public:
      *
      * @param ignored ignored
      */
-    void operator()(void *ignored) const;
+    void operator()(void* ignored) const;
 
 };
 

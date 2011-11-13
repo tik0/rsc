@@ -55,7 +55,7 @@ public:
      * @param v2 another vector
      * @return distance between the two vectors
      */
-    virtual double calc(const double *v1, const double *v2,
+    virtual double calc(const double* v1, const double* v2,
             const unsigned int& dim) = 0;
 
 };
@@ -75,7 +75,7 @@ public:
      * @param v2 another vector
      * @return Euclidean distance between the two vectors
      */
-    double calc(const double *v1, const double *v2, const unsigned int& dim);
+    double calc(const double* v1, const double* v2, const unsigned int& dim);
 
 };
 
@@ -95,7 +95,7 @@ public:
      * @param v2 another vector
      * @return maximum absolute distance between the two vectors
      */
-    double calc(const double *v1, const double *v2, const unsigned int& dim);
+    double calc(const double* v1, const double* v2, const unsigned int& dim);
 
 };
 
@@ -124,7 +124,7 @@ public:
      * @param dim dimension of the two vectors v1 and v2
      * @return true if v1 and v2 fulfill the metric condition
      */
-    virtual bool isFulfilled(const double *v1, const double *v2,
+    virtual bool isFulfilled(const double* v1, const double* v2,
             const unsigned int& dim) = 0;
 
 protected:
@@ -150,7 +150,7 @@ public:
      * @param dim dimension of both given vectors
      * @return true, if metric(v1, v2) < threshold
      */
-    bool isFulfilled(const double *v1, const double *v2,
+    bool isFulfilled(const double* v1, const double* v2,
             const unsigned int& dim);
 
 protected:
@@ -176,7 +176,7 @@ public:
      * @param dim dimension of both given vectors
      * @return true, if metric(v1, v2) > threshold
      */
-    bool isFulfilled(const double *v1, const double *v2,
+    bool isFulfilled(const double* v1, const double* v2,
             const unsigned int& dim);
 
 protected:
@@ -222,7 +222,7 @@ public:
      *
      * @param v next sequence member
      */
-    bool isConditionFulfilled(double *new_v, const unsigned int& dim);
+    bool isConditionFulfilled(double* new_v, const unsigned int& dim);
 
 protected:
 
@@ -235,7 +235,7 @@ protected:
     /**
      * Previous sequence element.
      */
-    double *prev_v;
+    double* prev_v;
     /**
      * Counts whether the condition is fulfilled long enough.
      */

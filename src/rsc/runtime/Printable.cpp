@@ -52,7 +52,7 @@ ostream &operator<<(ostream &stream, const Printable &record) {
     return stream;
 }
 
-ostream &operator<<(ostream &stream, const Printable *record) {
+ostream &operator<<(ostream &stream, const Printable* record) {
 
     stream << "*";
     record->print(stream);

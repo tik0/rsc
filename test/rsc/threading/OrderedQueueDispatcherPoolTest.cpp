@@ -185,7 +185,7 @@ TEST(OrderedQueueDispatcherPoolTest, testProcessingObjectOrientedInterface)
 void laterRegister(boost::shared_ptr<StubReceiver> lateReceiver,
         boost::shared_ptr<StubReceiver> earlyUnregisteredReceiver,
         boost::shared_ptr<StubReceiver> observingReceiver,
-        OrderedQueueDispatcherPool<int, StubReceiver> *pool,
+        OrderedQueueDispatcherPool<int, StubReceiver>* pool,
         const unsigned int &numMessages) {
 
     // wait until the observer got 50% of the messages, then register the new

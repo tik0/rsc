@@ -42,4 +42,4 @@ public:
     std::string getRegistryKey() const;
 };
 
-REGISTRY_EXPORT rsc::misc::Registry<TestRegistree> *globalTestRegistry();
+REGISTRY_EXPORT rsc::misc::Registry<TestRegistree>* globalTestRegistry();

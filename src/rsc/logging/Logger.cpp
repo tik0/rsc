@@ -29,31 +29,31 @@ namespace logging {
 Logger::~Logger() {
 }
 
-LoggerPtr Logger::getLogger(const std::string &name) {
+LoggerPtr Logger::getLogger(const std::string& name) {
     return LoggerFactory::getInstance()->getLogger(name);
 }
 
-void Logger::trace(const string &msg) {
+void Logger::trace(const string& msg) {
     this->log(LEVEL_TRACE, msg);
 }
 
-void Logger::debug(const string &msg) {
+void Logger::debug(const string& msg) {
     this->log(LEVEL_DEBUG, msg);
 }
 
-void Logger::info(const string &msg) {
+void Logger::info(const string& msg) {
     this->log(LEVEL_INFO, msg);
 }
 
-void Logger::warn(const string &msg) {
+void Logger::warn(const string& msg) {
     this->log(LEVEL_WARN, msg);
 }
 
-void Logger::error(const string &msg) {
+void Logger::error(const string& msg) {
     this->log(LEVEL_ERROR, msg);
 }
 
-void Logger::fatal(const string &msg) {
+void Logger::fatal(const string& msg) {
     this->log(LEVEL_FATAL, msg);
 }
 
@@ -81,11 +81,11 @@ bool Logger::isFatalEnabled() const {
     return isEnabledFor(LEVEL_FATAL);
 }
 
-bool Logger::isEnabledFor(const Level &level) const {
+bool Logger::isEnabledFor(const Level& level) const {
     return level <= getLevel();
 }
 
-ostream &operator<<(ostream &stream, const Logger::Level &level) {
+ostream& operator<<(ostream& stream, const Logger::Level& level) {
     switch (level) {
     case Logger::LEVEL_ALL:
         stream << "ALL";

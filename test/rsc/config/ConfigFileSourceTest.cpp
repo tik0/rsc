@@ -37,7 +37,7 @@ using namespace rsc::config;
 #ifndef WIN32
 class CollectingHandler: public OptionHandler {
 public:
-    void handleOption(const vector<string> &key, const string &value) {
+    void handleOption(const vector<string>& key, const string& value) {
         string name;
         for (vector<string>::const_iterator it = key.begin(); it != key.end(); ++it) {
             if (!(it == key.begin())) {

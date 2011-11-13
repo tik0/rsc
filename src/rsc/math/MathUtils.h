@@ -43,7 +43,7 @@ public:
      * @param angleInRad arbitrary angle in rad
      * @return normalization of the angle to interval \f$[0,2\pi[\f$
      */
-    static double normalizeAngle(const double &angleInRad);
+    static double normalizeAngle(const double& angleInRad);
 
     /**
      * Tests if two given angles in rad are the same angle regarding things like
@@ -55,8 +55,8 @@ public:
      * @return <code>true</code> if the difference of both angles is less than
      *         <code>precision</code>, else <code>false</code>
      */
-    static bool isSameAngle(const double &firstInRad,
-            const double &secondInRad, const double &precision =
+    static bool isSameAngle(const double& firstInRad,
+            const double& secondInRad, const double& precision =
                     getDefaultAnglePrecision());
 
     /**
@@ -65,7 +65,7 @@ public:
      * @param degree angle in degree
      * @return angle in rad
      */
-    static double radianFromDegree(const double &degree);
+    static double radianFromDegree(const double& degree);
 
     /**
      * Converts an angle given in radian to degrees.
@@ -73,7 +73,7 @@ public:
      * @param radian angle in rad
      * @return angle in degree
      */
-    static double degreeFromRadian(const double &radian);
+    static double degreeFromRadian(const double& radian);
 
     /**
      * Returns the default precision used for #isClose.
@@ -92,8 +92,8 @@ public:
      *                  #getDefaultClosePrecision
      * @return @c true if \f$|a-b| < \textrm{precision}\f$
      */
-    static bool isClose(const double &a, const double &b,
-            const double &precision = getDefaultClosePrecision());
+    static bool isClose(const double& a, const double& b,
+            const double& precision = getDefaultClosePrecision());
 
 private:
     static double getTwoPi();

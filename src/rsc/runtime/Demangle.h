@@ -53,7 +53,7 @@ RSC_EXPORT std::string demangle(const char* mangledSymbol);
  *
  * @author Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  */
-RSC_EXPORT std::string demangle(const std::string &mangledSymbol);
+RSC_EXPORT std::string demangle(const std::string& mangledSymbol);
 
 }
 }

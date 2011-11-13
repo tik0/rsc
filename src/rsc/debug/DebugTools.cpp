@@ -44,7 +44,7 @@ DebugToolsPtr DebugTools::newInstance() {
 #endif
 }
 
-string DebugTools::formatBacktrace(const vector<string> &trace) {
+string DebugTools::formatBacktrace(const vector<string>& trace) {
     stringstream s;
     for (std::vector<std::string>::const_iterator traceIt = trace.begin(); traceIt
             != trace.end(); ++traceIt) {

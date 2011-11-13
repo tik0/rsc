@@ -62,7 +62,7 @@ public:
      * @param name name of the logger
      * @return logger instance
      */
-    LoggerPtr getLogger(const std::string &name);
+    LoggerPtr getLogger(const std::string& name);
 
     /**
      * Simple hack to reconfigure all known loggers and new instances with a
@@ -71,7 +71,7 @@ public:
      * @todo better configuration system required
      * @param level new level for all loggers
      */
-    void reconfigure(const Logger::Level &level);
+    void reconfigure(const Logger::Level& level);
 
     /**
      * Reselected the automatically chosen logging system to adapt to newly
@@ -92,7 +92,7 @@ public:
      * @todo create a decorator for Logger and return this in the smart pointers
      *       to enable changing the logger instance at runtime
      */
-    void reselectLoggingSystem(const std::string &nameHint = "");
+    void reselectLoggingSystem(const std::string& nameHint = "");
 
     /**
      * Parameter to pass as name hint to #reselectLoggingSystem for selecting

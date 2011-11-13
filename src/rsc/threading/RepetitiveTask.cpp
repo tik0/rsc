@@ -111,7 +111,7 @@ void RepetitiveTask::timerAfterCycle() {
     RSCTRACE(logger, "Times (last cycle = " << timer.elapsed() << "s)");
 }
 
-ostream &operator<<(ostream &out, const RepetitiveTask &t) {
+ostream& operator<<(ostream& out, const RepetitiveTask& t) {
     // TODO missing content to output
     return out << "RepetitiveTask[cancelRequest=" << t.cancelRequest << "]";
 }

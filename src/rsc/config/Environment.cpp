@@ -71,7 +71,7 @@ path userConfigDirectory() {
     return userHomeDirectory() / ".config";
 }
 
-string transformName(const string &name, const string &prefix) {
+string transformName(const string& name, const string& prefix) {
     if (starts_with(name, prefix)) {
         string result;
         transform(name.begin() + prefix.size(), name.end(), back_inserter(
@@ -82,12 +82,12 @@ string transformName(const string &name, const string &prefix) {
     }
 }
 
-EnvironmentVariableSource::EnvironmentVariableSource(const string &prefix) :
+EnvironmentVariableSource::EnvironmentVariableSource(const string& prefix) :
     logger(Logger::getLogger("rsc.config.EnvironmentVariableSource")), prefix(
             prefix) {
 }
 
-void EnvironmentVariableSource::provideOptions(OptionHandler &handler) {
+void EnvironmentVariableSource::provideOptions(OptionHandler& handler) {
     for (environment_iterator it = environment_iterator(environ); it
             != environment_iterator(); ++it) {
         string name = transformName(it->first, this->prefix);

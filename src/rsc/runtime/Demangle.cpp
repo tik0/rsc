@@ -89,7 +89,7 @@ std::string demangle(const char* mangled_symbol) {
 namespace rsc {
 namespace runtime {
 
-std::string demangle(const std::string &mangled_symbol) {
+std::string demangle(const std::string& mangled_symbol) {
     return demangle(mangled_symbol.c_str());
 }
 

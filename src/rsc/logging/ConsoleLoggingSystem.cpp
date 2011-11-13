@@ -39,7 +39,7 @@ std::string ConsoleLoggingSystem::getRegistryKey() const {
     return getLoggerName();
 }
 
-LoggerPtr ConsoleLoggingSystem::createLogger(const std::string &name) {
+LoggerPtr ConsoleLoggingSystem::createLogger(const std::string& name) {
     return LoggerPtr(new ConsoleLogger(name));
 }
 

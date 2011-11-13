@@ -55,7 +55,7 @@ public:
      * @param name name of the new logger
      * @return new logger instance
      */
-    virtual LoggerPtr createLogger(const std::string &name) = 0;
+    virtual LoggerPtr createLogger(const std::string& name) = 0;
 
 };
 

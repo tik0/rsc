@@ -61,16 +61,16 @@ public:
     /**
      * A function that delivers a message to a receiver. Must be reentrant.
      */
-    typedef boost::function<void(boost::shared_ptr<R> &receiver,
-            const M &message)> deliverFunction;
+    typedef boost::function<void(boost::shared_ptr<R>& receiver,
+            const M& message)> deliverFunction;
 
     /**
      * A function that filters a message for a receiver. If @c true is returned,
      * the message is acceptable for the receiver, else it will not be
      * delivered. Must be reentrant.
      */
-    typedef boost::function<bool(boost::shared_ptr<R> &receiver,
-            const M &message)> filterFunction;
+    typedef boost::function<bool(boost::shared_ptr<R>& receiver,
+            const M& message)> filterFunction;
 
     /**
      * A handler that is called whenever a message is received from the pool
@@ -92,7 +92,7 @@ public:
          * @param message message to pass to the receiver
          */
         virtual void
-        deliver(boost::shared_ptr<R> &receiver, const M &message) = 0;
+        deliver(boost::shared_ptr<R>& receiver, const M& message) = 0;
 
     };
 
@@ -119,7 +119,7 @@ public:
          *         receiver, else it will not be delivered.
          */
         virtual bool
-        filter(boost::shared_ptr<R> &receiver, const M &message) = 0;
+        filter(boost::shared_ptr<R>& receiver, const M& message) = 0;
 
     };
 
@@ -134,7 +134,7 @@ private:
      */
     class TrueFilter: public FilterHandler {
     public:
-        bool filter(boost::shared_ptr<R> &/*receiver*/, const M &/*message*/) {
+        bool filter(boost::shared_ptr<R>& /*receiver*/, const M& /*message*/) {
             return true;
         }
     };
@@ -151,7 +151,7 @@ private:
             function(function) {
         }
 
-        bool filter(boost::shared_ptr<R> &receiver, const M &message) {
+        bool filter(boost::shared_ptr<R>& receiver, const M& message) {
             return function(receiver, message);
         }
 
@@ -172,7 +172,7 @@ private:
             function(function) {
         }
 
-        void deliver(boost::shared_ptr<R> &receiver, const M &message) {
+        void deliver(boost::shared_ptr<R>& receiver, const M& message) {
             function(receiver, message);
         }
 
@@ -229,8 +229,8 @@ private:
      * @param workerNum number of the worker requesting a new job
      * @param receiver out param with the receiver to work on
      */
-    void nextJob(const unsigned int &/*workerNum*/,
-            boost::shared_ptr<Receiver> &receiver) {
+    void nextJob(const unsigned int& /*workerNum*/,
+            boost::shared_ptr<Receiver>& receiver) {
 
         boost::mutex::scoped_lock lock(receiversMutex);
 
@@ -313,7 +313,7 @@ private:
     /**
      * Threaded worker method.
      */
-    void worker(const unsigned int &workerNum) {
+    void worker(const unsigned int& workerNum) {
 
         try {
             while (true) {
@@ -330,7 +330,7 @@ private:
                 finishedWork(receiver);
 
             }
-        } catch (InterruptedException &e) {
+        } catch (InterruptedException& e) {
             //            std::cout << "Worker " << workerNum << " was interrupted"
             //                    << std::endl;
         }
@@ -354,7 +354,7 @@ public:
      *                be reentrant.
      * @note the object-oriented interface should be preferred
      */
-    OrderedQueueDispatcherPool(const unsigned int &threadPoolSize,
+    OrderedQueueDispatcherPool(const unsigned int& threadPoolSize,
             deliverFunction delFunc) :
         currentPosition(0), jobsAvailable(false), interrupted(false), started(
                 false), threadPoolSize(threadPoolSize), deliveryHandler(
@@ -374,7 +374,7 @@ public:
      *                   receiver. Default accepts every message.
      * @note the object-oriented interface should be preferred
      */
-    OrderedQueueDispatcherPool(const unsigned int &threadPoolSize,
+    OrderedQueueDispatcherPool(const unsigned int& threadPoolSize,
             deliverFunction delFunc, filterFunction filterFunc) :
         currentPosition(0), jobsAvailable(false), interrupted(false), started(
                 false), threadPoolSize(threadPoolSize), deliveryHandler(
@@ -389,7 +389,7 @@ public:
      * @param threadPoolSize number of threads for this pool
      * @param deliveryHandler handler to deliver messages to receivers
      */
-    OrderedQueueDispatcherPool(const unsigned int &threadPoolSize,
+    OrderedQueueDispatcherPool(const unsigned int& threadPoolSize,
             DeliveryHandlerPtr deliveryHandler) :
         currentPosition(0), jobsAvailable(false), interrupted(false), started(
                 false), threadPoolSize(threadPoolSize), deliveryHandler(
@@ -403,7 +403,7 @@ public:
      * @param deliveryHandler handler to deliver messages to receivers
      * @param filterHandler filter handler for messages
      */
-    OrderedQueueDispatcherPool(const unsigned int &threadPoolSize,
+    OrderedQueueDispatcherPool(const unsigned int& threadPoolSize,
             DeliveryHandlerPtr deliveryHandler, FilterHandlerPtr filterHandler) :
         currentPosition(0), jobsAvailable(false), interrupted(false), started(
                 false), threadPoolSize(threadPoolSize), deliveryHandler(
@@ -505,7 +505,7 @@ public:
      *
      * @param message message to dispatch
      */
-    void push(const M &message) {
+    void push(const M& message) {
 
         //        std::cout << "new job " << message << std::endl;
         {

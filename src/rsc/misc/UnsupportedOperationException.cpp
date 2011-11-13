@@ -23,7 +23,7 @@ namespace rsc {
 namespace misc {
 
 UnsupportedOperationException::UnsupportedOperationException(
-        const std::string &reason) :
+        const std::string& reason) :
         std::runtime_error(reason) {
 }
 

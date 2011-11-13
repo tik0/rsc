@@ -50,11 +50,11 @@ public:
 
 unsigned int StubReceiver::nextReceiverNum = 1;
 
-ostream &operator<<(ostream &stream, const StubReceiver &receiver) {
+ostream& operator<<(ostream& stream, const StubReceiver& receiver) {
     return stream << "StubReceiver[" << receiver.receiverNum << "]";
 }
 
-void deliver(boost::shared_ptr<StubReceiver> &receiver, const int &message) {
+void deliver(boost::shared_ptr<StubReceiver>& receiver, const int& message) {
     boost::mutex::scoped_lock lock(receiver->mutex);
 
     // emulate slow processing
@@ -73,7 +73,7 @@ void deliver(boost::shared_ptr<StubReceiver> &receiver, const int &message) {
  */
 class DeliveryHandler: public OrderedQueueDispatcherPool<int, StubReceiver>::DeliveryHandler {
 public:
-    void deliver(boost::shared_ptr<StubReceiver> &receiver, const int &message) {
+    void deliver(boost::shared_ptr<StubReceiver>& receiver, const int& message) {
         boost::mutex::scoped_lock lock(receiver->mutex);
         receiver->messages.push_back(message);
         receiver->condition.notify_all();
@@ -186,7 +186,7 @@ void laterRegister(boost::shared_ptr<StubReceiver> lateReceiver,
         boost::shared_ptr<StubReceiver> earlyUnregisteredReceiver,
         boost::shared_ptr<StubReceiver> observingReceiver,
         OrderedQueueDispatcherPool<int, StubReceiver>* pool,
-        const unsigned int &numMessages) {
+        const unsigned int& numMessages) {
 
     // wait until the observer got 50% of the messages, then register the new
     // receiver
@@ -278,7 +278,7 @@ static boost::mutex rejectMutex;
 static boost::condition rejectCondition;
 static unsigned int rejectCalls = 0;
 
-bool rejectFilter(boost::shared_ptr<StubReceiver> &/*receiver*/, const int &/*message*/) {
+bool rejectFilter(boost::shared_ptr<StubReceiver>& /*receiver*/, const int& /*message*/) {
     boost::mutex::scoped_lock lock(rejectMutex);
     ++rejectCalls;
     rejectCondition.notify_all();
@@ -296,7 +296,7 @@ public:
         rejectCalls(0) {
     }
 
-    bool filter(boost::shared_ptr<StubReceiver> &/*receiver*/, const int &/*message*/) {
+    bool filter(boost::shared_ptr<StubReceiver>& /*receiver*/, const int& /*message*/) {
         boost::mutex::scoped_lock lock(rejectMutex);
         ++rejectCalls;
         rejectCondition.notify_all();

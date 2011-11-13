@@ -40,7 +40,7 @@ namespace threading {
 class RSC_EXPORT QueueEmptyException: public std::runtime_error {
 public:
     QueueEmptyException();
-    explicit QueueEmptyException(const std::string &message);
+    explicit QueueEmptyException(const std::string& message);
 };
 
 /**
@@ -54,7 +54,7 @@ template<class M>
 class SynchronizedQueue: public boost::noncopyable {
 public:
 
-    typedef boost::function<void(const M &drop)> dropHandlerType;
+    typedef boost::function<void(const M& drop)> dropHandlerType;
 
 private:
 
@@ -75,7 +75,7 @@ public:
      *                  element is removed. 0 means unlimited
      * @param
      */
-    explicit SynchronizedQueue(const unsigned int &sizeLimit = 0,
+    explicit SynchronizedQueue(const unsigned int& sizeLimit = 0,
             dropHandlerType dropHandler = 0) :
         interrupted(false), sizeLimit(sizeLimit), dropHandler(dropHandler) {
     }
@@ -93,7 +93,7 @@ public:
      *
      * @param message element to push on the queue
      */
-    void push(const M &message) {
+    void push(const M& message) {
         {
             boost::recursive_mutex::scoped_lock lock(mutex);
             if (sizeLimit > 0) {

@@ -46,7 +46,7 @@ public:
      * @param random If @c true, a random UUID is created. Otherwise
      * the nil UUID is created.
      */
-    explicit UUID(const bool &random = true);
+    explicit UUID(const bool& random = true);
 
     /**
      * Parses a UUID from a string. Various default formats are
@@ -56,7 +56,7 @@ public:
      * @throw std::runtime_error given string is not acceptable as a
      * UUID
      */
-    explicit UUID(const std::string &uuid);
+    explicit UUID(const std::string& uuid);
 
     /**
      * Parses a UUID from a string. Various default formats are
@@ -81,7 +81,7 @@ public:
      * @param ns Namespace in which @a name should be placed.
      * @param name A unique name within namespace @a ns.
      */
-    UUID(const UUID &ns, const std::string &name);
+    UUID(const UUID& ns, const std::string& name);
 
     virtual ~UUID();
 
@@ -99,11 +99,11 @@ public:
      */
     std::string getIdAsString() const;
 
-    bool operator==(const UUID &other) const;
-    bool operator!=(const UUID &other) const;
-    bool operator<(const UUID &other) const;
+    bool operator==(const UUID& other) const;
+    bool operator!=(const UUID& other) const;
+    bool operator<(const UUID& other) const;
 
-    friend RSC_EXPORT std::ostream &operator<<(std::ostream &stream, const UUID &id);
+    friend RSC_EXPORT std::ostream& operator<<(std::ostream& stream, const UUID& id);
 
 private:
 
@@ -116,7 +116,7 @@ private:
 
 typedef boost::shared_ptr<UUID> UUIDPtr;
 
-RSC_EXPORT std::ostream &operator<<(std::ostream &stream, const UUID &id);
+RSC_EXPORT std::ostream& operator<<(std::ostream& stream, const UUID& id);
 
 }
 }

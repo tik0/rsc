@@ -32,7 +32,7 @@ LinuxDebugTools::LinuxDebugTools() {
 LinuxDebugTools::~LinuxDebugTools() {
 }
 
-vector<string> LinuxDebugTools::createBacktrace(const unsigned int &maxElements) {
+vector<string> LinuxDebugTools::createBacktrace(const unsigned int& maxElements) {
 
     void** arr = (void**) malloc(maxElements * sizeof(void*));
     int nSize = backtrace(arr, maxElements);

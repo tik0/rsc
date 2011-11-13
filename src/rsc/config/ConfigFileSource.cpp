@@ -45,7 +45,7 @@ string trim(const string& s) {
     }
 }
 
-ConfigFileSource::ConfigFileSource(istream &stream) :
+ConfigFileSource::ConfigFileSource(istream& stream) :
     logger(Logger::getLogger("rsc.config.ConfigFileSource")), stream(stream) {
 }
 
@@ -64,7 +64,7 @@ void ConfigFileSource::provideOptions(OptionHandler& handler) {
 }
 
 // Based on Boost.ProgramOptions
-bool ConfigFileSource::getOption(string& name, string &value) {
+bool ConfigFileSource::getOption(string& name, string& value) {
     string line;
     while (getline(this->stream, line)) {
         // strip '#' comments and whitespace

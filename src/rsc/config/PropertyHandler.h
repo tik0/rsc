@@ -34,8 +34,8 @@ namespace config {
  */
 class RSC_EXPORT PropertyHandler : public OptionHandler {
 public:
-    void handleOption(const std::vector<std::string> &key,
-                      const std::string &value);
+    void handleOption(const std::vector<std::string>& key,
+                      const std::string& value);
     /** Returns the @ref runtime::Properties object constructed by
      * this handler.
      *

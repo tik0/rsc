@@ -38,7 +38,7 @@ LoggerFactory::LoggerFactory() :
 LoggerFactory::~LoggerFactory() {
 }
 
-void LoggerFactory::reselectLoggingSystem(const std::string &nameHint) {
+void LoggerFactory::reselectLoggingSystem(const std::string& nameHint) {
 
     set<string> keys = loggingSystemRegistry()->getKnownRegistryKeys();
     assert(keys.count(DEFAULT_LOGGING_SYSTEM));
@@ -76,7 +76,7 @@ LoggerFactory* LoggerFactory::getInstance() {
     return instance;
 }
 
-LoggerPtr LoggerFactory::getLogger(const std::string &name) {
+LoggerPtr LoggerFactory::getLogger(const std::string& name) {
     boost::recursive_mutex::scoped_lock lock(mutex);
     if (loggersByName.count(name)) {
         return loggersByName[name];
@@ -88,7 +88,7 @@ LoggerPtr LoggerFactory::getLogger(const std::string &name) {
     }
 }
 
-void LoggerFactory::reconfigure(const Logger::Level &level) {
+void LoggerFactory::reconfigure(const Logger::Level& level) {
     boost::recursive_mutex::scoped_lock lock(mutex);
     currentLevel = level;
     for (map<string, LoggerPtr>::iterator it = loggersByName.begin(); it

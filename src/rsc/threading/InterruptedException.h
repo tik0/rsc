@@ -34,7 +34,7 @@ namespace threading {
 class RSC_EXPORT InterruptedException: public std::runtime_error {
 public:
     InterruptedException();
-    InterruptedException(const std::string &message);
+    InterruptedException(const std::string& message);
     virtual ~InterruptedException() throw();
 };
 

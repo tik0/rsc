@@ -37,11 +37,11 @@ public:
     virtual ~ThreadedTaskExecutor();
 
     void schedule(TaskPtr t);
-    void schedule(TaskPtr t, const boost::uint64_t &delayMus);
+    void schedule(TaskPtr t, const boost::uint64_t& delayMus);
 
 private:
 
-    static void executeTask(TaskPtr task, const boost::uint64_t &delayMus);
+    static void executeTask(TaskPtr task, const boost::uint64_t& delayMus);
 
 };
 

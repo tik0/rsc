@@ -34,14 +34,14 @@ boost::uuids::nil_generator UUID::nilGen =
 boost::uuids::basic_random_generator<boost::mt19937> UUID::randomGen =
         boost::uuids::basic_random_generator<boost::mt19937>();
 
-UUID::UUID(const bool &random) :
+UUID::UUID(const bool& random) :
     id(nilGen()) {
     if (random) {
         id = randomGen();
     }
 }
 
-UUID::UUID(const string &uuid) {
+UUID::UUID(const string& uuid) {
     if (uuid != "") {
         boost::uuids::string_generator gen;
         id = gen(uuid);
@@ -59,7 +59,7 @@ UUID::UUID(boost::uint8_t* data) {
     memcpy(id.data, data, 16);
 }
 
-UUID::UUID(const UUID &ns, const string &name) :
+UUID::UUID(const UUID& ns, const string& name) :
     id(boost::uuids::name_generator(ns.getId())(name)) {
 }
 
@@ -76,19 +76,19 @@ string UUID::getIdAsString() const {
     return ss.str();
 }
 
-bool UUID::operator==(const UUID &other) const {
+bool UUID::operator==(const UUID& other) const {
     return !(*this < other) && !(other < *this);
 }
 
-bool UUID::operator!=(const UUID &other) const {
+bool UUID::operator!=(const UUID& other) const {
     return !operator==(other);
 }
 
-bool UUID::operator<(const UUID &other) const {
+bool UUID::operator<(const UUID& other) const {
     return id < other.id;
 }
 
-ostream &operator<<(ostream &stream, const UUID &id) {
+ostream& operator<<(ostream& stream, const UUID& id) {
     return stream << "UUID[" << id.id << "]";
 }
 

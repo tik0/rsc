@@ -31,7 +31,7 @@ using namespace boost;
 namespace rsc {
 namespace config {
 
-any parseTypedValue(const string &value) {
+any parseTypedValue(const string& value) {
     if ((value[0] == '<') && (value.find('>') != string::npos)) {
         unsigned int index = value.find('>');
         string type = value.substr(1, index - 1);

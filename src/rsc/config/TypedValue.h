@@ -40,7 +40,7 @@ namespace config {
  *
  * @author jmoringe
  */
-RSC_EXPORT boost::any parseTypedValue(const std::string &value);
+RSC_EXPORT boost::any parseTypedValue(const std::string& value);
 
 }
 }

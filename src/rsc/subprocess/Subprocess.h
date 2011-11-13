@@ -62,8 +62,8 @@ public:
      * @return subprocess instance
      * @throw std::runtime_error error starting the command
      */
-    static SubprocessPtr newInstance(const std::string &command,
-            const std::vector<std::string> &args = std::vector<std::string>());
+    static SubprocessPtr newInstance(const std::string& command,
+            const std::vector<std::string>& args = std::vector<std::string>());
 
 protected:
     Subprocess();

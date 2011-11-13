@@ -61,7 +61,7 @@ public:
      *             scheduling of tasks with a specified delay is not supported
      * @throw std::invalid_argument task to schedule is already canceled
      */
-    virtual void schedule(TaskPtr t, const boost::uint64_t &delayMus) = 0;
+    virtual void schedule(TaskPtr t, const boost::uint64_t& delayMus) = 0;
 
 };
 

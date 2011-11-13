@@ -35,7 +35,7 @@ namespace misc {
 class RSC_EXPORT IllegalStateException: public std::runtime_error {
 public:
     IllegalStateException();
-    IllegalStateException(const std::string &message);
+    IllegalStateException(const std::string& message);
     virtual ~IllegalStateException() throw();
 };
 

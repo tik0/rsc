@@ -44,8 +44,8 @@ public:
      * the option.
      * @param value The value of the option.
      */
-    virtual void handleOption(const std::vector<std::string> &key,
-                              const std::string &value) = 0;
+    virtual void handleOption(const std::vector<std::string>& key,
+                              const std::string& value) = 0;
 };
 
 }

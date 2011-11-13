@@ -40,16 +40,16 @@ public:
      *
      * @param name name of the logger
      */
-    ConsoleLogger(const std::string &name);
-    ConsoleLogger(const std::string &name, const Level &level);
+    ConsoleLogger(const std::string& name);
+    ConsoleLogger(const std::string& name, const Level& level);
     virtual ~ConsoleLogger();
 
     Level getLevel() const;
-    void setLevel(const Level &level);
+    void setLevel(const Level& level);
     std::string getName() const;
-    void setName(const std::string &name);
+    void setName(const std::string& name);
 
-    void log(const Level &level, const std::string &msg);
+    void log(const Level& level, const std::string& msg);
 
 private:
 
@@ -61,7 +61,7 @@ private:
      * @param level the level of the header to generate
      * @return the stream passed in
      */
-    std::ostream &printHeader(std::ostream &stream, const Level &level);
+    std::ostream& printHeader(std::ostream& stream, const Level& level);
 
     std::string name;
     Level level;

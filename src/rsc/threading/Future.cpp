@@ -24,15 +24,15 @@ using namespace std;
 namespace rsc {
 namespace threading {
 
-FutureException::FutureException(const string &message):
+FutureException::FutureException(const string& message):
     runtime_error(message) {
 }
 
-FutureTaskExecutionException::FutureTaskExecutionException(const string &msg) :
+FutureTaskExecutionException::FutureTaskExecutionException(const string& msg) :
     FutureException(msg) {
 }
 
-FutureTimeoutException::FutureTimeoutException(const string &message):
+FutureTimeoutException::FutureTimeoutException(const string& message):
     FutureException(message) {
 }
 

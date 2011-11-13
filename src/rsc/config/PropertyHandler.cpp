@@ -32,8 +32,8 @@ const Properties& PropertyHandler::getProperties() const {
     return this->result;
 }
 
-void PropertyHandler::handleOption(const vector<string> &key,
-                                   const string &value) {
+void PropertyHandler::handleOption(const vector<string>& key,
+                                   const string& value) {
     this->result[key[0]] = parseTypedValue(value);
 }
 

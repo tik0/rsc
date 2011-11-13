@@ -34,7 +34,7 @@ double MathUtils::getDefaultAnglePrecision() {
     return 0.001;
 }
 
-double MathUtils::normalizeAngle(const double &angleInRad) {
+double MathUtils::normalizeAngle(const double& angleInRad) {
 
     double mod = fmod(angleInRad, getTwoPi());
 
@@ -46,19 +46,19 @@ double MathUtils::normalizeAngle(const double &angleInRad) {
 
 }
 
-bool MathUtils::isSameAngle(const double &firstInRad,
-        const double &secondInRad, const double &precision) {
+bool MathUtils::isSameAngle(const double& firstInRad,
+        const double& secondInRad, const double& precision) {
 
     return cos(normalizeAngle(firstInRad) - normalizeAngle(secondInRad)) > cos(
             precision);
 
 }
 
-double MathUtils::radianFromDegree(const double &degree) {
+double MathUtils::radianFromDegree(const double& degree) {
     return degree * (M_PI / 180.0f);
 }
 
-double MathUtils::degreeFromRadian(const double &radian) {
+double MathUtils::degreeFromRadian(const double& radian) {
     return radian * (180.0f / M_PI);
 }
 
@@ -66,8 +66,8 @@ double MathUtils::getDefaultClosePrecision() {
     return 0.000001;
 }
 
-bool MathUtils::isClose(const double &a, const double &b,
-        const double &precision) {
+bool MathUtils::isClose(const double& a, const double& b,
+        const double& precision) {
     return abs(a - b) < precision;
 }
 

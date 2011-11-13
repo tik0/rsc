@@ -70,14 +70,14 @@ public:
      *
      * @param stream stream to print on
      */
-    virtual void printContents(std::ostream &stream) const;
+    virtual void printContents(std::ostream& stream) const;
 
     /**
      * Constructs and prints the final debug output.
      *
      * @param stream stream to print on
      */
-    virtual void print(std::ostream &stream) const;
+    virtual void print(std::ostream& stream) const;
 
 };
 
@@ -88,8 +88,8 @@ public:
  * @param printable Printable to print
  * @return the \c stream
  */
-RSC_EXPORT std::ostream &operator<<(std::ostream &stream,
-        const Printable &printable);
+RSC_EXPORT std::ostream& operator<<(std::ostream& stream,
+        const Printable& printable);
 
 /**
  * Output operator on std::ostream for pointer Printables.
@@ -98,7 +98,7 @@ RSC_EXPORT std::ostream &operator<<(std::ostream &stream,
  * @param printable Printable to print
  * @return the \c stream
  */
-RSC_EXPORT std::ostream &operator<<(std::ostream &stream,
+RSC_EXPORT std::ostream& operator<<(std::ostream& stream,
         const Printable* printable);
 
 /**
@@ -110,7 +110,7 @@ RSC_EXPORT std::ostream &operator<<(std::ostream &stream,
  * @tparam Y pointee type
  */
 template<class Y>
-std::ostream & operator<<(std::ostream & stream, boost::weak_ptr<Y> const & p) {
+std::ostream&  operator<<(std::ostream&  stream, boost::weak_ptr<Y> const & p) {
     return stream << p.lock().get();
 }
 

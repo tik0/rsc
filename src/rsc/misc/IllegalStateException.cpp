@@ -26,7 +26,7 @@ IllegalStateException::IllegalStateException() :
     std::runtime_error("Illegal State") {
 }
 
-IllegalStateException::IllegalStateException(const std::string &message) :
+IllegalStateException::IllegalStateException(const std::string& message) :
     std::runtime_error(message) {
 }
 

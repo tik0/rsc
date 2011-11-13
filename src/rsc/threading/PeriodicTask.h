@@ -49,7 +49,7 @@ public:
      * @param accountProcTime subtracts the processing time from sleep time in
      *           order to guarantee a fixed scheduling interval
      */
-    PeriodicTask(const unsigned int &ms, bool accountProcTime = true);
+    PeriodicTask(const unsigned int& ms, bool accountProcTime = true);
 
     virtual ~PeriodicTask();
 

@@ -33,7 +33,7 @@ using namespace std;
 namespace rsc {
 namespace subprocess {
 
-UnixSubprocess::UnixSubprocess(const string &command, const vector<string> &args) :
+UnixSubprocess::UnixSubprocess(const string& command, const vector<string>& args) :
     logger(logging::Logger::getLogger("rsc.subprocess.UnixSubprocess")),
             command(command), argLen(args.size() + 2) {
 

@@ -28,7 +28,7 @@ InterruptedException::InterruptedException() :
     runtime_error("interrupted") {
 }
 
-InterruptedException::InterruptedException(const string &message) :
+InterruptedException::InterruptedException(const string& message) :
     runtime_error(message) {
 }
 

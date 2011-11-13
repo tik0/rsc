@@ -70,8 +70,8 @@ WindowsSubprocess::TerminateResult WindowsSubprocess::terminateApp(DWORD pid,
     return terminateReturn;
 }
 
-WindowsSubprocess::WindowsSubprocess(const string &command,
-        const vector<string> &args) {
+WindowsSubprocess::WindowsSubprocess(const string& command,
+        const vector<string>& args) {
 
     STARTUPINFO startupInfo = { 0 };
     startupInfo.cb = sizeof(startupInfo);

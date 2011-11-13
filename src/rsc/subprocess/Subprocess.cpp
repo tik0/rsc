@@ -38,8 +38,8 @@ Subprocess::Subprocess() {
 Subprocess::~Subprocess() {
 }
 
-SubprocessPtr Subprocess::newInstance(const string &command,
-            const vector<string> &args) {
+SubprocessPtr Subprocess::newInstance(const string& command,
+            const vector<string>& args) {
 #if defined(SUBPROCESS_UNIX)
     return SubprocessPtr(new UnixSubprocess(command, args));
 #elif defined(SUBPROCESS_WINDOWS)

@@ -51,9 +51,9 @@ public:
      * @return backtrace string as vector of method calls
      */
     virtual std::vector<std::string> createBacktrace(
-            const unsigned int &maxElements = 20) = 0;
+            const unsigned int& maxElements = 20) = 0;
 
-    std::string formatBacktrace(const std::vector<std::string> &trace);
+    std::string formatBacktrace(const std::vector<std::string>& trace);
 
     /**
      * Generates a string giving verbose information about an exception in the
@@ -63,7 +63,7 @@ public:
      * @tparam ExceptionType type of the caught exception
      */
     template<class ExceptionType>
-    std::string exceptionInfo(const ExceptionType &e) {
+    std::string exceptionInfo(const ExceptionType& e) {
 
         std::stringstream s;
         s << "Exception of type: " << rsc::runtime::typeName(e) << std::endl;

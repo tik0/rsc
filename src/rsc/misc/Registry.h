@@ -66,7 +66,7 @@ public:
      *                              registered. In this case @c r is not owned
      *                              by this registry
      */
-    void addRegistree(R* r, const std::string &errorDescription = "") {
+    void addRegistree(R* r, const std::string& errorDescription = "") {
 
         boost::recursive_mutex::scoped_lock lock(mutex);
 
@@ -87,7 +87,7 @@ public:
      * @return registree
      * @throw std::invalid_argument if there is no registree with this name
      */
-    boost::shared_ptr<R> getRegistree(const std::string &key) {
+    boost::shared_ptr<R> getRegistree(const std::string& key) {
 
         boost::recursive_mutex::scoped_lock lock(mutex);
 
@@ -128,7 +128,7 @@ public:
      * @param name name of the registree to remove
      * @return @c true if a registree was removed, else @c false
      */
-    bool removeRegistree(const std::string &name) {
+    bool removeRegistree(const std::string& name) {
         boost::recursive_mutex::scoped_lock lock(mutex);
         return registreesByName.erase(name) != 0;
     }

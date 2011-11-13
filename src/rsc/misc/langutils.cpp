@@ -98,7 +98,7 @@ char randAlnumChar() {
     return c;
 }
 
-std::string randAlnumStr(const std::string::size_type &length) {
+std::string randAlnumStr(const std::string::size_type& length) {
     std::string s;
     s.reserve(length);
     generate_n(std::back_inserter(s), length, randAlnumChar);

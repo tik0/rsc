@@ -69,7 +69,7 @@ public:
      * @param name name of the logger
      * @return logger
      */
-    static LoggerPtr getLogger(const std::string &name);
+    static LoggerPtr getLogger(const std::string& name);
 
     /**
      * @name logger configuration
@@ -88,7 +88,7 @@ public:
      *
      * @param level new level
      */
-    virtual void setLevel(const Level &level) = 0;
+    virtual void setLevel(const Level& level) = 0;
 
     /**
      * Returns the hierarchical name of the logger.
@@ -102,7 +102,7 @@ public:
      *
      * @param name new name
      */
-    virtual void setName(const std::string &name) = 0;
+    virtual void setName(const std::string& name) = 0;
 
     //@}
 
@@ -118,42 +118,42 @@ public:
      *
      * @param msg message to log
      */
-    virtual void trace(const std::string &msg);
+    virtual void trace(const std::string& msg);
 
     /**
      * Logs a message with debug logging level if this level is enabled.
      *
      * @param msg message to log
      */
-    virtual void debug(const std::string &msg);
+    virtual void debug(const std::string& msg);
 
     /**
      * Logs a message with info logging level if this level is enabled.
      *
      * @param msg message to log
      */
-    virtual void info(const std::string &msg);
+    virtual void info(const std::string& msg);
 
     /**
      * Logs a message with warn logging level if this level is enabled.
      *
      * @param msg message to log
      */
-    virtual void warn(const std::string &msg);
+    virtual void warn(const std::string& msg);
 
     /**
      * Logs a message with error logging level if this level is enabled.
      *
      * @param msg message to log
      */
-    virtual void error(const std::string &msg);
+    virtual void error(const std::string& msg);
 
     /**
      * Logs a message with fatal logging level if this level is enabled.
      *
      * @param msg message to log
      */
-    virtual void fatal(const std::string &msg);
+    virtual void fatal(const std::string& msg);
 
     //@}
 
@@ -163,7 +163,7 @@ public:
      * @param level level for the message
      * @param msg message to log
      */
-    virtual void log(const Level &level, const std::string &msg) = 0;
+    virtual void log(const Level& level, const std::string& msg) = 0;
 
     /**
      * @name level checks
@@ -177,12 +177,12 @@ public:
     virtual bool isWarnEnabled() const;
     virtual bool isErrorEnabled() const;
     virtual bool isFatalEnabled() const;
-    virtual bool isEnabledFor(const Level &level) const;
+    virtual bool isEnabledFor(const Level& level) const;
     //@}
 
 };
 
-RSC_EXPORT std::ostream &operator<<(std::ostream &stream, const Logger::Level &level);
+RSC_EXPORT std::ostream& operator<<(std::ostream& stream, const Logger::Level& level);
 
 }
 }

@@ -48,7 +48,7 @@ TEST(DebugToolsTest, testExceptionInfo)
 
     try {
         throw invalid_argument("This is a message");
-    } catch (exception &e) {
+    } catch (exception& e) {
         cout << DebugTools::newInstance()->exceptionInfo(e);
     }
 

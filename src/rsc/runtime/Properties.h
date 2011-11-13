@@ -80,10 +80,10 @@ public:
      * @throw std::runtime_error If any value is of a type for which
      * comparison has not been explicitly implemented.
      */
-    bool operator==(const Properties &other) const;
+    bool operator==(const Properties& other) const;
 
     bool
-    has(const std::string &name) const throw (); // TODO check type
+    has(const std::string& name) const throw (); // TODO check type
 
     /**
      * @throw NoSuchObject
@@ -91,14 +91,14 @@ public:
      */
     template<typename T>
     T
-    get(const std::string &name) const;
+    get(const std::string& name) const;
 
     /**
      * @throw boost::bad_any_cast
      */
     template<typename T>
     T
-    get(const std::string &name, const T &default_) const;
+    get(const std::string& name, const T& default_) const;
 
     /** Parse the value of the property @a name as type @a T and
      * return the parsed value.
@@ -140,7 +140,7 @@ public:
      */
     template<typename Target, typename T>
     bool
-    set(const std::string &name, const T &value) throw ();
+    set(const std::string& name, const T& value) throw ();
 };
 
 /**
@@ -204,7 +204,7 @@ T Properties::get(const std::string& name, const T& default_) const {
 }
 
 template<typename T>
-T Properties::getAs(const std::string &name) const {
+T Properties::getAs(const std::string& name) const {
     std::string value = get<std::string>(name);
     try {
         return boost::lexical_cast<T>(value);
@@ -219,7 +219,7 @@ T Properties::getAs(const std::string &name) const {
 }
 
 template<typename T>
-T Properties::getAs(const std::string &name, const T &default_) const {
+T Properties::getAs(const std::string& name, const T& default_) const {
     if (has(name)) {
         return getAs<T>(name);
     } else {

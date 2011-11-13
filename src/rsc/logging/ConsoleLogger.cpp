@@ -28,12 +28,12 @@ using namespace std;
 namespace rsc {
 namespace logging {
 
-ConsoleLogger::ConsoleLogger(const string &name) :
+ConsoleLogger::ConsoleLogger(const string& name) :
     name(name), level(LEVEL_INFO) {
 
 }
 
-ConsoleLogger::ConsoleLogger(const string &name, const Level &level) :
+ConsoleLogger::ConsoleLogger(const string& name, const Level& level) :
     name(name), level(level) {
 }
 
@@ -45,7 +45,7 @@ Logger::Level ConsoleLogger::getLevel() const {
     return level;
 }
 
-void ConsoleLogger::setLevel(const Logger::Level &level) {
+void ConsoleLogger::setLevel(const Logger::Level& level) {
     boost::recursive_mutex::scoped_lock lock(mutex);
     this->level = level;
 }
@@ -55,17 +55,17 @@ string ConsoleLogger::getName() const {
     return name;
 }
 
-void ConsoleLogger::setName(const string &name) {
+void ConsoleLogger::setName(const string& name) {
     boost::recursive_mutex::scoped_lock lock(mutex);
     this->name = name;
 }
 
-ostream &ConsoleLogger::printHeader(ostream &stream, const Level &level) {
+ostream& ConsoleLogger::printHeader(ostream& stream, const Level& level) {
     return stream << rsc::misc::currentTimeMillis() << " " << this->name
             << " [" << level << "]: ";
 }
 
-void ConsoleLogger::log(const Level &level, const string &msg) {
+void ConsoleLogger::log(const Level& level, const string& msg) {
     boost::recursive_mutex::scoped_lock lock(mutex);
     if (isEnabledFor(level)) {
         if (level <= Logger::LEVEL_WARN) {

@@ -37,22 +37,22 @@ string Printable::getClassName() const {
 }
 
 
-void Printable::printContents(ostream &/*stream*/) const {
+void Printable::printContents(ostream& /*stream*/) const {
     // nothing to do here as a default
 }
 
-void Printable::print(ostream &stream) const {
+void Printable::print(ostream& stream) const {
     stream << getClassName() << "[";
     printContents(stream);
     stream << "]";
 }
 
-ostream &operator<<(ostream &stream, const Printable &record) {
+ostream& operator<<(ostream& stream, const Printable& record) {
     record.print(stream);
     return stream;
 }
 
-ostream &operator<<(ostream &stream, const Printable* record) {
+ostream& operator<<(ostream& stream, const Printable* record) {
 
     stream << "*";
     record->print(stream);

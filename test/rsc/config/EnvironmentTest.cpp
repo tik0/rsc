@@ -33,7 +33,7 @@ TEST(EnvironmentTest, testUserHomeDirectory)
 {
     try {
         userHomeDirectory();
-    } catch (runtime_error &e) {
+    } catch (runtime_error& e) {
         // may happen if windows service
     }
 }
@@ -42,7 +42,7 @@ TEST(EnvironmentTest, testUserConfigDirectory)
 {
     try {
         userConfigDirectory();
-    } catch (runtime_error &e) {
+    } catch (runtime_error& e) {
         // may happen if windows service
     }
 }

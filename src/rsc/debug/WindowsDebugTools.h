@@ -36,7 +36,7 @@ public:
     WindowsDebugTools();
     virtual ~WindowsDebugTools();
 
-    std::vector<std::string> createBacktrace(const unsigned int &maxElements);
+    std::vector<std::string> createBacktrace(const unsigned int& maxElements);
 
 };
 

@@ -85,7 +85,7 @@ TEST(FutureTest, testGetException)
     }
 }
 
-void setter(const int &result, Future<int> &future) {
+void setter(const int& result, Future<int>& future) {
     boost::this_thread::sleep(boost::posix_time::milliseconds(300));
     future.set(result);
 }

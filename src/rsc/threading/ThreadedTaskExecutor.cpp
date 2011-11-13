@@ -37,7 +37,7 @@ void ThreadedTaskExecutor::schedule(TaskPtr t) {
 }
 
 void ThreadedTaskExecutor::schedule(TaskPtr t,
-        const boost::uint64_t &delayMus) {
+        const boost::uint64_t& delayMus) {
     if (t->isCancelRequested()) {
         throw std::invalid_argument("Task already canceled.");
     }
@@ -49,7 +49,7 @@ void ThreadedTaskExecutor::schedule(TaskPtr t,
 }
 
 void ThreadedTaskExecutor::executeTask(TaskPtr task,
-        const boost::uint64_t &delayMus) {
+        const boost::uint64_t& delayMus) {
     if (delayMus > 0) {
         boost::this_thread::sleep(boost::posix_time::microseconds(delayMus));
     }

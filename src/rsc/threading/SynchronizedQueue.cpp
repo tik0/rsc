@@ -29,7 +29,7 @@ QueueEmptyException::QueueEmptyException() :
 
 }
 
-QueueEmptyException::QueueEmptyException(const string &message) :
+QueueEmptyException::QueueEmptyException(const string& message) :
     runtime_error(message) {
 
 }

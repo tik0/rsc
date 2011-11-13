@@ -38,8 +38,8 @@ namespace subprocess {
 class RSC_EXPORT WindowsSubprocess: public Subprocess {
 public:
 
-    WindowsSubprocess(const std::string &command,
-            const std::vector<std::string> &args = std::vector<std::string>());
+    WindowsSubprocess(const std::string& command,
+            const std::vector<std::string>& args = std::vector<std::string>());
     virtual ~WindowsSubprocess();
 
 private:

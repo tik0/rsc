@@ -32,7 +32,7 @@ namespace misc {
  */
 class UnsupportedOperationException: public std::runtime_error {
 public:
-    UnsupportedOperationException(const std::string &description);
+    UnsupportedOperationException(const std::string& description);
     virtual ~UnsupportedOperationException() throw();
 };
 

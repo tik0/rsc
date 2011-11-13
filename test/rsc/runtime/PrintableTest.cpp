@@ -34,7 +34,7 @@ using namespace testing;
 class DummyPrintable: public Printable {
 public:
 
-    DummyPrintable(const string &name) :
+    DummyPrintable(const string& name) :
         name(name) {
     }
 
@@ -42,7 +42,7 @@ public:
         return name;
     }
 
-    void printContents(ostream &stream) const {
+    void printContents(ostream& stream) const {
         stream << "CONTENTS";
     }
 

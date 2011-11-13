@@ -109,7 +109,7 @@ public:
     virtual void waitDone();
     virtual bool isDone();
 
-    friend std::ostream &operator<<(std::ostream &out, const RepetitiveTask &t);
+    friend std::ostream& operator<<(std::ostream& out, const RepetitiveTask& t);
 
 protected:
 
@@ -134,7 +134,7 @@ private:
 
 };
 
-std::ostream &operator<<(std::ostream &out, const RepetitiveTask &t);
+std::ostream& operator<<(std::ostream& out, const RepetitiveTask& t);
 
 }
 }

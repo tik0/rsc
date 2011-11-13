@@ -74,9 +74,9 @@ public:
      * @param prefix A prefix string against which all environment
      *               variables are matched.
      */
-    EnvironmentVariableSource(const std::string &prefix = "");
+    EnvironmentVariableSource(const std::string& prefix = "");
 
-    void provideOptions(OptionHandler &handler);
+    void provideOptions(OptionHandler& handler);
 private:
     rsc::logging::LoggerPtr logger;
 

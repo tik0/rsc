@@ -24,7 +24,7 @@ using namespace std;
 namespace rsc {
 namespace threading {
 
-PeriodicTask::PeriodicTask(const unsigned int &ms, bool accountProcTime) :
+PeriodicTask::PeriodicTask(const unsigned int& ms, bool accountProcTime) :
         cycleTime(ms), logger(
                 rsc::logging::Logger::getLogger("rsc.threading.PeriodicTask")), fixedScheduling(
                 accountProcTime), nextProcessingStart(0) {
@@ -62,7 +62,7 @@ bool PeriodicTask::continueExec() {
                 boost::this_thread::sleep(
                         boost::posix_time::microseconds(cycleTime * 1000));
             }
-        } catch (const boost::thread_interrupted &e) {
+        } catch (const boost::thread_interrupted& e) {
             // TODO handle interruption somewhere directly in task. This is
             // something all tasks should benefit of, see above TODO.
             RSCWARN(

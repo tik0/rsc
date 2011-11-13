@@ -38,7 +38,7 @@
 class REGISTRY_EXPORT TestRegistree {
 public:
     std::string key;
-    TestRegistree(const std::string &key);
+    TestRegistree(const std::string& key);
     std::string getRegistryKey() const;
 };
 

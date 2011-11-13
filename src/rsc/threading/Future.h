@@ -41,7 +41,7 @@ namespace threading {
  */
 class RSC_EXPORT FutureException: public std::runtime_error {
 public:
-    explicit FutureException(const std::string &message);
+    explicit FutureException(const std::string& message);
 };
 
 /**
@@ -58,7 +58,7 @@ public:
      *
      * @param msg error message
      */
-    explicit FutureTaskExecutionException(const std::string &msg);
+    explicit FutureTaskExecutionException(const std::string& msg);
 
 };
 
@@ -77,7 +77,7 @@ public:
      * @param message A string describing the circumstances of the
      * timeout.
      */
-    explicit FutureTimeoutException(const std::string &message);
+    explicit FutureTimeoutException(const std::string& message);
 };
 
 /**
@@ -200,7 +200,7 @@ public:
      *
      * @param message error description
      */
-    void setError(const std::string &message) {
+    void setError(const std::string& message) {
         errorMsg = message;
         {
             MutexType::scoped_lock lock(mutex);
@@ -210,11 +210,11 @@ public:
         condition.notify_all();
     }
 protected:
-    MutexType &getMutex() {
+    MutexType& getMutex() {
         return this->mutex;
     }
 
-    ConditionType &getCondition() {
+    ConditionType& getCondition() {
         return this->condition;
     }
 };

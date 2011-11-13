@@ -38,7 +38,7 @@ public:
 
     std::string getRegistryKey() const;
 
-    LoggerPtr createLogger(const std::string &name);
+    LoggerPtr createLogger(const std::string& name);
 
     static std::string getLoggerName();
 

@@ -75,7 +75,7 @@ RSC_EXPORT char randAlnumChar();
  * @param length desired length of the string
  * @return random string of specified length
  */
-RSC_EXPORT std::string randAlnumStr(const std::string::size_type &length);
+RSC_EXPORT std::string randAlnumStr(const std::string::size_type& length);
 
 // This macro allows you to mark a function as being deprecated. Please note
 // that if your return type contains a comma (template) you need to typedef it.

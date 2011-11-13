@@ -35,7 +35,7 @@ void waitOnQueueElement(SynchronizedQueue<int>* queue, int* resultVar,
         bool* interrupted) {
     try {
         *resultVar = queue->pop();
-    } catch (InterruptedException &e) {
+    } catch (InterruptedException& e) {
         *interrupted = true;
     }
 }
@@ -166,7 +166,7 @@ TEST(SynchronizedQueueTest, testSizeLimit)
 
 }
 
-void drop(const int &dropped, vector<int>* results) {
+void drop(const int& dropped, vector<int>* results) {
     results->push_back(dropped);
 }
 

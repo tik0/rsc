@@ -24,7 +24,7 @@
     return registry;
 }
 
-TestRegistree::TestRegistree(const std::string &key) :
+TestRegistree::TestRegistree(const std::string& key) :
         key(key) {
 }
 

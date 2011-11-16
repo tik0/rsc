@@ -22,6 +22,7 @@
 #include <string>
 
 #include <boost/cstdint.hpp>
+#include <boost/shared_ptr.hpp>
 
 #include "rsc/rscexports.h"
 
@@ -46,6 +47,32 @@ public:
      */
     void operator()(void* ignored) const;
 
+};
+
+/**
+ * A deleter for boost::shared_ptr which enables to use a pointer in a
+ * shared_ptr, which is not a shared_ptr itself and owned by another object. The
+ * only requirement is that this object in turn is maintained by a shared_ptr.
+ * This deleter effectively keeps up the reference count of the parent object
+ * by storing an instance of a shared_ptr to the parent until the child ptr is
+ * deleted.
+ *
+ * @author jwienke
+ * @tparam ParentType type of the parent which is owned by a shared_ptr
+ */
+template<class ParentType>
+class ParentSharedPtrDeleter {
+public:
+    ParentSharedPtrDeleter(boost::shared_ptr<ParentType> parent) :
+            parent(parent) {
+    }
+
+    void operator()(void const *) {
+        parent.reset();
+    }
+
+private:
+    boost::shared_ptr<ParentType> parent;
 };
 
 /**

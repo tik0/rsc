@@ -68,7 +68,7 @@ INCLUDE(ParseArguments)
 FUNCTION(PROTOBUF_GENERATE)
 
     # argument parsing
-    PARSE_ARGUMENTS(ARG "PROTOROOT;PROTOFILES;OUTPATH;INCLUDES;EXPORT_MACRO;CPP;JAVA;PYTHON" "DEBUG" ${ARGN})
+    PARSE_ARGUMENTS(ARG "PROTOROOT;PROTOFILES;OUTPATH;INCLUDES;EXPORT_MACRO;CPP;JAVA;PYTHON;MATLAB" "DEBUG" ${ARGN})
 
     IF(NOT ARG_PROTOFILES)
         MESSAGE(SEND_ERROR "Error: PROTOBUF_GENERATE() called without any proto files")
@@ -130,6 +130,19 @@ FUNCTION(PROTOBUF_GENERATE)
         LIST(GET ARG_PYTHON 0 RESULT_PYTHON)
     ENDIF()
     
+    # decide whether to build MATLAB
+    LIST(LENGTH ARG_MATLAB MATLAB_LENGTH)
+    IF(MATLAB_LENGTH EQUAL 0)
+        SET(BUILD_MATLAB FALSE)
+    ELSE()
+        IF(NOT MATLAB_LENGTH EQUAL 1)
+            MESSAGE(SEND_ERROR "Error: PROTOBUF_GENERATE() MATLAB argument expects one parameter MATLAB_VAR")
+            RETURN()
+        ENDIF()
+        SET(BUILD_MATLAB TRUE)
+        LIST(GET ARG_MATLAB 0 RESULT_MATLAB)
+    ENDIF()
+    
     # create proper export macro for CPP if desired
     IF(EXPORT_MACRO_LENGTH EQUAL 1)
         SET(ARG_EXPORT "dllexport_decl=${ARG_EXPORT_MACRO}:")
@@ -162,6 +175,7 @@ FUNCTION(PROTOBUF_GENERATE)
         MESSAGE("INCLUDE_CMD_LINE: ${INCLUDE_CMD_LINE}")
     ENDIF()
 
+    SET(MATCHED_FILE_PATHS)
     FOREACH(PROTOFILE ${ARG_PROTOFILES})
     
         # ensure that the file ends with .proto
@@ -194,6 +208,7 @@ FUNCTION(PROTOBUF_GENERATE)
         ELSE()
             MESSAGE(SEND_ERROR "Proto file '${PROTOFILE}' is not in protoroot '${PROTOROOT}'")
         ENDIF()
+        LIST(APPEND MATCHED_FILE_PATHS ${ABS_FILE})
         
         # build the result file name
         STRING(REGEX REPLACE "^${PROTOROOT}(/?)" "" ROOT_CLEANED_FILE ${MATCH_PATH})
@@ -214,18 +229,18 @@ FUNCTION(PROTOBUF_GENERATE)
         
         # first the package
         # TODO jwienke: ignore comments... see below TODO
-        SET(JAVA_PACKAGE_REGEX "package[\t ]+([^;\n\r]+);")
-        STRING(REGEX MATCH ${JAVA_PACKAGE_REGEX} JAVA_PACKAGE_LINE ${PROTO_CONTENT})
+        SET(PACKAGE_REGEX "package[\t ]+([^;\n\r]+);")
+        STRING(REGEX MATCH ${PACKAGE_REGEX} PACKAGE_LINE ${PROTO_CONTENT})
         IF(ARG_DEBUG)
-            MESSAGE("  JAVA_PACKAGE_LINE=${JAVA_PACKAGE_LINE}")
+            MESSAGE("  PACKAGE_LINE=${PACKAGE_LINE}")
         ENDIF()
-        SET(JAVA_PACKAGE "")
-        IF(JAVA_PACKAGE_LINE)
-            STRING(REGEX REPLACE ${JAVA_PACKAGE_REGEX} "\\1" JAVA_PACKAGE ${JAVA_PACKAGE_LINE})
+        SET(PACKAGE "")
+        IF(PACKAGE_LINE)
+            STRING(REGEX REPLACE ${PACKAGE_REGEX} "\\1" PACKAGE ${PACKAGE_LINE})
         ENDIF()
-        STRING(REPLACE "." "/" JAVA_PACKAGE_PATH "${JAVA_PACKAGE}")
+        STRING(REPLACE "." "/" JAVA_PACKAGE_PATH "${PACKAGE}")
         IF(ARG_DEBUG)
-            MESSAGE("  JAVA_PACKAGE=${JAVA_PACKAGE}")
+            MESSAGE("  PACKAGE=${PACKAGE}")
             MESSAGE("  JAVA_PACKAGE_PATH=${JAVA_PACKAGE_PATH}")
         ENDIF()
         
@@ -254,7 +269,7 @@ FUNCTION(PROTOBUF_GENERATE)
         
         # finally deduce the real java name
         SET(JAVA_FILE "${OUTPATH}/${JAVA_PACKAGE_PATH}/${JAVA_CLASS}.java")
-        
+
         IF(ARG_DEBUG)
             MESSAGE("  CPP_FILE=${CPP_FILE}")
             MESSAGE("  HDR_FILE=${HDR_FILE}")
@@ -321,6 +336,21 @@ FUNCTION(PROTOBUF_GENERATE)
         SET(${RESULT_PYTHON} ${PYTHON_FILES} PARENT_SCOPE)
     ENDIF()
     
+    IF(BUILD_MATLAB)
+        ADD_CUSTOM_COMMAND(
+            OUTPUT ${OUTPATH}
+            COMMAND ${CMAKE_COMMAND} -E make_directory ${OUTPATH}
+            COMMAND ${PROTOBUF_PROTOC_EXECUTABLE}
+            ARGS "--matlab_out=${OUTPATH}" "--proto_path=${PROTOROOT}" ${INCLUDE_CMD_LINE} ${MATCHED_FILE_PATHS}
+            DEPENDS ${MATCHED_FILE_PATHS}
+            COMMENT "Running Matlab protocol buffer compiler to generate files in ${OUTPATH}"
+            VERBATIM)
+    ENDIF()
+
+    IF(BUILD_MATLAB)
+        SET(${RESULT_MATLAB} ${OUTPATH} PARENT_SCOPE)
+    ENDIF()
+    
 ENDFUNCTION()
 
 MACRO(PROTOBUF_GENERATE_CPP SRCS HDRS)
@@ -351,7 +381,20 @@ FIND_PROGRAM(PROTOBUF_PROTOC_EXECUTABLE NAMES protoc
              HINTS "${PROTOBUF_ROOT}/bin"
              DOC "The Google Protocol Buffers Compiler"
 )
-
+IF(PROTOBUF_PROTOC_EXECUTABLE AND NOT PROTOBUF_PROTOC_MATLAB)
+    # check whether this protoc version supports matlab
+    EXECUTE_PROCESS(COMMAND ${PROTOBUF_PROTOC_EXECUTABLE} "-h"
+                    ERROR_VARIABLE PROTOC_HELP_TEXT
+                    OUTPUT_QUIET)
+    STRING(REGEX MATCH "--matlab_out" PROTOC_MATLAB_OUT "${PROTOC_HELP_TEXT}")
+    IF(PROTOC_MATLAB_OUT)
+        SET(PROTOBUF_PROTOC_MATLAB TRUE CACHE BOOL "Whether protoc is able to generate matlab output.")
+        MESSAGE(STATUS "protoc supports matlab")
+    ELSE()
+        SET(PROTOBUF_PROTOC_MATLAB FALSE CACHE BOOL "Whether protoc is able to generate matlab output.")
+        MESSAGE(STATUS "protoc does not support matlab")
+    ENDIF()
+ENDIF()
 FIND_FILE(PROTOBUF_JAVA_LIBRARY
           NAMES ${PROTOBUF_JAVA_NAME} protobuf.jar
           HINTS ${PROTOBUF_JAVA_ROOT}
@@ -364,7 +407,8 @@ MARK_AS_ADVANCED(PROTOBUF_INCLUDE_DIR
                  PROTOBUF_LIBRARY
                  PROTOBUF_PROTOC_LIBRARY
                  PROTOBUF_PROTOC_EXECUTABLE
-                 PROTOBUF_JAVA_LIBRARY)
+                 PROTOBUF_JAVA_LIBRARY
+                 PROTOBUF_PROTOC_MATLAB)
 
 # Restore original find library prefixes
 IF(WIN32)

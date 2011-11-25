@@ -6,7 +6,8 @@
 #                   [SUPPRESSION_FILE <file>]
 #                   [ENABLE_IDS <id...>]
 #                   [TARGET_NAME <name>]
-#                   [INCLUDES <dir...>])
+#                   [INCLUDES <dir...>]
+#                   [INLINE_SUPPRESSION])
 #
 # Generates a target "cppcheck" that executes cppcheck on the specified sources.
 # Sources may either be file names or directories containing files where all
@@ -24,6 +25,7 @@
 # CMake project, as otherwise the target names collide.
 # Additional include directories for the cppcheck program can be given with
 # INCLUDES.
+# If INLINE_SUPPRESSION is set, cppcheck inline-suppression comments are parsed.
 #
 # cppcheck will be executed with CMAKE_CURRENT_SOURCE_DIR as working directory.
 #
@@ -52,7 +54,7 @@ FUNCTION(GENERATE_CPPCHECK)
 
     IF(CPPCHECK_FOUND)
     
-        PARSE_ARGUMENTS(ARG "SOURCES;SUPPRESSION_FILE;ENABLE_IDS;TARGET_NAME;INCLUDES" "" ${ARGN})
+        PARSE_ARGUMENTS(ARG "SOURCES;SUPPRESSION_FILE;ENABLE_IDS;TARGET_NAME;INCLUDES" "INLINE_SUPPRESSION" ${ARGN})
         
         SET(TARGET_NAME "cppcheck")
         SET(TARGET_NAME_SUFFIX "")
@@ -86,6 +88,12 @@ FUNCTION(GENERATE_CPPCHECK)
             SET(SUPPRESSION_FILE "\"${ABS}\"")
         ENDIF()
         
+        # inline suppressions
+        SET(INLINE_ARG)
+        IF(ARG_INLINE_SUPPRESSION)
+            SET(INLINE_ARG "--inline-suppr")
+        ENDIF()
+        
         # includes
         SET(INCLUDE_ARGUMENTS "")
         FOREACH(INCLUDE ${ARG_INCLUDES})
@@ -108,7 +116,7 @@ FUNCTION(GENERATE_CPPCHECK)
         
         FILE(WRITE ${CPPCHECK_WRAPPER_SCRIPT}
 "
-EXECUTE_PROCESS(COMMAND \"${CPPCHECK_EXECUTABLE}\" ${INCLUDE_ARGUMENTS} ${SUPPRESSION_ARGUMENT} ${SUPPRESSION_FILE} ${IDS_ARGUMENT} --xml ${SOURCE_ARGS}
+EXECUTE_PROCESS(COMMAND \"${CPPCHECK_EXECUTABLE}\" ${INCLUDE_ARGUMENTS} ${SUPPRESSION_ARGUMENT} ${SUPPRESSION_FILE} ${INLINE_ARG} ${IDS_ARGUMENT} --xml ${SOURCE_ARGS}
                 RESULT_VARIABLE CPPCHECK_EXIT_CODE
                 ERROR_VARIABLE ERROR_OUT
                 WORKING_DIRECTORY \"${CMAKE_CURRENT_SOURCE_DIR}\")

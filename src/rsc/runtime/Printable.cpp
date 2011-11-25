@@ -36,7 +36,6 @@ string Printable::getClassName() const {
     return typeName(*this);
 }
 
-
 void Printable::printContents(ostream& /*stream*/) const {
     // nothing to do here as a default
 }
@@ -54,9 +53,15 @@ ostream& operator<<(ostream& stream, const Printable& record) {
 
 ostream& operator<<(ostream& stream, const Printable* record) {
 
-    stream << "*";
-    record->print(stream);
-    stream << " at " << ((void*) record);
+    if (record) {
+
+        stream << "*";
+        record->print(stream);
+        stream << " at " << ((void*) record);
+
+    } else {
+        stream << "0x0";
+    }
 
     return stream;
 

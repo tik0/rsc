@@ -26,6 +26,7 @@
 #include <set>
 #include <map>
 #include <valarray>
+#include <deque>
 
 #include <algorithm>
 #include <iterator>
@@ -103,6 +104,22 @@ operator<<(basic_ostream<Ch, Tr>& stream, const vector<T>& container) {
     typedef typename container_type::value_type value_type;
 
     stream << "#(";
+    if (container.size() >= 1) {
+        copy(container.begin(), container.end() - 1,
+                ostream_iterator<value_type> (stream, ", "));
+        stream << container.back();
+    }
+    stream << ")";
+    return stream;
+}
+
+template<typename Ch, typename Tr, typename T>
+basic_ostream<Ch, Tr>&
+operator<<(basic_ostream<Ch, Tr>& stream, const deque<T>& container) {
+    typedef vector<T> container_type;
+    typedef typename container_type::value_type value_type;
+
+    stream << "d(";
     if (container.size() >= 1) {
         copy(container.begin(), container.end() - 1,
                 ostream_iterator<value_type> (stream, ", "));

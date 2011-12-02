@@ -75,10 +75,10 @@ FUNCTION(PROTOBUF_GENERATE)
         RETURN()
     ENDIF(NOT ARG_PROTOFILES)
     LIST(LENGTH ARG_PROTOROOT PROTOROOT_LENGTH)
-    IF(PROTOROOT_LENGTH GREATER 1)
-        MESSAGE(SEND_ERROR "Error: PROTOBUF_GENERATE() called with too many protoroots, only one is allowed")
-        RETURN()
-    ENDIF()
+    #IF(PROTOROOT_LENGTH GREATER 1)
+    #    MESSAGE(SEND_ERROR "Error: PROTOBUF_GENERATE() called with too many protoroots, only one is allowed")
+    #    RETURN()
+    #ENDIF()
     LIST(LENGTH ARG_OUTPATH OUTPATH_LENGTH)
     IF(OUTPATH_LENGTH GREATER 1)
         MESSAGE(SEND_ERROR "Error: PROTOBUF_GENERATE() called with too many outpaths, only one is allowed")
@@ -153,9 +153,9 @@ FUNCTION(PROTOBUF_GENERATE)
     IF(OUTPATH_LENGTH EQUAL 1)
         SET(OUTPATH ${ARG_OUTPATH})
     ENDIF()
-    SET(PROTOROOT ${CMAKE_CURRENT_SOURCE_DIR})
-    IF(PROTOROOT_LENGTH EQUAL 1)
-        SET(PROTOROOT ${ARG_PROTOROOT})
+    SET(PROTOROOTS ${CMAKE_CURRENT_SOURCE_DIR})
+    IF(PROTOROOT_LENGTH GREATER 0)
+        SET(PROTOROOTS ${ARG_PROTOROOT})
     ENDIF()
     
     SET(ARG_EXPORT "")
@@ -171,12 +171,14 @@ FUNCTION(PROTOBUF_GENERATE)
     
     IF(ARG_DEBUG)
         MESSAGE("OUTPATH: ${OUTPATH}")
-        MESSAGE("PROTOROOT: ${PROTOROOT}")
+        MESSAGE("PROTOROOTS: ${PROTOROOTS}")
         MESSAGE("INCLUDE_CMD_LINE: ${INCLUDE_CMD_LINE}")
     ENDIF()
 
     SET(MATCHED_FILE_PATHS)
     FOREACH(PROTOFILE ${ARG_PROTOFILES})
+    
+        FILE(TO_CMAKE_PATH ${PROTOFILE} PROTOFILE)
     
         # ensure that the file ends with .proto
         STRING(REGEX MATCH "\\.proto$$" PROTOEND ${PROTOFILE})
@@ -188,30 +190,57 @@ FUNCTION(PROTOBUF_GENERATE)
         GET_FILENAME_COMPONENT(ABS_FILE ${PROTOFILE} ABSOLUTE)
         GET_FILENAME_COMPONENT(FILE_WE ${PROTOFILE} NAME_WE)
         
+        STRING(LENGTH ${ABS_FILE} ABS_FILE_LENGTH)
+        
         IF(ARG_DEBUG)
             MESSAGE("file ${PROTOFILE}:")
             MESSAGE("  PATH=${PROTO_PATH}")
             MESSAGE("  ABS_FILE=${ABS_FILE}")
             MESSAGE("  FILE_WE=${FILE_WE}")
-            MESSAGE("  PROTOROOT=${PROTOROOT}")
+            MESSAGE("  PROTOROOTS=${PROTOROOTS}")
         ENDIF()
         
-        # find out of the file is in the specified proto root
-        # TODO clean the PROTOROOT so that it does not form a regex itself?
-        STRING(REGEX MATCH "^${PROTOROOT}" IN_ROOT_PATH ${PROTOFILE})
-        STRING(REGEX MATCH "^${PROTOROOT}" IN_ROOT_ABS_FILE ${ABS_FILE})
+        # find out if the file is in one of the specified proto root
+        # we mimic the protoc logic here by taking the first matching proto_path
+        SET(MATCH_PATH)
+        FOREACH(ROOT ${PROTOROOTS})
         
-        IF(IN_ROOT_PATH)
-            SET(MATCH_PATH ${PROTOFILE})
-        ELSEIF(IN_ROOT_ABS_FILE)
-            SET(MATCH_PATH ${ABS_FILE})
-        ELSE()
-            MESSAGE(SEND_ERROR "Proto file '${PROTOFILE}' is not in protoroot '${PROTOROOT}'")
+            IF(ARG_DEBUG)
+                MESSAGE("  ROOT=${ROOT}")
+            ENDIF()
+        
+            FILE(RELATIVE_PATH REL_ABS ${ROOT} ${ABS_FILE})
+            STRING(LENGTH ${REL_ABS} REL_LENGTH)
+            
+            IF(ARG_DEBUG)
+                MESSAGE("    REL_ABS=${REL_ABS}")
+                MESSAGE("    REL_LENGTH=${REL_LENGTH}")
+            ENDIF()
+            
+            IF(${REL_LENGTH} GREATER 0 AND ${REL_LENGTH} LESS ${ABS_FILE_LENGTH})
+                # we did not need to go directories up, hence the path is shorter
+                # and this is a match... bad assumption but works
+                SET(MATCH_PATH ${REL_ABS})
+                SET(MATCH_ROOT ${ROOT})
+                IF(ARG_DEBUG)
+                    MESSAGE("  MATCH_ROOT=${MATCH_ROOT}")
+                ENDIF()
+                BREAK()
+            ENDIF()
+            
+        ENDFOREACH()
+        
+        IF(ARG_DEBUG)
+            MESSAGE("  MATCH_PATH=${MATCH_PATH}")
+        ENDIF()
+        
+        IF(NOT MATCH_PATH)
+            MESSAGE(SEND_ERROR "Proto file '${PROTOFILE}' is not in protoroots '${PROTOROOTS}'")
         ENDIF()
         LIST(APPEND MATCHED_FILE_PATHS ${ABS_FILE})
         
         # build the result file name
-        STRING(REGEX REPLACE "^${PROTOROOT}(/?)" "" ROOT_CLEANED_FILE ${MATCH_PATH})
+        FILE(RELATIVE_PATH ROOT_CLEANED_FILE ${MATCH_ROOT} ${ABS_FILE})
         IF(ARG_DEBUG)
             MESSAGE("  ROOT_CLEANED_FILE=${ROOT_CLEANED_FILE}")
         ENDIF()
@@ -277,6 +306,12 @@ FUNCTION(PROTOBUF_GENERATE)
             MESSAGE("  PYTHON_FILE=${PYTHON_FILE}")
         ENDIF()
         
+        # generate and use a list of protoroot arguments to pass to protoc
+        SET(ROOT_ARGS)
+        FOREACH(ROOT ${PROTOROOTS})
+            LIST(APPEND ROOT_ARGS "--proto_path" ${ROOT})
+        ENDFOREACH()
+        
         IF(BUILD_CPP)
             LIST(APPEND CPP_SRCS "${CPP_FILE}")
             LIST(APPEND CPP_HDRS "${HDR_FILE}")
@@ -286,9 +321,9 @@ FUNCTION(PROTOBUF_GENERATE)
                        "${HDR_FILE}"
                 COMMAND ${CMAKE_COMMAND} -E make_directory ${OUTPATH}
                 COMMAND ${PROTOBUF_PROTOC_EXECUTABLE}
-                ARGS "--cpp_out=${ARG_EXPORT}${OUTPATH}" --proto_path "${PROTOROOT}" ${INCLUDE_CMD_LINE} "${MATCH_PATH}"
+                ARGS "--cpp_out=${ARG_EXPORT}${OUTPATH}" ${ROOT_ARGS} ${INCLUDE_CMD_LINE} "${ABS_FILE}"
                 DEPENDS ${ABS_FILE}
-                COMMENT "Running C++ protocol buffer compiler on ${MATCH_PATH} with root ${PROTOROOT}, generating: ${CPP_FILE}"
+                COMMENT "Running C++ protocol buffer compiler on ${ABS_PATH} with root ${MATCH_ROOT}, generating: ${CPP_FILE}"
                 VERBATIM)
         ENDIF()
         
@@ -299,9 +334,9 @@ FUNCTION(PROTOBUF_GENERATE)
                 OUTPUT "${JAVA_FILE}"
                 COMMAND ${CMAKE_COMMAND} -E make_directory ${OUTPATH}
                 COMMAND ${PROTOBUF_PROTOC_EXECUTABLE}
-                ARGS "--java_out=${OUTPATH}" --proto_path "${PROTOROOT}" ${INCLUDE_CMD_LINE} "${MATCH_PATH}"
+                ARGS "--java_out=${OUTPATH}" ${ROOT_ARGS} ${INCLUDE_CMD_LINE} "${ABS_FILE}"
                 DEPENDS ${ABS_FILE}
-                COMMENT "Running Java protocol buffer compiler on ${MATCH_PATH} with root ${PROTOROOT}, generating: ${JAVA_FILE}"
+                COMMENT "Running Java protocol buffer compiler on ${ABS_PATH} with root ${MATCH_ROOT}, generating: ${JAVA_FILE}"
                 VERBATIM)
         ENDIF()
         
@@ -312,9 +347,9 @@ FUNCTION(PROTOBUF_GENERATE)
                 OUTPUT "${PYTHON_FILE}"
                 COMMAND ${CMAKE_COMMAND} -E make_directory ${OUTPATH}
                 COMMAND ${PROTOBUF_PROTOC_EXECUTABLE}
-                ARGS "--python_out=${OUTPATH}" --proto_path "${PROTOROOT}" ${INCLUDE_CMD_LINE} "${MATCH_PATH}"
+                ARGS "--python_out=${OUTPATH}" ${ROOT_ARGS} ${INCLUDE_CMD_LINE} "${ABS_FILE}"
                 DEPENDS ${ABS_FILE}
-                COMMENT "Running Python protocol buffer compiler on ${MATCH_PATH} with root ${PROTOROOT}, generating: ${PYTHON_FILE}"
+                COMMENT "Running Python protocol buffer compiler on ${ABS_PATH} with root ${MATCH_ROOT}, generating: ${PYTHON_FILE}"
                 VERBATIM)
         ENDIF()
             
@@ -341,7 +376,7 @@ FUNCTION(PROTOBUF_GENERATE)
             OUTPUT ${OUTPATH}
             COMMAND ${CMAKE_COMMAND} -E make_directory ${OUTPATH}
             COMMAND ${PROTOBUF_PROTOC_EXECUTABLE}
-            ARGS "--matlab_out=${OUTPATH}" "--proto_path=${PROTOROOT}" ${INCLUDE_CMD_LINE} ${MATCHED_FILE_PATHS}
+            ARGS "--matlab_out=${OUTPATH}" ${ROOT_ARGS} ${INCLUDE_CMD_LINE} ${MATCHED_FILE_PATHS}
             DEPENDS ${MATCHED_FILE_PATHS}
             COMMENT "Running Matlab protocol buffer compiler to generate files in ${OUTPATH}"
             VERBATIM)

@@ -29,7 +29,7 @@ using namespace rsc::logging;
 
 int main(int argc, char** argv) {
 
-    LoggerFactory::getInstance()->reconfigure(Logger::LEVEL_TRACE);
+    LoggerFactory::getInstance().reconfigure(Logger::LEVEL_TRACE);
 
     InitGoogleMock(&argc, argv);
     return RUN_ALL_TESTS();

@@ -41,33 +41,33 @@ using namespace testing;
 
 TEST(LoggerFactoryTest, testSingleton)
 {
-    EXPECT_EQ(LoggerFactory::getInstance(), LoggerFactory::getInstance());
+    EXPECT_EQ(&LoggerFactory::getInstance(), &LoggerFactory::getInstance());
 }
 
 TEST(LoggerFactoryTest, testSingletonLoggers)
 {
-    LoggerFactory::getInstance()->reconfigure(Logger::LEVEL_WARN);
+    LoggerFactory::getInstance().reconfigure(Logger::LEVEL_WARN);
     stringstream name;
     name << rand();
-    LoggerPtr logger = LoggerFactory::getInstance()->getLogger(name.str());
+    LoggerPtr logger = LoggerFactory::getInstance().getLogger(name.str());
     EXPECT_EQ(Logger::LEVEL_WARN, logger->getLevel());
-    EXPECT_EQ(logger, LoggerFactory::getInstance()->getLogger(name.str()));
-    EXPECT_NE(logger, LoggerFactory::getInstance()->getLogger(name.str() + "blubb"));
+    EXPECT_EQ(logger, LoggerFactory::getInstance().getLogger(name.str()));
+    EXPECT_NE(logger, LoggerFactory::getInstance().getLogger(name.str() + "blubb"));
 }
 
 TEST(LoggerFactoryTest, testReconfigure)
 {
-    LoggerFactory::getInstance()->reconfigure(Logger::LEVEL_ERROR);
+    LoggerFactory::getInstance().reconfigure(Logger::LEVEL_ERROR);
     stringstream name;
     name << rand();
-    LoggerPtr logger = LoggerFactory::getInstance()->getLogger(name.str());
+    LoggerPtr logger = LoggerFactory::getInstance().getLogger(name.str());
     EXPECT_EQ(Logger::LEVEL_ERROR, logger->getLevel());
 
-    LoggerFactory::getInstance()->reconfigure(Logger::LEVEL_TRACE);
+    LoggerFactory::getInstance().reconfigure(Logger::LEVEL_TRACE);
     EXPECT_EQ(Logger::LEVEL_TRACE, logger->getLevel());
     stringstream name2;
     name2 << rand();
-    LoggerPtr logger2 = LoggerFactory::getInstance()->getLogger(name2.str());
+    LoggerPtr logger2 = LoggerFactory::getInstance().getLogger(name2.str());
     EXPECT_EQ(Logger::LEVEL_TRACE, logger2->getLevel());
 }
 
@@ -83,38 +83,38 @@ TEST(LoggerFactoryTest, testReselectLoggingSystem)
     loggingSystemRegistry()->addRegistree(l2);
 
     // force default
-    LoggerFactory::getInstance()->reselectLoggingSystem(
+    LoggerFactory::getInstance().reselectLoggingSystem(
             LoggerFactory::DEFAULT_LOGGING_SYSTEM);
-    EXPECT_EQ(ConsoleLoggingSystem::getLoggerName(), LoggerFactory::getInstance()->getLoggingSystemName());
+    EXPECT_EQ(ConsoleLoggingSystem::getLoggerName(), LoggerFactory::getInstance().getLoggingSystemName());
     // if the logging system is illegally reported by the line above the next
     // line will cause the mock object to report an error
-    LoggerPtr logger(LoggerFactory::getInstance()->getLogger(randAlnumStr(130)));
+    LoggerPtr logger(LoggerFactory::getInstance().getLogger(randAlnumStr(130)));
 
     // force hint
     string name = randAlnumStr(10);
     EXPECT_CALL(*l2, createLogger(name)).Times(1).WillOnce(Return(LoggerPtr(new NiceMock<MockLogger>)));
-    LoggerFactory::getInstance()->reselectLoggingSystem(
+    LoggerFactory::getInstance().reselectLoggingSystem(
             l2->name);
-    EXPECT_EQ(l2->name, LoggerFactory::getInstance()->getLoggingSystemName());
-    logger = LoggerFactory::getInstance()->getLogger(name);
+    EXPECT_EQ(l2->name, LoggerFactory::getInstance().getLoggingSystemName());
+    logger = LoggerFactory::getInstance().getLogger(name);
 
-    LoggerFactory::getInstance()->reselectLoggingSystem(
+    LoggerFactory::getInstance().reselectLoggingSystem(
             LoggerFactory::DEFAULT_LOGGING_SYSTEM);
     loggingSystemRegistry()->removeRegistree(l1->name);
 
     // wrong hint, fallback to other available system
     string newName = randAlnumStr(12);
     EXPECT_CALL(*l2, createLogger(newName)).Times(1).WillOnce(Return(LoggerPtr(new NiceMock<MockLogger>)));
-    LoggerFactory::getInstance()->reselectLoggingSystem(
+    LoggerFactory::getInstance().reselectLoggingSystem(
             randAlnumStr(123));
-    EXPECT_EQ(l2->name, LoggerFactory::getInstance()->getLoggingSystemName());
-    logger = LoggerFactory::getInstance()->getLogger(newName);
+    EXPECT_EQ(l2->name, LoggerFactory::getInstance().getLoggingSystemName());
+    logger = LoggerFactory::getInstance().getLogger(newName);
 
     // cleanup mocks
-    LoggerFactory::getInstance()->reselectLoggingSystem(
+    LoggerFactory::getInstance().reselectLoggingSystem(
             LoggerFactory::DEFAULT_LOGGING_SYSTEM);
     loggingSystemRegistry()->removeRegistree(l2->name);
 
-    LoggerFactory::getInstance()->clearKnownLoggers();
+    LoggerFactory::getInstance().clearKnownLoggers();
 
 }

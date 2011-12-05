@@ -28,6 +28,7 @@
 #include "Logger.h"
 #include "LoggingSystem.h"
 #include "../misc/Registry.h"
+#include "../patterns/Singleton.h"
 #include "rsc/rscexports.h"
 
 namespace rsc {
@@ -39,11 +40,14 @@ namespace logging {
  *
  * @author jwienke
  */
-class RSC_EXPORT LoggerFactory: boost::noncopyable {
+class RSC_EXPORT LoggerFactory: public patterns::Singleton<LoggerFactory> {
 private:
     LoggerFactory();
 
 public:
+
+    friend class patterns::Singleton<LoggerFactory>;
+
     virtual ~LoggerFactory();
 
     /**
@@ -52,7 +56,7 @@ public:
      * @todo is this method thread-safe? Singleton in C++ and static check needed
      * @return single instance
      */
-    static LoggerFactory* getInstance();
+    //static LoggerFactory* getInstance();
 
     /**
      * Get a logger for the given name. If a logger with this name already

@@ -69,12 +69,13 @@ void LoggerFactory::reselectLoggingSystem(const std::string& nameHint) {
 
 	loggingSystem = loggingSystemRegistry()->getRegistree(systemName);
 
+	// TODO update existing loggers to use the new logging system
+
 }
 
-LoggerFactory* LoggerFactory::getInstance() {
-    static LoggerFactory* instance = new LoggerFactory();
-    return instance;
-}
+//LoggerFactory* LoggerFactory::getInstance() {
+//    return LoggerFactory::getInstance();
+//}
 
 LoggerPtr LoggerFactory::getLogger(const std::string& name) {
     boost::recursive_mutex::scoped_lock lock(mutex);

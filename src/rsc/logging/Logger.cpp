@@ -30,7 +30,7 @@ Logger::~Logger() {
 }
 
 LoggerPtr Logger::getLogger(const std::string& name) {
-    return LoggerFactory::getInstance()->getLogger(name);
+    return LoggerFactory::getInstance().getLogger(name);
 }
 
 void Logger::trace(const string& msg) {

@@ -26,6 +26,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include "Logger.h"
+#include "LoggerProxy.h"
 #include "LoggingSystem.h"
 #include "../misc/Registry.h"
 #include "../patterns/Singleton.h"
@@ -113,7 +114,7 @@ private:
     boost::shared_ptr<LoggingSystem> loggingSystem;
 
     boost::recursive_mutex mutex;
-    std::map<std::string, LoggerPtr> loggersByName;
+    std::map<std::string, LoggerProxyPtr> loggersByName;
 
     Logger::Level currentLevel;
 

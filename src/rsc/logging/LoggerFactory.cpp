@@ -20,6 +20,7 @@
 #include "LoggerFactory.h"
 
 #include "ConsoleLoggingSystem.h"
+#include "LoggerProxy.h"
 
 using namespace std;
 using namespace rsc::misc;
@@ -80,15 +81,16 @@ LoggerPtr LoggerFactory::getLogger(const std::string& name) {
     } else {
         LoggerPtr logger(loggingSystem->createLogger(name));
         logger->setLevel(currentLevel);
-        loggersByName[name] = logger;
-        return logger;
+        LoggerProxyPtr proxy(new LoggerProxy(logger));
+        loggersByName[name] = proxy;
+        return proxy;
     }
 }
 
 void LoggerFactory::reconfigure(const Logger::Level& level) {
     boost::recursive_mutex::scoped_lock lock(mutex);
     currentLevel = level;
-    for (map<string, LoggerPtr>::iterator it = loggersByName.begin(); it
+    for (map<string, LoggerProxyPtr>::iterator it = loggersByName.begin(); it
             != loggersByName.end(); ++it) {
         it->second->setLevel(level);
     }

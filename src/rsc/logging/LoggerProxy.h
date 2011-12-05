@@ -79,5 +79,7 @@ private:
 
 };
 
+typedef boost::shared_ptr<LoggerProxy> LoggerProxyPtr;
+
 }
 }

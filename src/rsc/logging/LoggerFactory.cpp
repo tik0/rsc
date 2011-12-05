@@ -73,10 +73,6 @@ void LoggerFactory::reselectLoggingSystem(const std::string& nameHint) {
 
 }
 
-//LoggerFactory* LoggerFactory::getInstance() {
-//    return LoggerFactory::getInstance();
-//}
-
 LoggerPtr LoggerFactory::getLogger(const std::string& name) {
     boost::recursive_mutex::scoped_lock lock(mutex);
     if (loggersByName.count(name)) {

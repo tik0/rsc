@@ -51,14 +51,6 @@ public:
     virtual ~LoggerFactory();
 
     /**
-     * Returns the singleton instance of this class.
-     *
-     * @todo is this method thread-safe? Singleton in C++ and static check needed
-     * @return single instance
-     */
-    //static LoggerFactory* getInstance();
-
-    /**
      * Get a logger for the given name. If a logger with this name already
      * exists, the existing instance is returned.
      *

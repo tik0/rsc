@@ -39,24 +39,22 @@ using namespace rsc::logging;
 using namespace rsc::misc;
 using namespace testing;
 
-TEST(LoggerFactoryTest, testSingleton)
-{
+TEST(LoggerFactoryTest, testSingleton) {
     EXPECT_EQ(&LoggerFactory::getInstance(), &LoggerFactory::getInstance());
 }
 
-TEST(LoggerFactoryTest, testSingletonLoggers)
-{
+TEST(LoggerFactoryTest, testSingletonLoggers) {
     LoggerFactory::getInstance().reconfigure(Logger::LEVEL_WARN);
     stringstream name;
     name << rand();
     LoggerPtr logger = LoggerFactory::getInstance().getLogger(name.str());
     EXPECT_EQ(Logger::LEVEL_WARN, logger->getLevel());
     EXPECT_EQ(logger, LoggerFactory::getInstance().getLogger(name.str()));
-    EXPECT_NE(logger, LoggerFactory::getInstance().getLogger(name.str() + "blubb"));
+    EXPECT_NE(logger,
+            LoggerFactory::getInstance().getLogger(name.str() + "blubb"));
 }
 
-TEST(LoggerFactoryTest, testReconfigure)
-{
+TEST(LoggerFactoryTest, testReconfigure) {
     LoggerFactory::getInstance().reconfigure(Logger::LEVEL_ERROR);
     stringstream name;
     name << rand();
@@ -71,32 +69,74 @@ TEST(LoggerFactoryTest, testReconfigure)
     EXPECT_EQ(Logger::LEVEL_TRACE, logger2->getLevel());
 }
 
-TEST(LoggerFactoryTest, testReselectLoggingSystem)
-{
+class StubLogger: public Logger {
+private:
+    string name;
+    Logger::Level level;
+public:
+
+    StubLogger(string& name) :
+            name(name) {
+    }
+
+    Logger::Level getLevel() const {
+        return level;
+    }
+
+    void setLevel(const Logger::Level& level) {
+        this->level = level;
+    }
+
+    std::string getName() const {
+        return name;
+    }
+
+    void setName(const std::string& name) {
+        this->name = name;
+    }
+
+    vector<pair<Logger::Level, string> > logs;
+
+    void log(const Logger::Level& level, const std::string& msg) {
+        logs.push_back(make_pair(level, msg));
+    }
+
+};
+
+TEST(LoggerFactoryTest, testReselectLoggingSystem) {
+
+    LoggerFactory::getInstance().clearKnownLoggers();
 
     // ensure that there are other logging systems
-    StrictMock<MockLoggingSystem>* l1 = new StrictMock<MockLoggingSystem> (
+    StrictMock<MockLoggingSystem>* l1 = new StrictMock<MockLoggingSystem>(
             randAlnumStr(25));
     loggingSystemRegistry()->addRegistree(l1);
-    StrictMock<MockLoggingSystem>* l2 = new StrictMock<MockLoggingSystem> (
+    StrictMock<MockLoggingSystem>* l2 = new StrictMock<MockLoggingSystem>(
             randAlnumStr(25));
     loggingSystemRegistry()->addRegistree(l2);
 
     // force default
     LoggerFactory::getInstance().reselectLoggingSystem(
             LoggerFactory::DEFAULT_LOGGING_SYSTEM);
-    EXPECT_EQ(ConsoleLoggingSystem::getLoggerName(), LoggerFactory::getInstance().getLoggingSystemName());
+    EXPECT_EQ(ConsoleLoggingSystem::getLoggerName(),
+            LoggerFactory::getInstance().getLoggingSystemName());
     // if the logging system is illegally reported by the line above the next
     // line will cause the mock object to report an error
-    LoggerPtr logger(LoggerFactory::getInstance().getLogger(randAlnumStr(130)));
+    string dummyName = randAlnumStr(20);
+    LoggerPtr logger(LoggerFactory::getInstance().getLogger(dummyName));
 
     // force hint
     string name = randAlnumStr(10);
-    EXPECT_CALL(*l2, createLogger(name)).Times(1).WillOnce(Return(LoggerPtr(new NiceMock<MockLogger>)));
-    LoggerFactory::getInstance().reselectLoggingSystem(
-            l2->name);
+    boost::shared_ptr<StubLogger> nameLogger(new StubLogger(name));
+    EXPECT_CALL(*l2, createLogger(dummyName)).Times(1).WillOnce(
+            Return(LoggerPtr(new StubLogger(dummyName))));
+    EXPECT_CALL(*l2, createLogger(name)).Times(1).WillOnce(
+            Return(nameLogger));
+    LoggerFactory::getInstance().reselectLoggingSystem(l2->name);
     EXPECT_EQ(l2->name, LoggerFactory::getInstance().getLoggingSystemName());
     logger = LoggerFactory::getInstance().getLogger(name);
+    logger->debug("Narf");
+    EXPECT_EQ(size_t(1), nameLogger->logs.size());
 
     LoggerFactory::getInstance().reselectLoggingSystem(
             LoggerFactory::DEFAULT_LOGGING_SYSTEM);
@@ -104,11 +144,20 @@ TEST(LoggerFactoryTest, testReselectLoggingSystem)
 
     // wrong hint, fallback to other available system
     string newName = randAlnumStr(12);
-    EXPECT_CALL(*l2, createLogger(newName)).Times(1).WillOnce(Return(LoggerPtr(new NiceMock<MockLogger>)));
-    LoggerFactory::getInstance().reselectLoggingSystem(
-            randAlnumStr(123));
+    EXPECT_CALL(*l2, createLogger(dummyName)).Times(1).WillOnce(
+            Return(LoggerPtr(new StubLogger(dummyName))));
+    EXPECT_CALL(*l2, createLogger(name)).Times(1).WillOnce(
+            Return(LoggerPtr(new StubLogger(name))));
+    EXPECT_CALL(*l2, createLogger(newName)).Times(1).WillOnce(
+            Return(LoggerPtr(new StubLogger(newName))));
+    LoggerFactory::getInstance().reselectLoggingSystem(randAlnumStr(123));
     EXPECT_EQ(l2->name, LoggerFactory::getInstance().getLoggingSystemName());
     logger = LoggerFactory::getInstance().getLogger(newName);
+
+    // The original nameLogger must not be touched anymore, because we now have
+    // a new logging system
+    logger->debug("Narf 2");
+    EXPECT_EQ(size_t(1), nameLogger->logs.size());
 
     // cleanup mocks
     LoggerFactory::getInstance().reselectLoggingSystem(

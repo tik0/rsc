@@ -32,7 +32,7 @@ const string LoggerFactory::DEFAULT_LOGGING_SYSTEM =
         ConsoleLoggingSystem::getLoggerName();
 
 LoggerFactory::LoggerFactory() :
-    currentLevel(Logger::LEVEL_WARN) {
+        currentLevel(Logger::LEVEL_WARN) {
     reselectLoggingSystem();
 }
 
@@ -68,9 +68,13 @@ void LoggerFactory::reselectLoggingSystem(const std::string& nameHint) {
 
     boost::recursive_mutex::scoped_lock lock(mutex);
 
-	loggingSystem = loggingSystemRegistry()->getRegistree(systemName);
+    loggingSystem = loggingSystemRegistry()->getRegistree(systemName);
 
-	// TODO update existing loggers to use the new logging system
+    // update existing loggers to use the new logging system
+    for (map<string, LoggerProxyPtr>::iterator it = loggersByName.begin();
+            it != loggersByName.end(); ++it) {
+        it->second->setLogger(loggingSystem->createLogger(it->first));
+    }
 
 }
 
@@ -90,8 +94,8 @@ LoggerPtr LoggerFactory::getLogger(const std::string& name) {
 void LoggerFactory::reconfigure(const Logger::Level& level) {
     boost::recursive_mutex::scoped_lock lock(mutex);
     currentLevel = level;
-    for (map<string, LoggerProxyPtr>::iterator it = loggersByName.begin(); it
-            != loggersByName.end(); ++it) {
+    for (map<string, LoggerProxyPtr>::iterator it = loggersByName.begin();
+            it != loggersByName.end(); ++it) {
         it->second->setLevel(level);
     }
 }

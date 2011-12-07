@@ -59,10 +59,13 @@ TEST(LoggerFactoryTest, testReconfigure) {
     stringstream name;
     name << rand();
     LoggerPtr logger = LoggerFactory::getInstance().getLogger(name.str());
+    LoggerPtr rootLogger = LoggerFactory::getInstance().getLogger("");
     EXPECT_EQ(Logger::LEVEL_ERROR, logger->getLevel());
+    EXPECT_EQ(Logger::LEVEL_ERROR, rootLogger->getLevel());
 
     LoggerFactory::getInstance().reconfigure(Logger::LEVEL_TRACE);
     EXPECT_EQ(Logger::LEVEL_TRACE, logger->getLevel());
+    EXPECT_EQ(Logger::LEVEL_TRACE, rootLogger->getLevel());
     stringstream name2;
     name2 << rand();
     LoggerPtr logger2 = LoggerFactory::getInstance().getLogger(name2.str());
@@ -128,6 +131,8 @@ TEST(LoggerFactoryTest, testReselectLoggingSystem) {
     // force hint
     string name = randAlnumStr(10);
     boost::shared_ptr<StubLogger> nameLogger(new StubLogger(name));
+    EXPECT_CALL(*l2, createLogger("")).Times(1).WillOnce(
+            Return(LoggerPtr(new StubLogger(dummyName))));
     EXPECT_CALL(*l2, createLogger(dummyName)).Times(1).WillOnce(
             Return(LoggerPtr(new StubLogger(dummyName))));
     EXPECT_CALL(*l2, createLogger(name)).Times(1).WillOnce(
@@ -144,6 +149,8 @@ TEST(LoggerFactoryTest, testReselectLoggingSystem) {
 
     // wrong hint, fallback to other available system
     string newName = randAlnumStr(12);
+    EXPECT_CALL(*l2, createLogger("")).Times(1).WillOnce(
+            Return(LoggerPtr(new StubLogger(dummyName))));
     EXPECT_CALL(*l2, createLogger(dummyName)).Times(1).WillOnce(
             Return(LoggerPtr(new StubLogger(dummyName))));
     EXPECT_CALL(*l2, createLogger(name)).Times(1).WillOnce(

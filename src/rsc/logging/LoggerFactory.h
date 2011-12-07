@@ -20,6 +20,7 @@
 #pragma once
 
 #include <map>
+#include <vector>
 
 #include <boost/noncopyable.hpp>
 #include <boost/thread/recursive_mutex.hpp>
@@ -111,10 +112,24 @@ public:
 
 private:
 
+
+    /**
+     * @name logger graph definitions
+     */
+    //@{
+    class LoggerTreeNode;
+    typedef boost::shared_ptr<LoggerTreeNode> LoggerTreeNodePtr;
+    //@}
+
+    class ReconfigurationVisitor;
+    class ReselectVisitor;
+
+    LoggerProxyPtr createLogger(const std::vector<std::string>& path);
+
     boost::shared_ptr<LoggingSystem> loggingSystem;
 
     boost::recursive_mutex mutex;
-    std::map<std::string, LoggerProxyPtr> loggersByName;
+    LoggerTreeNodePtr loggerTree;
 
     Logger::Level currentLevel;
 

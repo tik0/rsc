@@ -23,6 +23,7 @@ INSTALL(FILES ExtractTBBVersion.cpp.in
               Findsloccount.cmake
               FindSpread.cmake
               FindTBB.cmake
+              FindXenomai.cmake
               GenerateCppcheck.cmake
               GenerateDoxygen.cmake
               IgnoreReturnCode.cmake

@@ -22,6 +22,7 @@
 #include <vector>
 
 #include <boost/bind.hpp>
+#include <boost/enable_shared_from_this.hpp>
 #include <boost/format.hpp>
 #include <boost/function.hpp>
 #include <boost/algorithm/string.hpp>
@@ -45,7 +46,8 @@ namespace logging {
  *
  * @author jwienke
  */
-class LoggerFactory::LoggerTreeNode {
+class LoggerFactory::LoggerTreeNode: public boost::enable_shared_from_this<
+        LoggerTreeNode> {
 public:
 
     /**
@@ -54,8 +56,13 @@ public:
      */
     typedef vector<string> NamePath;
 
-    LoggerTreeNode(const string& name, LoggerProxyPtr loggerProxy) :
-            name(name), loggerProxy(loggerProxy) {
+    LoggerTreeNode(const string& name, LoggerProxyPtr loggerProxy,
+            LoggerTreeNodeWeakPtr parent) :
+            name(name), loggerProxy(loggerProxy), parent(parent) {
+    }
+
+    LoggerTreeNodeWeakPtr getParent() const {
+        return parent;
     }
 
     string getName() const {
@@ -97,7 +104,8 @@ public:
 
         if (!children.count(path.front())) {
             children[path.front()] = LoggerTreeNodePtr(
-                    new LoggerTreeNode(path.front(), createFn(path)));
+                    new LoggerTreeNode(path.front(), createFn(path),
+                            shared_from_this()));
         }
         if (subPath.size() > 1) {
             return children[path.front()]->addChildren(subPath, createFn);
@@ -220,6 +228,7 @@ private:
     string name;
     LoggerProxyPtr loggerProxy;
 
+    LoggerTreeNodeWeakPtr parent;
     map<string, LoggerTreeNodePtr> children;
 
 };
@@ -231,7 +240,8 @@ LoggerFactory::LoggerFactory() :
         currentLevel(Logger::LEVEL_WARN) {
     reselectLoggingSystem();
     loggerTree.reset(
-            new LoggerTreeNode("", createLogger(LoggerTreeNode::NamePath())));
+            new LoggerTreeNode("", createLogger(LoggerTreeNode::NamePath()),
+                    LoggerTreeNodeWeakPtr()));
 }
 
 LoggerFactory::~LoggerFactory() {

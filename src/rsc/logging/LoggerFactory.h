@@ -24,6 +24,7 @@
 
 #include <boost/noncopyable.hpp>
 #include <boost/thread/recursive_mutex.hpp>
+#include <boost/weak_ptr.hpp>
 #include <boost/shared_ptr.hpp>
 
 #include "Logger.h"
@@ -119,6 +120,7 @@ private:
     //@{
     class LoggerTreeNode;
     typedef boost::shared_ptr<LoggerTreeNode> LoggerTreeNodePtr;
+    typedef boost::weak_ptr<LoggerTreeNode> LoggerTreeNodeWeakPtr;
     //@}
 
     class ReconfigurationVisitor;

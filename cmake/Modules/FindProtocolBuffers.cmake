@@ -392,8 +392,9 @@ MACRO(PROTOBUF_GENERATE_CPP SRCS HDRS)
     PROTOBUF_GENERATE(${ARGN} CPP ${SRCS} ${HDRS})
 ENDMACRO()
 
-FIND_PATH(PROTOBUF_INCLUDE_DIR google/protobuf/service.h
-          PATHS "${PROTOBUF_ROOT}/include")
+FIND_PATH(PROTOBUF_INCLUDE_DIR NAMES google/protobuf/service.h
+          HINTS "${PROTOBUF_ROOT}/include"
+          DOC "The Google Protocol Buffers Headers")
 
 # Google's provided vcproj files generate libraries with a "lib"
 # prefix on Windows

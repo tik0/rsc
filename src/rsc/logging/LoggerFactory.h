@@ -81,6 +81,10 @@ public:
      * Get a logger for the given name. If a logger with this name already
      * exists, the existing instance is returned.
      *
+     * Receiving a logger is a quite expensive operation if a logger with the
+     * specified name did not exist before at runtime. Hence, do not use
+     * constantly changing names for loggers with a short lifetime.
+     *
      * @param name name of the logger, empty string means root logger
      * @return logger instance
      */

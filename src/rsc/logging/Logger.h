@@ -70,6 +70,10 @@ public:
      * Returns a logger for the given name. The initial log level of the logger
      * is defined by the global configuration.
      *
+     * Receiving a logger is a quite expensive operation if a logger with the
+     * specified name did not exist before at runtime. Hence, do not use
+     * constantly changing names for loggers with a short lifetime.
+     *
      * @param name name of the logger
      * @return logger
      */

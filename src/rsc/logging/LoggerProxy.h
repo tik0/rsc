@@ -44,6 +44,8 @@ public:
      * assigning levels to the callback.
      *
      * @author jwienke
+     * @note Convert this to a real observer pattern when more feedback is
+     *       required than only the level change
      */
     class SetLevelCallback {
     public:

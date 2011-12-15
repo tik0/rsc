@@ -28,13 +28,29 @@
 #include <boost/shared_ptr.hpp>
 
 #include "Logger.h"
+#include "LoggerTreeNode.h"
 #include "LoggerProxy.h"
 #include "LoggingSystem.h"
 #include "../misc/Registry.h"
 #include "../patterns/Singleton.h"
+#include "../misc/langutils.h"
 #include "rsc/rscexports.h"
 
 namespace rsc {
+
+/**
+ * Provids a hierarchical logging system with the possibility to install
+ * different backends, which are instances of LoggingSystem. The hierarchy is
+ * completely maintained by LoggerFactory, hence logging systems only need to
+ * provide Logger instances which are configured externally according to the
+ * hierarchy.
+ *
+ * To install new LoggingSystem instances, register them in #loggingSystemRegistry.
+ * The selection of a logging system can be triggered through LoggerFactory#reselectLoggingSystem using a string as a hint.
+ *
+ * As the default, a simple cout- / cerr-based LoggingSystem called
+ * ConsoleLoggingSystem is provided.
+ */
 namespace logging {
 
 /**
@@ -57,17 +73,19 @@ public:
      * Get a logger for the given name. If a logger with this name already
      * exists, the existing instance is returned.
      *
-     * @todo think about logger hierarchy
-     * @param name name of the logger
+     * @param name name of the logger, empty string means root logger
      * @return logger instance
      */
-    LoggerPtr getLogger(const std::string& name);
+    LoggerPtr getLogger(const std::string& name = "");
 
     /**
      * Simple hack to reconfigure all known loggers and new instances with a
-     * logging level.
+     * logging level. Only loggers which had a manually assigned level will
+     * actually be assigned with the new level. All others use the inheritance
+     * tree to get a level. Effectively this will result in all loggers
+     * appearing with the same level but semantics for changing certain levels
+     * in the logger tree are preserved.
      *
-     * @todo better configuration system required
      * @param level new level for all loggers
      */
     void reconfigure(const Logger::Level& level);
@@ -88,8 +106,6 @@ public:
      *                 string is empty, it will not be used. If it is
      *                 #DEFAULT_LOGGING_SYSTEM, the default logging system will
      *                 be selected even if other systems are available.
-     * @todo create a decorator for Logger and return this in the smart pointers
-     *       to enable changing the logger instance at runtime
      */
     void reselectLoggingSystem(const std::string& nameHint = "");
 
@@ -98,6 +114,11 @@ public:
      * the default system.
      */
     static const std::string DEFAULT_LOGGING_SYSTEM;
+
+    /**
+     * Default level when the system is used without prior initialization.
+     */
+    static const Logger::Level DEFAULT_LEVEL;
 
     /**
      * Returns the name of the currently selected logging system.
@@ -113,27 +134,16 @@ public:
 
 private:
 
-
-    /**
-     * @name logger graph definitions
-     */
-    //@{
-    class LoggerTreeNode;
-    typedef boost::shared_ptr<LoggerTreeNode> LoggerTreeNodePtr;
-    typedef boost::weak_ptr<LoggerTreeNode> LoggerTreeNodeWeakPtr;
-    //@}
-
     class ReconfigurationVisitor;
     class ReselectVisitor;
 
-    LoggerProxyPtr createLogger(const std::vector<std::string>& path);
+    LoggerProxyPtr createLogger(const LoggerTreeNode::NamePath& path,
+            LoggerTreeNodePtr node);
 
     boost::shared_ptr<LoggingSystem> loggingSystem;
 
     boost::recursive_mutex mutex;
     LoggerTreeNodePtr loggerTree;
-
-    Logger::Level currentLevel;
 
 };
 

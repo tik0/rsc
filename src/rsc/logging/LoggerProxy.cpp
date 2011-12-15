@@ -22,8 +22,11 @@
 namespace rsc {
 namespace logging {
 
-LoggerProxy::LoggerProxy(LoggerPtr logger) :
-        logger(logger) {
+LoggerProxy::SetLevelCallback::~SetLevelCallback() {
+}
+
+LoggerProxy::LoggerProxy(LoggerPtr logger, SetLevelCallbackPtr callback) :
+        logger(logger), callback(callback) {
 }
 
 LoggerProxy::~LoggerProxy() {
@@ -34,7 +37,8 @@ Logger::Level LoggerProxy::getLevel() const {
 }
 
 void LoggerProxy::setLevel(const Logger::Level& level) {
-    logger->setLevel(level);
+    //logger->setLevel(level);
+    callback->call(shared_from_this(), level);
 }
 
 std::string LoggerProxy::getName() const {

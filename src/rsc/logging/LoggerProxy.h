@@ -19,6 +19,7 @@
 
 #pragma once
 
+#include <boost/enable_shared_from_this.hpp>
 #include <boost/shared_ptr.hpp>
 
 #include "Logger.h"
@@ -32,14 +33,32 @@ namespace logging {
  *
  * @author jwienke
  */
-class LoggerProxy: public Logger {
+class LoggerProxy: public Logger, public boost::enable_shared_from_this<
+        LoggerProxy> {
 public:
+
+    /**
+     * Interface for callbacks which are invoked when someone calls setLevel on
+     * this proxy. This callback also needs to ensure that the level of the
+     * called logger is set. LoggerProxy completely delegates the task of
+     * assigning levels to the callback.
+     *
+     * @author jwienke
+     */
+    class SetLevelCallback {
+    public:
+        virtual ~SetLevelCallback();
+        virtual void call(boost::shared_ptr<LoggerProxy> proxy,
+                const Logger::Level& level) = 0;
+    };
+    typedef boost::shared_ptr<SetLevelCallback> SetLevelCallbackPtr;
 
     /**
      * Constructor.
      * @param logger the initial logger to hide behind this proxy
+     * @param callback callback invoked when #setLevel is called
      */
-    LoggerProxy(LoggerPtr logger);
+    LoggerProxy(LoggerPtr logger, SetLevelCallbackPtr callback);
     virtual ~LoggerProxy();
 
     /**
@@ -76,6 +95,8 @@ private:
      * to this instance, even on reselection.
      */
     LoggerPtr logger;
+
+    SetLevelCallbackPtr callback;
 
 };
 

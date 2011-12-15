@@ -135,8 +135,7 @@ TEST(LoggerFactoryTest, testReselectLoggingSystem) {
             Return(LoggerPtr(new StubLogger(dummyName))));
     EXPECT_CALL(*l2, createLogger(dummyName)).Times(1).WillOnce(
             Return(LoggerPtr(new StubLogger(dummyName))));
-    EXPECT_CALL(*l2, createLogger(name)).Times(1).WillOnce(
-            Return(nameLogger));
+    EXPECT_CALL(*l2, createLogger(name)).Times(1).WillOnce(Return(nameLogger));
     LoggerFactory::getInstance().reselectLoggingSystem(l2->name);
     EXPECT_EQ(l2->name, LoggerFactory::getInstance().getLoggingSystemName());
     logger = LoggerFactory::getInstance().getLogger(name);
@@ -172,5 +171,107 @@ TEST(LoggerFactoryTest, testReselectLoggingSystem) {
     loggingSystemRegistry()->removeRegistree(l2->name);
 
     LoggerFactory::getInstance().clearKnownLoggers();
+
+}
+
+TEST(LoggerFactoryTest, testHierarchicalNames) {
+
+    LoggerFactory::killInstance();
+
+    LoggerPtr rootLogger = LoggerFactory::getInstance().getLogger("");
+    LoggerPtr level1Logger = LoggerFactory::getInstance().getLogger("test");
+    LoggerPtr level2Logger = LoggerFactory::getInstance().getLogger("test.it");
+    LoggerPtr level3Logger = LoggerFactory::getInstance().getLogger(
+            "test.it.now");
+    LoggerPtr level4Logger = LoggerFactory::getInstance().getLogger(
+            "test.it.now.really");
+
+    EXPECT_EQ("", rootLogger->getName());
+    EXPECT_EQ("test", level1Logger->getName());
+    EXPECT_EQ("test.it", level2Logger->getName());
+    EXPECT_EQ("test.it.now", level3Logger->getName());
+    EXPECT_EQ("test.it.now.really", level4Logger->getName());
+
+}
+
+TEST(LoggerFactoryTest, testHierarchicalLevels) {
+
+    LoggerFactory::killInstance();
+
+    LoggerPtr rootLogger = LoggerFactory::getInstance().getLogger("");
+    LoggerPtr level1Logger = LoggerFactory::getInstance().getLogger("test");
+    LoggerPtr level2Logger = LoggerFactory::getInstance().getLogger("test.it");
+    LoggerPtr level3Logger = LoggerFactory::getInstance().getLogger(
+            "test.it.now");
+    LoggerPtr level4Logger = LoggerFactory::getInstance().getLogger(
+            "test.it.now.really");
+
+    EXPECT_EQ(LoggerFactory::DEFAULT_LEVEL, rootLogger->getLevel());
+    EXPECT_EQ(LoggerFactory::DEFAULT_LEVEL, level1Logger->getLevel());
+    EXPECT_EQ(LoggerFactory::DEFAULT_LEVEL, level2Logger->getLevel());
+    EXPECT_EQ(LoggerFactory::DEFAULT_LEVEL, level3Logger->getLevel());
+
+    ASSERT_NE(LoggerFactory::DEFAULT_LEVEL, Logger::LEVEL_DEBUG);
+    ASSERT_NE(LoggerFactory::DEFAULT_LEVEL, Logger::LEVEL_TRACE);
+
+    level3Logger->setLevel(Logger::LEVEL_TRACE);
+    EXPECT_EQ(level3Logger->getLevel(), Logger::LEVEL_TRACE);
+    EXPECT_EQ(level4Logger->getLevel(), Logger::LEVEL_TRACE);
+
+    rootLogger->setLevel(Logger::LEVEL_DEBUG);
+    EXPECT_EQ(rootLogger->getLevel(), Logger::LEVEL_DEBUG);
+    EXPECT_EQ(level1Logger->getLevel(), Logger::LEVEL_DEBUG);
+    EXPECT_EQ(level2Logger->getLevel(), Logger::LEVEL_DEBUG);
+    EXPECT_EQ(level3Logger->getLevel(), Logger::LEVEL_TRACE);
+    EXPECT_EQ(level4Logger->getLevel(), Logger::LEVEL_TRACE);
+
+}
+
+TEST(LoggeFactoryTest, testRootLoggerCorrectLevelAfterReselect) {
+
+    LoggerFactory::killInstance();
+
+    ASSERT_NE(Logger::LEVEL_FATAL,
+            LoggerFactory::getInstance().getLogger("")->getLevel());
+    LoggerFactory::getInstance().getLogger("")->setLevel(Logger::LEVEL_FATAL);
+    LoggerFactory::getInstance().reselectLoggingSystem(
+            ConsoleLoggingSystem::getLoggerName());
+    EXPECT_EQ(Logger::LEVEL_FATAL,
+            LoggerFactory::getInstance().getLogger("")->getLevel());
+
+}
+
+TEST(LoggerFactoryTest, testReconfigureSameSemantics) {
+
+    LoggerFactory::killInstance();
+    LoggerFactory& factory = LoggerFactory::getInstance();
+
+    LoggerPtr rootLogger = factory.getLogger();
+    LoggerPtr childLevel1 = factory.getLogger("this");
+    LoggerPtr childLevel2 = factory.getLogger("this.is");
+    LoggerPtr childLevel3 = factory.getLogger("this.is.achild");
+
+    childLevel2->setLevel(Logger::LEVEL_ERROR);
+    EXPECT_EQ(LoggerFactory::DEFAULT_LEVEL, rootLogger->getLevel());
+    EXPECT_EQ(LoggerFactory::DEFAULT_LEVEL, childLevel1->getLevel());
+    EXPECT_EQ(Logger::LEVEL_ERROR, childLevel2->getLevel());
+    EXPECT_EQ(Logger::LEVEL_ERROR, childLevel3->getLevel());
+
+    factory.reconfigure(Logger::LEVEL_FATAL);
+    EXPECT_EQ(Logger::LEVEL_FATAL, rootLogger->getLevel());
+    EXPECT_EQ(Logger::LEVEL_FATAL, childLevel1->getLevel());
+    EXPECT_EQ(Logger::LEVEL_FATAL, childLevel2->getLevel());
+    EXPECT_EQ(Logger::LEVEL_FATAL, childLevel3->getLevel());
+
+    // after reconfiguration add a new child and see that this child has
+    // the right derived level
+    EXPECT_EQ(Logger::LEVEL_FATAL,
+            factory.getLogger("this.is.achild.again")->getLevel());
+
+    // now, changing level1 must not change children as level had an assigned level
+    childLevel1->setLevel(Logger::LEVEL_OFF);
+    EXPECT_EQ(Logger::LEVEL_OFF, childLevel1->getLevel());
+    EXPECT_EQ(Logger::LEVEL_FATAL, childLevel2->getLevel());
+    EXPECT_EQ(Logger::LEVEL_FATAL, childLevel3->getLevel());
 
 }

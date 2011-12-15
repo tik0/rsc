@@ -38,6 +38,10 @@ typedef boost::shared_ptr<Logger> LoggerPtr;
  * Interface for logging adapters that can be used with RSC. The interface
  * mimics the log4cxx interface. Loggers must be <b>reentrant</b>!
  *
+ * Even though loggers are hierarchical, this hierarchy is maintained
+ * externally. Hence, implementations of this class do not need to interpret
+ * the name they get assigned and each Logger always gets a level.
+ *
  * @author jwienke
  */
 class RSC_EXPORT Logger: public boost::noncopyable {
@@ -187,6 +191,11 @@ RSC_EXPORT std::ostream& operator<<(std::ostream& stream, const Logger::Level& l
 }
 }
 
+/**
+ * @name logging utility macros with stream semantics
+ */
+//@{
+
 #define RSCTRACE(logger, msg) \
     if (logger->isTraceEnabled()) { \
         std::stringstream s; \
@@ -229,3 +238,4 @@ RSC_EXPORT std::ostream& operator<<(std::ostream& stream, const Logger::Level& l
         logger->fatal(s.str()); \
     }
 
+//@}

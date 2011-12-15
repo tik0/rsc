@@ -39,11 +39,19 @@
 namespace rsc {
 
 /**
- * Provids a hierarchical logging system with the possibility to install
+ * Provides a hierarchical logging system with the possibility to install
  * different backends, which are instances of LoggingSystem. The hierarchy is
  * completely maintained by LoggerFactory, hence logging systems only need to
  * provide Logger instances which are configured externally according to the
  * hierarchy.
+ *
+ * Conceptually, the hierarchy is based on log4cxx/log4j. We have a root logger
+ * with empty string as name. All other loggers are (indirect) children of this
+ * logger. Hierarchies are separated by a '.' in the logger name. At startup
+ * only the root logger has an assigned level. All other loggers inherit this
+ * level if not one of their parents also has a level assigned. Generally,
+ * the effective level of a logger is the assigned level of the earliest parent
+ * of the logger which actually has an assigned level.
  *
  * To install new LoggingSystem instances, register them in #loggingSystemRegistry.
  * The selection of a logging system can be triggered through LoggerFactory#reselectLoggingSystem using a string as a hint.

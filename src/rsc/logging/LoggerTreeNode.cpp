@@ -38,8 +38,8 @@ LoggerTreeNode::LoggerTreeNode(const string& name, LoggerProxyPtr loggerProxy,
         name(name), loggerProxy(loggerProxy), parent(parent) {
 }
 
-LoggerTreeNodeWeakPtr LoggerTreeNode::getParent() const {
-    return parent;
+LoggerTreeNodePtr LoggerTreeNode::getParent() const {
+    return parent.lock();
 }
 
 string LoggerTreeNode::getName() const {

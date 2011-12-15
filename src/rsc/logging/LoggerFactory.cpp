@@ -202,7 +202,7 @@ LoggerProxyPtr LoggerFactory::createLogger(const LoggerTreeNode::NamePath& path,
                                     mutex))));
     // new level can be derived from parent logger
     logger->setLevel(
-            node->getParent().lock()->getLoggerProxy()->getLogger()->getLevel());
+            node->getParent()->getLoggerProxy()->getLogger()->getLevel());
     return proxy;
 }
 

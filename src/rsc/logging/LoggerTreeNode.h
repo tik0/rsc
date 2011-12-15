@@ -73,7 +73,7 @@ public:
     LoggerTreeNode(const std::string& name, LoggerProxyPtr loggerProxy,
             LoggerTreeNodeWeakPtr parent);
 
-    LoggerTreeNodeWeakPtr getParent() const;
+    LoggerTreeNodePtr getParent() const;
 
     std::string getName() const;
 

@@ -20,6 +20,7 @@ INCLUDE(GenerateCppcheck)
 OPTION(BUILD_TESTS "Decide if the test suite shall be built or not" ON)
 OPTION(BUILD_EXAMPLES "Decide if the examples shall be built or not" ON)
 OPTION(INSTALL_TOOLCHAINS "Decide if cmake toolchain files should be installed" ON)
+SET(GMOCK_SOURCE_LOCATION "http://googlemock.googlecode.com/files/gmock-1.6.0.zip" CACHE STRING "Location to the google mock source code zip. Either http(s):// or a file://.")
 
 # --- global definitions ---
 
@@ -47,10 +48,8 @@ SET(RSC_CMAKE_PATH "share/cmake")
 SET(RSC_CMAKE_MODULE_PATH "${RSC_CMAKE_PATH}/Modules")
 SET(RSC_CMAKE_TOOLCHAIN_PATH "${RSC_CMAKE_PATH}/Toolchains")
 
-SET(GTEST_DIR "${CMAKE_SOURCE_DIR}/3rdparty/gmock/gtest")
-SET(GTEST_INCLUDE_DIR "${GTEST_DIR}/include")
-SET(GMOCK_DIR "${CMAKE_SOURCE_DIR}/3rdparty/gmock")
-SET(GMOCK_INCLUDE_DIR "${GMOCK_DIR}/include")
+SET(GTEST_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}/3rdparty/gmock/src/gmock-src/gtest/include")
+SET(GMOCK_INCLUDE_DIR "${CMAKE_CURRENT_BINARY_DIR}/3rdparty/gmock/src/gmock-src/include")
 SET(GMOCK_LIBRARY_NAME "gmock")
 
 SET(OUTPUT_PATH ${CMAKE_BINARY_DIR}/build)

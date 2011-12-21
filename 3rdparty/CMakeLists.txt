@@ -9,7 +9,7 @@ IF(BUILD_TESTS)
             URL ${GMOCK_SOURCE_LOCATION}
             BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/gmock/build"
             CONFIGURE_COMMAND ""
-            BUILD_COMMAND ""
+            #BUILD_COMMAND ""
             INSTALL_COMMAND "")
     # However, downloading is done at build time, hence letting a library target
     # simply depend on the relevant source files in gmock does not work, as they

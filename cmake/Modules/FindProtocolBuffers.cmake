@@ -323,7 +323,7 @@ FUNCTION(PROTOBUF_GENERATE)
                 COMMAND ${PROTOBUF_PROTOC_EXECUTABLE}
                 ARGS "--cpp_out=${ARG_EXPORT}${OUTPATH}" ${ROOT_ARGS} ${INCLUDE_CMD_LINE} "${ABS_FILE}"
                 DEPENDS ${ABS_FILE}
-                COMMENT "Running C++ protocol buffer compiler on ${ABS_PATH} with root ${MATCH_ROOT}, generating: ${CPP_FILE}"
+                COMMENT "Running C++ protocol buffer compiler on ${ABS_FILE} with root ${MATCH_ROOT}, generating: ${CPP_FILE}"
                 VERBATIM)
         ENDIF()
         
@@ -336,7 +336,7 @@ FUNCTION(PROTOBUF_GENERATE)
                 COMMAND ${PROTOBUF_PROTOC_EXECUTABLE}
                 ARGS "--java_out=${OUTPATH}" ${ROOT_ARGS} ${INCLUDE_CMD_LINE} "${ABS_FILE}"
                 DEPENDS ${ABS_FILE}
-                COMMENT "Running Java protocol buffer compiler on ${ABS_PATH} with root ${MATCH_ROOT}, generating: ${JAVA_FILE}"
+                COMMENT "Running Java protocol buffer compiler on ${ABS_FILE} with root ${MATCH_ROOT}, generating: ${JAVA_FILE}"
                 VERBATIM)
         ENDIF()
         
@@ -349,7 +349,7 @@ FUNCTION(PROTOBUF_GENERATE)
                 COMMAND ${PROTOBUF_PROTOC_EXECUTABLE}
                 ARGS "--python_out=${OUTPATH}" ${ROOT_ARGS} ${INCLUDE_CMD_LINE} "${ABS_FILE}"
                 DEPENDS ${ABS_FILE}
-                COMMENT "Running Python protocol buffer compiler on ${ABS_PATH} with root ${MATCH_ROOT}, generating: ${PYTHON_FILE}"
+                COMMENT "Running Python protocol buffer compiler on ${ABS_FILE} with root ${MATCH_ROOT}, generating: ${PYTHON_FILE}"
                 VERBATIM)
         ENDIF()
             

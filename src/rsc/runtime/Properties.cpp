@@ -85,17 +85,16 @@ Properties::has(const std::string& name) const throw () {
 
 // Free functions.
 
-Properties
-operator<<(const Properties& Properties1,
-	   const Properties& Properties2) {
+Properties operator<<(const Properties& Properties1,
+        const Properties& Properties2) {
     Properties result;
     for (Properties::const_iterator it = Properties1.begin();
-         it != Properties1.end(); ++it) {
-	result[it->first] = it->second;
+            it != Properties1.end(); ++it) {
+        result[it->first] = it->second;
     }
     for (Properties::const_iterator it = Properties2.begin();
-         it != Properties2.end(); ++it) {
-	result[it->first] = it->second;
+            it != Properties2.end(); ++it) {
+        result[it->first] = it->second;
     }
     return result;
 }

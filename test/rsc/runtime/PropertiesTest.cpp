@@ -40,7 +40,7 @@ public:
         this->p2["woob"] = 1.5;
 
         this->onlyStrings["foo"] = string("1");
-	this->onlyStrings["bar"] = string("baz");
+        this->onlyStrings["bar"] = string("baz");
         this->onlyStrings["woob"] = string("1.5");
     }
 };

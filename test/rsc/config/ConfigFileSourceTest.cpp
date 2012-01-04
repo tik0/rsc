@@ -26,15 +26,15 @@
 #include <rsc/config/OptionHandler.h>
 #include <rsc/config/ConfigFileSource.h>
 #include <rsc/config/TypedValue.h>
+#include <rsc/runtime/Properties.h>
 
 #include "testconfig.h"
 
 using namespace std;
 using namespace boost;
 using namespace rsc::config;
+using namespace rsc::runtime;
 
-// TODO figure this out and re-enable
-#ifndef WIN32
 class CollectingHandler: public OptionHandler {
 public:
     void handleOption(const vector<string>& key, const string& value) {
@@ -48,19 +48,31 @@ public:
         this->collected[name] = parseTypedValue(value);
     }
 
-    map<string, any> collected;
+    // TODO jwienke: for some strange reasons, on windows we have to use
+    // Properties here and not map<string, any>, because otherwise there will be
+    // a linker error. See bug #784 for more details.
+    Properties collected;
 };
 
-TEST(ConfigFileSourceTest, testSmoke)
+class ConfigFileSourceEncodingTest : public ::testing::TestWithParam<string> {
+};
+
+
+TEST_P(ConfigFileSourceEncodingTest, testSmoke)
 {
+
     CollectingHandler handler;
-    ifstream stream(str(format("%1%/smoke.conf") % TEST_ROOT).c_str());
+    ifstream stream(str(format("%1%/%2%") % TEST_ROOT % GetParam()).c_str());
     ConfigFileSource source(stream);
     source.provideOptions(handler);
     EXPECT_EQ(any_cast<int>(handler.collected["global"]), 5);
     EXPECT_EQ(any_cast<string>(handler.collected["string"]), "string");
     EXPECT_EQ(any_cast<double>(handler.collected["section1.option"]), 1.5);
 }
+
+INSTANTIATE_TEST_CASE_P(ValidFiles,
+                        ConfigFileSourceEncodingTest,
+                        ::testing::Values("smoke-unix.conf", "smoke-windows.conf", "smoke-mac.conf"));
 
 TEST(ConfigFileSourceTest, testSyntaxErrors)
 {
@@ -75,4 +87,3 @@ TEST(ConfigFileSourceTest, testSyntaxErrors)
         EXPECT_THROW(source.provideOptions(handler), invalid_argument);
     }
 }
-#endif

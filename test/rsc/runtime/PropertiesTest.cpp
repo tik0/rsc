@@ -33,8 +33,8 @@ public:
     Properties onlyStrings;
 
     virtual void SetUp() {
-	this->p1["foo"] = 1;
-	this->p1["bar"] = string("baz");
+        this->p1["foo"] = 1;
+        this->p1["bar"] = string("baz");
 
         this->p2["foo"] = 2;
         this->p2["woob"] = 1.5;

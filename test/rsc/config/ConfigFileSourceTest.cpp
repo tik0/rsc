@@ -72,7 +72,7 @@ TEST_P(ConfigFileSourceEncodingTest, testSmoke)
 
 INSTANTIATE_TEST_CASE_P(ValidFiles,
                         ConfigFileSourceEncodingTest,
-                        ::testing::Values("smoke-unix.conf", "smoke-windows.conf", "smoke-mac.conf"));
+                        ::testing::Values("smoke-unix.conf", "smoke-windows.conf"));
 
 TEST(ConfigFileSourceTest, testSyntaxErrors)
 {

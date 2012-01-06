@@ -8,7 +8,7 @@
 # Possible hints:
 # LOG4CXX_VISUAL_STUDIO_PROJECT - root directory of the log4cxx visual studio project on windows
 #
-# This file may be licensed under the terms of of the
+# This file may be licensed under the terms of the
 # GNU Lesser General Public License Version 3 (the ``LGPL''),
 # or (at your option) any later version.
 #

@@ -19,6 +19,7 @@ INSTALL(FILES ExtractTBBVersion.cpp.in
               FindLcov.cmake
               FindLog4cxx.cmake
               FindMongo.cmake
+              FindOpenKC.cmake
               FindProtocolBuffers.cmake
               Findsloccount.cmake
               FindSpread.cmake

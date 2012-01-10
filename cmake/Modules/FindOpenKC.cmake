@@ -53,9 +53,6 @@ IF(UNIX)
         # TODO: This is ugly yet
         SET(OPENKC_LIBRARIES "${OPENKC_DIR}/../lib/libopenkc.so")
 
-        MESSAGE("OPENKC_LIBRARIES: ${OPENKC_LIBRARIES}")
-        MESSAGE("OPENKC_DIR: ${OPENKC_DIR}")
-
     ENDIF(OPENKC_DIR)
 
 ENDIF(UNIX)

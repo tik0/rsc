@@ -42,16 +42,10 @@ IF(UNIX)
         SET(OPENKC_FOUND TRUE)
         SET(OPENKC_INCLUDE_DIRS ${OPENKC_DIR})
         
-        FIND_LIBRARY(OPENKC_LIBRARIES openkc
-              PATHS "${OPENKC_ROOT}/lib"
-                    "${OPENKC_DIR}/../lib"
-                    "${CMAKE_INSTALL_PREFIX}/lib"
-              HINTS "${OPENKC_ROOT}/lib"
-                    "${OPENKC_DIR}/../lib"
+        FIND_LIBRARY(OPENKC_LIBRARIES openkcfri
+              HINTS "${OPENKC_DIR}/../lib"
+                    "${OPENKC_ROOT}/lib"
                     "${CMAKE_INSTALL_PREFIX}/lib")
-
-        # TODO: This is ugly yet
-        SET(OPENKC_LIBRARIES "${OPENKC_DIR}/../lib/libopenkc.so")
 
     ENDIF(OPENKC_DIR)
 

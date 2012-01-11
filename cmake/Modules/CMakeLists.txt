@@ -8,6 +8,7 @@ INSTALL(FILES ExtractTBBVersion.cpp.in
               CheckInitMethod.cmake
               CheckLSBTypes.cmake
               CMakeDoxyfile.in
+              CMakeVariableDump.cmake
               EnableCoverageReport.cmake
               EnableSlocCount.cmake
               FindBoostThreadpool.cmake

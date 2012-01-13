@@ -36,9 +36,13 @@
 namespace rsc {
 namespace config {
 
-/** Objects of this class parse streams that contain configuration
+/**
+ * Objects of this class parse streams that contain configuration
  * information in "ini-file" syntax. Sections and keys are mapped to
  * hierarchical names.
+ *
+ * Currently, only files with line encoding styles of the respective platform
+ * the code is run on are supported. Others may work but without guarantee.
  *
  * @author jmoringe
  */

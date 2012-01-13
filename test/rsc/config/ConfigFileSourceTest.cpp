@@ -81,16 +81,19 @@ INSTANTIATE_TEST_CASE_P(ValidFiles,
                         ConfigFileSourceEncodingTest,
                         ::testing::Values("smoke-unix.conf", "smoke-windows.conf"));
 
-TEST(ConfigFileSourceTest, testSyntaxErrors)
-{
+TEST(ConfigFileSourceTest, testSyntaxErrors) {
     CollectingHandler handler;
     for (unsigned int i = 1; i <= 3; ++i) {
-        ifstream
-                stream(
-                        str(
-                                format("%1%/syntax-errors-%2%.conf")
-                                        % TEST_ROOT % i).c_str());
+        ifstream stream(
+                str(format("%1%/syntax-errors-%2%.conf") % TEST_ROOT % i).c_str());
         ConfigFileSource source(stream);
         EXPECT_THROW(source.provideOptions(handler), invalid_argument);
     }
+}
+
+TEST(ConfigFileSourceTest, testEolError) {
+    CollectingHandler handler;
+    ifstream stream(str(format("%1%/smoke-mac.conf") % TEST_ROOT).c_str());
+    ConfigFileSource source(stream);
+    EXPECT_THROW(source.provideOptions(handler), invalid_argument);
 }

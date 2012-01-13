@@ -74,6 +74,13 @@ void ConfigFileSource::provideOptions(OptionHandler& handler) {
 bool ConfigFileSource::getOption(string& name, string& value) {
     string line;
     while (getline(this->stream, line)) {
+
+        // check for files encoded with the old Mac EOL style.
+        size_t rPos = line.find('\r');
+        if (rPos != line.npos && rPos != 0 && rPos != line.size() - 1) {
+            throw invalid_argument("Old Mac EOL style '\\r' is not supported.");
+        }
+
         // strip '#' comments and whitespace
         string::size_type n;
         if ((n = line.find('#')) != string::npos)

@@ -32,7 +32,8 @@
 namespace rsc {
 namespace config {
 
-/** Implementations of this interface obtain configuration information
+/**
+ * Implementations of this interface obtain configuration information
  * somewhere and pass individual configuration options to an
  * @ref OptionHandler instance.
  *
@@ -40,13 +41,19 @@ namespace config {
  */
 class RSC_EXPORT ConfigSource {
 public:
+
     virtual ~ConfigSource();
-    /** Implementations should pass all configuration options to
+
+    /**
+     * Implementations should pass all configuration options to
      * @a handler.
      *
-     * \param handler The handler to which all option should be passed.
+     * @param handler The handler to which all option should be passed.
+     * @throw std::invalid_argument may be thrown when the options this source
+     *                              uses in the background are not well-formated
      */
     virtual void provideOptions(OptionHandler& handler) = 0;
+
 };
 
 }

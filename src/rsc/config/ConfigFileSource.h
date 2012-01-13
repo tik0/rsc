@@ -46,11 +46,12 @@ namespace config {
  *
  * @author jmoringe
  */
-class RSC_EXPORT ConfigFileSource : public ConfigSource{
+class RSC_EXPORT ConfigFileSource : public ConfigSource {
 public:
     ConfigFileSource(std::istream& stream);
 
     void provideOptions(OptionHandler& handler);
+
 private:
     logging::LoggerPtr logger;
 

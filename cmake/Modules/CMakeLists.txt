@@ -16,6 +16,7 @@ INSTALL(FILES ExtractTBBVersion.cpp.in
               FindCBF.cmake
               FindCppcheck.cmake
               FindEigen2.cmake
+              FindFRI.cmake
               Findgcovr.cmake
               FindJsonCpp.cmake
               FindLcov.cmake

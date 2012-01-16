@@ -1,13 +1,15 @@
-# - Try to find Open KUKA Control FRI 
+# - Try to find Controller Basis Framework 
 # Will define:
 #
-# OPENKC_FOUND - If OpenKC was found
-# OPENKC_DIR - OpenKC root dir (where headers were found)
-# OPENKC_INCLUDE_DIRS - Include directories
-# OPENKC_LIBRARIES - OpenKC library
+# CBF_FOUND - If CBF was found
+# CBF_DIR - CBF root dir (where headers were found)
+# CBF_INCLUDE_DIRS - Include directories
+# CBF_LIBRARY_DIRS - Library directories
+# CBF_LIBRARIES - CBF library
+# CBF_DEFINES - CBF compiler defines
 #
 # Possible hints:
-# OPENKC_ROOT - root directory of the OpenKC innstallation
+# CBF_ROOT - root directory of the CBF innstallation
 #
 # Copyright (C) 2012 by Arne Nordmann <anordman at cor-lab dot de>
 #
@@ -32,29 +34,27 @@
 IF(UNIX)
     
     # Try to find xeno-config.h
-    FIND_PATH(OPENKC_DIR
-              NAMES fri_okc_comm.h
-              HINTS "${OPENKC_ROOT}/include"
-                    "${CMAKE_INSTALL_PREFIX}/include"
-              PATHS "${OPENKC_ROOT}/include"
+    FIND_PATH(CBF_DIR
+              NAMES cbf/cbf.h
+              HINTS "${CBF_ROOT}/include"
                     "${CMAKE_INSTALL_PREFIX}/include")
 
-    IF(OPENKC_DIR)
+    IF(CBF_DIR)
     
-        SET(OPENKC_FOUND TRUE)
-        SET(OPENKC_INCLUDE_DIRS ${OPENKC_DIR})
+        SET(CBF_FOUND TRUE)
+        SET(CBF_INCLUDE_DIRS ${CBF_DIR})
         
-        FIND_LIBRARY(OPENKC_LIBRARIES openkcfri
-              HINTS "${OPENKC_DIR}/../lib"
-                    "${OPENKC_ROOT}/lib"
-                    "${CMAKE_INSTALL_PREFIX}/lib"
-              PATHS "${OPENKC_DIR}/../lib"
-                    "${OPENKC_ROOT}/lib"
+        FIND_LIBRARY(CBF_LIBRARY_DIRS cbf
+              HINTS "${CBF_DIR}/../lib"
+                    "${CBF_ROOT}/lib"
                     "${CMAKE_INSTALL_PREFIX}/lib")
+                    
+        SET(CBF_LIBRARIES "-lcbf")
+        SET(CBF_DEFINES "-g -ggdb3 -O2")
 
-    ENDIF(OPENKC_DIR)
+    ENDIF(CBF_DIR)
 
 ENDIF(UNIX)
 
 INCLUDE(FindPackageHandleStandardArgs)
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(OpenKC DEFAULT_MSG OPENKC_FOUND OPENKC_DIR)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(CBF DEFAULT_MSG CBF_FOUND CBF_DIR)

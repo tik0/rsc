@@ -32,7 +32,7 @@ IF(UNIX)
     
     # Try to find xeno-config.h
     FIND_PATH(FRI_DIR
-              NAMES fri_okc_comm.h
+              NAMES friComm.h
               HINTS "${FRI_ROOT}"
                     "${FRI_ROOT}/include"
                     "${CMAKE_INSTALL_PREFIX}/include"

@@ -30,7 +30,7 @@
 
 IF(UNIX)
     
-    # Try to find xeno-config.h
+    # Try to find friComm.h
     FIND_PATH(FRI_DIR
               NAMES friComm.h
               HINTS "${FRI_ROOT}"

@@ -43,13 +43,12 @@ IF(UNIX)
     
         SET(CBF_FOUND TRUE)
         SET(CBF_INCLUDE_DIRS ${CBF_DIR})
-        
-        FIND_LIBRARY(CBF_LIBRARY_DIRS cbf
+
+        FIND_LIBRARY(CBF_LIBRARIES cbf
               HINTS "${CBF_DIR}/../lib"
                     "${CBF_ROOT}/lib"
                     "${CMAKE_INSTALL_PREFIX}/lib")
-                    
-        SET(CBF_LIBRARIES "-lcbf")
+
         SET(CBF_DEFINES "-g -ggdb3 -O2")
 
     ENDIF(CBF_DIR)
@@ -58,3 +57,4 @@ ENDIF(UNIX)
 
 INCLUDE(FindPackageHandleStandardArgs)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(CBF DEFAULT_MSG CBF_FOUND CBF_DIR)
+

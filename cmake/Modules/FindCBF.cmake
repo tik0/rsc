@@ -2,9 +2,7 @@
 # Will define:
 #
 # CBF_FOUND - If CBF was found
-# CBF_DIR - CBF root dir (where headers were found)
 # CBF_INCLUDE_DIRS - Include directories
-# CBF_LIBRARY_DIRS - Library directories
 # CBF_LIBRARIES - CBF library
 # CBF_DEFINES - CBF compiler defines
 #
@@ -32,8 +30,8 @@
 #     Bielefeld University
 
 IF(UNIX)
-    
-    # Try to find xeno-config.h
+
+    # Try to find cbf.h
     FIND_PATH(CBF_DIR
               NAMES cbf/cbf.h
               HINTS "${CBF_ROOT}"
@@ -44,7 +42,7 @@ IF(UNIX)
     IF(CBF_DIR)
     
         SET(CBF_FOUND TRUE)
-        SET(CBF_INCLUDE_DIRS ${CBF_DIR})
+        SET(CBF_INCLUDE_DIRS ${CBF_DIR})        
 
         FIND_LIBRARY(CBF_LIBRARIES cbf
               HINTS "${CBF_DIR}/../lib"

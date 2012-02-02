@@ -36,7 +36,9 @@ IF(UNIX)
     # Try to find xeno-config.h
     FIND_PATH(CBF_DIR
               NAMES cbf/cbf.h
-              HINTS "${CBF_ROOT}/include"
+              HINTS "${CBF_ROOT}"
+                    "${CBF_ROOT}/include"
+                    "${CMAKE_INSTALL_PREFIX}"
                     "${CMAKE_INSTALL_PREFIX}/include")
 
     IF(CBF_DIR)
@@ -46,6 +48,7 @@ IF(UNIX)
 
         FIND_LIBRARY(CBF_LIBRARIES cbf
               HINTS "${CBF_DIR}/../lib"
+                    "${CBF_ROOT}/../lib"
                     "${CBF_ROOT}/lib"
                     "${CMAKE_INSTALL_PREFIX}/lib")
 

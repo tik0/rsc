@@ -36,4 +36,5 @@ INSTALL(FILES ExtractTBBVersion.cpp.in
               ParseArguments.cmake
               PedanticCompilerWarnings.cmake
               SubversionIsWc.cmake
+              SuperPedanticCompilerWarnings.cmake
         DESTINATION ${CMAKE_MODULE_PATH})

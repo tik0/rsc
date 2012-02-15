@@ -20,7 +20,7 @@ INCLUDE(GenerateCppcheck)
 OPTION(BUILD_TESTS "Decide if the test suite shall be built or not" ON)
 OPTION(BUILD_EXAMPLES "Decide if the examples shall be built or not" ON)
 OPTION(INSTALL_TOOLCHAINS "Decide if cmake toolchain files should be installed" ON)
-OPTION(CMAKE_PACKAGE_CACHE "Disabled/Enable CMake Package Cache for RSC" OFF)
+OPTION(EXPORT_TO_CMAKE_PACKAGE_REGISTRY "If set to ON, RSC will be exported to the CMake user package registry so that downstream projects automatically find the workspace location in find_package calls." OFF)
 
 # --- global definitions ---
 
@@ -151,10 +151,11 @@ CONFIGURE_FILE(rsc.pc.in ${CMAKE_BINARY_DIR}/rsc.pc @ONLY)
 INSTALL(FILES ${CMAKE_BINARY_DIR}/rsc.pc DESTINATION lib/pkgconfig)
 
 # --- cmake config files ---
-IF(CMAKE_PACKAGE_CACHE)
-    MESSAGE(STATUS "Exported RSC to CMake Package Cache")
+
+IF(EXPORT_TO_CMAKE_PACKAGE_REGISTRY)
+    MESSAGE(STATUS "Exported RSC to CMake package registry")
     EXPORT(PACKAGE RSC)
-ENDIF(CMAKE_PACKAGE_CACHE)
+ENDIF()
 
 CONFIGURE_FILE(RSCBuildTreeSettings.cmake.in
                "${CMAKE_BINARY_DIR}/RSCBuildTreeSettings.cmake" @ONLY)

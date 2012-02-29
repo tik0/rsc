@@ -2,7 +2,7 @@
  *
  * This file is part of the RSC project
  *
- * Copyright (C) 2011 Jan Moringen
+ * Copyright (C) 2011, 2012 Jan Moringen
  *
  * This file may be licensed under the terms of the
  * GNU Lesser General Public License Version 3 (the ``LGPL''),
@@ -52,6 +52,14 @@ using namespace rsc::logging;
 
 namespace rsc {
 namespace config {
+
+path systemConfigDirectory() {
+#ifndef WIN32
+    return "/etc/";
+#else
+    return "c:\\"
+#endif
+}
 
 path userHomeDirectory() {
 #ifndef WIN32

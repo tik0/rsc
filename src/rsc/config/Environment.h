@@ -2,7 +2,7 @@
  *
  * This file is part of the RSC project
  *
- * Copyright (C) 2011 Jan Moringen
+ * Copyright (C) 2011, 2012 Jan Moringen
  *
  * This file may be licensed under the terms of the
  * GNU Lesser General Public License Version 3 (the ``LGPL''),
@@ -37,6 +37,17 @@
 
 namespace rsc {
 namespace config {
+
+/**
+ * Return the directory in which system-wide configuration files are
+ * located.
+ *
+ * @return A @ref boost::filesystem::path object representing the
+ *         system configuration directory.
+ *
+ * @author jmoringe
+ */
+RSC_EXPORT boost::filesystem::path systemConfigDirectory();
 
 /**
  * Return the home directory of the user associated with the current

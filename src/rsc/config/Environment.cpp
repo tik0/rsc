@@ -57,7 +57,7 @@ path systemConfigDirectory() {
 #ifndef WIN32
     return "/etc/";
 #else
-    return "c:\\"
+    return "c:\\";
 #endif
 }
 

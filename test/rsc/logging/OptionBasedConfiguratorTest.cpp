@@ -43,25 +43,25 @@ using namespace rsc;
 using namespace rsc::config;
 using namespace rsc::logging;
 
-TEST(OptionBasedConfiguratorTest, testConfigFromFile)
-{
+TEST(OptionBasedConfiguratorTest, testConfigFromFile) {
 
     LoggerFactory::getInstance().clearKnownLoggers();
 
     OptionBasedConfigurator configurator;
-    boost::filesystem::ifstream stream(TEST_ROOT + "/rsc/logging/logging.config");
+    boost::filesystem::ifstream stream(
+            TEST_ROOT + "/rsc/logging/logging.config");
     ASSERT_TRUE(stream);
     ConfigFileSource(stream).provideOptions(configurator);
 
     EXPECT_EQ(Logger::LEVEL_TRACE, Logger::getLogger("")->getLevel());
     EXPECT_EQ(Logger::LEVEL_DEBUG, Logger::getLogger("sub.logger")->getLevel());
-    EXPECT_EQ(Logger::LEVEL_TRACE, Logger::getLogger("another.logger")->getLevel());
+    EXPECT_EQ(Logger::LEVEL_TRACE,
+            Logger::getLogger("another.logger")->getLevel());
     EXPECT_EQ(Logger::LEVEL_TRACE, Logger::getLogger("sub.foo")->getLevel());
 
 }
 
-TEST(OptionBasedConfiguratorTest, testDifferentRoot)
-{
+TEST(OptionBasedConfiguratorTest, testDifferentRoot) {
 
     LoggerFactory::getInstance().clearKnownLoggers();
 
@@ -70,10 +70,25 @@ TEST(OptionBasedConfiguratorTest, testDifferentRoot)
     root.push_back("new");
     root.push_back("root");
     OptionBasedConfigurator configurator(root);
-    boost::filesystem::ifstream stream(TEST_ROOT + "/rsc/logging/logging.config");
+    boost::filesystem::ifstream stream(
+            TEST_ROOT + "/rsc/logging/logging.config");
     ASSERT_TRUE(stream);
     ConfigFileSource(stream).provideOptions(configurator);
 
     EXPECT_EQ(Logger::LEVEL_OFF, Logger::getLogger("sub.logger")->getLevel());
+
+}
+
+TEST(OptionBasedConfiguratorTest, testFactoryConfiguration) {
+
+    LoggerFactory::getInstance().clearKnownLoggers();
+    LoggerFactory::getInstance().reconfigureFromFile(
+            TEST_ROOT + "/rsc/logging/logging.config");
+
+    EXPECT_EQ(Logger::LEVEL_TRACE, Logger::getLogger("")->getLevel());
+    EXPECT_EQ(Logger::LEVEL_DEBUG, Logger::getLogger("sub.logger")->getLevel());
+    EXPECT_EQ(Logger::LEVEL_TRACE,
+            Logger::getLogger("another.logger")->getLevel());
+    EXPECT_EQ(Logger::LEVEL_TRACE, Logger::getLogger("sub.foo")->getLevel());
 
 }

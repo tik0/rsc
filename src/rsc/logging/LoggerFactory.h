@@ -110,6 +110,14 @@ public:
     void reconfigure(const Logger::Level& level);
 
     /**
+     * Reconfigures the logging system from a configuration file.
+     *
+     * @param fileName name of the configuration file
+     * @throw std::invalid_argument invalid file path
+     */
+    void reconfigureFromFile(const std::string& fileName);
+
+    /**
      * Reselected the automatically chosen logging system to adapt to newly
      * available ones. A hint can be given on the name of the logging system to
      * select.

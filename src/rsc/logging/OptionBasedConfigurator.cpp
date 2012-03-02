@@ -49,6 +49,10 @@ vector<string> OptionBasedConfigurator::getDefaultRootOption() {
     return root;
 }
 
+vector<string> OptionBasedConfigurator::getRootOption() const {
+    return rootOption;
+}
+
 bool OptionBasedConfigurator::keyStartWithRoot(
         const vector<string>& key) const {
 
@@ -88,8 +92,6 @@ string OptionBasedConfigurator::loggerNameFromKey(
 
 void OptionBasedConfigurator::handleOption(const vector<string>& key,
         const string& value) {
-
-    cout << value << endl;
 
     if (!keyStartWithRoot(key)) {
         return;

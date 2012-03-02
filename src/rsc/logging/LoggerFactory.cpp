@@ -30,12 +30,15 @@
 
 #include <boost/bind.hpp>
 #include <boost/enable_shared_from_this.hpp>
+#include <boost/filesystem/fstream.hpp>
 #include <boost/format.hpp>
 #include <boost/function.hpp>
 #include <boost/algorithm/string.hpp>
 
 #include "ConsoleLoggingSystem.h"
 #include "LoggerProxy.h"
+#include "OptionBasedConfigurator.h"
+#include "../config/ConfigFileSource.h"
 #include "../runtime/ContainerIO.h"
 
 using namespace std;
@@ -260,6 +263,15 @@ string LoggerFactory::getLoggingSystemName() {
 void LoggerFactory::clearKnownLoggers() {
     boost::recursive_mutex::scoped_lock lock(mutex);
     loggerTree->clearChildren();
+}
+
+void LoggerFactory::reconfigureFromFile(const string& fileName) {
+    OptionBasedConfigurator configurator;
+    boost::filesystem::ifstream stream(fileName);
+    if (!stream) {
+        throw invalid_argument("Unable to open file " + fileName);
+    }
+    config::ConfigFileSource(stream).provideOptions(configurator);
 }
 
 }

@@ -91,14 +91,24 @@ TEST(ConfigFileSourceTest, testSyntaxErrors) {
     for (unsigned int i = 1; i <= 3; ++i) {
         ifstream stream(
                 str(format("%1%/syntax-errors-%2%.conf") % TEST_ROOT % i).c_str());
-        ConfigFileSource source(stream);
-        EXPECT_THROW(source.provideOptions(handler), invalid_argument);
+        try {
+            ConfigFileSource source(stream);
+            source.provideOptions(handler);
+            FAIL();
+        } catch (invalid_argument& e) {
+            // good
+        }
     }
 }
 
 TEST(ConfigFileSourceTest, testEolError) {
     CollectingHandler handler;
     ifstream stream(str(format("%1%/smoke-mac.conf") % TEST_ROOT).c_str());
-    ConfigFileSource source(stream);
-    EXPECT_THROW(source.provideOptions(handler), invalid_argument);
+    try {
+        ConfigFileSource source(stream);
+        source.provideOptions(handler);
+        FAIL();
+    } catch (invalid_argument& e) {
+        // good
+    }
 }

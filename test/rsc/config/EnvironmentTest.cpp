@@ -36,6 +36,11 @@ using namespace std;
 using namespace boost;
 using namespace rsc::config;
 
+TEST(EnvironmentTest, testSystemConfigDirectory)
+{
+    systemConfigDirectory();
+}
+
 TEST(EnvironmentTest, testUserHomeDirectory)
 {
     try {
@@ -53,4 +58,3 @@ TEST(EnvironmentTest, testUserConfigDirectory)
         // may happen if windows service
     }
 }
-

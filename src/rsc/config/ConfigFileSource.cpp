@@ -54,9 +54,8 @@ string trim(const string& s) {
 
 ConfigFileSource::ConfigFileSource(istream& stream) :
     logger(Logger::getLogger("rsc.config.ConfigFileSource")), stream(stream) {
-}
 
-void ConfigFileSource::provideOptions(OptionHandler& handler) {
+    // parse options and store them in an internal map
     string name;
     string value;
     while (getOption(name, value)) {
@@ -66,7 +65,16 @@ void ConfigFileSource::provideOptions(OptionHandler& handler) {
 
         RSCTRACE(logger, "Option " << key << " -> " << value);
 
-        handler.handleOption(key, value);
+        options[key] = value;
+
+    }
+
+}
+
+void ConfigFileSource::provideOptions(OptionHandler& handler) {
+    for (map<vector<string>, string>::const_iterator it = options.begin();
+            it != options.end(); ++it) {
+        handler.handleOption(it->first, it->second);
     }
 }
 

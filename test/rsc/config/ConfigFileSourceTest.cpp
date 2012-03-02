@@ -68,13 +68,18 @@ class ConfigFileSourceEncodingTest : public ::testing::TestWithParam<string> {
 TEST_P(ConfigFileSourceEncodingTest, testSmoke)
 {
 
-    CollectingHandler handler;
     ifstream stream(str(format("%1%/%2%") % TEST_ROOT % GetParam()).c_str());
     ConfigFileSource source(stream);
-    source.provideOptions(handler);
-    EXPECT_EQ(any_cast<int>(handler.collected["global"]), 5);
-    EXPECT_EQ(any_cast<string>(handler.collected["string"]), "string");
-    EXPECT_EQ(any_cast<double>(handler.collected["section1.option"]), 1.5);
+
+    // test multiple iterations to be sure that the object can be reused for
+    // multiple handlers
+    for (unsigned int i = 0; i < 3; ++i) {
+        CollectingHandler handler;
+        source.provideOptions(handler);
+        EXPECT_EQ(any_cast<int>(handler.collected["global"]), 5);
+        EXPECT_EQ(any_cast<string>(handler.collected["string"]), "string");
+        EXPECT_EQ(any_cast<double>(handler.collected["section1.option"]), 1.5);
+    }
 }
 
 INSTANTIATE_TEST_CASE_P(ValidFiles,

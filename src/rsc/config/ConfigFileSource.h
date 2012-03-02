@@ -27,6 +27,9 @@
 #pragma once
 
 #include <iostream>
+#include <map>
+#include <string>
+#include <vector>
 
 #include "../logging/Logger.h"
 
@@ -57,6 +60,8 @@ private:
 
     std::istream& stream;
     std::string currentSection;
+
+    std::map<std::vector<std::string>, std::string> options;
 
     bool getOption(std::string& name, std::string& value);
 };

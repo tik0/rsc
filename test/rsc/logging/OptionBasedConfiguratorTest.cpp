@@ -57,7 +57,7 @@ TEST(OptionBasedConfiguratorTest, testConfigFromFile) {
     ConfigFileSource(stream).provideOptions(configurator);
 
     EXPECT_EQ(Logger::LEVEL_TRACE, Logger::getLogger("")->getLevel());
-    EXPECT_EQ(Logger::LEVEL_DEBUG, Logger::getLogger("sub.logger")->getLevel());
+    EXPECT_EQ(Logger::LEVEL_DEBUG, Logger::getLogger("sub.loGGer")->getLevel());
     EXPECT_EQ(Logger::LEVEL_TRACE,
             Logger::getLogger("another.logger")->getLevel());
     EXPECT_EQ(Logger::LEVEL_TRACE, Logger::getLogger("sub.foo")->getLevel());
@@ -89,7 +89,7 @@ TEST(OptionBasedConfiguratorTest, testFactoryConfiguration) {
             TEST_ROOT + "/rsc/logging/logging.config");
 
     EXPECT_EQ(Logger::LEVEL_TRACE, Logger::getLogger("")->getLevel());
-    EXPECT_EQ(Logger::LEVEL_DEBUG, Logger::getLogger("sub.logger")->getLevel());
+    EXPECT_EQ(Logger::LEVEL_DEBUG, Logger::getLogger("sub.loGGer")->getLevel());
     EXPECT_EQ(Logger::LEVEL_TRACE,
             Logger::getLogger("another.logger")->getLevel());
     EXPECT_EQ(Logger::LEVEL_TRACE, Logger::getLogger("sub.foo")->getLevel());

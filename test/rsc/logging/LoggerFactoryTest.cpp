@@ -79,40 +79,6 @@ TEST(LoggerFactoryTest, testReconfigure) {
     EXPECT_EQ(Logger::LEVEL_TRACE, logger2->getLevel());
 }
 
-class StubLogger: public Logger {
-private:
-    string name;
-    Logger::Level level;
-public:
-
-    StubLogger(string& name) :
-            name(name) {
-    }
-
-    Logger::Level getLevel() const {
-        return level;
-    }
-
-    void setLevel(const Logger::Level& level) {
-        this->level = level;
-    }
-
-    std::string getName() const {
-        return name;
-    }
-
-    void setName(const std::string& name) {
-        this->name = name;
-    }
-
-    vector<pair<Logger::Level, string> > logs;
-
-    void log(const Logger::Level& level, const std::string& msg) {
-        logs.push_back(make_pair(level, msg));
-    }
-
-};
-
 TEST(LoggerFactoryTest, testReselectLoggingSystem) {
 
     LoggerFactory::getInstance().clearKnownLoggers();

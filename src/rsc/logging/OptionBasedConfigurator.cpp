@@ -27,6 +27,7 @@
 #include "OptionBasedConfigurator.h"
 
 #include "Logger.h"
+#include "LoggerFactory.h"
 
 using namespace std;
 using namespace rsc::config;
@@ -105,10 +106,10 @@ void OptionBasedConfigurator::handleOption(const vector<string>& key,
     }
 
     LoggerPtr logger = Logger::getLogger(loggerNameFromKey(key));
-    cout << logger->getName() << endl;
 
     string setting = key.back();
     if (setting == "LEVEL") {
+
         if (value == "ALL") {
             logger->setLevel(Logger::LEVEL_ALL);
         } else if (value == "TRACE") {
@@ -126,6 +127,9 @@ void OptionBasedConfigurator::handleOption(const vector<string>& key,
         } else if (value == "OFF") {
             logger->setLevel(Logger::LEVEL_OFF);
         }
+
+    } else if (setting == "SYSTEM" && logger->getName() == "") {
+        LoggerFactory::getInstance().reselectLoggingSystem(value);
     }
 
 }

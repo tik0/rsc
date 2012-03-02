@@ -31,17 +31,20 @@
 #include <boost/filesystem/fstream.hpp>
 
 #include <gtest/gtest.h>
+#include <gmock/gmock.h>
 
 #include "rsc/config/ConfigFileSource.h"
 #include "rsc/logging/LoggerFactory.h"
 #include "rsc/logging/OptionBasedConfigurator.h"
 
 #include "testconfig.h"
+#include "mocks.h"
 
 using namespace std;
 using namespace rsc;
 using namespace rsc::config;
 using namespace rsc::logging;
+using namespace testing;
 
 TEST(OptionBasedConfiguratorTest, testConfigFromFile) {
 
@@ -90,5 +93,36 @@ TEST(OptionBasedConfiguratorTest, testFactoryConfiguration) {
     EXPECT_EQ(Logger::LEVEL_TRACE,
             Logger::getLogger("another.logger")->getLevel());
     EXPECT_EQ(Logger::LEVEL_TRACE, Logger::getLogger("sub.foo")->getLevel());
+
+}
+
+TEST(OptionBasedConfiguratorTest, testSystemSelection) {
+
+    LoggerFactory::getInstance().clearKnownLoggers();
+
+    // set up mock system
+    const string systemName = "DummyLoggingSystem";
+    loggingSystemRegistry()->removeRegistree(systemName);
+    StrictMock<MockLoggingSystem>* mockSystem =
+            new StrictMock<MockLoggingSystem>(systemName);
+    loggingSystemRegistry()->addRegistree(mockSystem);
+    EXPECT_CALL(*mockSystem, createLogger(_)).Times(AtLeast(1)).WillRepeatedly(
+            Return(LoggerPtr(new StubLogger(string("")))));
+
+    vector<string> root;
+    root.push_back("system");
+    root.push_back("config");
+    OptionBasedConfigurator configurator(root);
+    boost::filesystem::ifstream stream(
+            TEST_ROOT + "/rsc/logging/logging.config");
+    ASSERT_TRUE(stream);
+    ConfigFileSource(stream).provideOptions(configurator);
+
+    EXPECT_EQ(systemName, LoggerFactory::getInstance().getLoggingSystemName());
+
+    // back to defaults
+    LoggerFactory::getInstance().reselectLoggingSystem(
+            LoggerFactory::DEFAULT_LOGGING_SYSTEM);
+    loggingSystemRegistry()->removeRegistree(systemName);
 
 }

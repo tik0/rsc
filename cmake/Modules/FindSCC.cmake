@@ -30,7 +30,7 @@
 IF(UNIX)
 
     # Try to find scc binary
-    find_program(SCC_EXECUTABLE
+    FIND_PROGRAM(SCC_EXECUTABLE
               NAME scc
               HINTS "${SCC_ROOT}"
                     "${SCC_ROOT}/bin"
@@ -38,6 +38,16 @@ IF(UNIX)
                     "${CMAKE_INSTALL_PREFIX}/bin")
 
 ENDIF(UNIX)
+
+MACRO(SCC_GENERATE_HEADER SCXML)
+    SET(SC_HEADER "${SCXML}.h")
+    ADD_CUSTOM_COMMAND(
+        OUTPUT ${SC_HEADER}
+        COMMAND ${SCC_EXECUTABLE}
+        ARGS "-i" ${SCXML} "-o" ${SC_HEADER}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        COMMENT "Generating ${SC_HEADER}")
+ENDMACRO()
 
 INCLUDE(FindPackageHandleStandardArgs)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(SCC DEFAULT_MSG SCC_FOUND SCC_EXECUTABLE)

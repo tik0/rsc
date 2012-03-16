@@ -24,6 +24,7 @@ INSTALL(FILES ExtractTBBVersion.cpp.in
               FindMongo.cmake
               FindOpenKC.cmake
               FindProtocolBuffers.cmake
+              FindSCC.cmake
               Findsloccount.cmake
               FindSpread.cmake
               FindTBB.cmake

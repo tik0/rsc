@@ -3,6 +3,7 @@ SET(CMAKE_MODULE_PATH "${RSC_CMAKE_MODULE_PATH}")
 MESSAGE(STATUS "Installing CMake modules to: ${CMAKE_MODULE_PATH}")
 
 INSTALL(FILES ExtractTBBVersion.cpp.in
+              ExtractSpreadVersion.cpp.in
               TestAttributeConstructor.cpp
               TestCRTInit.cpp
               CheckInitMethod.cmake

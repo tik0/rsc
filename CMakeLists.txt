@@ -172,6 +172,8 @@ INSTALL(FILES ${CMAKE_BINARY_DIR}/RSCConfigVersion.cmake DESTINATION share/rsc)
 EXPORT(TARGETS ${RSC_NAME} FILE "${CMAKE_BINARY_DIR}/RSCDepends.cmake")
 INSTALL(EXPORT RSCDepends
         DESTINATION "share/rsc")
+        
+INSTALL(FILES COPYING.txt DESTINATION share/doc/rsc RENAME copyright)
 
 # --- enable unit tests if desired ---
 

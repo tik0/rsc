@@ -43,7 +43,8 @@ TARGET_LINK_LIBRARIES(${RSC_TEST_NAME}
 					  ${REGISTREE_TEST_LIB_NAME}
                       ${RSC_NAME}
                       ${Boost_LIBRARIES}
-                      ${GMOCK_LIBRARY_NAME})
+                      ${GMOCK_LIBRARY_NAME}
+                      ${CMAKE_THREAD_LIBS_INIT})
 
 ADD_TEST(${RSC_TEST_NAME} ${EXECUTABLE_OUTPUT_PATH}/${RSC_TEST_NAME} "--gtest_output=xml:${TEST_RESULT_DIR}/")
 

@@ -100,6 +100,7 @@ IF(BOOST_ROOT)
 ENDIF()
 
 FIND_PACKAGE(Boost ${Boost_USE_VERSION} REQUIRED thread filesystem signals program_options system)
+FIND_PACKAGE(Threads)
 
 SET(USE_INTERNAL_BOOST_UUID FALSE CACHE BOOL "Wether to use the internal version of boost.uuid or not")
 IF(NOT USE_INTERNAL_BOOST_UUID)

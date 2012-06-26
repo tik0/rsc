@@ -29,88 +29,37 @@ INCLUDE(CheckCXXCompilerFlag)
 # TODO find a flag that better tells if this is GCC
 IF(UNIX)
 
-    CHECK_CXX_COMPILER_FLAG(-pipe CHECK_CXX_FLAG_pipe)
-    IF(CHECK_CXX_FLAG_pipe)
-        ADD_DEFINITIONS(-pipe)
-    ENDIF()
-    CHECK_CXX_COMPILER_FLAG(-Wall CHECK_CXX_FLAG_Wall)
-    IF(CHECK_CXX_FLAG_Wall)
-        ADD_DEFINITIONS(-Wall)
-    ENDIF()
-    CHECK_CXX_COMPILER_FLAG(-Wextra CHECK_CXX_FLAG_Wextra)
-    IF(CHECK_CXX_FLAG_Wextra)
-        ADD_DEFINITIONS(-Wextra)
-    ENDIF()
-    CHECK_CXX_COMPILER_FLAG(-fdiagnostics-show-option CHECK_CXX_FLAG_DIAGNOSTICS)
-    IF(CHECK_CXX_FLAG_DIAGNOSTICS)
-        ADD_DEFINITIONS(-fdiagnostics-show-option)
-    ENDIF()
-    
-    
-    CHECK_CXX_COMPILER_FLAG(-pedantic CHECK_CXX_FLAG_DIAGNOSTICS)
-    IF(CHECK_CXX_FLAG_DIAGNOSTICS)
-        ADD_DEFINITIONS(-pedantic)
-    ENDIF()
-    CHECK_CXX_COMPILER_FLAG(-Wchar-subscripts CHECK_CXX_FLAG_DIAGNOSTICS)
-    IF(CHECK_CXX_FLAG_DIAGNOSTICS)
-        ADD_DEFINITIONS(-Wchar-subscripts)
-    ENDIF()
-    CHECK_CXX_COMPILER_FLAG(-Winit-self CHECK_CXX_FLAG_DIAGNOSTICS)
-    IF(CHECK_CXX_FLAG_DIAGNOSTICS)
-        ADD_DEFINITIONS(-Winit-self)
-    ENDIF()
-    CHECK_CXX_COMPILER_FLAG(-Wswitch-enum CHECK_CXX_FLAG_DIAGNOSTICS)
-    IF(CHECK_CXX_FLAG_DIAGNOSTICS)
-        ADD_DEFINITIONS(-Wswitch-enum)
-    ENDIF()
-    CHECK_CXX_COMPILER_FLAG(-Wstrict-aliasing=3 CHECK_CXX_FLAG_DIAGNOSTICS)
-    IF(CHECK_CXX_FLAG_DIAGNOSTICS)
-        ADD_DEFINITIONS(-Wstrict-aliasing=3)
-    ENDIF()
-    CHECK_CXX_COMPILER_FLAG(-Wstrict-overflow=5 CHECK_CXX_FLAG_DIAGNOSTICS)
-    IF(CHECK_CXX_FLAG_DIAGNOSTICS)
-        ADD_DEFINITIONS(-Wstrict-overflow=5)
-    ENDIF()
-    CHECK_CXX_COMPILER_FLAG(-Wundef CHECK_CXX_FLAG_DIAGNOSTICS)
-    IF(CHECK_CXX_FLAG_DIAGNOSTICS)
-        ADD_DEFINITIONS(-Wundef)
-    ENDIF()
-    CHECK_CXX_COMPILER_FLAG(-Wno-endif-labels CHECK_CXX_FLAG_DIAGNOSTICS)
-    IF(CHECK_CXX_FLAG_DIAGNOSTICS)
-        ADD_DEFINITIONS(-Wno-endif-labels)
-    ENDIF()
-    CHECK_CXX_COMPILER_FLAG(-Wshadow CHECK_CXX_FLAG_DIAGNOSTICS)
-    IF(CHECK_CXX_FLAG_DIAGNOSTICS)
-        ADD_DEFINITIONS(-Wshadow)
-    ENDIF()
-    CHECK_CXX_COMPILER_FLAG(-Wno-system-headers CHECK_CXX_FLAG_DIAGNOSTICS)
-    IF(CHECK_CXX_FLAG_DIAGNOSTICS)
-        ADD_DEFINITIONS(-Wno-system-headers)
-    ENDIF()
-    CHECK_CXX_COMPILER_FLAG(-Wno-builtin-macro-redefined CHECK_CXX_FLAG_DIAGNOSTICS)
-    IF(CHECK_CXX_FLAG_DIAGNOSTICS)
-        ADD_DEFINITIONS(-Wno-builtin-macro-redefined)
-    ENDIF()
-    CHECK_CXX_COMPILER_FLAG(-Wmissing-declarations CHECK_CXX_FLAG_DIAGNOSTICS)
-    IF(CHECK_CXX_FLAG_DIAGNOSTICS)
-        ADD_DEFINITIONS(-Wmissing-declarations)
-    ENDIF()
-    CHECK_CXX_COMPILER_FLAG(-Wsign-conversion CHECK_CXX_FLAG_DIAGNOSTICS)
-    IF(CHECK_CXX_FLAG_DIAGNOSTICS)
-        ADD_DEFINITIONS(-Wsign-conversion)
-    ENDIF()
-    
-    # We want this, but it`s not usable with gtest (loads of warnings from gtest)
-    #CHECK_CXX_COMPILER_FLAG(-Wswitch-default CHECK_CXX_FLAG_DIAGNOSTICS)
-    #IF(CHECK_CXX_FLAG_DIAGNOSTICS)
-    #    ADD_DEFINITIONS(-Wswitch-default)
-    #ENDIF()   
-    
-    # if you are insane, enable this...
-    CHECK_CXX_COMPILER_FLAG(-Weffc++ CHECK_CXX_FLAG_EFFCPP)
-    IF(CHECK_CXX_FLAG_EFFCPP)
-        ADD_DEFINITIONS(-Weffc++)
-    ENDIF()
+	SET(FLAGS_TO_TEST 
+	  -pipe
+	  -Wall
+	  -Wextra
+	  -fdiagnostics-show-option 
+	  -pedantic 
+	  -Wchar-subscripts 
+	  -Winit-self 
+	  -Wswitch-enum 
+	  -Wstrict-aliasing=3 
+	  -Wstrict-overflow=5 
+	  -Wundef 
+	  -Wno-endif-labels 
+	  -Wshadow 
+	  -Wno-system-headers 
+	  -Wno-builtin-macro-redefined 
+	  -Wmissing-declarations 
+	  -Wsign-conversion 
+	  -Weffc++)
+
+	FOREACH(F ${FLAGS_TO_TEST})
+	  #we make a good unique variable name for the check
+	  STRING(REGEX REPLACE "[-+=]" "_" F_CHECK_NAME ${F})
+	  SET(F_CHECK_NAME CHECK_CXX_FLAG${F_CHECK_NAME})
+	  #now we do the check
+	  CHECK_CXX_COMPILER_FLAG(${F} ${F_CHECK_NAME})
+	  #if the check pass, lets add the definition
+	  IF(${F_CHECK_NAME})
+		ADD_DEFINITIONS(${f})
+	  ENDIF(${F_CHECK_NAME})
+	ENDFOREACH(F ${FLAGS_TO_TEST})
 
 ELSEIF(MSVC)
 

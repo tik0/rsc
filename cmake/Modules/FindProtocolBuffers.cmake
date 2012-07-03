@@ -434,6 +434,7 @@ ENDIF()
 FIND_FILE(PROTOBUF_JAVA_LIBRARY
           NAMES ${PROTOBUF_JAVA_NAME} protobuf.jar protobuf-java.jar
           HINTS ${PROTOBUF_JAVA_ROOT}
+                "${PROTOBUF_JAVA_ROOT}/share/java"
                 "/usr/share/java"
                 "/usr/share/java/protobuf-java"
                 "${CMAKE_INSTALL_PREFIX}/lib/java"

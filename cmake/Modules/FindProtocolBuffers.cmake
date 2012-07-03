@@ -432,7 +432,7 @@ IF(PROTOBUF_PROTOC_EXECUTABLE AND NOT PROTOBUF_PROTOC_MATLAB)
     ENDIF()
 ENDIF()
 FIND_FILE(PROTOBUF_JAVA_LIBRARY
-          NAMES ${PROTOBUF_JAVA_NAME} protobuf.jar
+          NAMES ${PROTOBUF_JAVA_NAME} protobuf.jar protobuf-java.jar
           HINTS ${PROTOBUF_JAVA_ROOT}
                 "/usr/share/java"
                 "/usr/share/java/protobuf-java"

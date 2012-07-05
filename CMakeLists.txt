@@ -195,41 +195,19 @@ ENABLE_SLOCCOUNT(FOLDERS src test examples)
 # --- cppcheck ---
 
 GENERATE_CPPCHECK(SOURCES src test examples
-  "${CMAKE_CURRENT_BINARY_DIR}/src" "${CMAKE_CURRENT_BINARY_DIR}/test" "${CMAKE_CURRENT_BINARY_DIR}/examples"
-  ENABLE_IDS style
-  INLINE_SUPPRESSION)
+                  "${CMAKE_CURRENT_BINARY_DIR}/src" "${CMAKE_CURRENT_BINARY_DIR}/test" "${CMAKE_CURRENT_BINARY_DIR}/examples"
+                  ENABLE_IDS style
+                  INLINE_SUPPRESSION)
 
 
 # --- package ---
-INCLUDE(CheckLSBTypes)
 
+# default configuration, platform independent
 SET(CPACK_PACKAGE_VERSION_MAJOR ${RSC_VERSION_MAJOR})
 SET(CPACK_PACKAGE_VERSION_MINOR ${RSC_VERSION_MINOR})
 SET(CPACK_PACKAGE_VERSION_PATCH ${RSC_VERSION_PATCH})
-SET(VERSION_SUFFIX "${RSC_VERSION_MAJOR}.${RSC_VERSION_MINOR}")
 
-# --------------------------------------------------------------------
-# !!! Do not change these two lines !!!
-SET(CPACK_PACKAGE_VERSION   "${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}")
-SET(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}${VERSION_SUFFIX}-${CPACK_PACKAGE_VERSION}_${LSB_CODENAME}_${LSB_PROCESSOR_ARCH}")
-# --------------------------------------------------------------------
-
-SET(CPACK_GENERATOR "TGZ")
 SET(CPACK_PACKAGE_VENDOR "CoR-Lab Bielefeld University")
 SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/COPYING.txt")
 
-IF(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    SET(CPACK_GENERATOR "${CPACK_GENERATOR};DEB")
-    SET(CPACK_DEBIAN_PACKAGE_NAME "rsc${VERSION_SUFFIX}")
-    SET(CPACK_DEBIAN_PACKAGE_VERSION ${CPACK_PACKAGE_VERSION})
-    SET(CPACK_DEBIAN_PACKAGE_MAINTAINER "Sebastian Wrede (swrede@techfak.uni-bielefeld.de)")
-    SET(CPACK_DEBIAN_PACKAGE_DESCRIPTION "RSC is a project focused on all aspects of reusable library functions in robotics systems. RSC is meant to improve the C++ std lib for robotic systems without pulling in many additional dependencies.")
-    SET(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
-    SET(CPACK_DEBIAN_PACKAGE_SECTION "devel")
-    SET(CPACK_DEBIAN_PACKAGE_CONFLICTS "rsc-0.5.0, rsc-0.4.0")
-    SET(CPACK_DEBIAN_ARCHITECTURE ${CMAKE_SYSTEM_PROCESSOR})
-    SET(CPACK_DEBIAN_PACKAGE_DEPENDS "libboost-signals-dev, libc6, libboost-program-options-dev, libboost-filesystem-dev, libboost-thread-dev")
-    SET(CPACK_DEBIAN_PACKAGE_SUGGESTS "cmake-data, cmake, doxygen, cppcheck, sloccount, lcov")
-ENDIF(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-
-INCLUDE(CPack)
+INCLUDE(ProvideFlexibleCPack)

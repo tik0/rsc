@@ -39,6 +39,7 @@ INSTALL(FILES ExtractTBBVersion.cpp.in
               ParseArguments.cmake
               PedanticCompilerWarnings.cmake
               ProvideGoogleMock.cmake
+              ProvideFlexibleCPack.cmake
               SubversionIsWc.cmake
               SuperPedanticCompilerWarnings.cmake
         DESTINATION ${CMAKE_MODULE_PATH})

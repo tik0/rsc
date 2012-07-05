@@ -25,9 +25,9 @@ OPTION(EXPORT_TO_CMAKE_PACKAGE_REGISTRY "If set to ON, RSC will be exported to t
 # --- global definitions ---
 
 # version information
-SET(RSC_VERSION_MAJOR "0")
-SET(RSC_VERSION_MINOR "7")
-SET(RSC_VERSION_PATCH "0")
+SET(RSC_VERSION_MAJOR "0" CACHE STRING "Major project version part")
+SET(RSC_VERSION_MINOR "7" CACHE STRING "Minor project version part")
+SET(RSC_VERSION_PATCH "0" CACHE STRING "Patch project version part")
 SET(RSC_VERSION "${RSC_VERSION_MAJOR}.${RSC_VERSION_MINOR}.${RSC_VERSION_PATCH}")
 SET(RSC_ABI_VERSION "4")
 

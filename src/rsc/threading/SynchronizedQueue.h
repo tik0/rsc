@@ -183,6 +183,13 @@ public:
         boost::recursive_mutex::scoped_lock lock(mutex);
         return this->queue.size();
     }
+    
+    void clear() {
+        boost::recursive_mutex::scoped_lock lock(mutex);
+        while (!this->queue.empty()) {
+            this->queue.pop();
+        }
+    }
 
     /**
      * Interrupts the processing on this queue for every current call to pop

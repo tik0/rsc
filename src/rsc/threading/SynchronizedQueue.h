@@ -175,7 +175,7 @@ public:
     }
 
     /**
-     * Return element count of the cue.
+     * Return element count of the queue.
      *
      * @return The number of elements currently stored in the queue.
      */
@@ -183,7 +183,10 @@ public:
         boost::recursive_mutex::scoped_lock lock(mutex);
         return this->queue.size();
     }
-    
+
+    /**
+     * Remove all elements from the queue.
+     */
     void clear() {
         boost::recursive_mutex::scoped_lock lock(mutex);
         while (!this->queue.empty()) {
@@ -192,8 +195,9 @@ public:
     }
 
     /**
-     * Interrupts the processing on this queue for every current call to pop
-     * and any later call. All of them will return with an exception.
+     * Interrupts the processing on this queue for every current call
+     * to pop and any later call. All of them will return with an
+     * exception.
      */
     void interrupt() {
         {

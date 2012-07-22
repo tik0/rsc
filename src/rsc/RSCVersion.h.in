@@ -34,7 +34,9 @@
 #define RSC_VERSION_MINOR @RSC_VERSION_MINOR@
 #define RSC_VERSION_PATCH @RSC_VERSION_PATCH@
 
-#define RSC_VERSION_NUMERIC @RSC_VERSION_NUMERIC@
+// We have to resort to this trick to avoid invalid octal integer
+// literals.
+#define RSC_VERSION_NUMERIC (1@RSC_VERSION_NUMERIC@ - 1000000)
 
 #define RSC_ABI_VERSION @RSC_ABI_VERSION@
 
@@ -51,7 +53,7 @@ public:
     static unsigned int major();
     static unsigned int minor();
     static unsigned int patch();
-    
+
     static unsigned int numeric();
 
     static std::string string();
@@ -69,4 +71,3 @@ private:
 };
 
 }
-

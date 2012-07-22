@@ -26,7 +26,7 @@ OPTION(EXPORT_TO_CMAKE_PACKAGE_REGISTRY "If set to ON, RSC will be exported to t
 
 # version information
 SET(RSC_VERSION_MAJOR "0" CACHE STRING "Major project version part")
-SET(RSC_VERSION_MINOR "7" CACHE STRING "Minor project version part")
+SET(RSC_VERSION_MINOR "8" CACHE STRING "Minor project version part")
 SET(RSC_VERSION_PATCH "0" CACHE STRING "Patch project version part")
 SET(RSC_VERSION "${RSC_VERSION_MAJOR}.${RSC_VERSION_MINOR}.${RSC_VERSION_PATCH}")
 SET(RSC_ABI_VERSION "4")
@@ -171,7 +171,7 @@ INSTALL(FILES ${CMAKE_BINARY_DIR}/RSCConfigVersion.cmake DESTINATION share/rsc)
 EXPORT(TARGETS ${RSC_NAME} FILE "${CMAKE_BINARY_DIR}/RSCDepends.cmake")
 INSTALL(EXPORT RSCDepends
         DESTINATION "share/rsc")
-        
+
 INSTALL(FILES COPYING.txt DESTINATION share/doc/rsc RENAME copyright)
 
 # --- enable unit tests if desired ---

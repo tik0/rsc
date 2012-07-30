@@ -14,6 +14,7 @@ INCLUDE(EnableCoverageReport)
 INCLUDE(EnableSlocCount)
 INCLUDE(GenerateDoxygen)
 INCLUDE(GenerateCppcheck)
+INCLUDE(GitProjectVersion)
 
 # --- user options ---
 
@@ -25,21 +26,26 @@ OPTION(EXPORT_TO_CMAKE_PACKAGE_REGISTRY "If set to ON, RSC will be exported to t
 # --- global definitions ---
 
 # version information
+GIT_PROJECT_VERSION(GIT_TAG_NAME GIT_COMMIT_NUMBER GIT_COMMIT_ID)
+
 SET(RSC_VERSION_MAJOR "0" CACHE STRING "Major project version part")
 SET(RSC_VERSION_MINOR "8" CACHE STRING "Minor project version part")
-SET(RSC_VERSION_PATCH "0" CACHE STRING "Patch project version part")
-SET(RSC_VERSION "${RSC_VERSION_MAJOR}.${RSC_VERSION_MINOR}.${RSC_VERSION_PATCH}")
-SET(RSC_ABI_VERSION "4")
-
-FIND_PACKAGE(Subversion)
-INCLUDE(SubversionIsWc)
-SET(RSC_WC_REVISION "archive")
-Subversion_IS_WC(${CMAKE_CURRENT_SOURCE_DIR} IS_SVN_VERSION)
-MESSAGE(STATUS "This is a checked out version: ${IS_SVN_VERSION}")
-IF(Subversion_FOUND AND IS_SVN_VERSION)
-    Subversion_WC_INFO(${CMAKE_CURRENT_SOURCE_DIR} RSC)
-    MESSAGE(STATUS "Current revision is ${RSC_WC_REVISION}")
+IF(GIT_COMMIT_NUMBER)
+    SET(RSC_VERSION_PATCH "${GIT_COMMIT_NUMBER}" CACHE STRING "Patch project version part")
+ELSE()
+    SET(RSC_VERSION_PATCH "0" CACHE STRING "Patch project version part")
 ENDIF()
+# we should not make this a cache entry as it wouln't be update automatically
+# otherwise
+IF(GIT_COMMIT_NUMBER)
+    SET(RSC_WC_REVISION "${GIT_COMMIT_ID}")
+ELSE()
+    SET(RSC_WC_REVISION "archive")
+ENDIF()
+
+SET(RSC_VERSION "${RSC_VERSION_MAJOR}.${RSC_VERSION_MINOR}.${RSC_VERSION_PATCH}")
+
+SET(RSC_ABI_VERSION "4")
 
 SET(RSC_NAME "rsc")
 SET(RSC_TEST_NAME "rsctest")

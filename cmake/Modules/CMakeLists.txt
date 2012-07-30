@@ -33,6 +33,7 @@ INSTALL(FILES ExtractTBBVersion.cpp.in
               FindXenomai.cmake
               GenerateCppcheck.cmake
               GenerateDoxygen.cmake
+              GitProjectVersion.cmake
               IgnoreReturnCode.cmake
               InstallFilesRecursive.cmake
               PadString.cmake

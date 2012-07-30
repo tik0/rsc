@@ -1,4 +1,3 @@
-
 SET(CMAKE_MODULE_PATH "${RSC_CMAKE_MODULE_PATH}")
 MESSAGE(STATUS "Installing CMake modules to: ${CMAKE_MODULE_PATH}")
 
@@ -35,6 +34,7 @@ INSTALL(FILES ExtractTBBVersion.cpp.in
               PadString.cmake
               ParseArguments.cmake
               PedanticCompilerWarnings.cmake
+              ProvideGoogleMock.cmake
               SubversionIsWc.cmake
               SuperPedanticCompilerWarnings.cmake
         DESTINATION ${CMAKE_MODULE_PATH})

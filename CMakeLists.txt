@@ -14,7 +14,7 @@ INCLUDE(EnableCoverageReport)
 INCLUDE(EnableSlocCount)
 INCLUDE(GenerateDoxygen)
 INCLUDE(GenerateCppcheck)
-INCLUDE(GitProjectVersion)
+INCLUDE(DefineProjectVersion)
 
 # --- user options ---
 
@@ -25,25 +25,9 @@ OPTION(EXPORT_TO_CMAKE_PACKAGE_REGISTRY "If set to ON, RSC will be exported to t
 
 # --- global definitions ---
 
-# version information
-GIT_PROJECT_VERSION(GIT_TAG_NAME GIT_COMMIT_NUMBER GIT_COMMIT_ID)
+DEFINE_PROJECT_VERSION(RSC_ 0 8 0 "archive")
 
-SET(RSC_VERSION_MAJOR "0" CACHE STRING "Major project version part")
-SET(RSC_VERSION_MINOR "8" CACHE STRING "Minor project version part")
-IF(GIT_COMMIT_NUMBER)
-    SET(RSC_VERSION_PATCH "${GIT_COMMIT_NUMBER}" CACHE STRING "Patch project version part")
-ELSE()
-    SET(RSC_VERSION_PATCH "0" CACHE STRING "Patch project version part")
-ENDIF()
-# we should not make this a cache entry as it wouln't be update automatically
-# otherwise
-IF(GIT_COMMIT_NUMBER)
-    SET(RSC_WC_REVISION "${GIT_COMMIT_ID}")
-ELSE()
-    SET(RSC_WC_REVISION "archive")
-ENDIF()
-
-SET(RSC_VERSION "${RSC_VERSION_MAJOR}.${RSC_VERSION_MINOR}.${RSC_VERSION_PATCH}")
+MESSAGE(STATUS "This is RSC version: ${RSC_VERSION}-${RSC_WC_REVISION}")
 
 SET(RSC_ABI_VERSION "4")
 

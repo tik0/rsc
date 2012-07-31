@@ -9,6 +9,7 @@ INSTALL(FILES ExtractTBBVersion.cpp.in
               CheckLSBTypes.cmake
               CMakeDoxyfile.in
               CMakeVariableDump.cmake
+              CurrentDate.cmake
               DefineProjectVersion.cmake
               EnableCoverageReport.cmake
               EnableSlocCount.cmake

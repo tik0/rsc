@@ -9,7 +9,8 @@
 # GMOCK_SOURCES - Internal, sources used for the target
 #
 # Uses:
-# GMOCK_SOURCE - Source URL to download the archive, default exists for 1.6.0
+# GMOCK_SOURCE - Source URL to download the archive, default exists for 1.6.0.
+#                This can also be a file:// URL.
 #
 # In cases the source URL is changed in the cache, a new download will be
 # done.

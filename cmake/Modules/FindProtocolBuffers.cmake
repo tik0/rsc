@@ -437,6 +437,7 @@ FIND_FILE(PROTOBUF_JAVA_LIBRARY
                 "${PROTOBUF_JAVA_ROOT}/share/java"
                 "/usr/share/java"
                 "/usr/share/java/protobuf-java"
+                "/usr/share/protobuf/lib"
                 "${CMAKE_INSTALL_PREFIX}/lib/java"
                 "${CMAKE_INSTALL_PREFIX}/share/java")
 

@@ -1,6 +1,6 @@
 prefix=@CMAKE_INSTALL_PREFIX@
 libdir=${prefix}/lib
-includedir=${prefix}/include
+includedir=${prefix}/include/@INSTALL_PATH_PREFIX@
 
 Name: Robotics Systems Commons
 Description: RSC is a Code.CoR-Lab project focused on all aspects of reusable library functions in robotics systems.

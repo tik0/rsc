@@ -36,6 +36,11 @@ FUNCTION(GIT_PROJECT_VERSION LATEST_TAG COMMIT_NUMBER COMMIT_ID)
         EXECUTE_PROCESS(COMMAND ${GIT_EXECUTABLE} describe --tags --match *.*
                         RESULT_VARIABLE VERSION_RESULT
                         OUTPUT_VARIABLE VERSION_OUTPUT)
+               
+        # we should not fail if git execution had an error         
+        IF(NOT VERSION_RESULT EQUAL 0)
+            RETURN()
+        ENDIF()
     
         STRING(STRIP ${VERSION_OUTPUT} VERSION_OUTPUT)
         STRING(REGEX REPLACE "(.+)-([0-9]+)-(.+)" "\\1;\\2;\\3" VERSION_MATCH ${VERSION_OUTPUT})

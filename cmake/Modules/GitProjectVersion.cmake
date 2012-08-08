@@ -37,6 +37,8 @@ FUNCTION(GIT_PROJECT_VERSION LATEST_TAG COMMIT_NUMBER COMMIT_ID)
                         RESULT_VARIABLE VERSION_RESULT
                         OUTPUT_VARIABLE VERSION_OUTPUT)
                
+        MESSAGE(STATUS "Git version output: '${VERSION_OUTPUT}'")
+               
         # we should not fail if git execution had an error         
         IF(NOT VERSION_RESULT EQUAL 0)
             RETURN()

@@ -37,8 +37,6 @@ FUNCTION(GIT_PROJECT_VERSION LATEST_TAG COMMIT_NUMBER COMMIT_ID)
                         RESULT_VARIABLE VERSION_RESULT
                         OUTPUT_VARIABLE VERSION_OUTPUT)
                
-        MESSAGE(STATUS "Git version output: '${VERSION_OUTPUT}'")
-               
         # we should not fail if git execution had an error         
         IF(NOT VERSION_RESULT EQUAL 0)
             RETURN()
@@ -46,6 +44,11 @@ FUNCTION(GIT_PROJECT_VERSION LATEST_TAG COMMIT_NUMBER COMMIT_ID)
     
         STRING(STRIP ${VERSION_OUTPUT} VERSION_OUTPUT)
         STRING(REGEX REPLACE "(.+)-([0-9]+)-(.+)" "\\1;\\2;\\3" VERSION_MATCH ${VERSION_OUTPUT})
+        
+        LIST(LENGTH VERSION_MATCH MATCH_LENGTH)
+        IF(NOT MATCH_LENGTH EQUAL 3)
+            RETURN()
+        ENDIF()
         
         LIST(GET VERSION_MATCH 0 TAG)
         LIST(GET VERSION_MATCH 1 NUMBER)

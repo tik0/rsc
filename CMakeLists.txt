@@ -15,6 +15,7 @@ INCLUDE(EnableSlocCount)
 INCLUDE(GenerateDoxygen)
 INCLUDE(GenerateCppcheck)
 INCLUDE(DefineProjectVersion)
+INCLUDE(CurrentDate)
 
 # --- user options ---
 
@@ -26,6 +27,7 @@ OPTION(EXPORT_TO_CMAKE_PACKAGE_REGISTRY "If set to ON, RSC will be exported to t
 # --- global definitions ---
 
 DEFINE_PROJECT_VERSION(RSC_ 0 8 0 "archive")
+CURRENT_DATE(RSC_BUILD_DATE)
 
 MESSAGE(STATUS "This is RSC version: ${RSC_VERSION}-${RSC_WC_REVISION}")
 

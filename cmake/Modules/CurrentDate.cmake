@@ -20,15 +20,31 @@
 #   CoR-Lab, Research Institute for Cognition and Robotics
 #     Bielefeld University
 
-MACRO(CURRENT_DATE RESULT)
+FUNCTION(CURRENT_DATE RESULT)
+
     IF (WIN32)
-        EXECUTE_PROCESS(COMMAND "date" "/T" OUTPUT_VARIABLE ${RESULT})
-        STRING(REGEX REPLACE "(..)/(..)/..(..).*" "\\3\\2\\1" ${RESULT} ${${RESULT}})
+        SET(ARGS "/T")
+        SET(REPLACE "(..)/(..)/..(..).*" "\\3\\2\\1")
     ELSEIF(UNIX)
-        EXECUTE_PROCESS(COMMAND "date" "+%d/%m/%Y" OUTPUT_VARIABLE ${RESULT})
-        STRING(REGEX REPLACE "(..)/(..)/..(..).*" "\\3\\2\\1" ${RESULT} ${${RESULT}})
-    ELSE (WIN32)
-        MESSAGE(SEND_ERROR "date not implemented")
-        SET(${RESULT} 000000)
-    ENDIF (WIN32)
-ENDMACRO()
+        SET(ARGS "+%d/%m/%Y")
+        SET(REPLACE "(..)/(..)/..(..).*" "\\3\\2\\1")
+    ELSE()
+        MESSAGE(WARNING "date not implemented")
+        SET(${RESULT} 000000 PARENT_SCOPE)
+        RETURN()
+    ENDIF()
+    
+    EXECUTE_PROCESS(COMMAND "date" ${ARGS}
+                    OUTPUT_VARIABLE DATE_OUTPUT
+                    RESULT_VARIABLE DATE_RESULT)
+
+    IF(NOT DATE_RESULT EQUAL 0)
+        MESSAGE(WARNING "error calling date command")
+        SET(${RESULT} 000000 PARENT_SCOPE)
+        RETURN()
+    ENDIF()
+                    
+    STRING(REGEX REPLACE ${REPLACE} DATE_STRING ${DATE_OUTPUT})
+    SET(${RESULT} ${DATE_STRING} PARENT_SCOPE)
+    
+ENDFUNCTION()

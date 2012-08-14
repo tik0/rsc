@@ -34,6 +34,7 @@ FUNCTION(GIT_PROJECT_VERSION LATEST_TAG COMMIT_NUMBER COMMIT_ID)
         MESSAGE(STATUS "This is a git repository")
         
         EXECUTE_PROCESS(COMMAND ${GIT_EXECUTABLE} describe --tags --match *.*
+                        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
                         RESULT_VARIABLE VERSION_RESULT
                         OUTPUT_VARIABLE VERSION_OUTPUT)
                

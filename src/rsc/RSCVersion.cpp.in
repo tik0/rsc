@@ -63,7 +63,7 @@ string RSCVersion::buildId() {
 }
 
 string RSCVersion::buildDate() {
-	return "@RSC_WC_LAST_CHANGED_DATE@";
+	return "@RSC_BUILD_DATE@";
 }
 
 string RSCVersion::buildString() {

@@ -14,6 +14,8 @@ INCLUDE(EnableCoverageReport)
 INCLUDE(EnableSlocCount)
 INCLUDE(GenerateDoxygen)
 INCLUDE(GenerateCppcheck)
+INCLUDE(DefineProjectVersion)
+INCLUDE(CurrentDate)
 
 # --- user options ---
 
@@ -24,22 +26,12 @@ OPTION(EXPORT_TO_CMAKE_PACKAGE_REGISTRY "If set to ON, RSC will be exported to t
 
 # --- global definitions ---
 
-# version information
-SET(RSC_VERSION_MAJOR "0" CACHE STRING "Major project version part")
-SET(RSC_VERSION_MINOR "7" CACHE STRING "Minor project version part")
-SET(RSC_VERSION_PATCH "0" CACHE STRING "Patch project version part")
-SET(RSC_VERSION "${RSC_VERSION_MAJOR}.${RSC_VERSION_MINOR}.${RSC_VERSION_PATCH}")
-SET(RSC_ABI_VERSION "4")
+DEFINE_PROJECT_VERSION(RSC_ 0 7 0 "archive")
+CURRENT_DATE(RSC_BUILD_DATE)
 
-FIND_PACKAGE(Subversion)
-INCLUDE(SubversionIsWc)
-SET(RSC_WC_REVISION "archive")
-Subversion_IS_WC(${CMAKE_CURRENT_SOURCE_DIR} IS_SVN_VERSION)
-MESSAGE(STATUS "This is a checked out version: ${IS_SVN_VERSION}")
-IF(Subversion_FOUND AND IS_SVN_VERSION)
-    Subversion_WC_INFO(${CMAKE_CURRENT_SOURCE_DIR} RSC)
-    MESSAGE(STATUS "Current revision is ${RSC_WC_REVISION}")
-ENDIF()
+MESSAGE(STATUS "This is RSC version: ${RSC_VERSION}-${RSC_WC_REVISION}")
+
+SET(RSC_ABI_VERSION "4")
 
 SET(RSC_NAME "rsc")
 SET(RSC_TEST_NAME "rsctest")
@@ -171,7 +163,7 @@ INSTALL(FILES ${CMAKE_BINARY_DIR}/RSCConfigVersion.cmake DESTINATION share/rsc)
 EXPORT(TARGETS ${RSC_NAME} FILE "${CMAKE_BINARY_DIR}/RSCDepends.cmake")
 INSTALL(EXPORT RSCDepends
         DESTINATION "share/rsc")
-        
+
 INSTALL(FILES COPYING.txt DESTINATION share/doc/rsc RENAME copyright)
 
 # --- enable unit tests if desired ---

@@ -1,4 +1,3 @@
-
 SET(CMAKE_MODULE_PATH "${RSC_CMAKE_MODULE_PATH}")
 MESSAGE(STATUS "Installing CMake modules to: ${CMAKE_MODULE_PATH}")
 
@@ -10,6 +9,8 @@ INSTALL(FILES ExtractTBBVersion.cpp.in
               CheckLSBTypes.cmake
               CMakeDoxyfile.in
               CMakeVariableDump.cmake
+              CurrentDate.cmake
+              DefineProjectVersion.cmake
               EnableCoverageReport.cmake
               EnableSlocCount.cmake
               FindBoostThreadpool.cmake
@@ -33,6 +34,8 @@ INSTALL(FILES ExtractTBBVersion.cpp.in
               FindXenomai.cmake
               GenerateCppcheck.cmake
               GenerateDoxygen.cmake
+              GitProjectVersion.cmake
+              git2staticversion.py
               IgnoreReturnCode.cmake
               InstallFilesRecursive.cmake
               PadString.cmake

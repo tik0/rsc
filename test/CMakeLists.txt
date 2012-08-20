@@ -14,6 +14,7 @@ CONFIGURE_FILE(testconfig.h.in ${CMAKE_CURRENT_BINARY_DIR}/testconfig.h)
 
 SET(REGISTRY_TEST_LIB_NAME "registry")
 ADD_LIBRARY(${REGISTRY_TEST_LIB_NAME} SHARED "rsc/misc/testRegistry.cpp" "rsc/misc/testRegistry.h")
+TARGET_LINK_LIBRARIES(${REGISTRY_TEST_LIB_NAME} ${RSC_NAME})
 
 SET(REGISTREE_TEST_LIB_NAME "registree")
 ADD_LIBRARY(${REGISTREE_TEST_LIB_NAME} SHARED "rsc/misc/RegistreeLib.cpp" "rsc/misc/RegistreeLib.h")

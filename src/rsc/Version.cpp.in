@@ -3,6 +3,7 @@
  * This file is a part of the RSC project
  *
  * Copyright (C) 2011 by Johannes Wienke <jwienke at techfak dot uni-bielefeld dot de>
+ * Copyright (C) 2012 Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  *
  * This file may be licensed under the terms of the
  * GNU Lesser General Public License Version 3 (the ``LGPL''),
@@ -24,7 +25,7 @@
  *
  * ============================================================ */
 
-#include "RSCVersion.h"
+#include "Version.h"
 
 #include <sstream>
 
@@ -32,44 +33,44 @@ using namespace std;
 
 namespace rsc {
 
-unsigned int RSCVersion::major() {
-	return RSC_VERSION_MAJOR;
+unsigned int Version::major() {
+    return RSC_VERSION_MAJOR;
 }
 
-unsigned int RSCVersion::minor() {
-	return RSC_VERSION_MINOR;
+unsigned int Version::minor() {
+    return RSC_VERSION_MINOR;
 }
 
-unsigned int RSCVersion::patch() {
-	return RSC_VERSION_PATCH;
+unsigned int Version::patch() {
+    return RSC_VERSION_PATCH;
 }
 
-unsigned int RSCVersion::numeric() {
-	return RSC_VERSION_NUMERIC;
+unsigned int Version::numeric() {
+    return RSC_VERSION_NUMERIC;
 }
 
-string RSCVersion::string() {
-	ostringstream ss;
-	ss << major() << '.' << minor() << '.' << patch();
-	return ss.str();
+string Version::string() {
+    ostringstream ss;
+    ss << major() << '.' << minor() << '.' << patch();
+    return ss.str();
 }
 
-unsigned int RSCVersion::abi() {
-	return RSC_ABI_VERSION;
+unsigned int Version::abi() {
+    return RSC_ABI_VERSION;
 }
 
-string RSCVersion::buildId() {
-	return "@RSC_WC_REVISION@";
+string Version::buildId() {
+    return "@RSC_WC_REVISION@";
 }
 
-string RSCVersion::buildDate() {
-	return "@RSC_BUILD_DATE@";
+string Version::buildDate() {
+    return "@RSC_BUILD_DATE@";
 }
 
-string RSCVersion::buildString() {
-	ostringstream ss;
-	ss << buildId() << " (DATE " << buildDate() << ")";
-	return ss.str();
+string Version::buildString() {
+    ostringstream ss;
+    ss << buildId() << " (DATE " << buildDate() << ")";
+    return ss.str();
 }
 
 }

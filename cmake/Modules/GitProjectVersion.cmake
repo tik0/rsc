@@ -29,36 +29,46 @@ FUNCTION(GIT_PROJECT_VERSION LATEST_TAG COMMIT_NUMBER COMMIT_ID)
     SET(${COMMIT_NUMBER} "" PARENT_SCOPE)
     SET(${COMMIT_ID} "" PARENT_SCOPE)
 
-    IF(GIT_EXECUTABLE AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
-    
-        MESSAGE(STATUS "This is a git repository")
-        
-        EXECUTE_PROCESS(COMMAND ${GIT_EXECUTABLE} describe --tags --match *.*
-                        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-                        RESULT_VARIABLE VERSION_RESULT
-                        OUTPUT_VARIABLE VERSION_OUTPUT)
-               
-        # we should not fail if git execution had an error         
-        IF(NOT VERSION_RESULT EQUAL 0)
-            RETURN()
-        ENDIF()
-    
-        STRING(STRIP ${VERSION_OUTPUT} VERSION_OUTPUT)
-        STRING(REGEX REPLACE "(.+)-([0-9]+)-(.+)" "\\1;\\2;\\3" VERSION_MATCH ${VERSION_OUTPUT})
-        
-        LIST(LENGTH VERSION_MATCH MATCH_LENGTH)
-        IF(NOT MATCH_LENGTH EQUAL 3)
-            RETURN()
-        ENDIF()
-        
-        LIST(GET VERSION_MATCH 0 TAG)
-        LIST(GET VERSION_MATCH 1 NUMBER)
-        LIST(GET VERSION_MATCH 2 ID)
-        
-        SET(${LATEST_TAG} ${TAG} PARENT_SCOPE)
-        SET(${COMMIT_NUMBER} ${NUMBER} PARENT_SCOPE)
-        SET(${COMMIT_ID} ${ID} PARENT_SCOPE)
-
+    IF(NOT GIT_EXECUTABLE)
+        RETURN()
     ENDIF()
+    
+    # check whether this is a git repository by calling "git status" once
+    EXECUTE_PROCESS(COMMAND ${GIT_EXECUTABLE} status
+                    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+                    RESULT_VARIABLE STATUS_RESULT
+                    OUTPUT_QUIET
+                    ERROR_QUIET)
+    IF(NOT STATUS_RESULT EQUAL 0)
+        RETURN()
+    ENDIF()
+    
+    MESSAGE(STATUS "This is a git repository")
+    
+    EXECUTE_PROCESS(COMMAND ${GIT_EXECUTABLE} describe --tags --match *.*
+                    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+                    RESULT_VARIABLE VERSION_RESULT
+                    OUTPUT_VARIABLE VERSION_OUTPUT)
+           
+    # we should not fail if git execution had an error         
+    IF(NOT VERSION_RESULT EQUAL 0)
+        RETURN()
+    ENDIF()
+
+    STRING(STRIP ${VERSION_OUTPUT} VERSION_OUTPUT)
+    STRING(REGEX REPLACE "(.+)-([0-9]+)-(.+)" "\\1;\\2;\\3" VERSION_MATCH ${VERSION_OUTPUT})
+    
+    LIST(LENGTH VERSION_MATCH MATCH_LENGTH)
+    IF(NOT MATCH_LENGTH EQUAL 3)
+        RETURN()
+    ENDIF()
+    
+    LIST(GET VERSION_MATCH 0 TAG)
+    LIST(GET VERSION_MATCH 1 NUMBER)
+    LIST(GET VERSION_MATCH 2 ID)
+    
+    SET(${LATEST_TAG} ${TAG} PARENT_SCOPE)
+    SET(${COMMIT_NUMBER} ${NUMBER} PARENT_SCOPE)
+    SET(${COMMIT_ID} ${ID} PARENT_SCOPE)
 
 ENDFUNCTION()

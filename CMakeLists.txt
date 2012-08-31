@@ -35,10 +35,11 @@ SET(RSC_ABI_VERSION "4")
 SET(SO_VERSION "${RSC_VERSION_MAJOR}.${RSC_VERSION_MINOR}")
 
 SET(RSC_NAME "rsc")
-SET(RSC_TEST_NAME "rsctest")
-
+SET(VERSION_SUFFIX "${RSC_VERSION_MAJOR}.${RSC_VERSION_MINOR}")
 SET(INSTALL_PATH_PREFIX "rsc${RSC_VERSION_MAJOR}.${RSC_VERSION_MINOR}"
     CACHE STRING "Prefix path applied to all non-versioned installed files in order to prevent version clashes.")
+
+SET(RSC_TEST_NAME "rsctest")
 
 SET(RSC_CMAKE_PATH "share/${INSTALL_PATH_PREFIX}/cmake")
 SET(RSC_CMAKE_MODULE_PATH "${RSC_CMAKE_PATH}/Modules")
@@ -161,16 +162,20 @@ SET(LIB_SUFFIX ${CMAKE_SHARED_LIBRARY_SUFFIX})
 IF(CMAKE_LINK_LIBRARY_SUFFIX)
     SET(LIB_SUFFIX ${CMAKE_LINK_LIBRARY_SUFFIX})
 ENDIF()
-CONFIGURE_FILE(RSCConfig.cmake.in "${CMAKE_BINARY_DIR}/RSCConfig.cmake" @ONLY)
-INSTALL(FILES "${CMAKE_BINARY_DIR}/RSCConfig.cmake" DESTINATION "share/${INSTALL_PATH_PREFIX}")
-CONFIGURE_FILE(RSCConfigVersion.cmake.in "${CMAKE_BINARY_DIR}/RSCConfigVersion.cmake" @ONLY)
-INSTALL(FILES "${CMAKE_BINARY_DIR}/RSCConfigVersion.cmake" DESTINATION "share/${INSTALL_PATH_PREFIX}")
+CONFIGURE_FILE(RSCConfig.cmake.in
+               "${CMAKE_BINARY_DIR}/RSCConfig.cmake"
+               @ONLY)
+INSTALL(FILES "${CMAKE_BINARY_DIR}/RSCConfig.cmake"
+        DESTINATION "share/${INSTALL_PATH_PREFIX}")
+CONFIGURE_FILE(RSCConfigVersion.cmake.in
+               "${CMAKE_BINARY_DIR}/RSCConfigVersion.cmake"
+               @ONLY)
+INSTALL(FILES "${CMAKE_BINARY_DIR}/RSCConfigVersion.cmake"
+        DESTINATION "share/${INSTALL_PATH_PREFIX}")
 
 EXPORT(TARGETS ${RSC_NAME} FILE "${CMAKE_BINARY_DIR}/RSCDepends.cmake")
 INSTALL(EXPORT RSCDepends
         DESTINATION "share/${INSTALL_PATH_PREFIX}")
-
-INSTALL(FILES COPYING.txt DESTINATION "share/doc/${INSTALL_PATH_PREFIX}" RENAME copyright)
 
 # --- enable unit tests if desired ---
 
@@ -184,7 +189,9 @@ GENERATE_DOXYGEN(VERSION "${RSC_VERSION}")
 
 # --- coverage ---
 
-ENABLE_COVERAGE_REPORT(TARGETS ${RSC_NAME} TESTS ${RSC_TEST_NAME} FILTER "*3rdparty*" "*test/*")
+ENABLE_COVERAGE_REPORT(TARGETS ${RSC_NAME}
+                       TESTS  ${RSC_TEST_NAME}
+                       FILTER "*3rdparty*" "*test/*")
 
 # --- sloccount ---
 

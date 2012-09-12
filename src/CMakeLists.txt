@@ -31,7 +31,8 @@ FILE(GLOB SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
                   "rsc/misc/*.cpp"
                   "rsc/runtime/*.cpp"
                   "rsc/patterns/*.cpp"
-                  "rsc/threading/*.cpp")
+                  "rsc/threading/*.cpp"
+                  "rsc/plugins/*.cpp")
 SET(SOURCES ${SOURCES}
             rsc/debug/DebugTools.cpp
             rsc/subprocess/Subprocess.cpp
@@ -45,7 +46,8 @@ FILE(GLOB HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
                   "rsc/runtime/*.h"
                   "rsc/patterns/*.h"
                   "rsc/patterns/detail/*.h"
-                  "rsc/threading/*.h")
+                  "rsc/threading/*.h"
+                  "rsc/plugins/*.h")
 SET(HEADERS ${HEADERS}
             rsc/debug/DebugTools.h
             rsc/subprocess/Subprocess.h
@@ -80,7 +82,12 @@ ELSEIF(WIN32)
 ENDIF()
 
 ADD_LIBRARY(${RSC_NAME} SHARED ${SOURCES} ${HEADERS})
-TARGET_LINK_LIBRARIES(${RSC_NAME} ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+TARGET_LINK_LIBRARIES(${RSC_NAME} ${Boost_LIBRARIES}
+                                  ${CMAKE_THREAD_LIBS_INIT})
+# System libraries for dynamic loading (required by plugin system)
+IF(UNIX)
+    TARGET_LINK_LIBRARIES(${RSC_NAME} dl)
+ENDIF()
 SET_TARGET_PROPERTIES(${RSC_NAME}
                       PROPERTIES
                       VERSION ${SO_VERSION})

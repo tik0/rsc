@@ -28,6 +28,8 @@
 
 #include <boost/noncopyable.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/thread.hpp>
+#include <boost/bind.hpp>
 
 namespace rsc {
 namespace patterns {
@@ -35,11 +37,13 @@ namespace patterns {
 /**
  * This template class implements the singleton pattern.
  *
- * To add singleton behavior to a class @c C, add @c Singleton<C> to its list of
+ * To add singleton behavior to a class @c T, add @c Singleton<T> to its list of
  * base classes.
  *
- * @note C has to contain a friend declaration for @c Singleton<C>.
- * @note This singleton implementation is not thread-safe.
+ * @note T has to contain a friend declaration for @c Singleton<T>.
+ * @note This class is thread-safe and can be used in static initializations
+ * @note For allowing the use inside static initialization code, the absurd
+ *       amount of work for the mutex is necessary.
  *
  * @author Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  */
@@ -54,8 +58,7 @@ public:
      *
      * @return A reference to the instance.
      */
-    static T&
-    getInstance();
+    static T& getInstance();
 
     /**
      * This function can be used to make sure the instance is deleted at a
@@ -66,18 +69,37 @@ public:
      * @note The instance will be destroyed in any case but the order of
      *       destruction is unspecified then.
      */
-    static void
-    killInstance();
+    static void killInstance();
 private:
-    static boost::shared_ptr<T>&
-    getStorage();
+    static boost::shared_ptr<T>& getStorage();
+
+    static boost::mutex& getInstanceMutex();
+
+    static void createMutex(boost::mutex*& destination);
+
 };
 
 // Singleton implementation
 
 template<typename T>
-T&
-Singleton<T>::getInstance() {
+void Singleton<T>::createMutex(boost::mutex*& destination) {
+    destination = new boost::mutex();
+}
+
+template<typename T>
+boost::mutex& Singleton<T>::getInstanceMutex() {
+    static boost::mutex* instanceMutex;
+    static boost::once_flag instanceMutexOnceFlag = BOOST_ONCE_INIT;
+    boost::call_once(instanceMutexOnceFlag,
+            boost::bind(&Singleton::createMutex, boost::ref(instanceMutex)));
+    return *instanceMutex;
+}
+
+template<typename T>
+T& Singleton<T>::getInstance() {
+    boost::mutex& instanceMutex = getInstanceMutex();
+    boost::mutex::scoped_lock lock(instanceMutex);
+
     boost::shared_ptr<T>& instance = getStorage();
 
     if (!instance) {
@@ -93,6 +115,9 @@ Singleton<T>::~Singleton() {
 
 template<typename T>
 void Singleton<T>::killInstance() {
+    boost::mutex& instanceMutex = getInstanceMutex();
+    boost::mutex::scoped_lock lock(instanceMutex);
+
     boost::shared_ptr<T>& instance = getStorage();
 
     if (instance) {
@@ -101,10 +126,8 @@ void Singleton<T>::killInstance() {
 }
 
 template<typename T>
-boost::shared_ptr<T>&
-Singleton<T>::getStorage() {
-    static boost::shared_ptr<T> instance = boost::shared_ptr<T>(
-            reinterpret_cast<T*> (0));
+boost::shared_ptr<T>& Singleton<T>::getStorage() {
+    static boost::shared_ptr<T> instance = boost::shared_ptr<T>();
 
     return instance;
 }

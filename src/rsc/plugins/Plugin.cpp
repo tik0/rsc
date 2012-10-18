@@ -121,8 +121,7 @@ private:
     void loadLibrary() {
 #ifdef __linux__
         if (!(this->handle = dlopen(this->library.c_str(), RTLD_NOW))) {
-            char buffer[4096];
-            const char* result = strerror_r(errno, buffer, 4096);
+            const char* result = dlerror();
             throw runtime_error(str(format("Failed to load plugin `%1%' from shared object `%2%': %3%.")
                                     % this->name
                                     % this->library
@@ -145,8 +144,7 @@ private:
         void *address;
 #ifdef __linux__
         if (!(address = dlsym(this->handle, name.c_str()))) {
-            char buffer[4096];
-            const char* result = strerror_r(errno, buffer, 4096);
+            const char* result = dlerror();
             throw runtime_error(str(format("Plugin `%1%' failed to define function `%2%': %3%")
                                     % this->name
                                     % name

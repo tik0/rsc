@@ -82,6 +82,8 @@ void Manager::addPath(const boost::filesystem::path& path) {
             // Strip leading "lib"
             if (name.substr(0, 3) == "lib") {
                 name = name.substr(3);
+            } else {
+                continue;
             }
             // Strip trailing ".so*"
             for (unsigned int i = 0; i <= 2; ++i) {

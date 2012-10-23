@@ -62,13 +62,33 @@ Configurator::~Configurator() {
     // Load all requested plugins.
     for (vector<string>::const_iterator it = this->load.begin();
          it != this->load.end(); ++it) {
-        string name = *it;
+        // Treat each element as a regular expression. Find matching
+        // plugins and load them. Note that regex syntax error can
+        // cause an exception here.
+        string pattern = *it;
+        RSCDEBUG(this->logger, "Looking up plugins matching pattern `"
+                 << pattern << "'");
+        set<PluginPtr> matches;
         try {
-            this->manager.getPlugin(name)->load();
+            matches = this->manager.getPlugins(boost::regex(pattern));
         } catch (const std::exception& e) {
-            throw runtime_error(str(format("Failed to load plugin `%1%' as requested via configuration: %2%")
-                                    % name
+            throw runtime_error(str(format("Failed to lookup matching plugins for patterns `%1%' as requested via configuration: %2%")
+                                    % pattern
                                     % e.what()));
+        }
+        RSCDEBUG(this->logger, "Found " << matches.size() << " match(es)");
+
+        // Try to load all plugins matching the pattern.
+        for (set<PluginPtr>::iterator it = matches.begin();
+             it != matches.end(); ++it) {
+            RSCDEBUG(this->logger, "Loading plugin " << (*it)->getName());
+            try {
+                (*it)->load();
+            } catch (const std::exception& e) {
+                throw runtime_error(str(format("Failed to load plugin `%1%' as requested via configuration: %2%")
+                                        % (*it)->getName()
+                                        % e.what()));
+            }
         }
     }
 }

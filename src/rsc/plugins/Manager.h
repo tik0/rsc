@@ -30,6 +30,7 @@
 #include <set>
 #include <map>
 
+#include <boost/regex.hpp>
 #include <boost/filesystem/path.hpp>
 
 #include "../patterns/Singleton.h"
@@ -73,11 +74,27 @@ public:
     void addPath(const boost::filesystem::path& path);
 
     /**
-     * Returns the set of known plugins.
+     * Returns the set of known plugins, potentially filtered by name
+     * according to regular expression @a regex.
      *
-     * @return A copy of the set of known plugins.
+     * @param regex A regular expression object which is matched
+     *              against plugin names, causing only matching plugin
+     *              to be returned.
+     * @return A copy of the set of known plugins (or subset thereof).
      */
-    std::set<PluginPtr> getPlugins() const;
+    std::set<PluginPtr> getPlugins(const boost::regex& regex
+                                   = boost::regex(".*")) const;
+
+    /**
+     * Returns the set of known plugins, filtered by name according to
+     * regular expression @a regex.
+     *
+     * @param regex A regular expression string which is matched
+     *              against plugin names, causing only matching plugin
+     *              to be returned.
+     * @return A copy of the set of known plugins (or subset thereof).
+     */
+    std::set<PluginPtr> getPlugins(const std::string& regex) const;
 
     /**
      * Return the plugin designated by @a name.

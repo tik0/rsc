@@ -109,15 +109,21 @@ void Manager::addPath(const boost::filesystem::path& path) {
     this->path.push_back(path);
 }
 
-set<PluginPtr> Manager::getPlugins() const {
+set<PluginPtr> Manager::getPlugins(const boost::regex& regex) const {
     set<PluginPtr> result;
 
     for (PluginMap::const_iterator it = this->plugins.begin();
          it != this->plugins.end(); ++it) {
-        result.insert(it->second);
+        if (regex_match(it->first, regex)) {
+            result.insert(it->second);
+        }
     }
     return result;
   }
+
+set<PluginPtr> Manager::getPlugins(const string& regex) const {
+    return getPlugins(boost::regex(regex));
+}
 
 PluginPtr Manager::getPlugin(const string& name) const {
     PluginMap::const_iterator it;

@@ -94,7 +94,7 @@ IF(BOOST_ROOT)
   SET(Boost_NO_SYSTEM_PATHS ON)
 ENDIF()
 
-FIND_PACKAGE(Boost ${Boost_USE_VERSION} REQUIRED thread filesystem signals program_options system)
+FIND_PACKAGE(Boost ${Boost_USE_VERSION} REQUIRED thread filesystem signals program_options system regex)
 
 SET(USE_INTERNAL_BOOST_UUID FALSE CACHE BOOL "Whether to use the internal version of boost.uuid or not")
 IF(NOT USE_INTERNAL_BOOST_UUID)

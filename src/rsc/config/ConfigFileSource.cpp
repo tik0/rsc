@@ -2,7 +2,7 @@
  *
  * This file is part of the RSC project
  *
- * Copyright (C) 2011 Jan Moringen
+ * Copyright (C) 2011, 2012 Jan Moringen
  *
  * This file may be licensed under the terms of the
  * GNU Lesser General Public License Version 3 (the ``LGPL''),
@@ -26,8 +26,10 @@
 
 #include "ConfigFileSource.h"
 
+#include <iterator>
+
 #include <boost/format.hpp>
-#include <boost/algorithm/string.hpp>
+#include <boost/tokenizer.hpp>
 
 #include "../runtime/ContainerIO.h"
 
@@ -52,23 +54,41 @@ string trim(const string& s) {
     }
 }
 
+void splitAtDots(const std::string& input, vector<string>& output) {
+    typedef boost::escaped_list_separator<char> SeparatorType;
+    typedef boost::tokenizer<SeparatorType>     TokenizerType;
+
+    SeparatorType sep('\\', '.');
+    TokenizerType tok(input, sep);
+    copy(tok.begin(), tok.end(), back_inserter(output));
+}
+
 ConfigFileSource::ConfigFileSource(istream& stream) :
     logger(Logger::getLogger("rsc.config.ConfigFileSource")), stream(stream) {
 
-    // parse options and store them in an internal map
+    // Parse option keys and values and store them in an internal map.
+    // Option keys are of the form
+    //
+    //   COMPONENT1.COMPONENT2.COMPONENT3 ...
+    //
+    // Components of option keys can be quoted to allow embedded '.'
+    // characters. For example:
+    //
+    //   logging."system.subsystem"
+    //
+    // would be parsed as option key
+    //
+    //   (logging system.subsystem) instead of
+    //   (logging system subsystem)
     string name;
     string value;
     while (getOption(name, value)) {
-
         vector<string> key;
-        split(key, name, is_any_of("."));
+        splitAtDots(name, key);
 
         RSCTRACE(logger, "Option " << key << " -> " << value);
-
         options[key] = value;
-
     }
-
 }
 
 void ConfigFileSource::provideOptions(OptionHandler& handler) {
@@ -89,7 +109,7 @@ bool ConfigFileSource::getOption(string& name, string& value) {
             throw invalid_argument("Old Mac EOL style '\\r' is not supported.");
         }
 
-        // strip '#' comments and whitespace
+        // Strip '#' comments and whitespace
         string::size_type n;
         if ((n = line.find('#')) != string::npos)
             line = line.substr(0, n);

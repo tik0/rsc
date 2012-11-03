@@ -29,7 +29,7 @@
 #include <errno.h>
 #include <string.h>
 
-#ifdef __linux__
+#if defined(__linux__) or defined(__APPLE__)
 #include <dlfcn.h>
 #endif
 
@@ -119,7 +119,7 @@ private:
     ShutdownFunction shutdown;
 
     void loadLibrary() {
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
         if (!(this->handle = dlopen(this->library.c_str(), RTLD_NOW))) {
             const char* result = dlerror();
             throw runtime_error(str(format("Failed to load plugin `%1%' from shared object `%2%': %3%.")
@@ -127,9 +127,9 @@ private:
                                     % this->library
                                     % (result ? result : "<unknown error>")));
         }
-#elif __APPLE__
-        throw runtime_error("Plugins are not implemented for this platform.");
-#elif _WIN32
+#elif defined(_WIN32)
+        throw runtime_error("Plugins are not implemented for Windows platform.");
+#else
         throw runtime_error("Plugins are not implemented for this platform.");
 #endif
     }
@@ -142,7 +142,7 @@ private:
         assert(this->handle);
 
         void *address;
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
         if (!(address = dlsym(this->handle, name.c_str()))) {
             const char* result = dlerror();
             throw runtime_error(str(format("Plugin `%1%' failed to define function `%2%': %3%")
@@ -150,9 +150,9 @@ private:
                                     % name
                                     % (result ? result : "<unknown error>")));
         }
-#elif __APPLE__
-        throw runtime_error("Plugins are not implemented for this platform.");
-#elif _WIN32
+#elif defined(_WIN32)
+        throw runtime_error("Plugins are not implemented for Windows platform.");
+#else
         throw runtime_error("Plugins are not implemented for this platform.");
 #endif
         return address;

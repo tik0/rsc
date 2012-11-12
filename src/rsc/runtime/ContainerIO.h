@@ -2,7 +2,7 @@
  *
  * This file is part of the RSC project
  *
- * Copyright (C) 2010, 2011 Jan Moringen
+ * Copyright (C) 2010, 2011, 2012 Jan Moringen
  *
  * This file may be licensed under the terms of the
  * GNU Lesser General Public License Version 3 (the ``LGPL''),
@@ -216,6 +216,7 @@ operator<<(basic_ostream<Ch, Tr>& stream, const valarray<T>& container) {
     return stream;
 }
 
+/* TODO(jmoringe, 2012-11-12): unfinished
 template<typename Ch, typename Tr, typename T>
 basic_ostream<Ch, Tr>&
 operator<<(basic_ostream<Ch, Tr>& stream, const slice_array<T>& container) {
@@ -223,13 +224,13 @@ operator<<(basic_ostream<Ch, Tr>& stream, const slice_array<T>& container) {
     typedef typename container_type::value_type value_type;
 
     stream << "s(";
-    /*    for (unsigned int i = 0; i != container.size(); ++i) {
-     stream << container[i];
-     if (i != container.size() - 1)
-     stream << ", ";
-     }*/
+    for (unsigned int i = 0; i != container.size(); ++i) {
+        stream << container[i];
+        if (i != container.size() - 1)
+            stream << ", ";
+    }
     stream << ")";
     return stream;
-}
+}*/
 
 }

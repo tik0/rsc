@@ -64,35 +64,41 @@ void Manager::addPath(const boost::filesystem::path& path) {
     }
 
     // Search specified directory for plugins.
-    RSCINFO(this->logger, "Adding path `" << path << "'");
+    RSCINFO(this->logger, "Adding path " << path);
     if (is_directory(path)) {
         for (directory_iterator it = directory_iterator(path);
              it != directory_iterator(); ++it) {
+            RSCTRACE(this->logger, "Processing " << it->path());
             if (!is_regular_file(it->path())) {
+                RSCINFO(this->logger, "Ignoring non-regular file " << it->path());
                 continue;
             }
 
             // Extract the plugin name from the library name.
             string name = it->path()
 #if BOOST_FILESYSTEM_VERSION == 3
-                .stem().string();
+                .filename().string();
 #else
-                .stem();
+                .filename();
 #endif
-            // Strip leading "lib"
-            if (name.substr(0, 3) == "lib") {
-                name = name.substr(3);
-            } else {
+            // Strip leading "lib" and trailing ".so*", ".dylib*", etc
+            regex libraryName (
+#if defined(__linux__)
+                    "^lib([^.]*)\\.so(.*)$"
+#elif defined(__APPLE__)
+                    "^lib([^.]*)(.*)\\.dylib$"
+#elif defined(_WIN32)
+                    // TODO(jmoringe, 2012-11-12): test this regexp
+                    "^([^.]*)\\.dll$"
+#else
+                    ""
+#endif
+                    );
+            if (!regex_match(name, libraryName)) {
+                RSCINFO(this->logger, "Ignoring non-matching file " << name);
                 continue;
             }
-            // Strip trailing ".so*"
-            for (unsigned int i = 0; i <= 2; ++i) {
-                if (name.substr(name.size() - (3 + i)).substr(0, 3)
-                    == ".so") {
-                    name = name.substr(0, name.size() - (3 + i));
-                    break;
-                }
-            }
+            name = regex_replace(name, libraryName, "\\1");
             boost::filesystem::path library = it->path();
 
             // If there is not yet an entry for the given name, add a

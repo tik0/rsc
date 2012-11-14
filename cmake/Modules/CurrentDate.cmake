@@ -22,14 +22,11 @@
 
 FUNCTION(CURRENT_DATE RESULT)
 
-    IF (WIN32)
-        SET(CMD "cmd.exe" "/c" "date" "/T")
-        SET(REPLACE "(..)/(..)/..(..).*" "\\3\\2\\1")
-    ELSEIF(UNIX)
+    IF(UNIX)
         SET(CMD "date" "+%d/%m/%Y")
         SET(REPLACE "(..)/(..)/..(..).*" "\\3\\2\\1")
     ELSE()
-        MESSAGE(WARNING "date not implemented")
+        MESSAGE(STATUS "date not implemented for this operating system")
         SET(${RESULT} 000000 PARENT_SCOPE)
         RETURN()
     ENDIF()

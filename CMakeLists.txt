@@ -87,10 +87,16 @@ SET(Boost_USE_STATIC_LIBS OFF)
 ADD_DEFINITIONS(-DBOOST_ALL_DYN_LINK)
 
 IF(BOOST_ROOT)
-  SET(Boost_NO_SYSTEM_PATHS ON)
+    SET(Boost_NO_SYSTEM_PATHS ON)
 ENDIF()
 
-FIND_PACKAGE(Boost ${Boost_USE_VERSION} REQUIRED thread filesystem signals program_options system)
+# determine the required libraries for boost based on its version
+FIND_PACKAGE(Boost ${Boost_USE_VERSION} REQUIRED)
+SET(BOOST_COMPONENTS thread filesystem signals program_options system regex)
+IF(Boost_VERSION STREQUAL 105000 OR Boost_VERSION STRGREATER 105000)
+    LIST(APPEND BOOST_COMPONENTS chrono) 
+ENDIF()
+FIND_PACKAGE(Boost ${Boost_USE_VERSION} REQUIRED ${BOOST_COMPONENTS})
 
 SET(USE_INTERNAL_BOOST_UUID FALSE CACHE BOOL "Wether to use the internal version of boost.uuid or not")
 IF(NOT USE_INTERNAL_BOOST_UUID)

@@ -23,10 +23,10 @@
 FUNCTION(CURRENT_DATE RESULT)
 
     IF (WIN32)
-        SET(ARGS "/T")
+        SET(CMD "cmd.exe" "/c" "date" "/T")
         SET(REPLACE "(..)/(..)/..(..).*" "\\3\\2\\1")
     ELSEIF(UNIX)
-        SET(ARGS "+%d/%m/%Y")
+        SET(CMD "date" "+%d/%m/%Y")
         SET(REPLACE "(..)/(..)/..(..).*" "\\3\\2\\1")
     ELSE()
         MESSAGE(WARNING "date not implemented")
@@ -34,12 +34,13 @@ FUNCTION(CURRENT_DATE RESULT)
         RETURN()
     ENDIF()
     
-    EXECUTE_PROCESS(COMMAND "date" ${ARGS}
+    EXECUTE_PROCESS(COMMAND ${CMD}
                     OUTPUT_VARIABLE DATE_OUTPUT
-                    RESULT_VARIABLE DATE_RESULT)
+                    RESULT_VARIABLE DATE_RESULT
+                    ERROR_VARIABLE DATE_ERROR)
 
     IF(NOT DATE_RESULT EQUAL 0)
-        MESSAGE(WARNING "error calling date command")
+        MESSAGE(WARNING "error calling date command: ${DATE_RESULT} ${DATE_ERROR}")
         SET(${RESULT} 000000 PARENT_SCOPE)
         RETURN()
     ENDIF()

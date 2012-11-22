@@ -45,7 +45,7 @@ FUNCTION(GIT_PROJECT_VERSION LATEST_TAG COMMIT_NUMBER COMMIT_ID)
     
     MESSAGE(STATUS "This is a git repository")
     
-    EXECUTE_PROCESS(COMMAND ${GIT_EXECUTABLE} describe --tags --match *.*
+    EXECUTE_PROCESS(COMMAND ${GIT_EXECUTABLE} describe --tags --match release-*.* --long
                     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
                     RESULT_VARIABLE VERSION_RESULT
                     OUTPUT_VARIABLE VERSION_OUTPUT)
@@ -55,20 +55,48 @@ FUNCTION(GIT_PROJECT_VERSION LATEST_TAG COMMIT_NUMBER COMMIT_ID)
         RETURN()
     ENDIF()
 
+    # make the matching against the branch more specific and grab the respective
+    # information
     STRING(STRIP ${VERSION_OUTPUT} VERSION_OUTPUT)
-    STRING(REGEX REPLACE "(.+)-([0-9]+)-(.+)" "\\1;\\2;\\3" VERSION_MATCH ${VERSION_OUTPUT})
-    
+    STRING(REGEX REPLACE "(release-[0-9]+\\.[0-9]+)-([0-9]+)-(.+)" "\\1;\\2;\\3" VERSION_MATCH ${VERSION_OUTPUT})
+
     LIST(LENGTH VERSION_MATCH MATCH_LENGTH)
     IF(NOT MATCH_LENGTH EQUAL 3)
+        MESSAGE(WARNING "Could not extract patch version from git describe call")
         RETURN()
     ENDIF()
-    
+
     LIST(GET VERSION_MATCH 0 TAG)
     LIST(GET VERSION_MATCH 1 NUMBER)
     LIST(GET VERSION_MATCH 2 ID)
-    
-    SET(${LATEST_TAG} ${TAG} PARENT_SCOPE)
-    SET(${COMMIT_NUMBER} ${NUMBER} PARENT_SCOPE)
-    SET(${COMMIT_ID} ${ID} PARENT_SCOPE)
+
+    # ensure that we are currently on a release branch
+    EXECUTE_PROCESS(COMMAND ${GIT_EXECUTABLE} rev-parse --abbrev-ref HEAD
+                    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+                    RESULT_VARIABLE BRANCH_RESULT
+                    OUTPUT_VARIABLE BRANCH_OUTPUT)
+
+    IF(NOT BRANCH_RESULT EQUAL 0)
+        MESSAGE(WARNING "Skiping the definition of the project version from git because the current branch could not be determined.")
+        RETURN()
+    ENDIF()
+    STRING(STRIP "${BRANCH_OUTPUT}" BRANCH_OUTPUT)
+    STRING(REGEX MATCH "^[0-9]+\\.[0-9]$" BRANCH_MATCH ${BRANCH_OUTPUT})
+
+    IF("" STREQUAL BRANCH_MATCH)
+
+        MESSAGE(STATUS "This repository is on a non-release branch. Not defining patch version.")
+
+        SET(${LATEST_TAG} ${TAG} PARENT_SCOPE)
+        SET(${COMMIT_NUMBER} 0 PARENT_SCOPE)
+        SET(${COMMIT_ID} ${ID} PARENT_SCOPE)
+
+    ELSE()
+
+        SET(${LATEST_TAG} ${TAG} PARENT_SCOPE)
+        SET(${COMMIT_NUMBER} ${NUMBER} PARENT_SCOPE)
+        SET(${COMMIT_ID} ${ID} PARENT_SCOPE)
+
+    ENDIF()
 
 ENDFUNCTION()

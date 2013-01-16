@@ -57,12 +57,19 @@ namespace config {
  * @param environmentVariablePrefix A prefix string with which all
  *                                  processed environment variables
  *                                  have to start.
+ * @param stripEnvironmentVariablePrefix if true, the prefix for environment
+ *                                       variable will be stripped before
+ *                                       passing options to the handler. If e.g.
+ *                                       RSC_ is set as prefix and this is true,
+ *                                       RSC_TEST will be passed to the handlers
+ *                                       as just TEST. Default is true.
  *
  * @author jmoringe
  */
 void RSC_EXPORT configure(OptionHandler& handler,
                           const std::string& configFileName,
-                          const std::string& environmentVariablePrefix);
+                          const std::string& environmentVariablePrefix,
+                          const bool& stripEnvironmentVariablePrefix = true);
 
 
 }

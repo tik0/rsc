@@ -52,7 +52,8 @@ LoggerPtr getLogger() {
 
 void configure(OptionHandler& handler,
                const string&  configFileName,
-               const string&  environmentVariablePrefix) {
+               const string&  environmentVariablePrefix,
+               const bool&    stripEnvironmentVariablePrefix) {
 
     // 1) Try system-wide configuration file.
     //    (lowest priority)
@@ -101,7 +102,8 @@ void configure(OptionHandler& handler,
     // 4) Add environment Variables
     //    (highest priority)
     {
-        EnvironmentVariableSource source(environmentVariablePrefix);
+        EnvironmentVariableSource source(environmentVariablePrefix,
+                stripEnvironmentVariablePrefix);
         source.provideOptions(handler);
     }
 }

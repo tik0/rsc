@@ -86,26 +86,31 @@ path userConfigDirectory() {
     return userHomeDirectory() / ".config";
 }
 
-string transformName(const string& name, const string& prefix) {
+string transformName(const string& name, const string& prefix,
+        const bool& stripPrefix) {
     if (starts_with(name, prefix)) {
         string result;
-        transform(name.begin() + prefix.size(), name.end(), back_inserter(
-                result), &::tolower);
+        string::const_iterator start = name.begin();
+        if (stripPrefix) {
+            start + prefix.size();
+        }
+        transform(start, name.end(), back_inserter(result), &::tolower);
         return result;
     } else {
         return "";
     }
 }
 
-EnvironmentVariableSource::EnvironmentVariableSource(const string& prefix) :
-    logger(Logger::getLogger("rsc.config.EnvironmentVariableSource")), prefix(
-            prefix) {
+EnvironmentVariableSource::EnvironmentVariableSource(const string& prefix,
+        const bool& stripPrefix) :
+        logger(Logger::getLogger("rsc.config.EnvironmentVariableSource")), prefix(
+                prefix), stripPrefix(stripPrefix) {
 }
 
 void EnvironmentVariableSource::provideOptions(OptionHandler& handler) {
     for (environment_iterator it = environment_iterator(environ); it
             != environment_iterator(); ++it) {
-        string name = transformName(it->first, this->prefix);
+        string name = transformName(it->first, this->prefix, this->stripPrefix);
         if (name.empty()) {
             continue;
         }

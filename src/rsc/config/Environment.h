@@ -91,14 +91,21 @@ public:
      *
      * @param prefix A prefix string against which all environment
      *               variables are matched.
+     * @param stripPrefix Determines whether the specified prefix will be
+     *                    stripped from the options when passing them to the
+     *                    handlers or not. If e.g. RSC_ is set as prefix and
+     *                    this is true, RSC_TEST will be passed to the handlers
+     *                    as just TEST. Default is true.
      */
-    EnvironmentVariableSource(const std::string& prefix = "");
+    EnvironmentVariableSource(const std::string& prefix = "",
+            const bool& stripPrefix = true);
 
     void provideOptions(OptionHandler& handler);
 private:
     rsc::logging::LoggerPtr logger;
 
     const std::string prefix;
+    bool stripPrefix;
 };
 
 }

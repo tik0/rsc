@@ -170,9 +170,28 @@ LoggerTreeNode::NamePath LoggerTreeNode::nameToPath(const string& name) {
     if (name.empty()) {
         return NamePath();
     }
+
+    // TODO add checks which can be detected easiest in the string representation
+
     NamePath path;
-    // TODO add consistency checks
-    boost::algorithm::split(path, name, boost::algorithm::is_any_of("."));
+    string lowerName = name;
+    boost::algorithm::to_lower(lowerName);
+    boost::algorithm::split(path, lowerName, boost::algorithm::is_any_of("."));
+
+    // Some consistency checks
+    assert(path.size() > 0);
+
+    // avoid reserved keywords at the end
+    // TODO how to avoid string duplication with OptionBasedConfigurator?
+    // The configurator would be the place to store the two string constants in
+    // but I do not want to have a dependency from this class to the
+    // configurator.
+    if (path.back() == "level" || path.back() == "system") {
+        throw invalid_argument(
+                "Logger names must not end with system or level (case-insensitive), but I received: '"
+                        + name + "'");
+    }
+
     return path;
 }
 

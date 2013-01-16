@@ -26,8 +26,11 @@
 
 #include "OptionBasedConfigurator.h"
 
+#include <boost/algorithm/string.hpp>
+
 #include "Logger.h"
 #include "LoggerFactory.h"
+#include "../runtime/ContainerIO.h"
 
 using namespace std;
 using namespace rsc::config;
@@ -37,7 +40,7 @@ namespace logging {
 
 OptionBasedConfigurator::OptionBasedConfigurator(
         const vector<string>& rootOption) :
-        rootOption(rootOption) {
+        rootOption(normalizeKey(rootOption)) {
 }
 
 OptionBasedConfigurator::~OptionBasedConfigurator() {
@@ -62,7 +65,9 @@ bool OptionBasedConfigurator::keyStartWithRoot(
     }
 
     for (size_t i = 0; i < rootOption.size(); ++i) {
-        if (rootOption[i] != key[i]) {
+        string keyPart = key[i];
+        boost::algorithm::to_lower(keyPart);
+        if (rootOption[i] != keyPart) {
             return false;
         }
     }
@@ -73,6 +78,8 @@ bool OptionBasedConfigurator::keyStartWithRoot(
 
 string OptionBasedConfigurator::loggerNameFromKey(
         const vector<string>& key) const {
+
+    vector<string> normalizedKey = normalizeKey(key);
 
     string name;
     // the last fragment must be the setting, do not include in the name
@@ -94,21 +101,23 @@ string OptionBasedConfigurator::loggerNameFromKey(
 void OptionBasedConfigurator::handleOption(const vector<string>& key,
         const string& value) {
 
-    if (!keyStartWithRoot(key)) {
+    vector<string> normalizedKey = normalizeKey(key);
+
+    if (!keyStartWithRoot(normalizedKey)) {
         return;
     }
 
     // something can only be a valid key for the configuration if there is a
     // chance that a special configuration key is at the end. Hence, sufficient
     // length is required
-    if (key.size() <= rootOption.size()) {
+    if (normalizedKey.size() <= rootOption.size()) {
         return;
     }
 
-    LoggerPtr logger = Logger::getLogger(loggerNameFromKey(key));
+    LoggerPtr logger = Logger::getLogger(loggerNameFromKey(normalizedKey));
 
-    string setting = key.back();
-    if (setting == "LEVEL") {
+    string setting = normalizedKey.back();
+    if (setting == "level") {
 
         if (value == "ALL") {
             logger->setLevel(Logger::LEVEL_ALL);
@@ -128,9 +137,23 @@ void OptionBasedConfigurator::handleOption(const vector<string>& key,
             logger->setLevel(Logger::LEVEL_OFF);
         }
 
-    } else if (setting == "SYSTEM" && logger->getName() == "") {
+    } else if (setting == "system" && logger->getName() == "") {
         LoggerFactory::getInstance().reselectLoggingSystem(value);
     }
+
+}
+
+vector<string> OptionBasedConfigurator::normalizeKey(
+        const vector<string>& key) const {
+
+    vector<string> normalizedKey;
+    for (vector<string>::const_iterator keyIt = key.begin(); keyIt != key.end(); ++keyIt) {
+        string part = *keyIt;
+        boost::algorithm::to_lower(part);
+        normalizedKey.push_back(part);
+    }
+
+    return normalizedKey;
 
 }
 

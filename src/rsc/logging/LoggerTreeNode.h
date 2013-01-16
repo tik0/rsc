@@ -150,6 +150,14 @@ public:
 
     void clearChildren();
 
+    /**
+     * Converts a string name of the form a.test.string to a hierarchical
+     * logger path representation. All upper-case letters will be converted to
+     * lower-case ones during this process.
+     *
+     * @param name point-separated string name of logger
+     * @return split path with lower-case parts
+     */
     static NamePath nameToPath(const std::string& name);
     static std::string pathToName(const NamePath& path);
 

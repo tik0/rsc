@@ -126,3 +126,17 @@ TEST(OptionBasedConfiguratorTest, testSystemSelection) {
     loggingSystemRegistry()->removeRegistree(systemName);
 
 }
+
+TEST(OptionBasedConfiguratorTest, testCaseInsensitiveSettings) {
+
+    LoggerFactory::getInstance().clearKnownLoggers();
+    LoggerFactory::getInstance().reconfigureFromFile(
+            TEST_ROOT + "/rsc/logging/loggingCaseInsensitive.config");
+
+    EXPECT_EQ(Logger::LEVEL_TRACE, Logger::getLogger("")->getLevel());
+    EXPECT_EQ(Logger::LEVEL_DEBUG, Logger::getLogger("sub.loGGer")->getLevel());
+    EXPECT_EQ(Logger::LEVEL_TRACE,
+            Logger::getLogger("another.logger")->getLevel());
+    EXPECT_EQ(Logger::LEVEL_TRACE, Logger::getLogger("sub.foo")->getLevel());
+
+}

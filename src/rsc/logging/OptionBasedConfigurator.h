@@ -84,6 +84,9 @@ private:
     std::string loggerNameFromKey(const std::vector<std::string>& key) const;
     std::string settingFromKey(const std::vector<std::string>& key) const;
 
+    std::vector<std::string> normalizeKey(
+            const std::vector<std::string>& key) const;
+
     std::vector<std::string> rootOption;
 
 };

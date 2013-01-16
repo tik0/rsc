@@ -30,6 +30,7 @@
 #include <boost/bind.hpp>
 #include <boost/function.hpp>
 #include <boost/thread.hpp>
+#include <boost/algorithm/string.hpp>
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
@@ -99,10 +100,12 @@ TEST(LoggerFactoryTest, testReselectLoggingSystem) {
     // if the logging system is illegally reported by the line above the next
     // line will cause the mock object to report an error
     string dummyName = randAlnumStr(20);
+    boost::algorithm::to_lower(dummyName);
     LoggerPtr logger(LoggerFactory::getInstance().getLogger(dummyName));
 
     // force hint
     string name = randAlnumStr(10);
+    boost::algorithm::to_lower(name);
     boost::shared_ptr<StubLogger> nameLogger(new StubLogger(name));
     EXPECT_CALL(*l2, createLogger("")).Times(1).WillOnce(
             Return(LoggerPtr(new StubLogger(dummyName))));
@@ -121,6 +124,7 @@ TEST(LoggerFactoryTest, testReselectLoggingSystem) {
 
     // wrong hint, fallback to other available system
     string newName = randAlnumStr(12);
+    boost::algorithm::to_lower(newName);
     EXPECT_CALL(*l2, createLogger("")).Times(1).WillOnce(
             Return(LoggerPtr(new StubLogger(dummyName))));
     EXPECT_CALL(*l2, createLogger(dummyName)).Times(1).WillOnce(
@@ -246,5 +250,44 @@ TEST(LoggerFactoryTest, testReconfigureSameSemantics) {
     EXPECT_EQ(Logger::LEVEL_OFF, childLevel1->getLevel());
     EXPECT_EQ(Logger::LEVEL_FATAL, childLevel2->getLevel());
     EXPECT_EQ(Logger::LEVEL_FATAL, childLevel3->getLevel());
+
+}
+
+TEST(LoggerFactoryTest, testCaseInsensitiveNames) {
+
+    LoggerFactory::killInstance();
+    LoggerFactory& factory = LoggerFactory::getInstance();
+
+    LoggerPtr upperCaseLogger = factory.getLogger("THIS.IS.A.TEST");
+    LoggerPtr lowerCaseLogger = factory.getLogger("this.is.a.test");
+
+    EXPECT_EQ(upperCaseLogger.get(), lowerCaseLogger.get());
+    EXPECT_EQ(upperCaseLogger->getName(), lowerCaseLogger->getName());
+
+    EXPECT_EQ("this.is.a.test", upperCaseLogger->getName()) << "Names should be all lower-case";
+
+}
+
+TEST(LoggerFactoryTest, testInvalidLoggerNames) {
+
+    // Logger names ending with level or system (case-insensitive) are not
+    // allowed as these are reserved keywords
+
+    LoggerFactory::killInstance();
+    LoggerFactory& factory = LoggerFactory::getInstance();
+
+    EXPECT_THROW(factory.getLogger("LEVEL"), invalid_argument);
+    EXPECT_THROW(factory.getLogger("level"), invalid_argument);
+    EXPECT_THROW(factory.getLogger("LeVeL"), invalid_argument);
+    EXPECT_THROW(factory.getLogger("test.LEVEL"), invalid_argument);
+    EXPECT_THROW(factory.getLogger("test.level"), invalid_argument);
+    EXPECT_THROW(factory.getLogger("test.LeVeL"), invalid_argument);
+
+    EXPECT_THROW(factory.getLogger("SYSTEM"), invalid_argument);
+    EXPECT_THROW(factory.getLogger("system"), invalid_argument);
+    EXPECT_THROW(factory.getLogger("SysTem"), invalid_argument);
+    EXPECT_THROW(factory.getLogger("test.SYSTEM"), invalid_argument);
+    EXPECT_THROW(factory.getLogger("test.system"), invalid_argument);
+    EXPECT_THROW(factory.getLogger("test.SysTem"), invalid_argument);
 
 }

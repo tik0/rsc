@@ -92,7 +92,7 @@ string transformName(const string& name, const string& prefix,
         string result;
         string::const_iterator start = name.begin();
         if (stripPrefix) {
-            start + prefix.size();
+            start = start + prefix.size();
         }
         transform(start, name.end(), back_inserter(result), &::tolower);
         return result;

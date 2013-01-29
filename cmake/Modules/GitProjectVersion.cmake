@@ -45,6 +45,23 @@ FUNCTION(GIT_PROJECT_VERSION LATEST_TAG COMMIT_NUMBER COMMIT_ID)
     
     MESSAGE(STATUS "This is a git repository")
     
+    # first, define the last commit id using git log.
+    # This is necessary, as git describe later might fail on shallow clones
+    EXECUTE_PROCESS(COMMAND ${GIT_EXECUTABLE} log -1 --pretty=format:g%h
+                    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+                    RESULT_VARIABLE HASH_RESULT
+                    OUTPUT_VARIABLE HASH_OUTPUT)
+    
+    IF(NOT HASH_RESULT EQUAL 0)
+        MESSAGE(STATUS "Unable to extract the git commit hash.")
+        RETURN()
+    ENDIF()
+    
+    STRING(STRIP ${HASH_OUTPUT} ID)    
+    SET(${COMMIT_ID} ${ID} PARENT_SCOPE)
+    
+    # After the commit hash was extracted safely we can try to use the full
+    # git describe logic, which is now safe to fail. 
     EXECUTE_PROCESS(COMMAND ${GIT_EXECUTABLE} describe --tags --match release-*.* --long
                     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
                     RESULT_VARIABLE VERSION_RESULT
@@ -68,7 +85,6 @@ FUNCTION(GIT_PROJECT_VERSION LATEST_TAG COMMIT_NUMBER COMMIT_ID)
 
     LIST(GET VERSION_MATCH 0 TAG)
     LIST(GET VERSION_MATCH 1 NUMBER)
-    LIST(GET VERSION_MATCH 2 ID)
 
     # ensure that we are currently on a release branch
     EXECUTE_PROCESS(COMMAND ${GIT_EXECUTABLE} rev-parse --abbrev-ref HEAD
@@ -90,7 +106,6 @@ FUNCTION(GIT_PROJECT_VERSION LATEST_TAG COMMIT_NUMBER COMMIT_ID)
         SET(${COMMIT_NUMBER} ${NUMBER} PARENT_SCOPE)
     ENDIF()
 
-    SET(${COMMIT_ID} ${ID} PARENT_SCOPE)
     SET(${LATEST_TAG} ${TAG} PARENT_SCOPE)
 
 ENDFUNCTION()

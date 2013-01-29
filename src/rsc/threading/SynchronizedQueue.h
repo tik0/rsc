@@ -28,6 +28,7 @@
 
 #include <queue>
 
+#include <boost/format.hpp>
 #include <boost/function.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/thread/condition.hpp>
@@ -120,16 +121,35 @@ public:
      * Returns the next element form the queue and wait until there is such an
      * element. The returned element is removed from the queue immediately.
      *
+     * @param timeoutMs maximum time spent waiting for a new element in
+     *                  milliseconds. Zero indicates to wait endlessly.
+     *                  Use #tryPop if you want to get a result without waiting
      * @return next element on the queue
      * @throw InterruptedException if #interrupt was called before a call to
      *                             this method or while waiting for an element
+     * @throw QueueEmptyException thrown if @param timeoutMs was > 0 and no
+     *                            element was found on the queue in the
+     *                            specified time
      */
-    M pop() {
+    M pop(const boost::uint32_t& timeoutMs = 0) {
 
         boost::recursive_mutex::scoped_lock lock(mutex);
 
         while (!interrupted && queue.empty()) {
-            condition.wait(lock);
+            if (timeoutMs == 0) {
+                condition.wait(lock);
+            } else {
+#if BOOST_VERSION >= 105000
+                if (!condition.timed_wait(lock, boost::posix_time::milliseconds(timeoutMs))) {
+#else
+                boost::xtime xt;
+                boost::xtime_get(&xt, boost::TIME_UTC);
+                xt.sec += (double(timeoutMs) / 1000.0);
+                if (!condition.timed_wait(lock, xt)) {
+#endif
+                    throw QueueEmptyException(boost::str(boost::format("No element available on queue within %d ms.") % timeoutMs));
+                }
+            }
         }
 
         if (interrupted) {

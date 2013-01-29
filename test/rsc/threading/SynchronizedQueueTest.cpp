@@ -114,6 +114,13 @@ TEST(SynchronizedQueueTest, testBasicPushPopMultiThreaded)
 
 }
 
+TEST(SynchronizedQueueTest, testPopTimeout) {
+
+    SynchronizedQueue<int> queue;
+    EXPECT_THROW(queue.pop(500), QueueEmptyException);
+
+}
+
 TEST(SynchronizedQueueTest, testInterruption)
 {
 

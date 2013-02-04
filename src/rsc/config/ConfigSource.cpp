@@ -26,6 +26,8 @@
 
 #include "ConfigSource.h"
 
+#include <stdexcept>
+
 #include <boost/tokenizer.hpp>
 
 namespace rsc {
@@ -43,6 +45,18 @@ void ConfigSource::splitKeyAtDots(const string& input, vector<string>& output) {
     SeparatorType sep('\\', '.');
     TokenizerType tok(input, sep);
     copy(tok.begin(), tok.end(), back_inserter(output));
+
+    for (vector<string>::const_iterator outputIt = output.begin();
+            outputIt != output.end(); ++outputIt) {
+        if (outputIt->empty()) {
+            throw invalid_argument("Empty component in key '" + input + "'");
+        }
+    }
+
+    if (output.empty()) {
+        throw invalid_argument("Option key is empty");
+    }
+
 }
 
 }

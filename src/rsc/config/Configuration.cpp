@@ -36,6 +36,7 @@
 
 #include "Environment.h"
 #include "ConfigFileSource.h"
+#include "CommandLinePropertySource.h"
 
 using namespace std;
 
@@ -53,6 +54,8 @@ LoggerPtr getLogger() {
 void configure(OptionHandler& handler,
                const string&  configFileName,
                const string&  environmentVariablePrefix,
+               const int&     argc,
+               char**         argv,
                const bool&    stripEnvironmentVariablePrefix) {
 
     // 1) Try system-wide configuration file.
@@ -106,6 +109,13 @@ void configure(OptionHandler& handler,
                 stripEnvironmentVariablePrefix);
         source.provideOptions(handler);
     }
+
+    // 5) Command line
+    if (argc > 0) {
+        CommandLinePropertySource source(argc, argv);
+        source.provideOptions(handler);
+    }
+
 }
 
 }

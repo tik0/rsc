@@ -26,10 +26,23 @@
 
 #include "ConfigSource.h"
 
+#include <boost/tokenizer.hpp>
+
 namespace rsc {
 namespace config {
 
+using namespace std;
+
 ConfigSource::~ConfigSource() {
+}
+
+void ConfigSource::splitKeyAtDots(const string& input, vector<string>& output) {
+    typedef boost::escaped_list_separator<char> SeparatorType;
+    typedef boost::tokenizer<SeparatorType> TokenizerType;
+
+    SeparatorType sep('\\', '.');
+    TokenizerType tok(input, sep);
+    copy(tok.begin(), tok.end(), back_inserter(output));
 }
 
 }

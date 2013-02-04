@@ -54,15 +54,6 @@ string trim(const string& s) {
     }
 }
 
-void splitAtDots(const std::string& input, vector<string>& output) {
-    typedef boost::escaped_list_separator<char> SeparatorType;
-    typedef boost::tokenizer<SeparatorType>     TokenizerType;
-
-    SeparatorType sep('\\', '.');
-    TokenizerType tok(input, sep);
-    copy(tok.begin(), tok.end(), back_inserter(output));
-}
-
 ConfigFileSource::ConfigFileSource(istream& stream) :
     logger(Logger::getLogger("rsc.config.ConfigFileSource")), stream(stream) {
 
@@ -84,7 +75,7 @@ ConfigFileSource::ConfigFileSource(istream& stream) :
     string value;
     while (getOption(name, value)) {
         vector<string> key;
-        splitAtDots(name, key);
+        splitKeyAtDots(name, key);
 
         RSCTRACE(logger, "Option " << key << " -> " << value);
         options[key] = value;

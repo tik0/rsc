@@ -33,10 +33,12 @@
 #include <gtest/gtest.h>
 
 #include "rsc/threading/SynchronizedQueue.h"
+#include "rsc/misc/langutils.h"
 
 using namespace std;
 using namespace rsc;
 using namespace rsc::threading;
+using namespace rsc::misc;
 
 void waitOnQueueElement(SynchronizedQueue<int>* queue, int* resultVar,
         bool* interrupted) {
@@ -117,7 +119,11 @@ TEST(SynchronizedQueueTest, testBasicPushPopMultiThreaded)
 TEST(SynchronizedQueueTest, testPopTimeout) {
 
     SynchronizedQueue<int> queue;
+    boost::uint64_t before = currentTimeMillis();
     EXPECT_THROW(queue.pop(500), QueueEmptyException);
+    boost::uint64_t after = currentTimeMillis();
+    EXPECT_GE(after - before, 500);
+
 
 }
 

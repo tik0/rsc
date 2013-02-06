@@ -142,10 +142,9 @@ public:
 #if BOOST_VERSION >= 105000
                 if (!condition.timed_wait(lock, boost::posix_time::milliseconds(timeoutMs))) {
 #else
-                boost::xtime xt;
-                boost::xtime_get(&xt, boost::TIME_UTC);
-                xt.sec += (double(timeoutMs) / 1000.0);
-                if (!condition.timed_wait(lock, xt)) {
+                const boost::system_time timeout = boost::get_system_time()
+                        + boost::posix_time::milliseconds(timeoutMs);
+                if (!condition.timed_wait(lock, timeout)) {
 #endif
                     throw QueueEmptyException(boost::str(boost::format("No element available on queue within %d ms.") % timeoutMs));
                 }

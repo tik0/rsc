@@ -31,6 +31,8 @@
 
 #include "rsc/subprocess/WindowsSubprocess.h"
 
+#include "testconfig.h"
+
 using namespace std;
 using namespace testing;
 using namespace rsc;
@@ -41,8 +43,8 @@ TEST(WindowsSubprocessTest, testSubprocess)
 
 	// TODO this test is really a stub. Think about how to better test this on windows
 	vector<string> args;
-	args.push_back("c:\\Users\\languitar\\workspace\\RSC\\build\\Doxyfile");
-    WindowsSubprocess proc("cmake", args);
+	args.push_back("--version");
+    WindowsSubprocess proc(CMAKE_EXECUTABLE, args);
     boost::this_thread::sleep(boost::posix_time::seconds(5));
 
 }

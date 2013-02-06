@@ -250,3 +250,55 @@ RSC_EXPORT std::ostream& operator<<(std::ostream& stream, const Logger::Level& l
     }
 
 //@}
+
+/**
+ * @name expectation logging utility macros with stream semantics
+ *
+ * The macros only log if the condition fails. However they do not let a program
+ * terminate and if the logger is not active, nothing will happen.
+ */
+//@{
+
+#define RSCTRACE_EXPECT(condition, logger, msg) \
+    if (!(condition) && logger->isTraceEnabled()) { \
+        std::stringstream s; \
+        s << msg << "\nfailed condition: " << #condition; \
+        logger->trace(s.str()); \
+    }
+
+#define RSCDEBUG_EXPECT(condition, logger, msg) \
+    if (!(condition) && logger->isDebugEnabled()) { \
+        std::stringstream s; \
+        s << msg << "\nfailed condition: " << #condition; \
+        logger->debug(s.str()); \
+    }
+
+#define RSCINFO_EXPECT(condition, logger, msg) \
+    if (!(condition) && logger->isInfoEnabled()) { \
+        std::stringstream s; \
+        s << msg << "\nfailed condition: " << #condition; \
+        logger->info(s.str()); \
+    }
+
+#define RSCWARN_EXPECT(condition, logger, msg) \
+    if (!(condition) && logger->isWarnEnabled()) { \
+        std::stringstream s; \
+        s << msg << "\nfailed condition: " << #condition; \
+        logger->warn(s.str()); \
+    }
+
+#define RSCERROR_EXPECT(condition, logger, msg) \
+    if (!(condition) && logger->isErrorEnabled()) { \
+        std::stringstream s; \
+        s << msg << "\nfailed condition: " << #condition; \
+        logger->error(s.str()); \
+    }
+
+#define RSCFATAL_EXPECT(condition, logger, msg) \
+    if (!(condition) && logger->isFatalEnabled()) { \
+        std::stringstream s; \
+        s << msg << "\nfailed condition: " << #condition; \
+        logger->fatal(s.str()); \
+    }
+
+//@}

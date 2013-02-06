@@ -44,7 +44,7 @@ using namespace rsc;
 using namespace rsc::logging;
 using namespace testing;
 
-TEST(LoggerFactoryTest, testLogMacros)
+TEST(LoggerTest, testLogMacros)
 {
 
     string expect = "one 2 three";
@@ -88,5 +88,64 @@ TEST(LoggerFactoryTest, testLogMacros)
         RSCFATAL(logger, "one " << 2 << " three");
 
     }
+
+}
+
+class StoringLogger: public Logger {
+public:
+    virtual Level getLevel() const {
+        return Logger::LEVEL_ALL;
+    }
+
+    virtual void setLevel(const Level& /*level*/) {
+    }
+
+    virtual string getName() const {
+        return "StoringLogger";
+    }
+
+    virtual void setName(const string& /*name*/) {
+    }
+
+    virtual void log(const Level& level, const string& msg) {
+        logCalls.push_back(make_pair(level, msg));
+    }
+
+    vector<pair<Logger::Level, string> > logCalls;
+
+};
+
+TEST(LoggerTest, testAssertionMacros) {
+
+    boost::shared_ptr<StoringLogger> logger(new StoringLogger);
+
+    RSCTRACE_EXPECT(false, logger, "false1");
+    RSCDEBUG_EXPECT(false, logger, "false2");
+    RSCINFO_EXPECT(false, logger, "false3");
+    RSCWARN_EXPECT(false, logger, "false4");
+    RSCERROR_EXPECT(false, logger, "false5");
+    RSCFATAL_EXPECT(false, logger, "false6");
+
+    RSCTRACE_EXPECT(true, logger, "true");
+    RSCDEBUG_EXPECT(true, logger, "true");
+    RSCINFO_EXPECT(true, logger, "true");
+    RSCWARN_EXPECT(true == true, logger, "true");
+    RSCERROR_EXPECT(true, logger, "true");
+    RSCFATAL_EXPECT(true ==
+            true, logger, "true");
+
+    ASSERT_EQ(6, logger->logCalls.size());
+    EXPECT_EQ(Logger::LEVEL_TRACE, logger->logCalls[0].first);
+    EXPECT_EQ("false1\nfailed condition: false", logger->logCalls[0].second);
+    EXPECT_EQ(Logger::LEVEL_DEBUG, logger->logCalls[1].first);
+    EXPECT_EQ("false2\nfailed condition: false", logger->logCalls[1].second);
+    EXPECT_EQ(Logger::LEVEL_INFO, logger->logCalls[2].first);
+    EXPECT_EQ("false3\nfailed condition: false", logger->logCalls[2].second);
+    EXPECT_EQ(Logger::LEVEL_WARN, logger->logCalls[3].first);
+    EXPECT_EQ("false4\nfailed condition: false", logger->logCalls[3].second);
+    EXPECT_EQ(Logger::LEVEL_ERROR, logger->logCalls[4].first);
+    EXPECT_EQ("false5\nfailed condition: false", logger->logCalls[4].second);
+    EXPECT_EQ(Logger::LEVEL_FATAL, logger->logCalls[5].first);
+    EXPECT_EQ("false6\nfailed condition: false", logger->logCalls[5].second);
 
 }

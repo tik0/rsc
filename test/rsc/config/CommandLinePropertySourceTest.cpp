@@ -105,11 +105,20 @@ TEST_F(CommandLinePropertySourceTest, testIgnoreInvalidSyntax) {
 
 TEST_F(CommandLinePropertySourceTest, testReportInvalidSyntax) {
 
-    int argc = 7;
-    char* argv[] = { "testProgram", "-Dno.equals", "-D=noKey", "-D",
-            "-Dkey..with.multiple=dots", "-Ddots.at.=end", "-D.dots.at=begin" };
+    vector<string> invalidArguments;
+    invalidArguments.push_back("-Dno.equals");
+    invalidArguments.push_back("-D=noKey");
+    invalidArguments.push_back("-D");
+    invalidArguments.push_back("-Dkey..with.multiple=dots");
+    invalidArguments.push_back("-Ddots.at.=end");
+    invalidArguments.push_back("-D.dots.at=begin");
 
-    EXPECT_THROW(getOptions(argc, argv, true), invalid_argument);
+    for (vector<string>::const_iterator argIt = invalidArguments.begin();
+            argIt != invalidArguments.end(); ++argIt) {
+        int argc = 2;
+        char* argv[] = { "testProgram", const_cast<char*>(argIt->c_str()) };
+        EXPECT_THROW(getOptions(argc, argv, true), invalid_argument);
+    }
 
 }
 
@@ -121,6 +130,18 @@ TEST_F(CommandLinePropertySourceTest, testDifferentOptionKey) {
     CommandLinePropertySource source(argc, argv, false, 'X');
     source.provideOptions(handler);
     EXPECT_EQ("bar", handler.getOptions().get<string>("foo"));
+
+}
+
+TEST_F(CommandLinePropertySourceTest, testPositionalArgumentsDelimiter) {
+
+    int argc = 4;
+    char* argv[] = { "testProgram", "-Dfoo=bar",  "--", "-Dtest=nothing"};
+
+    CommandLinePropertySource source(argc, argv);
+    source.provideOptions(handler);
+    EXPECT_EQ("bar", handler.getOptions().get<string>("foo"));
+    EXPECT_EQ(0, handler.getOptions().count("test"));
 
 }
 

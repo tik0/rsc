@@ -26,12 +26,10 @@
 
 #include "CommandLinePropertySource.h"
 
+#include <stdexcept>
 #include <vector>
 
-#include <boost/program_options.hpp>
-
 using namespace std;
-namespace po = boost::program_options;
 
 namespace rsc {
 namespace config {
@@ -48,30 +46,49 @@ CommandLinePropertySource::~CommandLinePropertySource() {
 
 void CommandLinePropertySource::provideOptions(OptionHandler& handler) {
 
-    vector<string> rawOptions;
+    for (int i = 1; i < argc; ++i) {
 
-    po::options_description desc("Allowed options");
-    desc.add_options()((string(",") + option).c_str(),
-            po::value<vector<string> >(&rawOptions),
-            "Define an option for the RSC configuration mechanism");
-
-    po::variables_map vm;
-    po::store(
-            po::command_line_parser(argc, argv).options(desc).allow_unregistered().run(),
-            vm);
-    po::notify(vm);
-
-    for (vector<string>::const_iterator rawOptionIt = rawOptions.begin();
-            rawOptionIt != rawOptions.end(); ++rawOptionIt) {
-
-        string rawOption = *rawOptionIt;
+        string rawOption = argv[i];
         RSCTRACE(logger, "Processing raw option '" << rawOption << "'");
+
+        // there must be enough room for -D
+        if (rawOption.size() < 2) {
+            RSCTRACE(logger, "Ignoring uninteresting option '" << rawOption << "'");
+            continue;
+        }
+
+        // check whether the separator -- for positional arguments was reached
+        // if so, stop all processing
+        if (rawOption == "--") {
+            break;
+        }
+
+        // check whether we want to process this option at all
+        if (rawOption.substr(0, 2) != string("-") + option) {
+            RSCTRACE(logger, "Ignoring uninteresting option '" << rawOption << "'");
+            continue;
+        }
+
+        // check whether we need to go to the next argument because only the flag
+        // was given
+        if (rawOption.length() == 2 && i < argc - 1) {
+            ++i;
+            rawOption = argv[i];
+        } else {
+            rawOption = rawOption.substr(2, rawOption.length() - 2);
+        }
 
         size_t equalsPos = rawOption.find_first_of('=');
         if (equalsPos == string::npos) {
             RSCWARN(logger,
                     "Cannot parse option '" << rawOption << "'. Reason: = character missing");
-            continue;
+            if (reportSyntaxErrors) {
+                throw invalid_argument(
+                        "Cannot parse option '" + rawOption
+                                + "'. Reason: = character missing");
+            } else {
+                continue;
+            }
         }
 
         string rawKey = rawOption.substr(0, equalsPos);

@@ -29,4 +29,4 @@
 #include <string>
 
 const static std::string TEST_ROOT = "@TEST_ROOT@";
-
+const static std::string CMAKE_EXECUTABLE = "@CMAKE_COMMAND@";

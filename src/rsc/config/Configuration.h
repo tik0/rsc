@@ -57,6 +57,12 @@ namespace config {
  * @param environmentVariablePrefix A prefix string with which all
  *                                  processed environment variables
  *                                  have to start.
+ * @param argc number of arguments passed to the main program. If 0, no command
+ *             line argument parsing will be performed. If something else is
+ *             specified, ensure that @param argv matches the argc. Defaults to
+ *             0, so no argument parsing.
+ * @param argv argument vector for command line parsing. Must match the length
+ *             given in argc. Might be an arbitrary pointer of argc i 0.
  * @param stripEnvironmentVariablePrefix if true, the prefix for environment
  *                                       variable will be stripped before
  *                                       passing options to the handler. If e.g.
@@ -69,8 +75,9 @@ namespace config {
 void RSC_EXPORT configure(OptionHandler& handler,
                           const std::string& configFileName,
                           const std::string& environmentVariablePrefix,
+                          const int& argc = 0,
+                          char** argv = 0,
                           const bool& stripEnvironmentVariablePrefix = true);
-
 
 }
 }

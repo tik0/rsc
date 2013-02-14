@@ -54,6 +54,19 @@ public:
      */
     virtual void provideOptions(OptionHandler& handler) = 0;
 
+protected:
+
+    /**
+     * Creates a key vector structure used in the options backend from a
+     * dot-separated string.
+     *
+     * @param inputs dot-separated key
+     * @param output key as vector of components
+     * @throw invalid_argument invalid key that cannot be split.
+     */
+    void splitKeyAtDots(const std::string& input,
+            std::vector<std::string>& output);
+
 };
 
 }

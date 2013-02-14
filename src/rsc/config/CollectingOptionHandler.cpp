@@ -1,8 +1,8 @@
 /* ============================================================
  *
- * This file is a part of the RSC project.
+ * This file is a part of the rsc project.
  *
- * Copyright (C) 2011 by Johannes Wienke <jwienke at techfak dot uni-bielefeld dot de>
+ * Copyright (C) 2013 by Johannes Wienke <jwienke at techfak dot uni-bielefeld dot de>
  *
  * This file may be licensed under the terms of the
  * GNU Lesser General Public License Version 3 (the ``LGPL''),
@@ -24,39 +24,38 @@
  *
  * ============================================================ */
 
-#include "ConfigSource.h"
+#include "CollectingOptionHandler.h"
 
-#include <stdexcept>
+#include "TypedValue.h"
 
-#include <boost/tokenizer.hpp>
+using namespace std;
 
 namespace rsc {
 namespace config {
 
-using namespace std;
-
-ConfigSource::~ConfigSource() {
+CollectingOptionHandler::CollectingOptionHandler() {
 }
 
-void ConfigSource::splitKeyAtDots(const string& input, vector<string>& output) {
-    typedef boost::escaped_list_separator<char> SeparatorType;
-    typedef boost::tokenizer<SeparatorType> TokenizerType;
+CollectingOptionHandler::CollectingOptionHandler(
+        const rsc::runtime::Properties& properties) :
+        options(properties) {
+}
 
-    SeparatorType sep('\\', '.');
-    TokenizerType tok(input, sep);
-    copy(tok.begin(), tok.end(), back_inserter(output));
-
-    for (vector<string>::const_iterator outputIt = output.begin();
-            outputIt != output.end(); ++outputIt) {
-        if (outputIt->empty()) {
-            throw invalid_argument("Empty component in key '" + input + "'");
+void CollectingOptionHandler::handleOption(const vector<string>& key,
+        const string& value) {
+    string name;
+    for (vector<string>::const_iterator it = key.begin(); it != key.end();
+            ++it) {
+        if (!(it == key.begin())) {
+            name += ".";
         }
+        name += *it;
     }
+    this->options[name] = parseTypedValue(value);
+}
 
-    if (output.empty()) {
-        throw invalid_argument("Option key is empty");
-    }
-
+runtime::Properties CollectingOptionHandler::getOptions() const {
+    return options;
 }
 
 }

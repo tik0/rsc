@@ -6,14 +6,15 @@
 # CMAKE_CURRENT_SOURCE_DIR is assumed as the absolute location for the files to
 # install. 
 #
-# INSTALL_FILES_RECURSIVE(DESTINATION FILE_LIST)
+# INSTALL_FILES_RECURSIVE(DESTINATION FILE_LIST [COMPONENT component_name])
 #
 #     DESTINATION: destination folder under which the structure of the files to
 #                  install is mirrored. INSTALL is used, hence relative
 #                  locations will be relative to CMAKE_INSTALL_PREFIX.
-#     FILE_LIST: list of files to install
+#     FILE_LIST:   list of files to install
+#     COMPONENT:   component name for cpack components
 #
-# Exmaple:
+# Example:
 # INSTALL_FILES_RECURSIVE(include "rsc/foo.h"
 #                                 "rsc/test/bla.h"
 #                                 "${CMAKE_CURRENT_BINARY_DIR}/rsc/narf/damn/xxx.h")
@@ -44,6 +45,9 @@
 
 MACRO(INSTALL_FILES_RECURSIVE DESTINATION FILE_LIST)
 
+    # Parse arguments for cpack component 
+    PARSE_ARGUMENTS(ARG "COMPONENT;" "" ${ARGN})
+    
     FOREACH(FILE ${${FILE_LIST}})
     
         #MESSAGE("Processing file ${FILE}")
@@ -69,8 +73,15 @@ MACRO(INSTALL_FILES_RECURSIVE DESTINATION FILE_LIST)
         GET_FILENAME_COMPONENT(REL_PATH ${BASE_PATH} PATH)
         #MESSAGE("REL_PATH: ${REL_PATH}")
     
-        INSTALL(FILES ${FILE} DESTINATION ${DESTINATION}/${REL_PATH})
-        
+        if(ARG_COMPONENT)
+            INSTALL(FILES ${FILE}
+                    DESTINATION ${DESTINATION}/${REL_PATH}
+                    COMPONENT ${ARG_COMPONENT})
+        else()
+            INSTALL(FILES ${FILE}
+                    DESTINATION ${DESTINATION}/${REL_PATH})
+        endif()
+
     ENDFOREACH()
 
 ENDMACRO()

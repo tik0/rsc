@@ -12,6 +12,7 @@ ENDIF()
 
 # SET(CMAKE_BUILD_TYPE Release)
 SET(CPACK_STRIP_FILES TRUE)
+set(CPACK_DEB_COMPONENT_INSTALL ON)
 
 #set(CPACK_INSTALL_PREFIX "/usr")
 set(CPACK_SET_DESTDIR On)
@@ -84,7 +85,11 @@ FILE(WRITE "${CMAKE_BINARY_DIR}/copyright"
 On Debian systems, the complete text of the GNU Lesser General Public
 License can be found in `/usr/share/common-licenses/LGPL-3'.")
 INSTALL(FILES "${CMAKE_BINARY_DIR}/copyright"
-        DESTINATION "share/doc/${CPACK_DEBIAN_PACKAGE_NAME}")
+        DESTINATION "share/doc/${CPACK_DEBIAN_PACKAGE_NAME}"
+        COMPONENT dev)
+INSTALL(FILES "${CMAKE_BINARY_DIR}/copyright"
+        DESTINATION "share/doc/${CPACK_DEBIAN_PACKAGE_NAME}"
+        COMPONENT runtime)
 
 # Generate required change log files
 EXECUTE_PROCESS(COMMAND ${GIT_EXECUTABLE}
@@ -103,6 +108,11 @@ EXECUTE_PROCESS(COMMAND ${GIT_EXECUTABLE}
                 OUTPUT_FILE "${CMAKE_BINARY_DIR}/changelog.Debian.gz")
 INSTALL(FILES "${CMAKE_BINARY_DIR}/changelog.gz"
               "${CMAKE_BINARY_DIR}/changelog.Debian.gz"
-        DESTINATION "share/doc/${CPACK_DEBIAN_PACKAGE_NAME}")
+        DESTINATION "share/doc/${CPACK_DEBIAN_PACKAGE_NAME}"
+        COMPONENT dev)
+INSTALL(FILES "${CMAKE_BINARY_DIR}/changelog.gz"
+              "${CMAKE_BINARY_DIR}/changelog.Debian.gz"
+        DESTINATION "share/doc/${CPACK_DEBIAN_PACKAGE_NAME}"
+        COMPONENT runtime)
 
 MESSAGE(STATUS "Debian Package: ${CPACK_DEBIAN_PACKAGE_NAME} (${CPACK_DEBIAN_PACKAGE_VERSION}) [${CPACK_PACKAGE_FILE_NAME}.deb]")

@@ -45,4 +45,5 @@ INSTALL(FILES ExtractTBBVersion.cpp.in
               ProvideFlexibleCPack.cmake
               SubversionIsWc.cmake
               SuperPedanticCompilerWarnings.cmake
-        DESTINATION ${CMAKE_MODULE_PATH})
+        DESTINATION ${CMAKE_MODULE_PATH}
+        COMPONENT dev)

@@ -1,5 +1,7 @@
 
 IF(USE_INTERNAL_BOOST_UUID)
     FILE(GLOB_RECURSE UUID_FILES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" *.hpp)
-    INSTALL(FILES ${UUID_FILES} DESTINATION "include/${INSTALL_PATH_PREFIX}/3rdparty/boost.uuid/boost/uuid")
+    INSTALL(FILES ${UUID_FILES}
+            DESTINATION "include/${INSTALL_PATH_PREFIX}/3rdparty/boost.uuid/boost/uuid"
+            COMPONENT dev)
 ENDIF()

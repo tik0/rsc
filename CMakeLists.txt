@@ -162,7 +162,9 @@ IF(UNIX)
         SET(EXTERNAL_INCLUDE_COMMANDS "-I${EXTERNAL_INCLUDE_COMMANDS}")
     ENDIF()
     CONFIGURE_FILE(rsc.pc.in "${CMAKE_BINARY_DIR}/rsc${RSC_VERSION_MAJOR}.${RSC_VERSION_MINOR}.pc" @ONLY)
-    INSTALL(FILES "${CMAKE_BINARY_DIR}/rsc${RSC_VERSION_MAJOR}.${RSC_VERSION_MINOR}.pc" DESTINATION lib/pkgconfig)
+    INSTALL(FILES "${CMAKE_BINARY_DIR}/rsc${RSC_VERSION_MAJOR}.${RSC_VERSION_MINOR}.pc"
+            DESTINATION lib/pkgconfig
+            COMPONENT dev)
 ENDIF()
 
 # --- cmake config files ---
@@ -183,16 +185,19 @@ CONFIGURE_FILE(RSCConfig.cmake.in
                "${CMAKE_BINARY_DIR}/RSCConfig.cmake"
                @ONLY)
 INSTALL(FILES "${CMAKE_BINARY_DIR}/RSCConfig.cmake"
-        DESTINATION "share/${INSTALL_PATH_PREFIX}")
+        DESTINATION "share/${INSTALL_PATH_PREFIX}"
+        COMPONENT dev)
 CONFIGURE_FILE(RSCConfigVersion.cmake.in
                "${CMAKE_BINARY_DIR}/RSCConfigVersion.cmake"
                @ONLY)
 INSTALL(FILES "${CMAKE_BINARY_DIR}/RSCConfigVersion.cmake"
-        DESTINATION "share/${INSTALL_PATH_PREFIX}")
+        DESTINATION "share/${INSTALL_PATH_PREFIX}"
+        COMPONENT dev)
 
 EXPORT(TARGETS ${RSC_NAME} FILE "${CMAKE_BINARY_DIR}/RSCDepends.cmake")
 INSTALL(EXPORT RSCDepends
-        DESTINATION "share/${INSTALL_PATH_PREFIX}")
+        DESTINATION "share/${INSTALL_PATH_PREFIX}"
+        COMPONENT dev)
 
 # --- enable unit tests if desired ---
 

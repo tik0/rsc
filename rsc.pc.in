@@ -5,5 +5,5 @@ includedir=${prefix}/include/@INSTALL_PATH_PREFIX@
 Name: Robotics Systems Commons
 Description: RSC is a Code.CoR-Lab project focused on all aspects of reusable library functions in robotics systems.
 Version: @RSC_VERSION@
-Libs: -Wl,--rpath -Wl,${libdir} -l${libdir}/lib@RSC_NAME@.so.@SO_VERSION@
+Libs: -Wl,--rpath -Wl,${libdir} ${libdir}/@CMAKE_SHARED_LIBRARY_PREFIX@@RSC_NAME@@CMAKE_SHARED_LIBRARY_SUFFIX@.@SO_VERSION@
 Cflags: -I${includedir} @EXTERNAL_INCLUDE_COMMANDS@

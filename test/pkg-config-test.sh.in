@@ -1,0 +1,46 @@
+#!/bin/bash
+
+set -e
+
+# Folder for installation
+TESTBINDIR=$(mktemp -d)
+trap "rm -rf $TESTBINDIR" 0 INT QUIT ABRT PIPE TERM
+
+# Folder to build and execute test binary
+TESTINSTALLDIR=$(mktemp -d)
+TESTINSTALLPREFIX=$(echo $TESTINSTALLDIR@CMAKE_INSTALL_PREFIX@/)
+trap "rm -rf $TESTINSTALLDIR" 0 INT QUIT ABRT PIPE TERM
+
+echo "Install prefix is $(echo $TESTINSTALLPREFIX)"
+
+# Install this project
+cd @CMAKE_SOURCE_DIR@/build
+make install DESTDIR=$TESTINSTALLDIR
+
+# Update pkg-config prefix
+sed 's#prefix=.*#prefix='$TESTINSTALLPREFIX'#' $TESTINSTALLPREFIX/lib/pkgconfig/rsc@SO_VERSION@.pc >tmp.pc
+mv tmp.pc $TESTINSTALLPREFIX/lib/pkgconfig/rsc@SO_VERSION@.pc
+
+
+# Generate, build and execute test binary
+cd $TESTBINDIR
+cat <<EOF > librsctest.c
+#include "rsc/runtime/Properties.h"
+
+int main(int, char*[]) {
+    rsc::runtime::Properties props;
+    return 0;
+}
+EOF
+
+echo "[----------]"
+echo "[ BUILD    ]"
+export PKG_CONFIG_PATH=$TESTINSTALLPREFIX/lib/pkgconfig
+g++ -o librsctest librsctest.c $(pkg-config --cflags --libs rsc@SO_VERSION@)
+echo "[       OK ]"
+
+echo "[ RUN      ]"
+[ -x librsctest ]
+./librsctest
+echo "[       OK ]"
+echo "[----------]"

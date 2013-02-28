@@ -41,11 +41,15 @@ ENDIF()
 ADD_EXECUTABLE(${RSC_TEST_NAME} ${TEST_SOURCES})
 TARGET_LINK_LIBRARIES(${RSC_TEST_NAME}
                       ${REGISTRY_TEST_LIB_NAME}
-					  ${REGISTREE_TEST_LIB_NAME}
+                      ${REGISTREE_TEST_LIB_NAME}
                       ${RSC_NAME}
                       ${GMOCK_LIBRARIES})
 
 ADD_TEST(${RSC_TEST_NAME} ${EXECUTABLE_OUTPUT_PATH}/${RSC_TEST_NAME} "--gtest_output=xml:${TEST_RESULT_DIR}/")
+
+# Pkg-config test
+configure_file(pkg-config-test.sh.in ${CMAKE_CURRENT_BINARY_DIR}/pkg-config-test.sh)
+add_test(${RSC_TEST_NAME}-pkgconfig "${CMAKE_CURRENT_BINARY_DIR}/pkg-config-test.sh")
 
 IF(WIN32)
     SET(PATH_STRING "$ENV{PATH};${Boost_LIBRARY_DIRS}")

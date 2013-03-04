@@ -26,6 +26,8 @@
 
 #include <string>
 
+#include <boost/filesystem.hpp>
+
 #include "OptionHandler.h"
 
 #include <rsc/rscexports.h>
@@ -41,8 +43,8 @@ namespace config {
  * The following configuration configuration sources are considered
  * based on @a configFileName:
  *
- * -# Prepending a system-wide configuration directory (e.g. @c /etc/)
- *    to @a configFileName
+ * -# Prepending a prefix-wide configuration directory (e.g. @c
+ *    /usr/local/etc/) to @a configFileName
  * -# Prepending a user-specific configuration directory (e.g. @c
  *    $HOME/.config) to @a configFileName
  * -# Prepending the current working directory (@c $(pwd)) to @a
@@ -69,15 +71,18 @@ namespace config {
  *                                       RSC_ is set as prefix and this is true,
  *                                       RSC_TEST will be passed to the handlers
  *                                       as just TEST. Default is true.
+ * @param prefix the (installation) prefix under which to search for a
+ *               prefix-wide configuration file
  *
  * @author jmoringe
  */
-void RSC_EXPORT configure(OptionHandler&     handler,
-                          const std::string& configFileName,
-                          const std::string& environmentVariablePrefix,
-                          int                argc = 0,
-                          const char**       argv = 0,
-                          bool               stripEnvironmentVariablePrefix = true);
+void RSC_EXPORT configure(OptionHandler&                 handler,
+                          const std::string&             configFileName,
+                          const std::string&             environmentVariablePrefix,
+                          int                            argc                           = 0,
+                          const char**                   argv                           = 0,
+                          bool                           stripEnvironmentVariablePrefix = true,
+                          const boost::filesystem::path& prefix                         = "/");
 
 }
 }

@@ -51,34 +51,35 @@ LoggerPtr getLogger() {
     return logger;
 }
 
-void configure(OptionHandler& handler,
-               const string&  configFileName,
-               const string&  environmentVariablePrefix,
-               int            argc,
-               const char**   argv,
-               bool           stripEnvironmentVariablePrefix) {
+void configure(OptionHandler&                 handler,
+               const string&                  configFileName,
+               const string&                  environmentVariablePrefix,
+               int                            argc,
+               const char**                   argv,
+               bool                           stripEnvironmentVariablePrefix,
+               const boost::filesystem::path& prefix) {
 
-    // 1) Try system-wide configuration file.
+    // 1) Try prefix-wide configuration file
     //    (lowest priority)
+    boost::filesystem::path
+        prefixWideFile(prefixConfigDirectory(prefix) / configFileName);
     try {
-        boost::filesystem::ifstream
-            stream(systemConfigDirectory() / configFileName);
+        boost::filesystem::ifstream stream(prefixWideFile);
         if (stream) {
             ConfigFileSource source(stream);
             source.provideOptions(handler);
         }
     } catch (const runtime_error& e) {
         RSCWARN(getLogger(),
-                "Failed to process system-wide configuration file `"
-                << (systemConfigDirectory() / configFileName) << "': "
-                << e.what());
+                "Failed to process prefix-wide configuration file `"
+                << prefixWideFile << "': " << e.what());
     }
 
     // 2) Try user configuration file.
+    boost::filesystem::path userFile(userConfigDirectory() / configFileName);
     bool isUserConfigDirOK = false;
     try {
-        boost::filesystem::ifstream
-            stream(userConfigDirectory() / configFileName);
+        boost::filesystem::ifstream stream(userFile);
         isUserConfigDirOK = true;
         if (stream) {
             ConfigFileSource source(stream);
@@ -88,7 +89,7 @@ void configure(OptionHandler& handler,
         RSCWARN(getLogger(),
                 "Failed to process user-specific configuration file `"
                 << (isUserConfigDirOK
-                    ? (userConfigDirectory() / configFileName).string()
+                    ? userFile.string()
                     : "<failed to determine user config dir>")
                 << "': " << e.what());
     }
@@ -103,7 +104,6 @@ void configure(OptionHandler& handler,
     }
 
     // 4) Add environment Variables
-    //    (highest priority)
     {
         EnvironmentVariableSource source(environmentVariablePrefix,
                 stripEnvironmentVariablePrefix);
@@ -111,6 +111,7 @@ void configure(OptionHandler& handler,
     }
 
     // 5) Command line
+    //    (highest priority)
     if (argc > 0) {
         CommandLinePropertySource source(argc, argv);
         source.provideOptions(handler);

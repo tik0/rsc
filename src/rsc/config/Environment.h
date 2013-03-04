@@ -2,7 +2,7 @@
  *
  * This file is part of the RSC project
  *
- * Copyright (C) 2011, 2012 Jan Moringen
+ * Copyright (C) 2011, 2012, 2013 Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  *
  * This file may be licensed under the terms of the
  * GNU Lesser General Public License Version 3 (the ``LGPL''),
@@ -48,6 +48,19 @@ namespace config {
  * @author jmoringe
  */
 RSC_EXPORT boost::filesystem::path systemConfigDirectory();
+
+/**
+ * Return the directory in which prefix-wide configuration files are
+ * located.
+ *
+ * @param prefix the prefix for which the path shall be located.
+ * @return A @ref boost::filesystem::path object representing the
+ *         prefix configuration directory.
+ *
+ * @author jwienke
+ */
+RSC_EXPORT boost::filesystem::path prefixConfigDirectory(
+        boost::filesystem::path prefix="/");
 
 /**
  * Return the home directory of the user associated with the current

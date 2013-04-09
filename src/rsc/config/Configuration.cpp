@@ -2,7 +2,7 @@
  *
  * This file is part of the RSC project
  *
- * Copyright (C) 2012 Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
+ * Copyright (C) 2012, 2013 Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  *
  * This file may be licensed under the terms of the
  * GNU Lesser General Public License Version 3 (the ``LGPL''),
@@ -54,9 +54,9 @@ LoggerPtr getLogger() {
 void configure(OptionHandler& handler,
                const string&  configFileName,
                const string&  environmentVariablePrefix,
-               const int&     argc,
-               char**         argv,
-               const bool&    stripEnvironmentVariablePrefix) {
+               int            argc,
+               const char**   argv,
+               bool           stripEnvironmentVariablePrefix) {
 
     // 1) Try system-wide configuration file.
     //    (lowest priority)

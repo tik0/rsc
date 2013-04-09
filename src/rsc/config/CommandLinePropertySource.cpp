@@ -34,11 +34,13 @@ using namespace std;
 namespace rsc {
 namespace config {
 
-CommandLinePropertySource::CommandLinePropertySource(const int& argc,
-        char** argv, const bool& reportSyntaxErrors, const char& option) :
-        logger(logging::Logger::getLogger("rsc.config.CommandLineSource")), argc(
-                argc), argv(argv), reportSyntaxErrors(reportSyntaxErrors), option(
-                option) {
+CommandLinePropertySource::CommandLinePropertySource(int          argc,
+                                                     const char** argv,
+                                                     bool         reportSyntaxErrors,
+                                                     char         option) :
+    logger(logging::Logger::getLogger("rsc.config.CommandLineSource")),
+    argc(argc), argv(argv),
+    reportSyntaxErrors(reportSyntaxErrors), option(option) {
 }
 
 CommandLinePropertySource::~CommandLinePropertySource() {

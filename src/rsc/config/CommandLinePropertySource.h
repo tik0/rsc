@@ -55,21 +55,23 @@ public:
      * @param option the command line option key used to parse the properties,
      *               defaults to 'D'.
      */
-    CommandLinePropertySource(const int& argc, char** argv,
-            const bool& reportSyntaxErrors = false, const char& option = 'D');
+    CommandLinePropertySource(int          argc,
+                              const char** argv,
+                              bool         reportSyntaxErrors = false,
+                              char         option             = 'D');
     virtual ~CommandLinePropertySource();
 
     void provideOptions(OptionHandler& handler);
 
 private:
     logging::LoggerPtr logger;
-    int argc;
-    char** argv;
-    bool reportSyntaxErrors;
-    char option;
+
+    int                argc;
+    const char**       argv;
+    bool               reportSyntaxErrors;
+    char               option;
 
 };
 
 }
 }
-

@@ -2,7 +2,7 @@
  *
  * This file is part of the RSC project
  *
- * Copyright (C) 2012 Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
+ * Copyright (C) 2012, 2013 Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  *
  * This file may be licensed under the terms of the
  * GNU Lesser General Public License Version 3 (the ``LGPL''),
@@ -72,12 +72,12 @@ namespace config {
  *
  * @author jmoringe
  */
-void RSC_EXPORT configure(OptionHandler& handler,
+void RSC_EXPORT configure(OptionHandler&     handler,
                           const std::string& configFileName,
                           const std::string& environmentVariablePrefix,
-                          const int& argc = 0,
-                          char** argv = 0,
-                          const bool& stripEnvironmentVariablePrefix = true);
+                          int                argc = 0,
+                          const char**       argv = 0,
+                          bool               stripEnvironmentVariablePrefix = true);
 
 }
 }

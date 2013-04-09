@@ -39,17 +39,13 @@ using namespace boost;
 using namespace rsc::config;
 using namespace rsc::runtime;
 
-// Avoid warnings about deprecated use of character strings for the common
-// construction of argv arrays.
-#pragma GCC diagnostic ignored "-Wwrite-strings"
-
 class CommandLinePropertySourceTest: public testing::Test {
 public:
     void SetUp() {
         handler = CollectingOptionHandler();
     }
 
-    Properties getOptions(int argc, char** argv, bool report = false) {
+    Properties getOptions(int argc, const char** argv, bool report = false) {
         CommandLinePropertySource source(argc, argv, report);
         source.provideOptions(handler);
         return handler.getOptions();
@@ -62,8 +58,8 @@ public:
 TEST_F(CommandLinePropertySourceTest, testSmoke) {
 
     int argc = 5;
-    char* argv[] = { "testProgram", "-Dfoo.bar=42", "-Dnarf=a test string",
-            "-D", "blub=111" };
+    const char* argv[] = { "testProgram", "-Dfoo.bar=42",
+                           "-Dnarf=a test string", "-D", "blub=111" };
 
     Properties options = getOptions(argc, argv);
     EXPECT_EQ(42, options.getAs<int>("foo.bar"));
@@ -75,7 +71,7 @@ TEST_F(CommandLinePropertySourceTest, testSmoke) {
 TEST_F(CommandLinePropertySourceTest, testIgnoreUnknownOptions) {
 
     int argc = 3;
-    char* argv[] = { "testProgram", "--switch", "-Dnarf=a test string" };
+    const char* argv[] = { "testProgram", "--switch", "-Dnarf=a test string" };
 
     Properties options = getOptions(argc, argv);
     EXPECT_EQ("a test string", options.get<string>("narf"));
@@ -85,7 +81,7 @@ TEST_F(CommandLinePropertySourceTest, testIgnoreUnknownOptions) {
 TEST_F(CommandLinePropertySourceTest, testEmptyValue) {
 
     int argc = 2;
-    char* argv[] = { "testProgram", "-Da.test=" };
+    const char* argv[] = { "testProgram", "-Da.test=" };
 
     Properties options = getOptions(argc, argv);
     EXPECT_EQ("", options.get<string>("a.test"));
@@ -95,8 +91,9 @@ TEST_F(CommandLinePropertySourceTest, testEmptyValue) {
 TEST_F(CommandLinePropertySourceTest, testIgnoreInvalidSyntax) {
 
     int argc = 7;
-    char* argv[] = { "testProgram", "-Dno.equals", "-D=noKey", "-D",
-            "-Dkey..with.multiple=dots", "-Ddots.at.=end", "-D.dots.at=begin" };
+    const char* argv[] = { "testProgram", "-Dno.equals", "-D=noKey", "-D",
+                           "-Dkey..with.multiple=dots", "-Ddots.at.=end",
+                           "-D.dots.at=begin" };
 
     Properties options = getOptions(argc, argv);
     EXPECT_EQ(size_t(0), options.size());
@@ -116,7 +113,7 @@ TEST_F(CommandLinePropertySourceTest, testReportInvalidSyntax) {
     for (vector<string>::const_iterator argIt = invalidArguments.begin();
             argIt != invalidArguments.end(); ++argIt) {
         int argc = 2;
-        char* argv[] = { "testProgram", const_cast<char*>(argIt->c_str()) };
+        const char* argv[] = { "testProgram", const_cast<char*>(argIt->c_str()) };
         EXPECT_THROW(getOptions(argc, argv, true), invalid_argument);
     }
 
@@ -125,7 +122,7 @@ TEST_F(CommandLinePropertySourceTest, testReportInvalidSyntax) {
 TEST_F(CommandLinePropertySourceTest, testDifferentOptionKey) {
 
     int argc = 2;
-    char* argv[] = { "testProgram", "-Xfoo=bar" };
+    const char* argv[] = { "testProgram", "-Xfoo=bar" };
 
     CommandLinePropertySource source(argc, argv, false, 'X');
     source.provideOptions(handler);
@@ -136,7 +133,7 @@ TEST_F(CommandLinePropertySourceTest, testDifferentOptionKey) {
 TEST_F(CommandLinePropertySourceTest, testPositionalArgumentsDelimiter) {
 
     int argc = 4;
-    char* argv[] = { "testProgram", "-Dfoo=bar",  "--", "-Dtest=nothing"};
+    const char* argv[] = { "testProgram", "-Dfoo=bar",  "--", "-Dtest=nothing"};
 
     CommandLinePropertySource source(argc, argv);
     source.provideOptions(handler);
@@ -144,5 +141,3 @@ TEST_F(CommandLinePropertySourceTest, testPositionalArgumentsDelimiter) {
     EXPECT_EQ(0, handler.getOptions().count("test"));
 
 }
-
-#pragma GCC diagnostic pop

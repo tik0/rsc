@@ -76,10 +76,15 @@ void configure(OptionHandler&                 handler,
     }
 
     // 2) Try user configuration file.
-    boost::filesystem::path userFile(userConfigDirectory() / configFileName);
+    //
+    // The two instance of userConfigDirectory() / configFileName in
+    // the following code cannot be reduce into a variable assignment
+    // outside the try/catch block since the code can throw an
+    // exception.
     bool isUserConfigDirOK = false;
     try {
-        boost::filesystem::ifstream stream(userFile);
+        boost::filesystem::ifstream
+            stream(userConfigDirectory() / configFileName);
         isUserConfigDirOK = true;
         if (stream) {
             ConfigFileSource source(stream);
@@ -89,7 +94,7 @@ void configure(OptionHandler&                 handler,
         RSCWARN(getLogger(),
                 "Failed to process user-specific configuration file `"
                 << (isUserConfigDirOK
-                    ? userFile.string()
+                    ? (userConfigDirectory() / configFileName).string()
                     : "<failed to determine user config dir>")
                 << "': " << e.what());
     }

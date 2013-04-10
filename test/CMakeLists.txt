@@ -1,4 +1,3 @@
-
 ENABLE_TESTING()
 
 SET(TEST_RESULT_DIR ${CMAKE_BINARY_DIR}/testresults)
@@ -48,8 +47,10 @@ TARGET_LINK_LIBRARIES(${RSC_TEST_NAME}
 ADD_TEST(${RSC_TEST_NAME} ${EXECUTABLE_OUTPUT_PATH}/${RSC_TEST_NAME} "--gtest_output=xml:${TEST_RESULT_DIR}/")
 
 # Pkg-config test
-configure_file(pkg-config-test.sh.in ${CMAKE_CURRENT_BINARY_DIR}/pkg-config-test.sh)
-add_test(${RSC_TEST_NAME}-pkgconfig "${CMAKE_CURRENT_BINARY_DIR}/pkg-config-test.sh")
+IF(UNIX)
+    configure_file(pkg-config-test.sh.in ${CMAKE_CURRENT_BINARY_DIR}/pkg-config-test.sh)
+    add_test(${RSC_TEST_NAME}-pkgconfig "${CMAKE_CURRENT_BINARY_DIR}/pkg-config-test.sh")
+ENDIF()
 
 IF(WIN32)
     SET(PATH_STRING "$ENV{PATH};${Boost_LIBRARY_DIRS}")

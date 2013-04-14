@@ -29,7 +29,13 @@
 
 INCLUDE(FindPackageHandleStandardArgs)
 
-FIND_PROGRAM(GCOVR_EXECUTABLE gcovr HINTS ${GCOVR_ROOT} "${GCOVR_ROOT}/bin")
+FIND_PROGRAM(GCOVR_EXECUTABLE gcovr
+             HINTS ${GCOVR_ROOT}
+                   "${GCOVR_ROOT}/bin"
+                   "${GCOVR_ROOT}/share/python"
+                   "/usr/share/python"
+                   "/usr/local/share/python"
+                   "${CMAKE_INSTALL_PREFIX}/share/python")
 
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(gcovr DEFAULT_MSG GCOVR_EXECUTABLE)
 

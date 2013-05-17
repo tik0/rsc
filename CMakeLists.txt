@@ -23,6 +23,7 @@ OPTION(BUILD_TESTS "Decide if the test suite shall be built or not" ON)
 OPTION(BUILD_EXAMPLES "Decide if the examples shall be built or not" ON)
 OPTION(INSTALL_TOOLCHAINS "Decide if CMake toolchain files should be installed" ON)
 OPTION(EXPORT_TO_CMAKE_PACKAGE_REGISTRY "If set to ON, RSC will be exported to the CMake user package registry so that downstream projects automatically find the workspace location in find_package calls." OFF)
+OPTION(ENCODE_VERSION "If set to ON, install pathes and library name will have the version encoded ('rsc{major,minor}' instead of 'rsc') to allow parallel installation of different versions." ON)
 
 # --- global definitions ---
 
@@ -34,9 +35,13 @@ MESSAGE(STATUS "This is RSC version: ${RSC_VERSION}-${RSC_WC_REVISION}")
 SET(RSC_ABI_VERSION "4")
 SET(SO_VERSION "${RSC_VERSION_MAJOR}.${RSC_VERSION_MINOR}")
 
-SET(RSC_NAME "rsc")
+if(ENCODE_VERSION)
+    set(RSC_NAME "rsc${RSC_VERSION_MAJOR}.${RSC_VERSION_MINOR}")
+else(ENCODE_VERSION)
+    set(RSC_NAME "rsc")
+endif(ENCODE_VERSION)
 SET(VERSION_SUFFIX "${RSC_VERSION_MAJOR}.${RSC_VERSION_MINOR}")
-SET(INSTALL_PATH_PREFIX "rsc${RSC_VERSION_MAJOR}.${RSC_VERSION_MINOR}"
+SET(INSTALL_PATH_PREFIX "${RSC_NAME}"
     CACHE STRING "Prefix path applied to all non-versioned installed files in order to prevent version clashes.")
 
 SET(RSC_TEST_NAME "rsctest")
@@ -161,8 +166,8 @@ IF(UNIX)
     IF(${EXT_LENGTH} GREATER 0)
         SET(EXTERNAL_INCLUDE_COMMANDS "-I${EXTERNAL_INCLUDE_COMMANDS}")
     ENDIF()
-    CONFIGURE_FILE(rsc.pc.in "${CMAKE_BINARY_DIR}/rsc${RSC_VERSION_MAJOR}.${RSC_VERSION_MINOR}.pc" @ONLY)
-    INSTALL(FILES "${CMAKE_BINARY_DIR}/rsc${RSC_VERSION_MAJOR}.${RSC_VERSION_MINOR}.pc" DESTINATION lib/pkgconfig)
+    CONFIGURE_FILE(rsc.pc.in "${CMAKE_BINARY_DIR}/${RSC_NAME}.pc" @ONLY)
+    INSTALL(FILES "${CMAKE_BINARY_DIR}/${RSC_NAME}.pc" DESTINATION lib/pkgconfig)
 ENDIF()
 
 # --- cmake config files ---

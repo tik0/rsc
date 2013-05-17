@@ -18,9 +18,9 @@ cd @CMAKE_SOURCE_DIR@/build
 make install DESTDIR=$TESTINSTALLDIR
 
 # Update pkg-config prefix
-sed 's#prefix=.*#prefix='$TESTINSTALLPREFIX'#' $TESTINSTALLPREFIX/lib/pkgconfig/rsc@SO_VERSION@.pc >tmp.pc
-mv tmp.pc $TESTINSTALLPREFIX/lib/pkgconfig/rsc@SO_VERSION@.pc
-
+PKGCONFIGFILE=$TESTINSTALLPREFIX/lib/pkgconfig/@RSC_NAME@.pc
+sed 's#prefix=.*#prefix='$TESTINSTALLPREFIX'#' $PKGCONFIGFILE > tmp.pc
+mv tmp.pc $PKGCONFIGFILE
 
 # Generate, build and execute test binary
 cd $TESTBINDIR
@@ -36,7 +36,7 @@ EOF
 echo "[----------]"
 echo "[ BUILD    ]"
 export PKG_CONFIG_PATH=$TESTINSTALLPREFIX/lib/pkgconfig
-g++ -o librsctest librsctest.c $(pkg-config --cflags --libs rsc@SO_VERSION@)
+g++ -o librsctest librsctest.c $(pkg-config --cflags --libs @RSC_NAME@)
 echo "[       OK ]"
 
 echo "[ RUN      ]"

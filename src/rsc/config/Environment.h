@@ -33,7 +33,10 @@
 #include <rsc/logging/Logger.h>
 
 #include "ConfigSource.h"
+
+#include "rsc/config.h"
 #include "rsc/rscexports.h"
+
 
 namespace rsc {
 namespace config {
@@ -60,7 +63,7 @@ RSC_EXPORT boost::filesystem::path systemConfigDirectory();
  * @author jwienke
  */
 RSC_EXPORT boost::filesystem::path prefixConfigDirectory(
-        boost::filesystem::path prefix="/");
+    const boost::filesystem::path& prefix = RSC_INSTALL_PREFIX);
 
 /**
  * Return the home directory of the user associated with the current

@@ -61,9 +61,16 @@ path systemConfigDirectory() {
 #endif
 }
 
-path prefixConfigDirectory(path prefix) {
+path prefixConfigDirectory(const path& prefix) {
 #ifndef WIN32
-    return prefix / "etc";
+    // The "common" rule in the "else" leg would lead to "/usr/etc",
+    // which does not normally exist. Therefore, we treat the "/usr"
+    // prefix specially.
+    if (prefix == "/usr") {
+        return systemConfigDirectory();
+    } else {
+        return prefix / "etc/";
+    }
 #else
     return "c:\\";
 #endif

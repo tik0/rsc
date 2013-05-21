@@ -1,6 +1,7 @@
 ENABLE_TESTING()
 
 SET(TEST_RESULT_DIR ${CMAKE_BINARY_DIR}/testresults)
+SET(PKGCONFIG_TEST_NAME "${RSC_TEST_NAME}_pkgconfig")
 
 INCLUDE_DIRECTORIES(BEFORE SYSTEM ${GMOCK_INCLUDE_DIRS})
 INCLUDE_DIRECTORIES(BEFORE ${CMAKE_CURRENT_BINARY_DIR})
@@ -49,7 +50,7 @@ ADD_TEST(${RSC_TEST_NAME} ${EXECUTABLE_OUTPUT_PATH}/${RSC_TEST_NAME} "--gtest_ou
 # Pkg-config test
 IF(UNIX)
     configure_file(pkg-config-test.sh.in ${CMAKE_CURRENT_BINARY_DIR}/pkg-config-test.sh)
-    add_test(${RSC_TEST_NAME}-pkgconfig "${CMAKE_CURRENT_BINARY_DIR}/pkg-config-test.sh")
+    add_test(${PKGCONFIG_TEST_NAME} "${CMAKE_CURRENT_BINARY_DIR}/pkg-config-test.sh")
 ENDIF()
 
 IF(WIN32)

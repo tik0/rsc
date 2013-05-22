@@ -20,13 +20,17 @@
 #   CoR-Lab, Research Institute for Cognition and Robotics
 #     Bielefeld University
 
+GET_FILENAME_COMPONENT(CURRENT_DATE_MODULE_DIR ${CMAKE_CURRENT_LIST_FILE} PATH)
+
 FUNCTION(CURRENT_DATE RESULT)
 
     IF(UNIX)
         SET(CMD "date" "+%d/%m/%Y")
-        SET(REPLACE "(..)/(..)/..(..).*" "\\3\\2\\1")
+    ELSEIF(WIN32)
+        FILE(TO_NATIVE_PATH ${CURRENT_DATE_MODULE_DIR} NATIVE_DIR)
+        SET(CMD cmd /C "${NATIVE_DIR}/current_date.bat")
     ELSE()
-        MESSAGE(STATUS "date not implemented for this operating system")
+        MESSAGE(STATUS "Current date cannot be parsed on this operating system.")
         SET(${RESULT} 000000 PARENT_SCOPE)
         RETURN()
     ENDIF()
@@ -41,7 +45,8 @@ FUNCTION(CURRENT_DATE RESULT)
         SET(${RESULT} 000000 PARENT_SCOPE)
         RETURN()
     ENDIF()
-                    
+
+    SET(REPLACE "(..)/(..)/..(..).*" "\\3\\2\\1")       
     STRING(REGEX REPLACE ${REPLACE} DATE_STRING ${DATE_OUTPUT})
     SET(${RESULT} ${DATE_STRING} PARENT_SCOPE)
     

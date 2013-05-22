@@ -49,8 +49,8 @@ ADD_TEST(${RSC_TEST_NAME} ${EXECUTABLE_OUTPUT_PATH}/${RSC_TEST_NAME} "--gtest_ou
 
 # Pkg-config test
 IF(UNIX)
-    configure_file(pkg-config-test.sh.in ${CMAKE_CURRENT_BINARY_DIR}/pkg-config-test.sh)
-    add_test(${PKGCONFIG_TEST_NAME} "${CMAKE_CURRENT_BINARY_DIR}/pkg-config-test.sh")
+    CONFIGURE_FILE(pkg-config-test.sh.in "${CMAKE_CURRENT_BINARY_DIR}/pkg-config-test.sh")
+    ADD_TEST(${PKGCONFIG_TEST_NAME} "${CMAKE_CURRENT_BINARY_DIR}/pkg-config-test.sh")
 ENDIF()
 
 IF(WIN32)

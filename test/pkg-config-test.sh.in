@@ -41,6 +41,7 @@ RESULTFILE=@TEST_RESULT_DIR@/@PKGCONFIG_TEST_NAME@.xml
 echo "[----------]"
 echo "[ BUILD    ]"
 export LD_LIBRARY_PATH=$TESTINSTALLPREFIX/lib
+export DYLD_LIBRARY_PATH=$TESTINSTALLPREFIX/lib
 export PKG_CONFIG_PATH=$TESTINSTALLPREFIX/lib/pkgconfig
 if g++ -o librsctest librsctest.c $(pkg-config --cflags --libs @RSC_NAME@);
 then

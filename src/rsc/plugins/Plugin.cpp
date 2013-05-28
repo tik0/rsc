@@ -29,6 +29,10 @@
 #include <errno.h>
 #include <string.h>
 
+#if defined(_WIN32)
+#include <windows.h>
+#endif
+
 #if defined(__linux__) or defined(__APPLE__)
 #include <dlfcn.h>
 #endif
@@ -114,7 +118,11 @@ private:
     string name;
     string library;
 
-    void*            handle;
+#if defined(_WIN32)
+    HMODULE          handle;
+#else
+	void*            handle;
+#endif
     InitFunction     init;
     ShutdownFunction shutdown;
 
@@ -128,7 +136,12 @@ private:
                                     % (result ? result : "<unknown error>")));
         }
 #elif defined(_WIN32)
-        throw runtime_error("Plugins are not implemented for Windows platform.");
+		if (!(this->handle= LoadLibrary(this->library.c_str()))) {
+			throw runtime_error(str(format("Failed to load plugin `%1%' from shared object `%2%': %3%.")
+                                    % this->name
+                                    % this->library
+                                    % GetLastError()));
+		}
 #else
         throw runtime_error("Plugins are not implemented for this platform.");
 #endif
@@ -151,7 +164,12 @@ private:
                                     % (result ? result : "<unknown error>")));
         }
 #elif defined(_WIN32)
-        throw runtime_error("Plugins are not implemented for Windows platform.");
+        if (!(address = GetProcAddress(this->handle, name.c_str()))) {
+			throw runtime_error(str(format("Plugin `%1%' failed to define function `%2%': %3%")
+                                    % this->name
+                                    % name
+                                    % GetLastError()));
+		}
 #else
         throw runtime_error("Plugins are not implemented for this platform.");
 #endif

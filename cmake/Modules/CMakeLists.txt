@@ -10,6 +10,7 @@ INSTALL(FILES ExtractTBBVersion.cpp.in
               CMakeDoxyfile.in
               CMakeVariableDump.cmake
               CurrentDate.cmake
+              current_date.bat
               DefineProjectVersion.cmake
               EnableCoverageReport.cmake
               EnableSlocCount.cmake

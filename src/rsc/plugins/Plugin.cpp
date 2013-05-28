@@ -192,6 +192,10 @@ void Plugin::load() {
     this->impl->load();
 }
 
+void Plugin::unload() {
+    this->impl->unload();
+}
+
 PluginPtr Plugin::create(const std::string& name, const std::string& library) {
     return PluginPtr(new Plugin(new Impl(name, library)));
 }

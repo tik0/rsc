@@ -43,7 +43,7 @@ void RSC_PLUGIN_INIT_SYMBOL() {
     boost::filesystem::path callFilePath(PLUGIN_CALL_FILE);
     boost::filesystem::create_directories(callFilePath.parent_path());
     ofstream callFile;
-    callFile.open (callFilePath.c_str(), ios::app);
+    callFile.open (callFilePath.string().c_str(), ios::app);
     callFile << "INIT\n";
     callFile.close();
 
@@ -58,7 +58,7 @@ void RSC_PLUGIN_SHUTDOWN_SYMBOL() {
     boost::filesystem::path callFilePath(PLUGIN_CALL_FILE);
     boost::filesystem::create_directories(callFilePath.parent_path());
     ofstream callFile;
-    callFile.open (callFilePath.c_str(), ios::app);
+    callFile.open (callFilePath.string().c_str(), ios::app);
     callFile << "SHUTDOWN\n";
     callFile.close();
 

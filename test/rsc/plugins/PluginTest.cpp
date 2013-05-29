@@ -74,7 +74,7 @@ TEST_F(PluginTest, testLoadingAndShutdown) {
 
     plugin->load();
     EXPECT_TRUE(boost::filesystem::exists(callFilePath));
-    ifstream callFile(callFilePath.c_str());
+    ifstream callFile(callFilePath.string().c_str());
     string callFileContent((istreambuf_iterator<char>(callFile)),
             (istreambuf_iterator<char>()));
     boost::algorithm::trim(callFileContent);

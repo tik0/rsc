@@ -1,8 +1,8 @@
 /* ============================================================
  *
- * This file is a part of RSC project
+ * This file is part of the RSC project
  *
- * Copyright (C) 2010 by Johannes Wienke <jwienke at techfak dot uni-bielefeld dot de>
+ * Copyright (C) 2013 Johannes Wienke <jwienke at techfak dot uni-bielefeld dot de>
  *
  * This file may be licensed under the terms of the
  * GNU Lesser General Public License Version 3 (the ``LGPL''),
@@ -24,11 +24,38 @@
  *
  * ============================================================ */
 
-#pragma once
+#include <fstream>
 
-#include <string>
+#include <boost/filesystem.hpp>
 
-const static std::string TEST_ROOT = "@TEST_ROOT@";
-const static std::string CMAKE_EXECUTABLE = "@CMAKE_COMMAND@";
-const static std::string TEST_PLUGIN_DIRECTORY = "@TEST_PLUGIN_DIRECTORY@";
-const static std::string PLUGIN_CALL_FILE = "@PLUGIN_CALL_FILE@";
+#include <rsc/plugins/Provider.h>
+
+#include "testconfig.h"
+
+using namespace std;
+
+extern "C" {
+
+void RSC_PLUGIN_INIT_SYMBOL() {
+
+    boost::filesystem::path callFilePath(PLUGIN_CALL_FILE);
+    boost::filesystem::create_directories(callFilePath.parent_path());
+    ofstream callFile;
+    callFile.open (callFilePath.c_str(), ios::app);
+    callFile << "INIT\n";
+    callFile.close();
+
+}
+
+void RSC_PLUGIN_SHUTDOWN_SYMBOL() {
+
+    boost::filesystem::path callFilePath(PLUGIN_CALL_FILE);
+    boost::filesystem::create_directories(callFilePath.parent_path());
+    ofstream callFile;
+    callFile.open (callFilePath.c_str(), ios::app);
+    callFile << "SHUTDOWN\n";
+    callFile.close();
+
+}
+
+}

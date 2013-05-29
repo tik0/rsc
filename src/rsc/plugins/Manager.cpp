@@ -84,12 +84,11 @@ void Manager::addPath(const boost::filesystem::path& path) {
             // Strip leading "lib" and trailing ".so*", ".dylib*", etc
             regex libraryName (
 #if defined(__linux__)
-                    "^lib([^.]*)\\.so(.*)$"
+                    "^lib([^.]*)(.*)\\.so(.*)$"
 #elif defined(__APPLE__)
                     "^lib([^.]*)(.*)\\.dylib$"
 #elif defined(_WIN32)
-                    // TODO(jmoringe, 2012-11-12): test this regexp
-                    "^([^.]*)\\.dll$"
+                    "^([^.]*)(.*)\\.dll$"
 #else
                     ""
 #endif

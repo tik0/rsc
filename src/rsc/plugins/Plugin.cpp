@@ -62,7 +62,8 @@ public:
                  .getLogger(str((format("rsc.plugins.Plugin[%1%]")
                                  % name)))),
           name(name), library(library),
-          handle(NULL), loaded(false) {
+          loaded(false), handle(NULL),
+          init(NULL), shutdown(NULL) {
     }
 
     const string& getName() const {

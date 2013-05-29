@@ -36,6 +36,8 @@ using namespace std;
 
 extern "C" {
 
+#ifndef PLUGIN_MISSING_INIT
+
 void RSC_PLUGIN_INIT_SYMBOL() {
 
     boost::filesystem::path callFilePath(PLUGIN_CALL_FILE);
@@ -47,6 +49,10 @@ void RSC_PLUGIN_INIT_SYMBOL() {
 
 }
 
+#endif
+
+#ifndef PLUGIN_MISSING_SHUTDOWN
+
 void RSC_PLUGIN_SHUTDOWN_SYMBOL() {
 
     boost::filesystem::path callFilePath(PLUGIN_CALL_FILE);
@@ -57,5 +63,7 @@ void RSC_PLUGIN_SHUTDOWN_SYMBOL() {
     callFile.close();
 
 }
+
+#endif
 
 }

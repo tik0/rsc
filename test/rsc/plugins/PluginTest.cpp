@@ -93,3 +93,18 @@ TEST(PluginTest, testLoadingAndShutdown) {
 
 }
 
+TEST(PluginTest, testMissingSymbols) {
+
+    // start over with a fresh instance
+    Manager::killInstance();
+    Manager& pluginManager = Manager::getInstance();
+    pluginManager.addPath(TEST_PLUGIN_DIRECTORY);
+
+    PluginPtr plugin = pluginManager.getPlugin("testplugin-missing-init");
+    EXPECT_THROW(plugin->load(), runtime_error);
+    EXPECT_THROW(plugin->unload(), runtime_error)<< "Unloading a plugin which was not loaded correctly must be an error condition.";
+
+    plugin = pluginManager.getPlugin("testplugin-missing-shutdown");
+    EXPECT_THROW(plugin->load(), runtime_error) << "It must not be possible to load a pugin with missing symbols.";
+
+}

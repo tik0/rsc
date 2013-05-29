@@ -62,7 +62,7 @@ public:
                  .getLogger(str((format("rsc.plugins.Plugin[%1%]")
                                  % name)))),
           name(name), library(library),
-          handle(NULL) {
+          handle(NULL), loaded(false) {
     }
 
     const string& getName() const {
@@ -85,6 +85,7 @@ public:
         RSCINFO(this->logger, "Initializing");
         try {
             this->init();
+            this->loaded = true;
         } catch (const std::exception& e) {
             throw runtime_error(str(format("Plugin `%1%' failed to initialize: %2%")
                                     % this->name
@@ -96,6 +97,13 @@ public:
     }
 
     void unload() {
+
+        if (!loaded) {
+            throw runtime_error(
+                    str(format("Plugin `%1%' failed cannot be unloaded because it has not been loaded correctly.")
+                               % this->name));
+        }
+
         // Shut the plugin down.
         RSCINFO(this->logger, "Shutting down");
         try {
@@ -117,6 +125,8 @@ private:
 
     string name;
     string library;
+
+    bool loaded;
 
 #if defined(_WIN32)
     HMODULE          handle;

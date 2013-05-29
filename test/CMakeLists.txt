@@ -53,13 +53,19 @@ ADD_TEST(${RSC_TEST_NAME} ${EXECUTABLE_OUTPUT_PATH}/${RSC_TEST_NAME} "--gtest_ou
 # test plugins
 SET(TESTPLUGIN_NAMES testplugin
                      testplugin-a-comPlex42NAME
-                     testplugin-with.dots.in.name.or.so.version.0.9)
+                     testplugin-with.dots.in.name.or.so.version.0.9
+                     testplugin-missing-init
+                     testplugin-missing-shutdown)
 FOREACH(TESTPLUGIN_NAME ${TESTPLUGIN_NAMES})
     ADD_LIBRARY(${TESTPLUGIN_NAME} SHARED rsc/plugins/testplugin.cpp)
     TARGET_LINK_LIBRARIES(${TESTPLUGIN_NAME} ${Boost_LIBRARIES})
     SET_TARGET_PROPERTIES(${TESTPLUGIN_NAME}
                           PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${TEST_PLUGIN_DIRECTORY})
 ENDFOREACH()
+SET_TARGET_PROPERTIES(testplugin-missing-init
+                      PROPERTIES COMPILE_FLAGS "-DPLUGIN_MISSING_INIT")
+SET_TARGET_PROPERTIES(testplugin-missing-shutdown
+                      PROPERTIES COMPILE_FLAGS "-DPLUGIN_MISSING_SHUTDOWN")
 
 # Pkg-config test
 IF(UNIX)

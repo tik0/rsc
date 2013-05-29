@@ -42,35 +42,35 @@ using namespace rsc;
 using namespace rsc::plugins;
 using namespace rsc::runtime;
 
-TEST(PluginTest, testName) {
+class PluginTest: public ::testing::Test {
+protected:
 
-    // start over with a fresh instance
-    Manager::killInstance();
-    Manager& pluginManager = Manager::getInstance();
-    pluginManager.addPath(TEST_PLUGIN_DIRECTORY);
+    virtual void SetUp() {
+        // start over with a fresh instance
+        Manager::killInstance();
+        Manager::getInstance().addPath(TEST_PLUGIN_DIRECTORY);
+    }
+
+};
+
+TEST_F(PluginTest, testName) {
 
     // this is a kind of indirect test, things will throw if the name is wrong
-    EXPECT_NO_THROW(pluginManager.getPlugin("testplugin"));
-    EXPECT_NO_THROW(pluginManager.getPlugin("testplugin-a-comPlex42NAME"));
-    EXPECT_NO_THROW(pluginManager.getPlugin("testplugin-with"))<< "So far we assume plugin names are stripped at the first dot.";
+    EXPECT_NO_THROW(Manager::getInstance().getPlugin("testplugin"));
+    EXPECT_NO_THROW(Manager::getInstance().getPlugin("testplugin-a-comPlex42NAME"));
+    EXPECT_NO_THROW(Manager::getInstance().getPlugin("testplugin-with"))<< "So far we assume plugin names are stripped at the first dot.";
 
-    EXPECT_THROW(pluginManager.getPlugin("iDoNotExist"), NoSuchObject);
+    EXPECT_THROW(Manager::getInstance().getPlugin("iDoNotExist"), NoSuchObject);
 
 }
 
-TEST(PluginTest, testLoadingAndShutdown) {
+TEST_F(PluginTest, testLoadingAndShutdown) {
 
-    // start over with a fresh instance
-    Manager::killInstance();
-    Manager& pluginManager = Manager::getInstance();
-    pluginManager.addPath(TEST_PLUGIN_DIRECTORY);
-
-    // clean call file
     boost::filesystem::path callFilePath(PLUGIN_CALL_FILE);
     boost::filesystem::create_directories(callFilePath.parent_path());
     boost::filesystem::remove(callFilePath);
 
-    PluginPtr plugin = pluginManager.getPlugin("testplugin");
+    PluginPtr plugin = Manager::getInstance().getPlugin("testplugin");
 
     plugin->load();
     EXPECT_TRUE(boost::filesystem::exists(callFilePath));
@@ -93,18 +93,13 @@ TEST(PluginTest, testLoadingAndShutdown) {
 
 }
 
-TEST(PluginTest, testMissingSymbols) {
+TEST_F(PluginTest, testMissingSymbols) {
 
-    // start over with a fresh instance
-    Manager::killInstance();
-    Manager& pluginManager = Manager::getInstance();
-    pluginManager.addPath(TEST_PLUGIN_DIRECTORY);
-
-    PluginPtr plugin = pluginManager.getPlugin("testplugin-missing-init");
+    PluginPtr plugin = Manager::getInstance().getPlugin("testplugin-missing-init");
     EXPECT_THROW(plugin->load(), runtime_error);
     EXPECT_THROW(plugin->unload(), runtime_error)<< "Unloading a plugin which was not loaded correctly must be an error condition.";
 
-    plugin = pluginManager.getPlugin("testplugin-missing-shutdown");
+    plugin = Manager::getInstance().getPlugin("testplugin-missing-shutdown");
     EXPECT_THROW(plugin->load(), runtime_error) << "It must not be possible to load a pugin with missing symbols.";
 
 }

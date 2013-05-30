@@ -50,6 +50,10 @@ namespace plugins {
  *
  * Plugins can be retrieved as #Plugin objects, loaded and unloaded.
  *
+ * Plugins names are constructed from the shared library file name up to the
+ * first dot in the file name. Common shared library prefixes are stripped.
+ * E.g. libfoo.0.9.so will have the name foo.
+ *
  * @author jmoringe
  */
 class RSC_EXPORT Manager : public patterns::Singleton<Manager> {
@@ -70,6 +74,10 @@ public:
      *             which should be searched for plugins.
      * @throw exception If @a path does not exist or is otherwise
      *                  inaccessible.
+     * @throw runtime_error If the path contains a plugin which has the same
+     *                      plugin name as other already loaded plugins. This
+     *                      might also happen for two plugins in the same
+     *                      directory.
      */
     void addPath(const boost::filesystem::path& path);
 

@@ -7,6 +7,7 @@
 # GMOCK_INCLUDE_DIRS - Include directories to use the provided gmock installation
 # GMOCK_LIBRARIES - Libraries to link tests against
 # GMOCK_SOURCES - Internal, sources used for the target
+# GMOCK_CFLAGS - compile flags to use when using gmock
 #
 # Uses:
 # GMOCK_SOURCE - Source URL to download the archive, default exists for 1.6.0.
@@ -108,6 +109,11 @@ IF(NOT GMOCK_AVAILABLE OR GMOCK_SOURCE_CHANGED)
                            "${GMOCK_BASE_DIR}"
                            "${GMOCK_BASE_DIR}/include" CACHE STRING "Google Mock include directories" FORCE)
     SET(GMOCK_LIBRARIES "gmock" CACHE STRING "Library target for Google Mock")
+    IF(MSVC11)
+        SET(GMOCK_CFLAGS "/DGTEST_USE_OWN_TR1_TUPLE=0;/D_VARIADIC_MAX=10" CACHE INTERNAL "Google Mock CFLAGS")
+    ELSE()
+        SET(GMOCK_CFLAGS "" CACHE INTERNAL "Google Mock CFLAGS")
+    ENDIF()
     
     SET(GMOCK_AVAILABLE TRUE CACHE BOOL "Indicates wether a completely extracted installation of gmock is available" FORCE)
     MESSAGE(STATUS "Google Mock successfully installed")
@@ -124,5 +130,9 @@ IF(GMOCK_AVAILABLE)
     # declare the target
     INCLUDE_DIRECTORIES(BEFORE SYSTEM ${GMOCK_INCLUDE_DIRS})
     ADD_LIBRARY(${GMOCK_LIBRARIES} STATIC ${GMOCK_SOURCES})
-
+    IF(MSVC11)
+        SET_TARGET_PROPERTIES(${GMOCK_LIBRARIES} PROPERTIES
+                              COMPILE_DEFINITIONS "GTEST_USE_OWN_TR1_TUPLE=0;_VARIADIC_MAX=10")
+    ENDIF()
+    
 ENDIF()

@@ -45,11 +45,20 @@ using namespace rsc::runtime;
 class PluginTest: public ::testing::Test {
 protected:
 
+    PluginTest() : callFilePath(PLUGIN_CALL_FILE) {
+    }
+
     virtual void SetUp() {
         // start over with a fresh instance
         Manager::killInstance();
         Manager::getInstance().addPath(boost::filesystem::path(TEST_PLUGIN_DIRECTORY));
+
+        // initialize call file
+        boost::filesystem::create_directories(callFilePath.parent_path());
+        boost::filesystem::remove(callFilePath);
     }
+
+    boost::filesystem::path callFilePath;
 
 };
 
@@ -73,10 +82,6 @@ TEST_F(PluginTest, testNameClashException) {
 
 TEST_F(PluginTest, testLoadingAndShutdown) {
 
-    boost::filesystem::path callFilePath(PLUGIN_CALL_FILE);
-    boost::filesystem::create_directories(callFilePath.parent_path());
-    boost::filesystem::remove(callFilePath);
-
     PluginPtr plugin = Manager::getInstance().getPlugin("testplugin");
 
     // TODO exception wrapping in load and unload with default policy received from global manager configuration
@@ -98,6 +103,15 @@ TEST_F(PluginTest, testLoadingAndShutdown) {
             boost::token_compress_on);
     ASSERT_EQ(size_t(2), parts.size());
     EXPECT_EQ("SHUTDOWN", parts[1]);
+
+}
+
+TEST_F(PluginTest, testDuplicatedLoading) {
+
+    PluginPtr plugin = Manager::getInstance().getPlugin("testplugin");
+
+    plugin->load();
+    EXPECT_THROW(plugin->load(), runtime_error);
 
 }
 

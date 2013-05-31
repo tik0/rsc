@@ -75,6 +75,15 @@ public:
     }
 
     void load() {
+
+        if (this->loaded) {
+            throw runtime_error(
+                    boost::str(
+                            boost::format(
+                                    "Plugin %1% is already loaded. Cannot load it again,")
+                                    % this->name));
+        }
+
         RSCINFO(this->logger, "Trying to load library `" << this->library << "'");
 
         // Load the library containing the plugin.

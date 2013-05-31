@@ -48,7 +48,7 @@ protected:
     virtual void SetUp() {
         // start over with a fresh instance
         Manager::killInstance();
-        Manager::getInstance().addPath(boost::filesystem::path(TEST_PLUGIN_DIRECTORY).make_preferred());
+        Manager::getInstance().addPath(boost::filesystem::path(TEST_PLUGIN_DIRECTORY));
     }
 
 };

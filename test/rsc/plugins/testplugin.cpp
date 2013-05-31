@@ -38,7 +38,7 @@ extern "C" {
 
 #ifndef PLUGIN_MISSING_INIT
 
-void RSC_PLUGIN_INIT_SYMBOL() {
+RSC_PLUGIN_EXPORT void RSC_PLUGIN_INIT_SYMBOL() {
 
     boost::filesystem::path callFilePath(PLUGIN_CALL_FILE);
     boost::filesystem::create_directories(callFilePath.parent_path());
@@ -53,7 +53,7 @@ void RSC_PLUGIN_INIT_SYMBOL() {
 
 #ifndef PLUGIN_MISSING_SHUTDOWN
 
-void RSC_PLUGIN_SHUTDOWN_SYMBOL() {
+RSC_PLUGIN_EXPORT void RSC_PLUGIN_SHUTDOWN_SYMBOL() {
 
     boost::filesystem::path callFilePath(PLUGIN_CALL_FILE);
     boost::filesystem::create_directories(callFilePath.parent_path());

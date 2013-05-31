@@ -34,13 +34,13 @@ using namespace std;
 extern "C" {
 
 // called on initialization of the plugin
-void RSC_PLUGIN_INIT_SYMBOL() {
+RSC_PLUGIN_EXPORT void RSC_PLUGIN_INIT_SYMBOL() {
     // do your important work to make the plugin functionality known here
     cout << "My plugin is initialized!" << endl;
 }
 
 // called when unloading the plugin
-void RSC_PLUGIN_SHUTDOWN_SYMBOL() {
+RSC_PLUGIN_EXPORT void RSC_PLUGIN_SHUTDOWN_SYMBOL() {
     // remove everything your plugin provides here
     cout << "My plugin is shut down!" << endl;
 }

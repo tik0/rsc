@@ -1,8 +1,8 @@
 /* ============================================================
  *
- * This file is a part of RSC project
+ * This file is part of the RSC project
  *
- * Copyright (C) 2010 by Johannes Wienke <jwienke at techfak dot uni-bielefeld dot de>
+ * Copyright (C) 2013 Johannes Wienke <jwienke at techfak dot uni-bielefeld dot de>
  *
  * This file may be licensed under the terms of the
  * GNU Lesser General Public License Version 3 (the ``LGPL''),
@@ -24,11 +24,25 @@
  *
  * ============================================================ */
 
-#pragma once
+#include <iostream>
 
-#include <string>
+#include <rsc/plugins/Provider.h>
 
-const static std::string TEST_ROOT = "@TEST_ROOT@";
-const static std::string CMAKE_EXECUTABLE = "@CMAKE_COMMAND@";
-const static std::string TEST_PLUGIN_DIRECTORY = "@TEST_PLUGIN_DIRECTORY_NATIVE@";
-const static std::string PLUGIN_CALL_FILE = "@PLUGIN_CALL_FILE_NATIVE@";
+using namespace std;
+
+// the required definitions for a plugin, built as a separate shared library
+extern "C" {
+
+// called on initialization of the plugin
+RSC_PLUGIN_EXPORT void RSC_PLUGIN_INIT_SYMBOL() {
+    // do your important work to make the plugin functionality known here
+    cout << "My plugin is initialized!" << endl;
+}
+
+// called when unloading the plugin
+RSC_PLUGIN_EXPORT void RSC_PLUGIN_SHUTDOWN_SYMBOL() {
+    // remove everything your plugin provides here
+    cout << "My plugin is shut down!" << endl;
+}
+
+}

@@ -26,5 +26,26 @@
 
 #pragma once
 
+/**
+ * The method name to expose in plugins for initializing a plugin.
+ */
 #define RSC_PLUGIN_INIT_SYMBOL     rsc_plugin_init
+
+/**
+ * The method name to expose in plugins for shutting down a plugin.
+ */
 #define RSC_PLUGIN_SHUTDOWN_SYMBOL rsc_plugin_shutdown
+
+#if defined (_WIN32)
+    /**
+     * Export symbol to put in front of plugin init and shutdown method to
+     * expose them outside of a plugin's library.
+     */
+    #define RSC_PLUGIN_EXPORT __declspec(dllexport)
+#else
+    /**
+     * Export symbol to put in front of plugin init and shutdown method to
+     * expose them outside of a plugin's library.
+     */
+    #define RSC_PLUGIN_EXPORT
+#endif

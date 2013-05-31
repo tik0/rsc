@@ -100,15 +100,23 @@ void Manager::addPath(const boost::filesystem::path& path) {
             name = regex_replace(name, libraryName, "\\1");
             boost::filesystem::path library = it->path();
 
-            // If there is not yet an entry for the given name, add a
-            // new plugin entry. Otherwise, ignore the plugin. This
-            // logic implements precedence of searchpath entries.
             RSCINFO(this->logger, "Found plugin `"
                     << name << "' [" << library << "]");
-            if (this->plugins.find(name) == this->plugins.end()) {
-                this->plugins[name]
-                    = Plugin::create(name, library.string());
+            // Throw an exception if there already is a plugin with the given
+            // name
+            PluginMap::iterator existingPluginIt = this->plugins.find(name);
+            if (existingPluginIt != this->plugins.end()) {
+                throw runtime_error(
+                        boost::str(
+                                boost::format("Search path %1% cannot be added "
+                                        "because it contains a plugin with "
+                                        "name %2% (%3%), which is conflicting "
+                                        "with an existing plugin (%4%).") % path
+                                        % name % library
+                                        % (*existingPluginIt).second->getLibrary()));
             }
+            this->plugins[name]
+                = Plugin::create(name, library.string());
         }
     } else {
         RSCINFO(this->logger, "Ignoring non-existent path `" << path << "'");

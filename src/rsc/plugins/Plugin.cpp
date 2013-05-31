@@ -70,6 +70,10 @@ public:
         return this->name;
     }
 
+    const string& getLibrary() const {
+        return this->library;
+    }
+
     void load() {
         RSCINFO(this->logger, "Trying to load library `" << this->library << "'");
 
@@ -205,6 +209,10 @@ void Plugin::load() {
 
 void Plugin::unload() {
     this->impl->unload();
+}
+
+string Plugin::getLibrary() const {
+    return this->impl->getLibrary();
 }
 
 PluginPtr Plugin::create(const std::string& name, const std::string& library) {

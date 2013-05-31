@@ -31,4 +31,5 @@
 const static std::string TEST_ROOT = "@TEST_ROOT@";
 const static std::string CMAKE_EXECUTABLE = "@CMAKE_COMMAND@";
 const static std::string TEST_PLUGIN_DIRECTORY = "@TEST_PLUGIN_DIRECTORY_NATIVE@";
+const static std::string TEST_PLUGIN_DIRECTORY_NAME_CLASH = "@TEST_PLUGIN_DIRECTORY_NAME_CLASH_NATIVE@";
 const static std::string PLUGIN_CALL_FILE = "@PLUGIN_CALL_FILE_NATIVE@";

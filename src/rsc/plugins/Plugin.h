@@ -75,6 +75,15 @@ public:
      *                      reason.
      */
     void unload();
+
+    /**
+     * Returns the path to the library implementing this plugin.
+     *
+     * @return string representing the filesystem path to the library
+     *         implementing this plugin
+     */
+    std::string getLibrary() const;
+
 private:
     friend class Manager;
 

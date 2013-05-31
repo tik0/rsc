@@ -57,10 +57,17 @@ TEST_F(PluginTest, testName) {
 
     // this is a kind of indirect test, things will throw if the name is wrong
     EXPECT_NO_THROW(Manager::getInstance().getPlugin("testplugin"));
-    EXPECT_NO_THROW(Manager::getInstance().getPlugin("testplugin-a-comPlex42NAME"));
-    EXPECT_NO_THROW(Manager::getInstance().getPlugin("testplugin-with"))<< "So far we assume plugin names are stripped at the first dot.";
+    EXPECT_NO_THROW(
+            Manager::getInstance().getPlugin("testplugin-a-comPlex42NAME"));
+    EXPECT_NO_THROW(Manager::getInstance().getPlugin("testplugin-with"))<< "Plugin names must be stripped at the first dot.";
 
     EXPECT_THROW(Manager::getInstance().getPlugin("iDoNotExist"), NoSuchObject);
+
+}
+
+TEST_F(PluginTest, testNameClashException) {
+
+    EXPECT_THROW(Manager::getInstance().addPath(TEST_PLUGIN_DIRECTORY_NAME_CLASH), runtime_error);
 
 }
 
@@ -72,6 +79,7 @@ TEST_F(PluginTest, testLoadingAndShutdown) {
 
     PluginPtr plugin = Manager::getInstance().getPlugin("testplugin");
 
+    // TODO exception wrapping in load and unload with default policy received from global manager configuration
     plugin->load();
     EXPECT_TRUE(boost::filesystem::exists(callFilePath));
     ifstream callFile(callFilePath.string().c_str());
@@ -95,11 +103,15 @@ TEST_F(PluginTest, testLoadingAndShutdown) {
 
 TEST_F(PluginTest, testMissingSymbols) {
 
-    PluginPtr plugin = Manager::getInstance().getPlugin("testplugin-missing-init");
+    PluginPtr plugin = Manager::getInstance().getPlugin(
+            "testplugin-missing-init");
     EXPECT_THROW(plugin->load(), runtime_error);
     EXPECT_THROW(plugin->unload(), runtime_error)<< "Unloading a plugin which was not loaded correctly must be an error condition.";
 
     plugin = Manager::getInstance().getPlugin("testplugin-missing-shutdown");
-    EXPECT_THROW(plugin->load(), runtime_error) << "It must not be possible to load a pugin with missing symbols.";
+    EXPECT_THROW(plugin->load(), runtime_error)<< "It must not be possible to load a pugin with missing symbols.";
 
 }
+
+// TODO plugin with missing dependency (missing linking)
+// TODO plugin with user exception in load and unload

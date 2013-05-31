@@ -27,6 +27,15 @@
 #pragma once
 
 /**
+ * @name Low-level plugin symbols
+ *
+ * Detailed symbols to use for providing plugins by implementing required
+ * methods. Instead of using these symbols directly it is usually easier to
+ * use @ref RSC_PLUGIN_INIT_SIGNATURE and @ref RSC_PLUGIN_SHUTDOWN_SIGNATURE.
+ */
+//@{
+
+/**
  * The method name to expose in plugins for initializing a plugin.
  */
 #define RSC_PLUGIN_INIT_SYMBOL     rsc_plugin_init
@@ -49,3 +58,23 @@
      */
     #define RSC_PLUGIN_EXPORT
 #endif
+
+//@}
+
+/**
+ * @name hogh-level plugin initialization
+ *
+ * To provide a plugin implement the following stub:
+ *
+ * RSC_PLUGIN_INIT_SIGNATURE() {}
+ * RSC_PLUGIN_SHUTDOWN_SIGNATURE() {}
+ */
+//@{
+#if defined (_WIN32)
+    #define RSC_PLUGIN_INIT_SIGNATURE __declspec(dllexport) void rsc_plugin_init
+    #define RSC_PLUGIN_SHUTDOWN_SIGNATURE __declspec(dllexport) void rsc_plugin_shutdown
+#else
+    #define RSC_PLUGIN_INIT_SIGNATURE void rsc_plugin_init
+    #define RSC_PLUGIN_SHUTDOWN_SIGNATURE void rsc_plugin_shutdown
+#endif
+//@}

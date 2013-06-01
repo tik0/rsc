@@ -65,63 +65,67 @@ void Manager::addPath(const boost::filesystem::path& path) {
 
     // Search specified directory for plugins.
     RSCINFO(this->logger, "Adding path " << path);
-    if (is_directory(path)) {
-        for (directory_iterator it = directory_iterator(path);
-             it != directory_iterator(); ++it) {
-            RSCTRACE(this->logger, "Processing " << it->path());
-            if (!is_regular_file(it->path())) {
-                RSCINFO(this->logger, "Ignoring non-regular file " << it->path());
-                continue;
-            }
+    this->path.push_back(path);
+    if (!is_directory(path)) {
+        RSCINFO(this->logger, "Ignoring non-existent path `" << path << "'");
+        return;
+    }
 
-            // Extract the plugin name from the library name.
-            string name = it->path()
+    set<string> namesInThisPath;
+    for (directory_iterator it = directory_iterator(path);
+         it != directory_iterator(); ++it) {
+        RSCTRACE(this->logger, "Processing " << it->path());
+        if (!is_regular_file(it->path())) {
+            RSCINFO(this->logger, "Ignoring non-regular file " << it->path());
+            continue;
+        }
+
+        // Extract the plugin name from the library name.
+        string name = it->path()
 #if BOOST_FILESYSTEM_VERSION == 3
-                .filename().string();
+            .filename().string();
 #else
-                .filename();
+            .filename();
 #endif
-            // Strip leading "lib" and trailing ".so*", ".dylib*", etc
-            regex libraryName (
+        // Strip leading "lib" and trailing ".so*", ".dylib*", etc
+        regex libraryName (
 #if defined(__linux__)
-                    "^lib([^.]*)(.*)\\.so(.*)$"
+                "^lib([^.]*)(.*)\\.so(.*)$"
 #elif defined(__APPLE__)
-                    "^lib([^.]*)(.*)\\.dylib$"
+                "^lib([^.]*)(.*)\\.dylib$"
 #elif defined(_WIN32)
-                    "^([^.]*)(.*)\\.dll$"
+                "^([^.]*)(.*)\\.dll$"
 #else
-                    ""
+                ""
 #endif
-                    );
-            if (!regex_match(name, libraryName)) {
-                RSCINFO(this->logger, "Ignoring non-matching file " << name);
-                continue;
-            }
-            name = regex_replace(name, libraryName, "\\1");
-            boost::filesystem::path library = it->path();
+                );
+        if (!regex_match(name, libraryName)) {
+            RSCINFO(this->logger, "Ignoring non-matching file " << name);
+            continue;
+        }
 
-            RSCINFO(this->logger, "Found plugin `"
-                    << name << "' [" << library << "]");
-            // Throw an exception if there already is a plugin with the given
-            // name
-            PluginMap::iterator existingPluginIt = this->plugins.find(name);
-            if (existingPluginIt != this->plugins.end()) {
-                throw runtime_error(
-                        boost::str(
-                                boost::format("Search path %1% cannot be added "
-                                        "because it contains a plugin with "
-                                        "name %2% (%3%), which is conflicting "
-                                        "with an existing plugin (%4%).") % path
-                                        % name % library
-                                        % (*existingPluginIt).second->getLibrary()));
-            }
+        name = regex_replace(name, libraryName, "\\1");
+        if (namesInThisPath.count(name) != 0) {
+            throw runtime_error(
+                    boost::str(
+                            boost::format(
+                                    "The path %1% contains multiple plugins forming the plugin name %2%.")
+                                    % path % name));
+        }
+        namesInThisPath.insert(name);
+
+        boost::filesystem::path library = it->path();
+
+        // If there is not yet an entry for the given name, add a
+        // new plugin entry. Otherwise, ignore the plugin. This
+        // logic implements precedence of searchpath entries.
+        RSCINFO(this->logger, "Found plugin `"
+                << name << "' [" << library << "]");
+        if (this->plugins.find(name) == this->plugins.end()) {
             this->plugins[name]
                 = Plugin::create(name, library.string());
         }
-    } else {
-        RSCINFO(this->logger, "Ignoring non-existent path `" << path << "'");
     }
-    this->path.push_back(path);
 }
 
 set<PluginPtr> Manager::getPlugins(const boost::regex& regex) const {

@@ -49,7 +49,11 @@ RSC_PLUGIN_INIT_SIGNATURE() {
     boost::filesystem::create_directories(callFilePath.parent_path());
     ofstream callFile;
     callFile.open (callFilePath.string().c_str(), ios::app);
+#ifdef PLUGIN_OVERRIDE
+    callFile << "INIT-OVERRIDE\n";
+#else
     callFile << "INIT\n";
+#endif
     callFile.close();
 
 }

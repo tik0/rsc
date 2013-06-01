@@ -45,13 +45,15 @@ using namespace rsc::runtime;
 class PluginTest: public ::testing::Test {
 protected:
 
-    PluginTest() : callFilePath(PLUGIN_CALL_FILE) {
+    PluginTest() :
+            callFilePath(PLUGIN_CALL_FILE) {
     }
 
     virtual void SetUp() {
         // start over with a fresh instance
         Manager::killInstance();
-        Manager::getInstance().addPath(boost::filesystem::path(TEST_PLUGIN_DIRECTORY));
+        Manager::getInstance().addPath(
+                boost::filesystem::path(TEST_PLUGIN_DIRECTORY));
 
         // initialize call file
         boost::filesystem::create_directories(callFilePath.parent_path());
@@ -75,9 +77,20 @@ TEST_F(PluginTest, testName) {
 }
 
 TEST_F(PluginTest, testNameClashException) {
+    EXPECT_THROW(Manager::getInstance().addPath(TEST_PLUGIN_DIRECTORY_NAME_CLASH), runtime_error) << "Adding a path with multiple plugins ending up with the same name must throw.";
+}
 
-    EXPECT_THROW(Manager::getInstance().addPath(TEST_PLUGIN_DIRECTORY_NAME_CLASH), runtime_error);
-
+TEST_F(PluginTest, testPathOverriding) {
+    EXPECT_NO_THROW(Manager::getInstance().addPath(TEST_PLUGIN_DIRECTORY_OVERRIDE))<< "Adding a path with a plugin duplicating an existing one must not throw.";
+    PluginPtr plugin = Manager::getInstance().getPlugin("testplugin");
+    plugin->load();
+    EXPECT_TRUE(boost::filesystem::exists(callFilePath));
+    ifstream callFile(callFilePath.string().c_str());
+    string callFileContent((istreambuf_iterator<char>(callFile)),
+            (istreambuf_iterator<char>()));
+    boost::algorithm::trim(callFileContent);
+    // here, there must not be INIT-OVERRIDE from the overriding plugin
+    EXPECT_EQ("INIT", callFileContent) << "Plugins with same names must be taken from the fist added path.";
 }
 
 TEST_F(PluginTest, testLoadingAndShutdown) {
@@ -108,7 +121,8 @@ TEST_F(PluginTest, testLoadingAndShutdown) {
 TEST_F(PluginTest, testExceptionWrapping) {
 
     {
-        PluginPtr plugin = Manager::getInstance().getPlugin("testplugin-init-exception");
+        PluginPtr plugin = Manager::getInstance().getPlugin(
+                "testplugin-init-exception");
         EXPECT_THROW(plugin->load(), runtime_error);
         EXPECT_THROW(plugin->load(false), invalid_argument);
         // ensure that the plugin cannot be unloaded after these errors
@@ -116,7 +130,8 @@ TEST_F(PluginTest, testExceptionWrapping) {
     }
 
     {
-        PluginPtr plugin = Manager::getInstance().getPlugin("testplugin-shutdown-exception");
+        PluginPtr plugin = Manager::getInstance().getPlugin(
+                "testplugin-shutdown-exception");
         plugin->load();
         EXPECT_THROW(plugin->unload(), runtime_error);
         plugin->load();

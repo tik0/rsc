@@ -64,7 +64,9 @@ SET(TESTPLUGIN_NAMES testplugin
                      testplugin-a-comPlex42NAME
                      testplugin-with.dots.in.name.or.so.version.0.9
                      testplugin-missing-init
-                     testplugin-missing-shutdown)
+                     testplugin-missing-shutdown
+                     testplugin-init-exception
+                     testplugin-shutdown-exception)
 FOREACH(TESTPLUGIN_NAME ${TESTPLUGIN_NAMES})
     ADD_LIBRARY(${TESTPLUGIN_NAME} SHARED rsc/plugins/testplugin.cpp)
     TARGET_LINK_LIBRARIES(${TESTPLUGIN_NAME} ${Boost_LIBRARIES})
@@ -76,6 +78,10 @@ SET_TARGET_PROPERTIES(testplugin-missing-init PROPERTIES
                       COMPILE_DEFINITIONS "PLUGIN_MISSING_INIT")
 SET_TARGET_PROPERTIES(testplugin-missing-shutdown PROPERTIES
                       COMPILE_DEFINITIONS "PLUGIN_MISSING_SHUTDOWN")
+SET_TARGET_PROPERTIES(testplugin-init-exception PROPERTIES
+                      COMPILE_DEFINITIONS "PLUGIN_INIT_EXCEPTION")
+SET_TARGET_PROPERTIES(testplugin-shutdown-exception PROPERTIES
+                      COMPILE_DEFINITIONS "PLUGIN_SHUTDOWN_EXCEPTION")
 
 # test plugin with name clashes
 ADD_LIBRARY(testplugin.clash SHARED rsc/plugins/testplugin.cpp)

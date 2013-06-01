@@ -74,7 +74,7 @@ public:
         return this->library;
     }
 
-    void load() {
+    void load(bool wrapExceptions) {
 
         if (this->loaded) {
             throw runtime_error(
@@ -97,20 +97,25 @@ public:
 
         // Initialize the plugin.
         RSCINFO(this->logger, "Initializing");
-        try {
-            this->init();
-            this->loaded = true;
-        } catch (const std::exception& e) {
-            throw runtime_error(str(format("Plugin `%1%' failed to initialize: %2%")
-                                    % this->name
-                                    % e.what()));
-        } catch (...) {
-            throw runtime_error(str(format("Plugin `%1%' failed to initialize due to unknown error.")
-                                    % this->name));
+        if (wrapExceptions) {
+            try {
+                this->init();
+                this->loaded = true;
+            } catch (const std::exception& e) {
+                throw runtime_error(str(format("Plugin `%1%' failed to initialize: %2%")
+                                        % this->name
+                                        % e.what()));
+            } catch (...) {
+                throw runtime_error(str(format("Plugin `%1%' failed to initialize due to unknown error.")
+                                        % this->name));
+            }
+        } else {
+          this->init();
+          this->loaded = true;
         }
     }
 
-    void unload() {
+    void unload(bool wrapExceptions) {
 
         if (!loaded) {
             throw runtime_error(
@@ -120,15 +125,21 @@ public:
 
         // Shut the plugin down.
         RSCINFO(this->logger, "Shutting down");
-        try {
+        this->loaded = false;
+
+        if (wrapExceptions) {
+            try {
+                this->shutdown();
+            } catch (const std::exception& e) {
+                throw runtime_error(str(format("Plugin `%1%' failed to shutdown: %2%")
+                                        % this->name
+                                        % e.what()));
+            } catch (...) {
+                throw runtime_error(str(format("Plugin `%1%' failed to shutdown due to unknown error.")
+                                        % this->name));
+            }
+        } else {
             this->shutdown();
-        } catch (const std::exception& e) {
-            throw runtime_error(str(format("Plugin `%1%' failed to shutdown: %2%")
-                                    % this->name
-                                    % e.what()));
-        } catch (...) {
-            throw runtime_error(str(format("Plugin `%1%' failed to shutdown due to unknown error.")
-                                    % this->name));
         }
     }
 private:
@@ -212,12 +223,12 @@ const string& Plugin::getName() const {
     return this->impl->getName();
 }
 
-void Plugin::load() {
-    this->impl->load();
+void Plugin::load(bool wrapExceptions) {
+    this->impl->load(wrapExceptions);
 }
 
-void Plugin::unload() {
-    this->impl->unload();
+void Plugin::unload(bool wrapExceptions) {
+    this->impl->unload(wrapExceptions);
 }
 
 string Plugin::getLibrary() const {

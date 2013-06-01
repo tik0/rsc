@@ -25,6 +25,7 @@
  * ============================================================ */
 
 #include <fstream>
+#include <stdexcept>
 
 #include <boost/filesystem.hpp>
 
@@ -40,6 +41,10 @@ extern "C" {
 
 RSC_PLUGIN_INIT_SIGNATURE() {
 
+#ifdef PLUGIN_INIT_EXCEPTION
+    throw invalid_argument("error");
+#endif
+
     boost::filesystem::path callFilePath(PLUGIN_CALL_FILE);
     boost::filesystem::create_directories(callFilePath.parent_path());
     ofstream callFile;
@@ -54,6 +59,10 @@ RSC_PLUGIN_INIT_SIGNATURE() {
 #ifndef PLUGIN_MISSING_SHUTDOWN
 
 RSC_PLUGIN_SHUTDOWN_SIGNATURE() {
+
+#ifdef PLUGIN_SHUTDOWN_EXCEPTION
+    throw invalid_argument("error");
+#endif
 
     boost::filesystem::path callFilePath(PLUGIN_CALL_FILE);
     boost::filesystem::create_directories(callFilePath.parent_path());

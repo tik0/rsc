@@ -65,18 +65,24 @@ public:
      * Tries to load the functionality of the plugin into the current
      * process.
      *
+     * @param wrapExceptions if @c true, exceptions generated inside the plugin
+     *                       init method are wrapped in a runtime_error.
+     *                       Otherwise they are passed through.
      * @throw runtime_error If the plugin cannot be loaded for some
      *                      reason.
      */
-    void load();
+    void load(bool wrapExceptions = true);
 
     /**
      * Tries to unload the functionality of the plugin.
      *
+     * @param wrapExceptions if @c true, exceptions generated inside the plugin
+     *                       init method are wrapped in a runtime_error.
+     *                       Otherwise they are passed through.
      * @throw runtime_error If the plugin cannot be unloaded for some
      *                      reason.
      */
-    void unload();
+    void unload(bool wrapExceptions = true);
 
     /**
      * Returns the path to the library implementing this plugin.

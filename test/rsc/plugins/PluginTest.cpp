@@ -84,7 +84,6 @@ TEST_F(PluginTest, testLoadingAndShutdown) {
 
     PluginPtr plugin = Manager::getInstance().getPlugin("testplugin");
 
-    // TODO exception wrapping in load and unload with default policy received from global manager configuration
     plugin->load();
     EXPECT_TRUE(boost::filesystem::exists(callFilePath));
     ifstream callFile(callFilePath.string().c_str());
@@ -103,6 +102,26 @@ TEST_F(PluginTest, testLoadingAndShutdown) {
             boost::token_compress_on);
     ASSERT_EQ(size_t(2), parts.size());
     EXPECT_EQ("SHUTDOWN", parts[1]);
+
+}
+
+TEST_F(PluginTest, testExceptionWrapping) {
+
+    {
+        PluginPtr plugin = Manager::getInstance().getPlugin("testplugin-init-exception");
+        EXPECT_THROW(plugin->load(), runtime_error);
+        EXPECT_THROW(plugin->load(false), invalid_argument);
+        // ensure that the plugin cannot be unloaded after these errors
+        EXPECT_THROW(plugin->unload(), runtime_error);
+    }
+
+    {
+        PluginPtr plugin = Manager::getInstance().getPlugin("testplugin-shutdown-exception");
+        plugin->load();
+        EXPECT_THROW(plugin->unload(), runtime_error);
+        plugin->load();
+        EXPECT_THROW(plugin->unload(false), invalid_argument);
+    }
 
 }
 
@@ -128,4 +147,3 @@ TEST_F(PluginTest, testMissingSymbols) {
 }
 
 // TODO plugin with missing dependency (missing linking)
-// TODO plugin with user exception in load and unload

@@ -51,8 +51,8 @@ protected:
 
     virtual void SetUp() {
         // start over with a fresh instance
-        Manager::killInstance();
-        Manager::getInstance().addPath(
+        pluginManager.reset(new Manager());
+        pluginManager->addPath(
                 boost::filesystem::path(TEST_PLUGIN_DIRECTORY));
 
         // initialize call file
@@ -60,6 +60,7 @@ protected:
         boost::filesystem::remove(callFilePath);
     }
 
+    ManagerPtr pluginManager;
     boost::filesystem::path callFilePath;
 
 };
@@ -67,22 +68,22 @@ protected:
 TEST_F(PluginTest, testName) {
 
     // this is a kind of indirect test, things will throw if the name is wrong
-    EXPECT_NO_THROW(Manager::getInstance().getPlugin("testplugin"));
+    EXPECT_NO_THROW(pluginManager->getPlugin("testplugin"));
     EXPECT_NO_THROW(
-            Manager::getInstance().getPlugin("testplugin-a-comPlex42NAME"));
-    EXPECT_NO_THROW(Manager::getInstance().getPlugin("testplugin-with"))<< "Plugin names must be stripped at the first dot.";
+            pluginManager->getPlugin("testplugin-a-comPlex42NAME"));
+    EXPECT_NO_THROW(pluginManager->getPlugin("testplugin-with"))<< "Plugin names must be stripped at the first dot.";
 
-    EXPECT_THROW(Manager::getInstance().getPlugin("iDoNotExist"), NoSuchObject);
+    EXPECT_THROW(pluginManager->getPlugin("iDoNotExist"), NoSuchObject);
 
 }
 
 TEST_F(PluginTest, testNameClashException) {
-    EXPECT_THROW(Manager::getInstance().addPath(TEST_PLUGIN_DIRECTORY_NAME_CLASH), runtime_error) << "Adding a path with multiple plugins ending up with the same name must throw.";
+    EXPECT_THROW(pluginManager->addPath(TEST_PLUGIN_DIRECTORY_NAME_CLASH), runtime_error) << "Adding a path with multiple plugins ending up with the same name must throw.";
 }
 
 TEST_F(PluginTest, testPathOverriding) {
-    EXPECT_NO_THROW(Manager::getInstance().addPath(TEST_PLUGIN_DIRECTORY_OVERRIDE))<< "Adding a path with a plugin duplicating an existing one must not throw.";
-    PluginPtr plugin = Manager::getInstance().getPlugin("testplugin");
+    EXPECT_NO_THROW(pluginManager->addPath(TEST_PLUGIN_DIRECTORY_OVERRIDE))<< "Adding a path with a plugin duplicating an existing one must not throw.";
+    PluginPtr plugin = pluginManager->getPlugin("testplugin");
     plugin->load();
     EXPECT_TRUE(boost::filesystem::exists(callFilePath));
     ifstream callFile(callFilePath.string().c_str());
@@ -95,7 +96,7 @@ TEST_F(PluginTest, testPathOverriding) {
 
 TEST_F(PluginTest, testLoadingAndShutdown) {
 
-    PluginPtr plugin = Manager::getInstance().getPlugin("testplugin");
+    PluginPtr plugin = pluginManager->getPlugin("testplugin");
 
     plugin->load();
     EXPECT_TRUE(boost::filesystem::exists(callFilePath));
@@ -121,7 +122,7 @@ TEST_F(PluginTest, testLoadingAndShutdown) {
 TEST_F(PluginTest, testExceptionWrapping) {
 
     {
-        PluginPtr plugin = Manager::getInstance().getPlugin(
+        PluginPtr plugin = pluginManager->getPlugin(
                 "testplugin-init-exception");
         EXPECT_THROW(plugin->load(), runtime_error);
         EXPECT_THROW(plugin->load(false), invalid_argument);
@@ -130,7 +131,7 @@ TEST_F(PluginTest, testExceptionWrapping) {
     }
 
     {
-        PluginPtr plugin = Manager::getInstance().getPlugin(
+        PluginPtr plugin = pluginManager->getPlugin(
                 "testplugin-shutdown-exception");
         plugin->load();
         EXPECT_THROW(plugin->unload(), runtime_error);
@@ -142,7 +143,7 @@ TEST_F(PluginTest, testExceptionWrapping) {
 
 TEST_F(PluginTest, testDuplicatedLoading) {
 
-    PluginPtr plugin = Manager::getInstance().getPlugin("testplugin");
+    PluginPtr plugin = pluginManager->getPlugin("testplugin");
 
     plugin->load();
     EXPECT_THROW(plugin->load(), runtime_error);
@@ -151,12 +152,12 @@ TEST_F(PluginTest, testDuplicatedLoading) {
 
 TEST_F(PluginTest, testMissingSymbols) {
 
-    PluginPtr plugin = Manager::getInstance().getPlugin(
+    PluginPtr plugin = pluginManager->getPlugin(
             "testplugin-missing-init");
     EXPECT_THROW(plugin->load(), runtime_error);
     EXPECT_THROW(plugin->unload(), runtime_error)<< "Unloading a plugin which was not loaded correctly must be an error condition.";
 
-    plugin = Manager::getInstance().getPlugin("testplugin-missing-shutdown");
+    plugin = pluginManager->getPlugin("testplugin-missing-shutdown");
     EXPECT_THROW(plugin->load(), runtime_error)<< "It must not be possible to load a pugin with missing symbols.";
 
 }

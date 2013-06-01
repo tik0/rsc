@@ -54,18 +54,20 @@ public:
      * Constructs a @c Configurator with default plugin search path @a
      * defaultPath.
      *
+     * @param manager the manager to configure
      * @param defaultPath A #vector of #boost::filesystem::path
      *                    objects which should be installed as plugin
      *                    search path in case no plugin search path is
      *                    configured.
      */
-    Configurator(const std::vector<boost::filesystem::path>& defaultPath);
+    Configurator(ManagerPtr manager,
+                 const std::vector<boost::filesystem::path>& defaultPath);
     virtual ~Configurator();
 
 private:
     logging::LoggerPtr logger;
 
-    Manager& manager;
+    ManagerPtr manager;
 
     bool                                 pathSet;
     std::vector<boost::filesystem::path> defaultPath;

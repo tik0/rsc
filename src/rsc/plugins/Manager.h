@@ -32,8 +32,8 @@
 
 #include <boost/regex.hpp>
 #include <boost/filesystem/path.hpp>
-
-#include "../patterns/Singleton.h"
+#include <boost/noncopyable.hpp>
+#include <boost/shared_ptr.hpp>
 
 #include "../logging/Logger.h"
 
@@ -45,8 +45,7 @@ namespace rsc {
 namespace plugins {
 
 /**
- * The singleton instance of this class manages plugin search path
- * entries and plugins.
+ * Instances of this class manages plugin search path entries and plugins.
  *
  * Plugins can be retrieved as #Plugin objects, loaded and unloaded.
  *
@@ -58,8 +57,11 @@ namespace plugins {
  *
  * @author jmoringe
  */
-class RSC_EXPORT Manager : public patterns::Singleton<Manager> {
+class RSC_EXPORT Manager: public boost::noncopyable {
 public:
+
+    Manager();
+
     virtual ~Manager();
 
     /**
@@ -115,7 +117,6 @@ public:
      */
     PluginPtr getPlugin(const std::string& name) const;
 private:
-    friend class patterns::Singleton<Manager>;
 
     typedef std::vector<boost::filesystem::path> PathList;
     typedef std::map<std::string, PluginPtr>     PluginMap;
@@ -125,8 +126,9 @@ private:
     PathList  path;
     PluginMap plugins;
 
-    Manager();
 };
+
+typedef boost::shared_ptr<Manager> ManagerPtr;
 
 }
 }

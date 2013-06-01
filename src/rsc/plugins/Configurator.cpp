@@ -42,10 +42,10 @@ using namespace boost::filesystem;
 namespace rsc {
 namespace plugins {
 
-Configurator::Configurator(const vector<path>& defaultPath)
+Configurator::Configurator(ManagerPtr manager, const vector<path>& defaultPath)
     : logger(logging::LoggerFactory::getInstance()
              .getLogger("rsc.plugins.Configurator")),
-      manager(Manager::getInstance()),
+      manager(manager),
       pathSet(false),
       defaultPath(defaultPath) {
 }
@@ -70,7 +70,7 @@ Configurator::~Configurator() {
                  << pattern << "'");
         set<PluginPtr> matches;
         try {
-            matches = this->manager.getPlugins(boost::regex(pattern));
+            matches = this->manager->getPlugins(boost::regex(pattern));
         } catch (const std::exception& e) {
             throw runtime_error(str(format("Failed to lookup matching plugins for patterns `%1%' as requested via configuration: %2%")
                                     % pattern
@@ -120,7 +120,7 @@ void Configurator::handleOption(const vector<string>& key,
                     path = "<default path>"; // for exception message
                     addDefaultPath();
                 } else {
-                    this->manager.addPath(path);
+                    this->manager->addPath(path);
                 }
             } catch (const std::exception& e) {
                 throw runtime_error(str(format("Failed to add path `%1%' as requested via configuration: %2%")
@@ -142,7 +142,7 @@ void Configurator::handleOption(const vector<string>& key,
 void Configurator::addDefaultPath() {
     for (vector<path>::const_iterator it = this->defaultPath.begin();
          it != this->defaultPath.end(); ++it) {
-        this->manager.addPath(*it);
+        this->manager->addPath(*it);
     }
 }
 

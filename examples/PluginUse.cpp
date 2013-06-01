@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
     }
 
     // get the plugin manager instance for working with plugins
-    Manager& pluginManager = Manager::getInstance();
+    Manager pluginManager;
 
     // register the user-specified plugin search paths
     for (int i = 1; i < argc; ++i) {

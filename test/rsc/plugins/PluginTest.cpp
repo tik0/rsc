@@ -145,5 +145,3 @@ TEST_F(PluginTest, testMissingSymbols) {
     EXPECT_THROW(plugin->load(), runtime_error)<< "It must not be possible to load a pugin with missing symbols.";
 
 }
-
-// TODO plugin with missing dependency (missing linking)

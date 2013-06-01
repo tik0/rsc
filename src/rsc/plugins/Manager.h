@@ -54,6 +54,8 @@ namespace plugins {
  * first dot in the file name. Common shared library prefixes are stripped.
  * E.g. libfoo.0.9.so will have the name foo.
  *
+ * Manager instances are not thread-safe and access needs to be synchronized.
+ *
  * @author jmoringe
  */
 class RSC_EXPORT Manager : public patterns::Singleton<Manager> {

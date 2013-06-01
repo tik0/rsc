@@ -46,6 +46,8 @@ class Impl;
  * Instances of this class represent pieces of RSB-related
  * functionality which can be loaded into a program at runtime.
  *
+ * Plugin instances are not thread-safe and access needs to be synchronized.
+ *
  * @author jmoringe
  */
 class RSC_EXPORT Plugin : boost::noncopyable {

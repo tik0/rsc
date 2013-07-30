@@ -90,6 +90,13 @@ IF(BOOST_ROOT)
     SET(Boost_NO_SYSTEM_PATHS ON)
 ENDIF()
 
+SET(USE_INTERNAL_BOOST_UUID FALSE CACHE BOOL "Wether to use the internal version of boost.uuid or not")
+IF(NOT USE_INTERNAL_BOOST_UUID)
+	MESSAGE(STATUS "Trying to find an external version of Boost.uuid")
+	FIND_PACKAGE(BoostUUID)
+	MESSAGE(STATUS "Boost.uuid found in system: ${BOOSTUUID_FOUND}")
+ENDIF()
+
 # determine the required libraries for boost based on its version
 FIND_PACKAGE(Boost ${Boost_USE_VERSION} REQUIRED)
 SET(BOOST_COMPONENTS thread filesystem signals program_options system regex)
@@ -98,12 +105,6 @@ IF(Boost_VERSION STREQUAL 105000 OR Boost_VERSION STRGREATER 105000)
 ENDIF()
 FIND_PACKAGE(Boost ${Boost_USE_VERSION} REQUIRED ${BOOST_COMPONENTS})
 
-SET(USE_INTERNAL_BOOST_UUID FALSE CACHE BOOL "Wether to use the internal version of boost.uuid or not")
-IF(NOT USE_INTERNAL_BOOST_UUID)
-	MESSAGE(STATUS "Trying to find an external version of Boost.uuid")
-	FIND_PACKAGE(BoostUUID)
-	MESSAGE(STATUS "Boost.uuid found in system: ${BOOSTUUID_FOUND}")
-ENDIF()
 IF(NOT BOOSTUUID_FOUND OR USE_INTERNAL_BOOST_UUID)
     MESSAGE(STATUS "Using an internal version of Boost.uuid. Remember that your client libraries have to use this version, too.")
     SET(USE_INTERNAL_BOOST_UUID TRUE CACHE BOOL "Wether to use the internal version of boost.uuid or not" FORCE)
@@ -111,6 +112,8 @@ IF(NOT BOOSTUUID_FOUND OR USE_INTERNAL_BOOST_UUID)
 ENDIF()
 INCLUDE_DIRECTORIES(BEFORE SYSTEM ${Boost_INCLUDE_DIRS} ${BOOSTUUID_INCLUDE_DIRS})
 LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
+
+
 
 # --- source code ---
 

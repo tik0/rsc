@@ -19,13 +19,14 @@
 #
 # The development of this software was supported by:
 #   CoR-Lab, Research Institute for Cognition and Robotics
-#     Bielefeld UniversityMESSAGE(STATUS "Loading toolchain for Oncilla system")
+#     Bielefeld University
+message(STATUS "Loading toolchain for the Oncilla Quadruped Robot (RoBoard 110, processor family: i586")
 
 # System description
-SET(CMAKE_SYSTEM_NAME "Linux")
-SET(CMAKE_SYSTEM_PROCESSOR "i586")
-SET(UNIX "True")
-SET(CMAKE_COMPILER_IS_GNUCXX "True")
+set(CMAKE_SYSTEM_NAME "Linux")
+set(CMAKE_SYSTEM_PROCESSOR "i586")
+set(UNIX "True")
+set(CMAKE_COMPILER_IS_GNUCXX "True")
 
 # CXX compiler flags
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=i586" CACHE STRING "" FORCE)
+add_definitions("-march=i586")

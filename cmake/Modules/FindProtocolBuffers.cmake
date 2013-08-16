@@ -431,8 +431,15 @@ IF(PROTOBUF_PROTOC_EXECUTABLE AND NOT PROTOBUF_PROTOC_MATLAB)
         MESSAGE(STATUS "protoc does not support matlab")
     ENDIF()
 ENDIF()
+
+SET(KNOWN_VERSIONS 2.6.0 2.5.1 2.5.0 2.4.1 2.4.0 2.3.0)
+SET(JAVA_NAMES ${PROTOBUF_JAVA_NAME} protobuf.jar protobuf-java.jar)
+FOREACH(VERSION ${KNOWN_VERSIONS})
+    LIST(APPEND JAVA_NAMES "protobuf-java-${VERSION}.jar")
+ENDFOREACH()
+
 FIND_FILE(PROTOBUF_JAVA_LIBRARY
-          NAMES ${PROTOBUF_JAVA_NAME} protobuf.jar protobuf-java.jar
+          NAMES ${JAVA_NAMES}
           HINTS ${PROTOBUF_JAVA_ROOT}
                 "${PROTOBUF_JAVA_ROOT}/share/java"
                 "/usr/share/java"

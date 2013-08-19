@@ -60,8 +60,16 @@ namespace rsc {
  * the effective level of a logger is the assigned level of the earliest parent
  * of the logger which actually has an assigned level.
  *
+ * In detail, the logger names have the following conventions and rules:
+ *  - name are handled case-insensitive
+ *  - the part after the last . must not be called "system" or "level"
+ *    (case-insensitive)
+ *  - you should not include = characters and any kind of line breaks as they
+ *    might interfere with configuration system
+ *
  * To install new LoggingSystem instances, register them in #loggingSystemRegistry.
- * The selection of a logging system can be triggered through LoggerFactory#reselectLoggingSystem using a string as a hint.
+ * The selection of a logging system can be triggered through
+ * LoggerFactory#reselectLoggingSystem using a string as a hint.
  *
  * As the default, a simple cout- / cerr-based LoggingSystem called
  * ConsoleLoggingSystem is provided.

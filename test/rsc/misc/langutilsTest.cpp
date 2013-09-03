@@ -49,7 +49,32 @@ public:
     }
 };
 
+DEPRECATED_MSG(void deprecatedFunctionMsg(int foo), "A test deprecation");
+void deprecatedFunctionMsg(int foo) {
+    int bla = foo + 1;
+    bla = bla + 1;
+}
+
+class DEPRECATED_CLASS("Test deprecation for a simple class") SimpleDeprecation;
+class SimpleDeprecation {
+};
+
+template<class T>
+class DEPRECATED_CLASS("Test deprecation for a template class") TemplateDeprecation;
+
+template<class T>
+class TemplateDeprecation {
+    std::pair<T, T> doSomething() {
+        return std::pair<T, T>();
+    }
+};
+
 TEST(DeprecationTest, testDeprecation) {
     deprecatedFunction(42);
+    deprecatedFunctionMsg(42);
     Foo().deprecatedFunction(42);
+    SimpleDeprecation s;
+    (void) s;
+    TemplateDeprecation<int> t;
+    (void) t;
 }

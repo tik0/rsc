@@ -24,6 +24,8 @@
  *
  * ============================================================ */
 
+/** @file */
+
 #pragma once
 
 #include <string>
@@ -111,22 +113,69 @@ RSC_EXPORT char randAlnumChar();
  */
 RSC_EXPORT std::string randAlnumStr(const std::string::size_type& length);
 
-// This macro allows you to mark a function as being deprecated. Please note
-// that if your return type contains a comma (template) you need to typedef it.
-// Otherwise the commas are interpreted as arguments to this macro.
-// Usage:
-// DEPRECATED(void deprecatedFunction(int foo));
-// void deprecatedFunction(int foo) {
-//     int bla = foo + 1;
-//     bla = bla + 1;
-// }
+/**
+ * This macro allows you to mark a function as being deprecated including a
+ * message explaining the deprecation.
+ *
+ * Usage:
+ * @code
+ * DEPRECATED_MSG(void deprecatedFunction(int foo), "use XYZ instead");
+ * void deprecatedFunction(int foo) {
+ *     int bla = foo + 1;
+ *     bla = bla + 1;
+ * }
+ * @endcode
+ *
+ * @note If your return type contains a comma (template) you need to typedef it.
+ * Otherwise the commas are interpreted as arguments to this macro.
+ */
 #ifdef __GNUC__
-#define DEPRECATED(func) func __attribute__ ((deprecated))
+#define DEPRECATED_MSG(func, msg) func __attribute__ ((deprecated (#msg)))
 #elif defined(_MSC_VER)
-#define DEPRECATED(func) __declspec(deprecated) func
+#define DEPRECATED_MSG(func, msg) __declspec(deprecated(#msg)) func
 #else
 #pragma message("WARNING: You need to implement DEPRECATED for this compiler")
-#define DEPRECATED(func) func
+#define DEPRECATED_MSG(func, msg) func
+#endif
+
+/**
+ * This macro allows you to mark a function as being deprecated. A default
+ * explanatory message will be used. Usually you should use #DEPRECATED_MSG
+ * instead.
+ *
+ * Usage:
+ * @code
+ * DEPRECATED_MSG(void deprecatedFunction(int foo));
+ * void deprecatedFunction(int foo) {
+ *     int bla = foo + 1;
+ *     bla = bla + 1;
+ * }
+ * @endcode
+ *
+ * @note If your return type contains a comma (template) you need to typedef it.
+ * Otherwise the commas are interpreted as arguments to this macro.
+ */
+#define DEPRECATED(fun) DEPRECATED_MSG(fun, "Use of deprecated construct.")
+
+/**
+ * This macro allows you to mark a class as being deprecated.
+ *
+ * Usage:
+ * @code
+ * class DEPRECATED_CLASS("Your explanation") SimpleDeprecation;
+ * class SimpleDeprecation {
+ * };
+ * @endcode
+ *
+ * @note On GCC, a bug might prevent deprecation warnings for template classes
+ */
+#ifdef __GNUC__
+#define DEPRECATED_CLASS(msg) __attribute__ ((deprecated (#msg)))
+#elif defined(_MSC_VER)
+#define DEPRECATED_CLASS(msg) __declspec(deprecated(#msg))
+#else
+#pragma message("WARNING: You need to implement DEPRECATED_CLASS for this compiler")
+#define DEPRECATED_CLASS(msg)
 #endif
 
 }

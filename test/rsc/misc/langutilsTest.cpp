@@ -49,7 +49,14 @@ public:
     }
 };
 
+DEPRECATED_MSG(void deprecatedFunctionMsg(int foo), "A test deprecation");
+void deprecatedFunctionMsg(int foo) {
+    int bla = foo + 1;
+    bla = bla + 1;
+}
+
 TEST(DeprecationTest, testDeprecation) {
     deprecatedFunction(42);
+    deprecatedFunctionMsg(42);
     Foo().deprecatedFunction(42);
 }

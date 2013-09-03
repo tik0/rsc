@@ -157,6 +157,27 @@ RSC_EXPORT std::string randAlnumStr(const std::string::size_type& length);
  */
 #define DEPRECATED(fun) DEPRECATED_MSG(fun, "Use of deprecated construct.")
 
+/**
+ * This macro allows you to mark a class as being deprecated.
+ *
+ * Usage:
+ * @code
+ * class DEPRECATED_CLASS("Your explanation") SimpleDeprecation;
+ * class SimpleDeprecation {
+ * };
+ * @endcode
+ *
+ * @note On GCC, a bug might prevent deprecation warnings for template classes
+ */
+#ifdef __GNUC__
+#define DEPRECATED_CLASS(msg) __attribute__ ((deprecated (#msg)))
+#elif defined(_MSC_VER)
+#define DEPRECATED_CLASS(msg) __declspec(deprecated(#msg))
+#else
+#pragma message("WARNING: You need to implement DEPRECATED_CLASS for this compiler")
+#define DEPRECATED_CLASS(msg)
+#endif
+
 }
 }
 

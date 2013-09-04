@@ -441,6 +441,10 @@ ELSE()
 ENDIF()
 
 SET(KNOWN_VERSIONS 2.6.0 2.5.1 2.5.0 2.4.1 2.4.0 2.3.0)
+# if we know the compiler version, we should favor it
+IF(PROTOBUF_PROTOC_VERSION)
+    LIST(INSERT KNOWN_VERSIONS 0 ${PROTOBUF_PROTOC_VERSION})
+ENDIF()
 SET(JAVA_NAMES ${PROTOBUF_JAVA_NAME} protobuf.jar protobuf-java.jar)
 FOREACH(VERSION ${KNOWN_VERSIONS})
     LIST(APPEND JAVA_NAMES "protobuf-java-${VERSION}.jar")

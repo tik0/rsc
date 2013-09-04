@@ -41,7 +41,7 @@
 namespace rsc {
 namespace misc {
 
-void NullDeleter::operator()(void */*ignored*/) const {
+void NullDeleter::operator()(void* /*ignored*/) const {
 }
 
 #ifdef WIN32

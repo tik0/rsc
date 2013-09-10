@@ -16,7 +16,6 @@ INSTALL(FILES ExtractTBBVersion.cpp.in
               EnableSlocCount.cmake
               FindBoostThreadpool.cmake
               FindBoostUUID.cmake
-              FindCBF.cmake
               FindCppcheck.cmake
               FindEigen2.cmake
               FindFRI.cmake

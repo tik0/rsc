@@ -54,6 +54,9 @@ int main(int, char*[]) {
 
     std::cout << "a list:   " << list << std::endl;
 
+    std::cout << "a list:   " << std::container_multiline << list << std::endl;
+    std::cout << std::container_singleline;
+
     // Vector example
     std::vector<int> vector;
     vector.push_back(1);
@@ -79,6 +82,8 @@ int main(int, char*[]) {
     map.insert(std::make_pair("c", 3.0));
 
     std::cout << "a map:    " << map << std::endl;
+    std::cout << "a map:    " << std::pair_default << std::container_multiline
+            << map << std::endl;
 
     return EXIT_SUCCESS;
 }

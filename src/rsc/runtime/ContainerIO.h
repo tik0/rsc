@@ -268,7 +268,7 @@ operator<<(basic_ostream<Ch, Tr>& stream, const map<R, S>& container) {
     stream << style.first_separator;
     for (typename container_type::const_iterator it = container.begin(); it
             != container.end();) {
-        stream << it->first << ": " << it->second;
+        stream << *it;
         if (++it != container.end())
             stream << style.separator;
     }
@@ -294,7 +294,7 @@ operator<<(basic_ostream<Ch, Tr>& stream, const multimap<R, S>& container) {
     stream << style.first_separator;
     for (typename container_type::const_iterator it = container.begin(); it
             != container.end();) {
-        stream << it->first << ": " << it->second;
+        stream << *it;
         if (++it != container.end())
             stream << style.separator;
     }

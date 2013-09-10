@@ -44,11 +44,32 @@ pair_style::pair_style(const string& open_brace, const string& separator,
 
 const int pair_style::stream_storage = ios_base::xalloc();
 
+void container_style_delete(ios_base::event event_, ios_base& stream, int /*index*/) {
+    if (event_ == ios_base::erase_event && stream.pword(
+            container_style::stream_storage)) {
+        delete reinterpret_cast<container_style*> (stream.pword(
+                container_style::stream_storage));
+    }
+}
+
+container_style::container_style(const string& separator,
+        const string& first_separator, const string& last_separator) :
+        separator(separator), first_separator(first_separator), last_separator(
+                last_separator) {
+}
+
+const int container_style::stream_storage = ios_base::xalloc();
+
 }
 
 const detail::set_pair_style<detail::pair_style> pair_default = {
         detail::pair_style() };
 const detail::set_pair_style<detail::pair_style> pair_whitespace = {
         detail::pair_style("", " ", "") };
+
+const detail::set_container_style<detail::container_style> container_singleline = {
+        detail::container_style() };
+const detail::set_container_style<detail::container_style> container_multiline = {
+        detail::container_style("\n", "\n", "\n") };
 
 }

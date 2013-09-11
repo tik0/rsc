@@ -26,7 +26,7 @@
 
 #pragma once
 
-#include <boost/signals.hpp>
+#include <boost/signals2.hpp>
 
 #include "Factory.h"
 
@@ -46,10 +46,10 @@ protected:
 public:
     typedef typename base::CreateFunction CreateFunction;
 
-    typedef boost::signal2<void, const std::string&, const CreateFunction&>
+    typedef boost::signals2::signal2<void, const std::string&, const CreateFunction&>
             ImplAddedSignal;
 
-    typedef boost::signal2<void, const std::string&, const CreateFunction&>
+    typedef boost::signals2::signal2<void, const std::string&, const CreateFunction&>
             ImplRemovedSignal;
 
     /**

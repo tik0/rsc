@@ -32,7 +32,7 @@ namespace rsc {
 namespace threading {
 
 RepetitiveTask::RepetitiveTask() :
-        cancelRequest(false), cancelled(false), done(false), logger(
+        cancelRequest(false), done(false), logger(
                 rsc::logging::Logger::getLogger("rsc.threading.RepetitiveTask")) {
 }
 

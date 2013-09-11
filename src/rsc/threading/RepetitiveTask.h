@@ -132,7 +132,6 @@ private:
     void timerAfterCycle();
 
     volatile bool cancelRequest;
-    volatile bool cancelled;
     volatile bool done;
 
     rsc::logging::LoggerPtr logger;

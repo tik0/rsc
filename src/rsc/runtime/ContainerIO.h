@@ -45,6 +45,7 @@
 namespace std {
 namespace detail {
 
+// style helpers for pairs
 RSC_EXPORT void pair_style_delete(ios_base::event event_, ios_base& stream,
         int index);
 
@@ -61,6 +62,28 @@ struct RSC_EXPORT pair_style {
 
 template<typename T>
 struct set_pair_style {
+    T value;
+};
+
+
+// style helpers for container types
+RSC_EXPORT void container_style_delete(ios_base::event event_, ios_base& stream,
+        int index);
+
+struct RSC_EXPORT container_style {
+    string separator;
+    string first_separator;
+    string last_separator;
+
+    static const int stream_storage;
+
+    container_style(const string& separator = ", ",
+            const string& first_separator = "",
+            const string& last_separator = "");
+};
+
+template<typename T>
+struct set_container_style {
     T value;
 };
 
@@ -87,6 +110,26 @@ RSC_EXPORT extern const detail::set_pair_style<detail::pair_style> pair_default;
 RSC_EXPORT extern const detail::set_pair_style<detail::pair_style>
         pair_whitespace;
 
+template<typename Ch, typename Tr, typename T>
+basic_ostream<Ch, Tr>&
+operator<<(basic_ostream<Ch, Tr>& stream,
+        const detail::set_container_style<T>& style) {
+    // Delete old style, if any, and install new style.
+    if (stream.pword(detail::container_style::stream_storage))
+        delete reinterpret_cast<detail::container_style*> (stream.pword(
+                detail::container_style::stream_storage));
+    else
+        stream.register_callback(&detail::pair_style_delete, 0);
+
+    stream.pword(detail::container_style::stream_storage) = new T(style.value);
+
+    // Return the modified stream.
+    return stream;
+}
+
+RSC_EXPORT extern const detail::set_container_style<detail::container_style> container_singleline;
+RSC_EXPORT extern const detail::set_container_style<detail::container_style> container_multiline;
+
 template<typename Ch, typename Tr, typename R, typename S>
 basic_ostream<Ch, Tr>&
 operator<<(basic_ostream<Ch, Tr>& stream, const pair<R, S>& pair) {
@@ -110,11 +153,21 @@ operator<<(basic_ostream<Ch, Tr>& stream, const vector<T>& container) {
     typedef vector<T> container_type;
     typedef typename container_type::value_type value_type;
 
+    if (!stream.pword(detail::container_style::stream_storage)) {
+        stream << container_singleline;
+    }
+
+    detail::container_style& style =
+            *reinterpret_cast<detail::container_style*>(stream.pword(
+                    detail::container_style::stream_storage));
+
     stream << "#(";
     if (container.size() >= 1) {
+        stream << style.first_separator;
         copy(container.begin(), container.end() - 1,
-                ostream_iterator<value_type> (stream, ", "));
+                ostream_iterator<value_type> (stream, style.separator.c_str()));
         stream << container.back();
+        stream << style.last_separator;
     }
     stream << ")";
     return stream;
@@ -126,11 +179,21 @@ operator<<(basic_ostream<Ch, Tr>& stream, const deque<T>& container) {
     typedef vector<T> container_type;
     typedef typename container_type::value_type value_type;
 
+    if (!stream.pword(detail::container_style::stream_storage)) {
+        stream << container_singleline;
+    }
+
+    detail::container_style& style =
+            *reinterpret_cast<detail::container_style*>(stream.pword(
+                    detail::container_style::stream_storage));
+
     stream << "d(";
     if (container.size() >= 1) {
+        stream << style.first_separator;
         copy(container.begin(), container.end() - 1,
-                ostream_iterator<value_type> (stream, ", "));
+                ostream_iterator<value_type> (stream, style.separator.c_str()));
         stream << container.back();
+        stream << style.last_separator;
     }
     stream << ")";
     return stream;
@@ -142,11 +205,21 @@ operator<<(basic_ostream<Ch, Tr>& stream, const list<T>& container) {
     typedef list<T> container_type;
     typedef typename container_type::value_type value_type;
 
+    if (!stream.pword(detail::container_style::stream_storage)) {
+        stream << container_singleline;
+    }
+
+    detail::container_style& style =
+            *reinterpret_cast<detail::container_style*>(stream.pword(
+                    detail::container_style::stream_storage));
+
     stream << "[";
     if (container.size() >= 1) {
+        stream << style.first_separator;
         copy(container.begin(), --container.end(),
-                ostream_iterator<value_type> (stream, ", "));
+                ostream_iterator<value_type> (stream, style.separator.c_str()));
         stream << container.back();
+        stream << style.last_separator;
     }
     stream << "]";
     return stream;
@@ -158,11 +231,21 @@ operator<<(basic_ostream<Ch, Tr>& stream, const set<T>& container) {
     typedef set<T> container_type;
     typedef typename container_type::value_type value_type;
 
+    if (!stream.pword(detail::container_style::stream_storage)) {
+        stream << container_singleline;
+    }
+
+    detail::container_style& style =
+            *reinterpret_cast<detail::container_style*>(stream.pword(
+                    detail::container_style::stream_storage));
+
     stream << "{";
     if (container.size() >= 1) {
+        stream << style.first_separator;
         copy(++container.begin(), container.end(),
-                ostream_iterator<value_type> (stream, ", "));
+                ostream_iterator<value_type> (stream, style.separator.c_str()));
         stream << *container.begin();
+        stream << style.last_separator;
     }
     stream << "}";
     return stream;
@@ -173,13 +256,23 @@ basic_ostream<Ch, Tr>&
 operator<<(basic_ostream<Ch, Tr>& stream, const map<R, S>& container) {
     typedef map<R, S> container_type;
 
+    if (!stream.pword(detail::container_style::stream_storage)) {
+        stream << container_singleline;
+    }
+
+    detail::container_style& style =
+            *reinterpret_cast<detail::container_style*>(stream.pword(
+                    detail::container_style::stream_storage));
+
     stream << "{";
+    stream << style.first_separator;
     for (typename container_type::const_iterator it = container.begin(); it
             != container.end();) {
-        stream << it->first << ": " << it->second;
+        stream << *it;
         if (++it != container.end())
-            stream << "\n";
+            stream << style.separator;
     }
+    stream << style.last_separator;
     stream << "}";
     return stream;
 }
@@ -189,13 +282,23 @@ basic_ostream<Ch, Tr>&
 operator<<(basic_ostream<Ch, Tr>& stream, const multimap<R, S>& container) {
     typedef multimap<R, S> container_type;
 
+    if (!stream.pword(detail::container_style::stream_storage)) {
+        stream << container_singleline;
+    }
+
+    detail::container_style& style =
+            *reinterpret_cast<detail::container_style*>(stream.pword(
+                    detail::container_style::stream_storage));
+
     stream << "{";
+    stream << style.first_separator;
     for (typename container_type::const_iterator it = container.begin(); it
             != container.end();) {
-        stream << it->first << ": " << it->second;
+        stream << *it;
         if (++it != container.end())
-            stream << "\n";
+            stream << style.separator;
     }
+    stream << style.last_separator;
     stream << "}";
     return stream;
 }
@@ -206,12 +309,22 @@ operator<<(basic_ostream<Ch, Tr>& stream, const valarray<T>& container) {
     typedef valarray<T> container_type;
     typedef typename container_type::value_type value_type;
 
+    if (!stream.pword(detail::container_style::stream_storage)) {
+        stream << container_singleline;
+    }
+
+    detail::container_style& style =
+            *reinterpret_cast<detail::container_style*>(stream.pword(
+                    detail::container_style::stream_storage));
+
     stream << "(";
+    stream << style.first_separator;
     for (unsigned int i = 0; i != container.size(); ++i) {
         stream << container[i];
         if (i != container.size() - 1)
-            stream << ", ";
+            stream << style.separator;
     }
+    stream << style.last_separator;
     stream << ")";
     return stream;
 }

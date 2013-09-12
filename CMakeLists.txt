@@ -106,19 +106,7 @@ IF(Boost_VERSION STREQUAL 105000 OR Boost_VERSION STRGREATER 105000)
     LIST(APPEND BOOST_COMPONENTS chrono) 
 ENDIF()
 FIND_PACKAGE(Boost ${Boost_USE_VERSION} REQUIRED ${BOOST_COMPONENTS})
-
-SET(USE_INTERNAL_BOOST_UUID FALSE CACHE BOOL "Whether to use the internal version of boost.uuid or not")
-IF(NOT USE_INTERNAL_BOOST_UUID)
-    MESSAGE(STATUS "Trying to find an external version of Boost.uuid")
-    FIND_PACKAGE(BoostUUID)
-    MESSAGE(STATUS "Boost.uuid found in system: ${BOOSTUUID_FOUND}")
-ENDIF()
-IF(NOT BOOSTUUID_FOUND OR USE_INTERNAL_BOOST_UUID)
-    MESSAGE(STATUS "Using an internal version of Boost.uuid. Remember that your client libraries have to use this version, too.")
-    SET(USE_INTERNAL_BOOST_UUID TRUE CACHE BOOL "Whether to use the internal version of boost.uuid or not" FORCE)
-    SET(BOOSTUUID_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/boost.uuid" CACHE PATH "Internal include path for Boost.uuid" FORCE)
-ENDIF()
-INCLUDE_DIRECTORIES(BEFORE SYSTEM ${Boost_INCLUDE_DIRS} ${BOOSTUUID_INCLUDE_DIRS})
+INCLUDE_DIRECTORIES(BEFORE SYSTEM ${Boost_INCLUDE_DIRS})
 LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
 
 # --- source code ---
@@ -126,7 +114,6 @@ LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
 INCLUDE_DIRECTORIES(BEFORE src "${CMAKE_CURRENT_BINARY_DIR}/src")
 
 ADD_SUBDIRECTORY(src)
-ADD_SUBDIRECTORY(3rdparty)
 IF(BUILD_TESTS)
     INCLUDE(ProvideGoogleMock)
     IF(GMOCK_AVAILABLE)
@@ -156,11 +143,6 @@ INCLUDE(ProvideFlexibleCPack)
 
 IF(UNIX)
     SET(EXTERNAL_INCLUDES ${Boost_INCLUDE_DIRS})
-    IF(NOT USE_INTERNAL_BOOST_UUID)
-        LIST(APPEND EXTERNAL_INCLUDES ${BOOSTUUID_INCLUDE_DIRS})
-    ELSE()
-        LIST(APPEND EXTERNAL_INCLUDES "\${includedir}/3rdparty/boost.uuid/")
-    ENDIF()
     STRING(REPLACE ";" " -I" EXTERNAL_INCLUDE_COMMANDS "${EXTERNAL_INCLUDES}")
     STRING(LENGTH "${EXTERNAL_INCLUDE_COMMANDS}" EXT_LENGTH)
     IF(${EXT_LENGTH} GREATER 0)
@@ -213,7 +195,7 @@ GENERATE_DOXYGEN(VERSION "${RSC_VERSION}")
 
 ENABLE_COVERAGE_REPORT(TARGETS ${RSC_NAME}
                        TESTS  ${RSC_TEST_NAME}
-                       FILTER "*3rdparty*" "*test/*")
+                       FILTER "*test/*")
 
 # --- sloccount ---
 

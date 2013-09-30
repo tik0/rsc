@@ -119,7 +119,7 @@ operator<<(basic_ostream<Ch, Tr>& stream,
         delete reinterpret_cast<detail::container_style*> (stream.pword(
                 detail::container_style::stream_storage));
     else
-        stream.register_callback(&detail::pair_style_delete, 0);
+        stream.register_callback(&detail::container_style_delete, 0);
 
     stream.pword(detail::container_style::stream_storage) = new T(style.value);
 

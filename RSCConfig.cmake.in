@@ -6,7 +6,7 @@ IF(NOT RSC_CONFIG_PROCESSED)
     IF(EXISTS "${RSC_CONFIG_DIR}/CMakeCache.txt")
         INCLUDE("${RSC_CONFIG_DIR}/RSCBuildTreeSettings.cmake")
     ELSE()
-
+    
         SET(RSC_INCLUDE_DIRS "${RSC_CONFIG_DIR}/../../include/@INSTALL_PATH_PREFIX@")
         SET(RSC_RUNTIME_LIBRARY_DIRS "${RSC_CONFIG_DIR}/../../bin")
         SET(RSC_CMAKE_MODULE_PATH "${RSC_CONFIG_DIR}/../../@RSC_CMAKE_MODULE_PATH@")
@@ -16,6 +16,9 @@ IF(NOT RSC_CONFIG_PROCESSED)
         SET(CMAKE_MODULE_PATH ${RSC_CMAKE_MODULE_PATH} ${CMAKE_MODULE_PATH})
     
     ENDIF()
+    
+    FIND_PACKAGE(Boost "@Boost_USE_VERSION@" REQUIRED "@BOOST_COMPONENTS@")
+    LIST(APPEND RSC_INCLUDE_DIRS ${Boost_INCLUDE_DIRS})
     
     # Expose rsc library as an imported target (from the point of view
     # of the downstream project)

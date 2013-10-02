@@ -7,8 +7,7 @@ IF(NOT RSC_CONFIG_PROCESSED)
         INCLUDE("${RSC_CONFIG_DIR}/RSCBuildTreeSettings.cmake")
     ELSE()
 
-        SET(RSC_INCLUDE_DIRS "${RSC_CONFIG_DIR}/../../include/@INSTALL_PATH_PREFIX@"
-                             "${RSC_CONFIG_DIR}/../../include/@INSTALL_PATH_PREFIX@/3rdparty/boost.uuid")
+        SET(RSC_INCLUDE_DIRS "${RSC_CONFIG_DIR}/../../include/@INSTALL_PATH_PREFIX@")
         SET(RSC_RUNTIME_LIBRARY_DIRS "${RSC_CONFIG_DIR}/../../bin")
         SET(RSC_CMAKE_MODULE_PATH "${RSC_CONFIG_DIR}/../../@RSC_CMAKE_MODULE_PATH@")
         SET(RSC_CMAKE_TOOLCHAINS_PATH "${RSC_CONFIG_DIR}/../../@RSC_CMAKE_TOOLCHAIN_PATH@")

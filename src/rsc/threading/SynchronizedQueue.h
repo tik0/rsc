@@ -84,7 +84,7 @@ public:
      * @param
      */
     explicit SynchronizedQueue(const unsigned int& sizeLimit = 0,
-            dropHandlerType dropHandler = 0) :
+                               dropHandlerType dropHandler = 0) :
         interrupted(false), sizeLimit(sizeLimit), dropHandler(dropHandler) {
     }
 
@@ -103,18 +103,18 @@ public:
      */
     void push(const M& message) {
         {
-            boost::recursive_mutex::scoped_lock lock(mutex);
-            if (sizeLimit > 0) {
-                while (queue.size() > sizeLimit - 1) {
-                    if (dropHandler) {
-                        dropHandler(queue.front());
+            boost::recursive_mutex::scoped_lock lock(this->mutex);
+            if (this->sizeLimit > 0) {
+                while (this->queue.size() > this->sizeLimit - 1) {
+                    if (this->dropHandler) {
+                        this->dropHandler(this->queue.front());
                     }
-                    queue.pop();
+                    this->queue.pop();
                 }
             }
-            queue.push(message);
+            this->queue.push(message);
         }
-        condition.notify_one();
+        this->condition.notify_one();
     }
 
     /**
@@ -133,30 +133,30 @@ public:
      */
     M pop(const boost::uint32_t& timeoutMs = 0) {
 
-        boost::recursive_mutex::scoped_lock lock(mutex);
+        boost::recursive_mutex::scoped_lock lock(this->mutex);
 
-        while (!interrupted && queue.empty()) {
+        while (!this->interrupted && this->queue.empty()) {
             if (timeoutMs == 0) {
-                condition.wait(lock);
+                this->condition.wait(lock);
             } else {
 #if BOOST_VERSION >= 105000
-                if (!condition.timed_wait(lock, boost::posix_time::milliseconds(timeoutMs))) {
+                if (!this->condition.timed_wait(lock, boost::posix_time::milliseconds(timeoutMs))) {
 #else
                 const boost::system_time timeout = boost::get_system_time()
                         + boost::posix_time::milliseconds(timeoutMs);
-                if (!condition.timed_wait(lock, timeout)) {
+                if (!this->condition.timed_wait(lock, timeout)) {
 #endif
                     throw QueueEmptyException(boost::str(boost::format("No element available on queue within %d ms.") % timeoutMs));
                 }
             }
         }
 
-        if (interrupted) {
+        if (this->interrupted) {
             throw InterruptedException("Queue was interrupted");
         }
 
-        M message = queue.front();
-        queue.pop();
+        M message = this->queue.front();
+        this->queue.pop();
         return message;
 
     }
@@ -170,14 +170,14 @@ public:
      */
     M tryPop() {
 
-        boost::recursive_mutex::scoped_lock lock(mutex);
+        boost::recursive_mutex::scoped_lock lock(this->mutex);
 
-        if (queue.empty()) {
+        if (this->queue.empty()) {
             throw QueueEmptyException();
         }
 
-        M message = queue.front();
-        queue.pop();
+        M message = this->queue.front();
+        this->queue.pop();
         return message;
 
     }
@@ -189,8 +189,8 @@ public:
      * @return @c true if empty, else @c false
      */
     bool empty() const {
-        boost::recursive_mutex::scoped_lock lock(mutex);
-        return queue.empty();
+        boost::recursive_mutex::scoped_lock lock(this->mutex);
+        return this->queue.empty();
     }
 
     /**
@@ -199,7 +199,7 @@ public:
      * @return The number of elements currently stored in the queue.
      */
     std::size_t size() const {
-        boost::recursive_mutex::scoped_lock lock(mutex);
+        boost::recursive_mutex::scoped_lock lock(this->mutex);
         return this->queue.size();
     }
 
@@ -207,7 +207,7 @@ public:
      * Remove all elements from the queue.
      */
     void clear() {
-        boost::recursive_mutex::scoped_lock lock(mutex);
+        boost::recursive_mutex::scoped_lock lock(this->mutex);
         while (!this->queue.empty()) {
             this->queue.pop();
         }
@@ -220,10 +220,10 @@ public:
      */
     void interrupt() {
         {
-            boost::recursive_mutex::scoped_lock lock(mutex);
-            interrupted = true;
+            boost::recursive_mutex::scoped_lock lock(this->mutex);
+            this->interrupted = true;
         }
-        condition.notify_all();
+        this->condition.notify_all();
     }
 
 };

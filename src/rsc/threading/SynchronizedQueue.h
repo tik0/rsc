@@ -118,6 +118,47 @@ public:
     }
 
     /**
+     * Returns the element at the front of the queue without removing
+     * it, waiting until there is such an element if necessary.
+     *
+     * @param timeoutMs maximum time spent waiting for a new element
+     *                  in milliseconds. Zero indicates to wait
+     *                  endlessly.
+     * @return front element of the queue
+     * @throw InterruptedException if #interrupt was called before a call to
+     *                             this method or while waiting for an element
+     * @throw QueueEmptyException thrown if @param timeoutMs was > 0
+     *                            and no element was found on the
+     *                            queue in the specified time
+     */
+    M peek(const boost::uint32_t& timeoutMs = 0) {
+
+        boost::recursive_mutex::scoped_lock lock(this->mutex);
+
+        while (!this->interrupted && this->queue.empty()) {
+            if (timeoutMs == 0) {
+                this->condition.wait(lock);
+            } else {
+#if BOOST_VERSION >= 105000
+                if (!this->condition.timed_wait(lock, boost::posix_time::milliseconds(timeoutMs))) {
+#else
+                const boost::system_time timeout = boost::get_system_time()
+                    + boost::posix_time::milliseconds(timeoutMs);
+                if (!this->condition.timed_wait(lock, timeout)) {
+#endif
+                    throw QueueEmptyException(boost::str(boost::format("No element available on queue within %d ms.") % timeoutMs));
+                }
+            }
+        }
+
+        if (this->interrupted) {
+            throw InterruptedException("Queue was interrupted");
+        }
+
+        return this->queue.front();
+    }
+
+    /**
      * Returns the next element form the queue and wait until there is such an
      * element. The returned element is removed from the queue immediately.
      *

@@ -64,6 +64,9 @@ public:
                  const std::vector<boost::filesystem::path>& defaultPath);
     virtual ~Configurator();
 
+    void handleOption(const std::vector<std::string>& key,
+                      const std::string& value);
+
 private:
     logging::LoggerPtr logger;
 
@@ -71,10 +74,7 @@ private:
 
     bool                                 pathSet;
     std::vector<boost::filesystem::path> defaultPath;
-    std::vector<std::string>             load;
-
-    void handleOption(const std::vector<std::string>& key,
-                      const std::string& value);
+    std::set<std::string>                load;
 
     void addDefaultPath();
 

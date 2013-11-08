@@ -60,7 +60,7 @@ Configurator::~Configurator() {
     }
 
     // Load all requested plugins.
-    for (vector<string>::const_iterator it = this->load.begin();
+    for (set<string>::const_iterator it = this->load.begin();
          it != this->load.end(); ++it) {
         // Treat each element as a regular expression. Find matching
         // plugins and load them. Note that regex syntax error can
@@ -132,7 +132,7 @@ void Configurator::handleOption(const vector<string>& key,
         this->pathSet = true;
     } else if (key[2] == "load") {
         vector<string> temp = splitValue(value);
-        copy(temp.begin(), temp.end(), back_inserter(this->load));
+        copy(temp.begin(), temp.end(), inserter(this->load, this->load.begin()));
     } else {
         throw invalid_argument(str(format("Invalid option key `%1%'; plugin related option keys are `path' and `load'.")
                                    % key));

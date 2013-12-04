@@ -39,25 +39,20 @@ using namespace rsc::runtime;
 TEST(TypeStringToolsTest, testTypeName)
 {
 
-#if defined DEMANGLE_GCC
-    string stringName = "std::string";
-#elif defined DEMANGLE_MSVC
-    string stringName = "class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >";
-#else
-    BOOST_STATIC_ASSERT(false);
-#endif
-
     EXPECT_EQ("bool", typeName(typeid(bool)));
     EXPECT_EQ("int", typeName(typeid(int)));
-    EXPECT_EQ(stringName, typeName(typeid(string)));
+    EXPECT_NE(string::npos, typeName(typeid(string)).find("std::"));
+    EXPECT_NE(string::npos, typeName(typeid(string)).find("string"));
 
     EXPECT_EQ("bool", typeName<bool>());
     EXPECT_EQ("int", typeName<int>());
-    EXPECT_EQ(stringName, typeName<string>());
+    EXPECT_NE(string::npos, typeName<string>().find("std::"));
+    EXPECT_NE(string::npos, typeName<string>().find("string"));
 
     EXPECT_EQ("bool", typeName(true));
     EXPECT_EQ("int", typeName(1));
-    EXPECT_EQ(stringName, typeName(string("bla")));
+    EXPECT_NE(string::npos, typeName(string("bla")).find("std::"));
+    EXPECT_NE(string::npos, typeName(string("bla")).find("string"));
 }
 
 TEST(TypeStringToolsTest, testTypeString)

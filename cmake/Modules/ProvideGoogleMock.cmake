@@ -38,7 +38,15 @@
 
 # TODO allow folder location of google mock in addition to the zip archive
 
-SET(GMOCK_SOURCE "http://googlemock.googlecode.com/files/gmock-1.7.0.zip" CACHE STRING "Location to download a google mock zip")
+# Only go to the more recent version of gmock in case of clang 5.0.0 because
+# The 1.6 version does not compile here. We cannot use 1.7 for all cases
+# because in GCC 4.6 there is a bug in cxx11 mode that prevents 1.7 from
+# compiling: https://groups.google.com/forum/#!topic/googlemock/XvPDUENM5JM
+IF(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND (CMAKE_CXX_COMPILER_VERSION VERSION_EQUAL "5.0.0" OR CMAKE_CXX_COMPILER_VERSION VERSION_GREATER "5.0.0"))
+    SET(GMOCK_SOURCE "http://googlemock.googlecode.com/files/gmock-1.7.0.zip" CACHE STRING "Location to download a google mock zip")
+ELSE()
+    SET(GMOCK_SOURCE "http://googlemock.googlecode.com/files/gmock-1.6.0.zip" CACHE STRING "Location to download a google mock zip")
+ENDIF()
 SET(GMOCK_AVAILABLE FALSE CACHE BOOL "Indicates wether a completely extracted installation of gmock is available")
 
 # check whether the download URL has changed. In this case we need to do a new
@@ -61,7 +69,7 @@ IF(NOT GMOCK_AVAILABLE OR GMOCK_SOURCE_CHANGED)
     
     # download fresh archive
     SET(GMOCK_ARCHIVE "${CMAKE_CURRENT_BINARY_DIR}/gmock.zip")
-    MESSAGE(STATUS "Downloading a fresh Google Mock archive as no old one was found.")
+    MESSAGE(STATUS "Downloading a fresh Google Mock archive as no old one was found (${GMOCK_SOURCE}).")
     FILE(DOWNLOAD ${GMOCK_SOURCE} ${GMOCK_ARCHIVE} STATUS GMOCK_DOWNLOAD_STATUS)
     #MESSAGE(STATUS "Google Mock download finished with status: ${GMOCK_DOWNLOAD_STATUS}")
     LIST(GET GMOCK_DOWNLOAD_STATUS 0 GMOCK_DOWNLOAD_STATUS_CODE)

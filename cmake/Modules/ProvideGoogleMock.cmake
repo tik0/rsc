@@ -38,7 +38,7 @@
 
 # TODO allow folder location of google mock in addition to the zip archive
 
-SET(GMOCK_SOURCE "http://googlemock.googlecode.com/files/gmock-1.6.0.zip" CACHE STRING "Location to download a google mock zip")
+SET(GMOCK_SOURCE "http://googlemock.googlecode.com/files/gmock-1.7.0.zip" CACHE STRING "Location to download a google mock zip")
 SET(GMOCK_AVAILABLE FALSE CACHE BOOL "Indicates wether a completely extracted installation of gmock is available")
 
 # check whether the download URL has changed. In this case we need to do a new

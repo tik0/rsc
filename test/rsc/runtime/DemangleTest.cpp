@@ -41,13 +41,10 @@ TEST(DemangleTest, testDemangle)
 {
     EXPECT_EQ("bool", demangle(typeid(bool).name()));
     EXPECT_EQ("int", demangle(typeid(int).name()));
-#if defined DEMANGLE_GCC
-    EXPECT_EQ("std::string", demangle(typeid(std::string).name()));
-    EXPECT_EQ("std::vector<int, std::allocator<int> >", demangle(typeid(std::vector<int>).name()));
-#elif defined DEMANGLE_MSVC
-    EXPECT_EQ("class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >", demangle(typeid(std::string).name()));
-    EXPECT_EQ("class std::vector<int,class std::allocator<int> >", demangle(typeid(std::vector<int>).name()));
-#else
-    BOOST_STATIC_ASSERT(false);
-#endif
+    const string stringName = demangle(typeid(std::string).name());
+    EXPECT_NE(string::npos, stringName.find("std::"));
+    EXPECT_NE(string::npos, stringName.find("string"));
+    const std::string vectorName = demangle(typeid(std::vector<int>).name());
+    EXPECT_NE(string::npos, vectorName.find("std::"));
+    EXPECT_NE(string::npos, vectorName.find("vector")) << "No 'vector' found in '" << vectorName << "'";
 }

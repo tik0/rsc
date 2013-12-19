@@ -10,7 +10,7 @@
 # GMOCK_CFLAGS - compile flags to use when using gmock
 #
 # Uses:
-# GMOCK_SOURCE - Source URL to download the archive, default exists for 1.6.0.
+# GMOCK_SOURCE - Source URL to download the archive, default exists for 1.7.0.
 #                This can also be a file:// URL.
 #
 # In cases the source URL is changed in the cache, a new download will be
@@ -50,7 +50,7 @@ IF(NOT GMOCK_SOURCE STREQUAL GMOCK_SOURCE_CACHE)
 ENDIF()
 
 IF(NOT GMOCK_AVAILABLE OR GMOCK_SOURCE_CHANGED)
-    
+
     # find unzip for extracting
     # TODO windows?
     FIND_PROGRAM(UNZIP_COMMAND "unzip")
@@ -58,7 +58,7 @@ IF(NOT GMOCK_AVAILABLE OR GMOCK_SOURCE_CHANGED)
         MESSAGE(WARNING "unzip was not found, Cannot extract the Google Mock archive.")
         RETURN()
     ENDIF()
-    
+
     # download fresh archive
     SET(GMOCK_ARCHIVE "${CMAKE_CURRENT_BINARY_DIR}/gmock.zip")
     MESSAGE(STATUS "Downloading a fresh Google Mock archive as no old one was found.")
@@ -71,17 +71,17 @@ IF(NOT GMOCK_AVAILABLE OR GMOCK_SOURCE_CHANGED)
         FILE(REMOVE ${GMOCK_ARCHIVE})
         RETURN()
     ENDIF()
-    
+
     # find out the name of the top-level folder in the archive and of source files
     EXECUTE_PROCESS(COMMAND ${UNZIP_COMMAND} -l ${GMOCK_ARCHIVE}
                     RESULT_VARIABLE GMOCK_ARCHIVE_CONTENTS_AVAILABLE
                     OUTPUT_VARIABLE GMOCK_ARCHIVE_CONTENTS)
-    
+
     IF(NOT GMOCK_ARCHIVE_CONTENTS_AVAILABLE EQUAL 0)
         MESSAGE(WARNING "Unable to list the contents of the Google Mock archive. Probably the downloaded zip file is corrupted.")
         RETURN()
-    ENDIF()                
-    
+    ENDIF()
+
     STRING(REGEX MATCH "[^ ]*/src/gmock-all\\.cc" GMOCK_ALL_FILE ${GMOCK_ARCHIVE_CONTENTS})
     MESSAGE(STATUS "GMOCK_ALL_FILE: ${GMOCK_ALL_FILE}")
     STRING(REGEX MATCH "[^ ]*/src/gtest-all\\.cc" GTEST_ALL_FILE ${GMOCK_ARCHIVE_CONTENTS})
@@ -90,20 +90,20 @@ IF(NOT GMOCK_AVAILABLE OR GMOCK_SOURCE_CHANGED)
     STRING(REPLACE "/src/gmock-all.cc" "" GMOCK_BASE_DIR ${GMOCK_ALL_FILE_CMAKE})
     SET(GMOCK_BASE_DIR "${CMAKE_CURRENT_BINARY_DIR}/${GMOCK_BASE_DIR}")
     MESSAGE(STATUS "GMOCK_BASE_DIR: ${GMOCK_BASE_DIR}")
-    
+
     EXECUTE_PROCESS(COMMAND ${UNZIP_COMMAND} -o ${GMOCK_ARCHIVE} -d ${CMAKE_CURRENT_BINARY_DIR}
                     RESULT_VARIABLE GMOCK_ARCHIVE_EXTRACTED
                     OUTPUT_QUIET)
     IF(NOT GMOCK_ARCHIVE_EXTRACTED EQUAL 0)
         MESSAGE(WARNING "Unable to extract the Google Mock archive. Probably the downloaded zip file is corrupted.")
         RETURN()
-    ENDIF()   
-    
+    ENDIF()
+
     # provide usefull information
     SET(GMOCK_SOURCES "${CMAKE_CURRENT_BINARY_DIR}/${GMOCK_ALL_FILE}"
                       "${CMAKE_CURRENT_BINARY_DIR}/${GTEST_ALL_FILE}"
                       CACHE STRING "Sources of Google Mock for the compilation target." FORCE)
-    
+
     SET(GMOCK_INCLUDE_DIRS "${GMOCK_BASE_DIR}/gtest"
                            "${GMOCK_BASE_DIR}/gtest/include"
                            "${GMOCK_BASE_DIR}"
@@ -114,7 +114,7 @@ IF(NOT GMOCK_AVAILABLE OR GMOCK_SOURCE_CHANGED)
     ELSE()
         SET(GMOCK_CFLAGS "" CACHE INTERNAL "Google Mock CFLAGS")
     ENDIF()
-    
+
     SET(GMOCK_AVAILABLE TRUE CACHE BOOL "Indicates wether a completely extracted installation of gmock is available" FORCE)
     MESSAGE(STATUS "Google Mock successfully installed")
 
@@ -126,7 +126,7 @@ ELSE()
 ENDIF()
 
 IF(GMOCK_AVAILABLE)
-    
+
     # declare the target
     INCLUDE_DIRECTORIES(BEFORE SYSTEM ${GMOCK_INCLUDE_DIRS})
     ADD_LIBRARY(${GMOCK_LIBRARIES} STATIC ${GMOCK_SOURCES})
@@ -134,5 +134,5 @@ IF(GMOCK_AVAILABLE)
         SET_TARGET_PROPERTIES(${GMOCK_LIBRARIES} PROPERTIES
                               COMPILE_DEFINITIONS "GTEST_USE_OWN_TR1_TUPLE=0;_VARIADIC_MAX=10")
     ENDIF()
-    
+
 ENDIF()

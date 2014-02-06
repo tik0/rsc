@@ -40,6 +40,8 @@
 #include "rsc/config.h"
 #include "rsc/rscexports.h"
 
+#include "../misc/langutils.h"
+
 namespace rsc {
 namespace misc {
 
@@ -53,9 +55,11 @@ namespace misc {
  *
  * @author jwienke
  * @tparam R type to register called registree.
+ *
+ * @deprecated If possible, use #rsc::patterns::Factory instead.
  */
 template<class R>
-class Registry: public boost::noncopyable {
+class DEPRECATED_CLASS("If possible, use rsc::patterns::Factory instead") Registry: public boost::noncopyable {
 public:
 
     Registry() {
@@ -73,7 +77,8 @@ public:
      *                              registered. In this case @c r is not owned
      *                              by this registry
      */
-    void addRegistree(R* r, const std::string& errorDescription = "") {
+    DEPRECATED_MSG(void addRegistree(R* r, const std::string& errorDescription = ""),
+                   "If possible, use rsc::patterns::Factory instead") {
 
         boost::recursive_mutex::scoped_lock lock(mutex);
 
@@ -94,7 +99,8 @@ public:
      * @return registree
      * @throw std::invalid_argument if there is no registree with this name
      */
-    boost::shared_ptr<R> getRegistree(const std::string& key) {
+    DEPRECATED_MSG(boost::shared_ptr<R> getRegistree(const std::string& key),
+                   "If possible, use rsc::patterns::Factory instead") {
 
         boost::recursive_mutex::scoped_lock lock(mutex);
 
@@ -114,7 +120,8 @@ public:
      *
      * @return all known registree keys
      */
-    std::set<std::string> getKnownRegistryKeys() {
+    DEPRECATED_MSG(std::set<std::string> getKnownRegistryKeys(),
+                   "If possible, use rsc::patterns::Factory instead") {
 
         boost::recursive_mutex::scoped_lock lock(mutex);
 
@@ -135,7 +142,8 @@ public:
      * @param name name of the registree to remove
      * @return @c true if a registree was removed, else @c false
      */
-    bool removeRegistree(const std::string& name) {
+    DEPRECATED_MSG(bool removeRegistree(const std::string& name),
+                   "If possible, use rsc::patterns::Factory instead") {
         boost::recursive_mutex::scoped_lock lock(mutex);
         return registreesByName.erase(name) != 0;
     }
@@ -146,7 +154,8 @@ public:
      *
      * @return mutex internally used by this class
      */
-    boost::recursive_mutex* getMutex() {
+    DEPRECATED_MSG(boost::recursive_mutex* getMutex(),
+                   "If possible, use rsc::patterns::Factory instead") {
         return &mutex;
     }
 
@@ -204,4 +213,3 @@ private:
 
 }
 }
-

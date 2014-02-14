@@ -108,7 +108,18 @@ void Configurator::handleOption(const vector<string>& key,
     if (key[2] == "path") {
         // Split value at ":" tokens. Each substring is a searchpath
         // entry.
-        vector<string> paths = splitValue(value);
+        vector<string> paths;
+
+        try {
+            paths = splitValue(value);
+        } catch (const std::exception& e) {
+            throw invalid_argument(str(format("Invalid plugin load path (option %1%) value `%2%': %3%")
+                                       % boost::io::group(std::container_none,
+                                                          std::element_sequence(".", ""),
+                                                          key)
+                                       % value
+                                       % e.what()));
+        }
 
         // Add all specified paths. The empty string, produced by "::"
         // means that the default searchpath should be spliced in.
@@ -131,11 +142,26 @@ void Configurator::handleOption(const vector<string>& key,
 
         this->pathSet = true;
     } else if (key[2] == "load") {
-        vector<string> temp = splitValue(value);
-        copy(temp.begin(), temp.end(), inserter(this->load, this->load.begin()));
+        vector<string> names;
+
+        try {
+            names = splitValue(value);
+        } catch (const std::exception& e) {
+            throw invalid_argument(str(format("Invalid list of plugins (option %1%) to load `%2%': %3%")
+                                       % boost::io::group(std::container_none,
+                                                          std::element_sequence(".", ""),
+                                                          key)
+                                       % value
+                                       % e.what()));
+        }
+
+        copy(names.begin(), names.end(),
+             inserter(this->load, this->load.begin()));
     } else {
         throw invalid_argument(str(format("Invalid option key `%1%'; plugin related option keys are `path' and `load'.")
-                                   % key));
+                                   % boost::io::group(std::container_none,
+                                                      std::element_sequence(".", ""),
+                                                      key)));
     }
 }
 

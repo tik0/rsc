@@ -57,13 +57,12 @@ protected:
     }
 
     ManagerPtr pluginManager;
-
+    const vector<boost::filesystem::path> defaultPath;
 };
 
 TEST_F(ConfiguratorTest, testNoExceptionSamePluginSpecifiedTwice) {
 
-    const vector<boost::filesystem::path> defaultPath;
-    Configurator c(this->pluginManager, defaultPath);
+    Configurator c(this->pluginManager, this->defaultPath);
     vector<string> loadOption;
     loadOption.push_back("plugins");
     loadOption.push_back("cpp");
@@ -71,4 +70,27 @@ TEST_F(ConfiguratorTest, testNoExceptionSamePluginSpecifiedTwice) {
     c.handleOption(loadOption, "testplugin");
     c.handleOption(loadOption, "testplugin");
 
+}
+
+TEST_F(ConfiguratorTest, testInvalidPluginPath) {
+    Configurator c(this->pluginManager, this->defaultPath);
+
+    vector<string> name;
+    name.push_back("plugins");
+    name.push_back("cpp");
+    name.push_back("path");
+
+    EXPECT_THROW(c.handleOption(name, "\\"), invalid_argument);
+    EXPECT_THROW(c.handleOption(name, "C:\\"), invalid_argument);
+}
+
+TEST_F(ConfiguratorTest, testInvalidPluginLoad) {
+    Configurator c(this->pluginManager, this->defaultPath);
+
+    vector<string> name;
+    name.push_back("plugins");
+    name.push_back("cpp");
+    name.push_back("load");
+
+    EXPECT_THROW(c.handleOption(name, "\\"), invalid_argument);
 }

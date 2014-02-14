@@ -31,14 +31,12 @@
 
 #include <boost/noncopyable.hpp>
 #include <boost/thread/recursive_mutex.hpp>
-#include <boost/weak_ptr.hpp>
 #include <boost/shared_ptr.hpp>
 
 #include "Logger.h"
 #include "LoggerTreeNode.h"
 #include "LoggerProxy.h"
 #include "LoggingSystem.h"
-#include "../misc/Registry.h"
 #include "../patterns/Singleton.h"
 #include "../misc/langutils.h"
 #include "rsc/rscexports.h"
@@ -184,4 +182,3 @@ private:
 
 }
 }
-

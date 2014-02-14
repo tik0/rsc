@@ -1,8 +1,8 @@
 /* ============================================================
  *
- * This file is part of the RSB project.
+ * This file is part of the RSC project.
  *
- * Copyright (C) 2012 Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
+ * Copyright (C) 2012, 2014 Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  *
  * This file may be licensed under the terms of the
  * GNU Lesser General Public License Version 3 (the ``LGPL''),
@@ -43,8 +43,8 @@ extern const std::string PLUGIN_SHUTDOWN_SYMBOL;
 class Impl;
 
 /**
- * Instances of this class represent pieces of RSB-related
- * functionality which can be loaded into a program at runtime.
+ * Instances of this class represent pieces of functionality which can
+ * be loaded into a program at runtime.
  *
  * Plugin instances are not thread-safe and access needs to be synchronized.
  *

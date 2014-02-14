@@ -26,8 +26,6 @@
 
 #include "CollectingOptionHandler.h"
 
-#include "TypedValue.h"
-
 using namespace std;
 
 namespace rsc {
@@ -51,7 +49,7 @@ void CollectingOptionHandler::handleOption(const vector<string>& key,
         }
         name += *it;
     }
-    this->options[name] = parseTypedValue(value);
+    this->options[name] = value;
 }
 
 runtime::Properties CollectingOptionHandler::getOptions() const {

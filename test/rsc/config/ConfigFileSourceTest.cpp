@@ -2,7 +2,7 @@
  *
  * This file is part of the RSC project
  *
- * Copyright (C) 2011 Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
+ * Copyright (C) 2011, 2014 Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  *
  * This file may be licensed under the terms of the
  * GNU Lesser General Public License Version 3 (the ``LGPL''),
@@ -33,7 +33,6 @@
 #include <rsc/config/OptionHandler.h>
 #include <rsc/config/ConfigFileSource.h>
 #include <rsc/config/CollectingOptionHandler.h>
-#include <rsc/config/TypedValue.h>
 #include <rsc/runtime/Properties.h>
 
 #include "testconfig.h"
@@ -49,18 +48,17 @@ class ConfigFileSourceEncodingTest : public ::testing::TestWithParam<string> {
 
 TEST_P(ConfigFileSourceEncodingTest, testSmoke)
 {
-
     ifstream stream(str(format("%1%/%2%") % TEST_ROOT % GetParam()).c_str());
     ConfigFileSource source(stream);
 
-    // test multiple iterations to be sure that the object can be reused for
-    // multiple handlers
+    // Test multiple iterations to be sure that the object can be
+    // reused for multiple handlers.
     for (unsigned int i = 0; i < 3; ++i) {
         CollectingOptionHandler handler;
         source.provideOptions(handler);
-        EXPECT_EQ(any_cast<int>(handler.getOptions()["global"]), 5);
+        EXPECT_EQ(any_cast<string>(handler.getOptions()["global"]), "5");
         EXPECT_EQ(any_cast<string>(handler.getOptions()["string"]), "string");
-        EXPECT_EQ(any_cast<double>(handler.getOptions()["section1.option"]), 1.5);
+        EXPECT_EQ(any_cast<string>(handler.getOptions()["section1.option"]), "1.5");
     }
 }
 
@@ -70,7 +68,7 @@ INSTANTIATE_TEST_CASE_P(ValidFiles,
 
 TEST(ConfigFileSourceTest, testSyntaxErrors) {
     CollectingOptionHandler handler;
-    for (unsigned int i = 1; i <= 3; ++i) {
+    for (unsigned int i = 1; i <= 2; ++i) {
         ifstream stream(
                 str(format("%1%/syntax-errors-%2%.conf") % TEST_ROOT % i).c_str());
         try {

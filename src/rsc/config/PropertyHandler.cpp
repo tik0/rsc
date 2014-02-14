@@ -2,7 +2,7 @@
  *
  * This file is part of the RSC project
  *
- * Copyright (C) 2011 Jan Moringen
+ * Copyright (C) 2011, 2014 Jan Moringen
  *
  * This file may be licensed under the terms of the
  * GNU Lesser General Public License Version 3 (the ``LGPL''),
@@ -26,8 +26,6 @@
 
 #include "PropertyHandler.h"
 
-#include "TypedValue.h"
-
 using namespace std;
 
 using namespace rsc::runtime;
@@ -41,7 +39,7 @@ const Properties& PropertyHandler::getProperties() const {
 
 void PropertyHandler::handleOption(const vector<string>& key,
                                    const string& value) {
-    this->result[key[0]] = parseTypedValue(value);
+    this->result[key[0]] = value;
 }
 
 }

@@ -2,7 +2,7 @@
  *
  * This file is part of the RSC project
  *
- * Copyright (C) 2010, 2011 Jan Moringen
+ * Copyright (C) 2010, 2011, 2014 Jan Moringen
  *
  * This file may be licensed under the terms of the
  * GNU Lesser General Public License Version 3 (the ``LGPL''),
@@ -54,8 +54,8 @@ int main(int, char*[]) {
 
     std::cout << "a list:   " << list << std::endl;
 
-    std::cout << "a list:   " << std::container_multiline << list << std::endl;
-    std::cout << std::container_singleline;
+    std::cout << "a list:   " << std::element_sequence_multiline << list << std::endl;
+    std::cout << std::element_sequence_singleline;
 
     // Vector example
     std::vector<int> vector;
@@ -82,7 +82,7 @@ int main(int, char*[]) {
     map.insert(std::make_pair("c", 3.0));
 
     std::cout << "a map:    " << map << std::endl;
-    std::cout << "a map:    " << std::pair_default << std::container_multiline
+    std::cout << "a map:    " << std::pair_default << std::element_sequence_multiline
             << map << std::endl;
 
     return EXIT_SUCCESS;

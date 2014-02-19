@@ -178,6 +178,62 @@ RSC_EXPORT std::string randAlnumStr(const std::string::size_type& length);
 #define DEPRECATED_CLASS(msg)
 #endif
 
+// provide static asserts that only issue a warning
+// adapted from: http://stackoverflow.com/a/8990275/283649
+
+#define PP_CAT(x,y) PP_CAT1(x,y)
+#define PP_CAT1(x,y) x##y
+
+namespace detail {
+
+struct true_type {
+};
+struct false_type {
+};
+template<int test> struct converter: public true_type {
+};
+template<> struct converter<0> : public false_type {
+};
+
+}
+
+/**
+ * Generates a compiler warning in case a static condition is not held. Might
+ * be used at namespace, structure, and function scope.
+ *
+ * Usage:
+ * @code
+ * STATIC_ASSERT_WARN(2==3, "Will always warn")
+ * STATIC_ASSERT_WARN((!boost::is_same<T, Event>::value), "Illegal type used")
+ * @endcode
+ *
+ * @note in case you are inside a templated class or function, you might need to
+ *       use STATIC_ASSERT_WARN_TEMPLATE to really generate a warning.
+ */
+#define STATIC_ASSERT_WARN(cond, msg) \
+struct PP_CAT(static_warning,__LINE__) { \
+    DEPRECATED_MSG(void _(::rsc::misc::detail::false_type const& ),msg) {}; \
+    void _(::rsc::misc::detail::true_type const& ) {}; \
+    PP_CAT(static_warning,__LINE__)() {_(::rsc::misc::detail::converter<(cond)>());} \
+}
+
+/**
+ * Generates a compiler warning in case a static condition is not held. Might
+ * be used at namespace, structure, and function scope. The first argument must
+ * be a completely unique token.
+ *
+ * Usage:
+ * @code
+ * STATIC_ASSERT_WARN_TEMPLATE(UNIQUE_TOKEN, 2==3, "Will always warn")
+ * STATIC_ASSERT_WARN_TEMPLATE(UNIQUE_TOKEN, (!boost::is_same<T, Event>::value), "Illegal type used")
+ * @endcode
+ *
+ * @note This macro adds a new member to your type. So try to use
+ *       STATIC_ASSERT_WARN whenever possible
+ */
+#define STATIC_ASSERT_WARN_TEMPLATE(token, cond, msg) \
+    STATIC_ASSERT_WARN(cond, msg) PP_CAT(PP_CAT(_localvar_, token),__LINE__)
+
 }
 }
 

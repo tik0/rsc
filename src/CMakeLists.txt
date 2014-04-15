@@ -48,7 +48,8 @@ FILE(GLOB HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
                   "rsc/patterns/*.h"
                   "rsc/patterns/detail/*.h"
                   "rsc/threading/*.h"
-                  "rsc/plugins/*.h")
+                  "rsc/plugins/*.h"
+                  "rsc/os/*.h")
 SET(HEADERS ${HEADERS}
             rsc/debug/DebugTools.h
             rsc/subprocess/Subprocess.h
@@ -56,34 +57,46 @@ SET(HEADERS ${HEADERS}
             ${CMAKE_CURRENT_BINARY_DIR}/rsc/config.h
             ${CMAKE_CURRENT_BINARY_DIR}/rsc/rscexports.h)
 
-# subprocess choice
-IF(UNIX)
-    MESSAGE(STATUS "Selected UnixSubprocess")
+# Platform-specific backend choices
+MESSAGE(STATUS "Selecting platform-specific backends")
+IF(CMAKE_SYSTEM_NAME STREQUAL Linux)
+    MESSAGE(STATUS "  UnixSubprocess")
     LIST(APPEND SOURCES rsc/subprocess/UnixSubprocess.cpp)
     LIST(APPEND HEADERS rsc/subprocess/UnixSubprocess.h)
     ADD_DEFINITIONS(-DSUBPROCESS_UNIX)
-ELSEIF(WIN32)
-    MESSAGE(STATUS "Selected WindowsSubprocess")
-    LIST(APPEND SOURCES rsc/subprocess/WindowsSubprocess.cpp)
-    LIST(APPEND HEADERS rsc/subprocess/WindowsSubprocess.h)
-    ADD_DEFINITIONS(-DSUBPROCESS_WINDOWS)
-ELSE()
-    MESSAGE(FATAL_ERROR "No Subprocess implementation is available for this platform")
-ENDIF()
 
-# debug tools selection
-IF(UNIX)
-    MESSAGE(STATUS "Selected LinuxDebugTools")
+    MESSAGE(STATUS "  LinuxDebugTools")
     LIST(APPEND SOURCES rsc/debug/LinuxDebugTools.cpp)
     LIST(APPEND HEADERS rsc/debug/LinuxDebugTools.h)
     ADD_DEFINITIONS(-DDEBUGTOOLS_LINUX)
+
+    MESSAGE(STATUS "  LinuxProcessInfo")
+    LIST(APPEND SOURCES rsc/os/LinuxProcessInfo.cpp)
+
+ELSEIF(UNIX)
+    MESSAGE(STATUS "  UnixSubprocess")
+    LIST(APPEND SOURCES rsc/subprocess/UnixSubprocess.cpp)
+    LIST(APPEND HEADERS rsc/subprocess/UnixSubprocess.h)
+    ADD_DEFINITIONS(-DSUBPROCESS_UNIX)
+
+    MESSAGE(STATUS "  LinuxDebugTools")
+    LIST(APPEND SOURCES rsc/debug/LinuxDebugTools.cpp)
+    LIST(APPEND HEADERS rsc/debug/LinuxDebugTools.h)
+    ADD_DEFINITIONS(-DDEBUGTOOLS_LINUX)
+
 ELSEIF(WIN32)
-    MESSAGE(STATUS "Selected WindowsDebugTools")
+    MESSAGE(STATUS "  WindowsSubprocess")
+    LIST(APPEND SOURCES rsc/subprocess/WindowsSubprocess.cpp)
+    LIST(APPEND HEADERS rsc/subprocess/WindowsSubprocess.h)
+    ADD_DEFINITIONS(-DSUBPROCESS_WINDOWS)
+
+    MESSAGE(STATUS "  WindowsDebugTools")
     LIST(APPEND SOURCES rsc/debug/WindowsDebugTools.cpp)
     LIST(APPEND HEADERS rsc/debug/WindowsDebugTools.h)
     ADD_DEFINITIONS(-DDEBUGTOOLS_WINDOWS)
+
 ELSE()
-    MESSAGE(FATAL_ERROR "No DebugTools implementation is available for this platform")
+    MESSAGE(FATAL_ERROR "No Subprocess, DebugTools or ProcessInfo implementation is available for this platform")
 ENDIF()
 
 ADD_LIBRARY(${RSC_NAME} SHARED ${SOURCES} ${HEADERS})

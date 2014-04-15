@@ -41,7 +41,8 @@ FILE(GLOB TEST_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
                        "rsc/math/*.cpp"
                        "rsc/threading/*.cpp"
                        "rsc/runtime/*.cpp"
-                       "rsc/patterns/*.cpp")
+                       "rsc/patterns/*.cpp"
+                       "rsc/os/*.cpp")
 SET(TEST_SOURCES ${TEST_SOURCES} "rsc/RscTestSuite.cpp")
 LIST(APPEND TEST_SOURCES "rsc/misc/UUIDTest.cpp" "rsc/misc/RegistryTest.cpp" "rsc/misc/langutilsTest.cpp")
 LIST(APPEND TEST_SOURCES "rsc/plugins/ConfiguratorTest.cpp"
@@ -95,7 +96,7 @@ TARGET_LINK_LIBRARIES(testplugin.clashed ${Boost_LIBRARIES})
 SET_TARGET_PROPERTIES(testplugin.clash testplugin.clashed PROPERTIES
                       LIBRARY_OUTPUT_DIRECTORY ${TEST_PLUGIN_DIRECTORY_NAME_CLASH}
                       RUNTIME_OUTPUT_DIRECTORY ${TEST_PLUGIN_DIRECTORY_NAME_CLASH})
-                      
+
 # test plugin overriding one from the usual path
 ADD_LIBRARY(testplugin.override SHARED rsc/plugins/testplugin.cpp)
 TARGET_LINK_LIBRARIES(testplugin.override ${Boost_LIBRARIES})

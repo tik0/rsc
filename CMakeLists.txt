@@ -101,7 +101,7 @@ ENDIF()
 
 # determine the required libraries for boost based on its version
 FIND_PACKAGE(Boost ${Boost_USE_VERSION} REQUIRED)
-SET(BOOST_COMPONENTS thread filesystem signals program_options system regex)
+SET(BOOST_COMPONENTS date_time thread filesystem signals program_options system regex)
 IF(Boost_VERSION STREQUAL 105000 OR Boost_VERSION STRGREATER 105000)
     LIST(APPEND BOOST_COMPONENTS chrono)
 ENDIF()

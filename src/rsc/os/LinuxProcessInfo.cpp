@@ -40,6 +40,8 @@
 
 #include <boost/date_time/posix_time/posix_time.hpp>
 
+#include "HostInfo.h"
+
 namespace rsc {
 namespace os{
 
@@ -141,44 +143,6 @@ std::vector<std::string> currentCommandlineArguments() {
 boost::posix_time::ptime getProcessStartTime(PID pid) {
     static const unsigned int START_TIME_BOOT_JIFFIES_FIELD_NUMBER = 22;
 
-    // Read system boot time in integral seconds since UNIX epoch.
-    // See /proc/stat section in proc(5).
-    boost::uint32_t bootTimeUNIXSeconds;
-    {
-        const std::string procStat = "/proc/stat";
-        std::ifstream stream(procStat.c_str());
-        stream >> std::noskipws;
-        std::string content;
-        std::copy(std::istream_iterator<char>(stream),
-                  std::istream_iterator<char>() ,
-                  std::back_inserter(content));
-        std::string pattern("btime ");
-        std::string::iterator start = std::search(content.begin(), content.end(),
-                                                  pattern.begin(), pattern.end());
-        if (start == content.end()) {
-            throw std::runtime_error(boost::str(boost::format("Could not find"
-                                                              " \"%1%\" entry in %2%")
-                                                % pattern % procStat));
-        }
-        std::string::iterator end = std::find(start, content.end(), '\n');
-        if (end == content.end()) {
-            throw std::runtime_error(boost::str(boost::format("Could not find"
-                                                              " end of \"%1%\""
-                                                              " entry in %2%")
-                                                % pattern % procStat));
-        }
-        std::string value;
-        std::copy(start + pattern.size(), end, std::back_inserter(value));
-        try {
-            bootTimeUNIXSeconds = boost::lexical_cast<boost::int32_t>(value);
-        } catch (const boost::bad_lexical_cast& e) {
-            throw std::runtime_error(boost::str(boost::format("Could not parse"
-                                                              " \"%1%\""
-                                                              " entry in %2%: %3%")
-                                                % pattern % procStat % e.what()));
-        }
-    }
-
     // Read process start time in jiffies since *system boot*.
     // See /proc/[pid]/stat section in proc(5).
     boost::uint64_t startTimeBootJiffies;
@@ -210,14 +174,11 @@ boost::posix_time::ptime getProcessStartTime(PID pid) {
 
     // Add to system boot time the process start time relative to
     // system boot time. Process integral seconds and milliseconds.
-    time_t startTimeUNIXSeconds
-        = bootTimeUNIXSeconds + startTimeBootJiffies / HZ;
-    boost::posix_time::ptime startTimeSeconds =
-        boost::posix_time::from_time_t(startTimeUNIXSeconds);
-
+    boost::posix_time::ptime bootTime = currentBootTime();
     return boost::posix_time::ptime
-        (startTimeSeconds.date(),
-         startTimeSeconds.time_of_day()
+        (bootTime.date(),
+         bootTime.time_of_day()
+         + boost::posix_time::seconds(startTimeBootJiffies / HZ)
          + boost::posix_time::milliseconds((1000/HZ * startTimeBootJiffies)
                                            % 1000));
 }

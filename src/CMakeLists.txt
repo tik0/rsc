@@ -73,6 +73,9 @@ IF(CMAKE_SYSTEM_NAME STREQUAL Linux)
     MESSAGE(STATUS "  LinuxProcessInfo")
     LIST(APPEND SOURCES rsc/os/LinuxProcessInfo.cpp)
 
+    MESSAGE(STATUS "  LinuxHostInfo")
+    LIST(APPEND SOURCES rsc/os/LinuxHostInfo.cpp)
+
 ELSEIF(UNIX)
     MESSAGE(STATUS "  UnixSubprocess")
     LIST(APPEND SOURCES rsc/subprocess/UnixSubprocess.cpp)
@@ -96,7 +99,7 @@ ELSEIF(WIN32)
     ADD_DEFINITIONS(-DDEBUGTOOLS_WINDOWS)
 
 ELSE()
-    MESSAGE(FATAL_ERROR "No Subprocess, DebugTools or ProcessInfo implementation is available for this platform")
+    MESSAGE(FATAL_ERROR "No Subprocess, DebugTools, ProcessInfo or HostInfo implementation is available for this platform")
 ENDIF()
 
 ADD_LIBRARY(${RSC_NAME} SHARED ${SOURCES} ${HEADERS})

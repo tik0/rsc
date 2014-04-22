@@ -87,6 +87,12 @@ ELSEIF(UNIX)
     LIST(APPEND HEADERS rsc/debug/LinuxDebugTools.h)
     ADD_DEFINITIONS(-DDEBUGTOOLS_LINUX)
 
+    MESSAGE(STATUS "  PosixProcessInfo")
+    LIST(APPEND SOURCES rsc/os/PosixProcessInfo.cpp)
+
+    MESSAGE(STATUS "  PosixHostInfo")
+    LIST(APPEND SOURCES rsc/os/PosixHostInfo.cpp)
+
 ELSEIF(WIN32)
     MESSAGE(STATUS "  WindowsSubprocess")
     LIST(APPEND SOURCES rsc/subprocess/WindowsSubprocess.cpp)

@@ -67,6 +67,8 @@ ELSEIF(WIN32)
     SET(SOURCES ${SOURCES} rsc/subprocess/WindowsSubprocess.cpp)
     SET(HEADERS ${HEADERS} rsc/subprocess/WindowsSubprocess.h)
     ADD_DEFINITIONS(-DSUBPROCESS_WINDOWS)
+ELSE()
+    MESSAGE(FATAL_ERROR "No Subprocess implementation is available for this platform")
 ENDIF()
 
 # debug tools selection
@@ -80,6 +82,8 @@ ELSEIF(WIN32)
     SET(SOURCES ${SOURCES} rsc/debug/WindowsDebugTools.cpp)
     SET(HEADERS ${HEADERS} rsc/debug/WindowsDebugTools.h)
     ADD_DEFINITIONS(-DDEBUGTOOLS_WINDOWS)
+ELSE()
+    MESSAGE(FATAL_ERROR "No DebugTools implementation is available for this platform")
 ENDIF()
 
 ADD_LIBRARY(${RSC_NAME} SHARED ${SOURCES} ${HEADERS})

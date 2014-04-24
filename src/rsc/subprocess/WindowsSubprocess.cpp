@@ -26,6 +26,7 @@
 
 #include "WindowsSubprocess.h"
 
+#include <stdexcept>
 #include <sstream>
 
 using namespace std;
@@ -38,8 +39,7 @@ bool CALLBACK terminateAppEnum(HWND hwnd, LPARAM lParam) {
     DWORD id;
     GetWindowThreadProcessId(hwnd, &id);
 
-    if(id == (DWORD)lParam)
-    {
+    if(id == (DWORD)lParam) {
         PostMessage(hwnd, WM_CLOSE, 0, 0);
     }
 

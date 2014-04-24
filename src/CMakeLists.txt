@@ -104,6 +104,12 @@ ELSEIF(WIN32)
     LIST(APPEND HEADERS rsc/debug/WindowsDebugTools.h)
     ADD_DEFINITIONS(-DDEBUGTOOLS_WINDOWS)
 
+    MESSAGE(STATUS "  Win32ProcessInfo")
+    LIST(APPEND SOURCES rsc/os/Win32ProcessInfo.cpp)
+
+    MESSAGE(STATUS "  Win32HostInfo")
+    LIST(APPEND SOURCES rsc/os/Win32HostInfo.cpp)
+
 ELSE()
     MESSAGE(FATAL_ERROR "No Subprocess, DebugTools, ProcessInfo or HostInfo implementation is available for this platform")
 ENDIF()
@@ -114,6 +120,10 @@ TARGET_LINK_LIBRARIES(${RSC_NAME} ${Boost_LIBRARIES}
 # System libraries for dynamic loading (required by plugin system)
 IF(UNIX)
     TARGET_LINK_LIBRARIES(${RSC_NAME} dl)
+ENDIF()
+# Windows-specific libraries
+IF(WIN32)
+    TARGET_LINK_LIBRARIES(${RSC_NAME} Secur32)
 ENDIF()
 SET_TARGET_PROPERTIES(${RSC_NAME}
                       PROPERTIES

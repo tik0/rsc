@@ -156,7 +156,7 @@ private:
 #if defined(_WIN32)
     HMODULE          handle;
 #else
-	void*            handle;
+    void*            handle;
 #endif
     InitFunction     init;
     ShutdownFunction shutdown;
@@ -166,17 +166,14 @@ private:
         if (!(this->handle = dlopen(this->library.c_str(), RTLD_NOW))) {
             const char* result = dlerror();
             throw runtime_error(str(format("Failed to load plugin `%1%' from shared object `%2%': %3%.")
-                                    % this->name
-                                    % this->library
+                                    % this->name % this->library
                                     % (result ? result : "<unknown error>")));
         }
 #elif defined(_WIN32)
-		if (!(this->handle= LoadLibrary(this->library.c_str()))) {
-			throw runtime_error(str(format("Failed to load plugin `%1%' from shared object `%2%': %3%.")
-                                    % this->name
-                                    % this->library
-                                    % GetLastError()));
-		}
+        if (!(this->handle= LoadLibrary(this->library.c_str()))) {
+            throw runtime_error(str(format("Failed to load plugin `%1%' from shared object `%2%': %3%.")
+                                    % this->name % this->library % GetLastError()));
+        }
 #else
         throw runtime_error("Plugins are not implemented for this platform.");
 #endif
@@ -184,8 +181,7 @@ private:
 
     void* resolveSymbol(const string& name) {
         RSCINFO(this->logger, "Resolving symbol `"
-                << name
-                << "' in library `" << this->library << "'");
+                << name << "' in library `" << this->library << "'");
 
         assert(this->handle);
 
@@ -194,17 +190,14 @@ private:
         if (!(address = dlsym(this->handle, name.c_str()))) {
             const char* result = dlerror();
             throw runtime_error(str(format("Plugin `%1%' failed to define function `%2%': %3%")
-                                    % this->name
-                                    % name
+                                    % this->name % name
                                     % (result ? result : "<unknown error>")));
         }
 #elif defined(_WIN32)
-        if (!(address = GetProcAddress(this->handle, name.c_str()))) {
-			throw runtime_error(str(format("Plugin `%1%' failed to define function `%2%': %3%")
-                                    % this->name
-                                    % name
-                                    % GetLastError()));
-		}
+        if (!(address = reinterpret_cast<void*>(GetProcAddress(this->handle, name.c_str())))) {
+            throw runtime_error(str(format("Plugin `%1%' failed to define function `%2%': %3%")
+                                    % this->name % name % GetLastError()));
+        }
 #else
         throw runtime_error("Plugins are not implemented for this platform.");
 #endif

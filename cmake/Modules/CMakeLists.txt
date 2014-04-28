@@ -37,6 +37,7 @@ INSTALL(FILES ExtractTBBVersion.cpp.in
               GitProjectVersion.cmake
               git2staticversion.py
               IgnoreReturnCode.cmake
+              InstallDebugSymbols.cmake
               InstallFilesRecursive.cmake
               PadString.cmake
               ParseArguments.cmake

@@ -113,6 +113,12 @@ RSC_EXPORT char randAlnumChar();
  */
 RSC_EXPORT std::string randAlnumStr(const std::string::size_type& length);
 
+#ifdef __GNUC__
+#define GCC_VERSION (__GNUC__ * 10000 \
+                     + __GNUC_MINOR__ * 100 \
+                     + __GNUC_PATCHLEVEL__)
+#endif
+
 /**
  * This macro allows you to mark a function as being deprecated including a
  * message explaining the deprecation.
@@ -130,7 +136,11 @@ RSC_EXPORT std::string randAlnumStr(const std::string::size_type& length);
  * Otherwise the commas are interpreted as arguments to this macro.
  */
 #ifdef __GNUC__
+#if GCC_VERSION > 40500
 #define DEPRECATED_MSG(func, msg) func __attribute__ ((deprecated (#msg)))
+#else
+#define DEPRECATED_MSG(func, msg) func __attribute__ ((deprecated))
+#endif
 #elif defined(_MSC_VER)
 #define DEPRECATED_MSG(func, msg) __declspec(deprecated(#msg)) func
 #else
@@ -170,7 +180,11 @@ RSC_EXPORT std::string randAlnumStr(const std::string::size_type& length);
  * @note On GCC, a bug might prevent deprecation warnings for template classes
  */
 #ifdef __GNUC__
+#if GCC_VERSION > 40500
 #define DEPRECATED_CLASS(msg) __attribute__ ((deprecated (#msg)))
+#else
+#define DEPRECATED_CLASS(msg) __attribute__ ((deprecated))
+#endif
 #elif defined(_MSC_VER)
 #define DEPRECATED_CLASS(msg) __declspec(deprecated(#msg))
 #else

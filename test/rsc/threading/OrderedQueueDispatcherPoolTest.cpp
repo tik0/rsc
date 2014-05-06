@@ -403,3 +403,89 @@ TEST(OrderedQueueDispatcherPoolTest, testUnregister)
     EXPECT_EQ((size_t) 0, receiver->messages.size());
 
 }
+
+class ParallelReceiver {
+public:
+
+    boost::recursive_mutex mutex;
+    volatile bool alreadyInCall;
+    volatile bool calledInParallel;
+
+    ParallelReceiver() :
+            alreadyInCall(false), calledInParallel(false) {
+    }
+
+    void call(const int& /*message*/) {
+
+        {
+            boost::recursive_mutex::scoped_lock lock(mutex);
+            if (alreadyInCall) {
+                calledInParallel = true;
+                return;
+            }
+            alreadyInCall = true;
+        }
+
+        boost::this_thread::sleep(boost::posix_time::seconds(2));
+
+        {
+            boost::recursive_mutex::scoped_lock lock(mutex);
+            alreadyInCall = false;
+        }
+
+    }
+
+};
+
+void parallelDeliver(boost::shared_ptr<ParallelReceiver>& receiver,
+        const int& message) {
+    receiver->call(message);
+}
+
+TEST(OrderedQueueDispatcherPoolTest, testParallelDispatchToOneReceiver)
+{
+
+    OrderedQueueDispatcherPool<int, ParallelReceiver> pool(2,
+                boost::bind(parallelDeliver, _1, _2));
+
+    pool.start();
+
+    pool.setParallelCalls(true);
+
+    boost::shared_ptr<ParallelReceiver> receiver(new ParallelReceiver);
+    pool.registerReceiver(receiver);
+
+    pool.push(42);
+    pool.push(43);
+
+    boost::this_thread::sleep(boost::posix_time::seconds(2));
+
+    pool.stop();
+
+    EXPECT_TRUE(receiver->calledInParallel);
+
+}
+
+TEST(OrderedQueueDispatcherPoolTest, testSequencedDispatchToOneReceiver)
+{
+
+    OrderedQueueDispatcherPool<int, ParallelReceiver> pool(2,
+                boost::bind(parallelDeliver, _1, _2));
+
+    pool.start();
+
+    boost::shared_ptr<ParallelReceiver> receiver(new ParallelReceiver);
+    pool.registerReceiver(receiver);
+
+    pool.push(42);
+    pool.push(43);
+
+    // twice the time one call can take so that both jobs have a chance to
+    // process
+    boost::this_thread::sleep(boost::posix_time::seconds(4));
+
+    pool.stop();
+
+    EXPECT_FALSE(receiver->calledInParallel);
+
+}

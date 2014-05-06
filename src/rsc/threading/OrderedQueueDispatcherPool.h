@@ -227,6 +227,8 @@ private:
     boost::condition jobsAvailableCondition;
     volatile bool interrupted;
 
+    volatile bool parallelCalls;
+
     volatile bool started;
 
     /**
@@ -267,7 +269,7 @@ private:
 
                 // TODO maybe provide an atomic pop and tell if successful
                 // operation in SynchronizedQueue
-                if (!receivers[realPos]->processing
+                if ((parallelCalls || !receivers[realPos]->processing)
                         && !receivers[realPos]->queue.empty()) {
 
                     // found a job
@@ -363,10 +365,10 @@ public:
      */
     OrderedQueueDispatcherPool(const unsigned int& threadPoolSize,
             deliverFunction delFunc) :
-        currentPosition(0), jobsAvailable(false), interrupted(false), started(
-                false), threadPoolSize(threadPoolSize), deliveryHandler(
-                new DeliverFunctionAdapter(delFunc)), filterHandler(
-                new TrueFilter()) {
+            currentPosition(0), jobsAvailable(false), interrupted(false), parallelCalls(
+                    false), started(false), threadPoolSize(threadPoolSize), deliveryHandler(
+                    new DeliverFunctionAdapter(delFunc)), filterHandler(
+                    new TrueFilter()) {
     }
 
     /**
@@ -383,10 +385,10 @@ public:
      */
     OrderedQueueDispatcherPool(const unsigned int& threadPoolSize,
             deliverFunction delFunc, filterFunction filterFunc) :
-        currentPosition(0), jobsAvailable(false), interrupted(false), started(
-                false), threadPoolSize(threadPoolSize), deliveryHandler(
-                new DeliverFunctionAdapter(delFunc)), filterHandler(
-                new FilterFunctionAdapter(filterFunc)) {
+            currentPosition(0), jobsAvailable(false), interrupted(false), parallelCalls(
+                    false), started(false), threadPoolSize(threadPoolSize), deliveryHandler(
+                    new DeliverFunctionAdapter(delFunc)), filterHandler(
+                    new FilterFunctionAdapter(filterFunc)) {
     }
 
     /**
@@ -398,9 +400,9 @@ public:
      */
     OrderedQueueDispatcherPool(const unsigned int& threadPoolSize,
             DeliveryHandlerPtr deliveryHandler) :
-        currentPosition(0), jobsAvailable(false), interrupted(false), started(
-                false), threadPoolSize(threadPoolSize), deliveryHandler(
-                deliveryHandler), filterHandler(new TrueFilter) {
+            currentPosition(0), jobsAvailable(false), interrupted(false), parallelCalls(
+                    false), started(false), threadPoolSize(threadPoolSize), deliveryHandler(
+                    deliveryHandler), filterHandler(new TrueFilter) {
     }
 
     /**
@@ -412,9 +414,9 @@ public:
      */
     OrderedQueueDispatcherPool(const unsigned int& threadPoolSize,
             DeliveryHandlerPtr deliveryHandler, FilterHandlerPtr filterHandler) :
-        currentPosition(0), jobsAvailable(false), interrupted(false), started(
-                false), threadPoolSize(threadPoolSize), deliveryHandler(
-                deliveryHandler), filterHandler(filterHandler) {
+            currentPosition(0), jobsAvailable(false), interrupted(false), parallelCalls(
+                    false), started(false), threadPoolSize(threadPoolSize), deliveryHandler(
+                    deliveryHandler), filterHandler(filterHandler) {
     }
 
     virtual ~OrderedQueueDispatcherPool() {
@@ -459,6 +461,26 @@ public:
         }
         return false;
 
+    }
+
+    /**
+     * Decides whether a single receiver might be called in parallel with
+     * overlapping calls or not. As the default, each receiver receives only one
+     * call at a time until the deliver method for that receiver has returned.
+     * Each call might originate from a different thread, but they will never
+     * overlap. By setting this flag to @c true, calls might overlap to allow a
+     * true parallelism. This, however, weakens the ordering guarantees given by
+     * this class. The thread pool is still guaranteed to process the orders in
+     * the way they arrive. However, due to the processing of multiple parallel
+     * threads, during the time of picking up the new message to dispatch and
+     * the actual dispatch task to the user code, ordering might change as a
+     * result of thread scheduling.
+     *
+     * @param allow if set to @c true, receivers might be called in parallel
+     *              by multiple thread with successive messages to dispatch
+     */
+    void setParallelCalls(const bool& allow) {
+        parallelCalls = allow;
     }
 
     /**

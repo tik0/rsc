@@ -391,7 +391,6 @@ template<typename Ch, typename Tr, typename Key, typename Interface>
 std::basic_ostream<Ch, Tr>&
 operator<<(std::basic_ostream<Ch, Tr>& stream,
         const Factory<Key, Interface>& factory) {
-    typedef Factory<Key, Interface> Factory_type;
     typedef typename Factory<Key, Interface>::ImplMapProxy impl_map_proxy_type;
 
     //

@@ -406,9 +406,6 @@ operator<<(basic_ostream<Ch, Tr>& stream, const multimap<R, S>& container) {
 template<typename Ch, typename Tr, typename T>
 basic_ostream<Ch, Tr>&
 operator<<(basic_ostream<Ch, Tr>& stream, const valarray<T>& container) {
-    typedef valarray<T> container_type;
-    typedef typename container_type::value_type value_type;
-
     if (!stream.pword(detail::element_sequence_style::stream_storage)) {
         stream << element_sequence_singleline;
     }

@@ -76,6 +76,9 @@ IF(CMAKE_SYSTEM_NAME STREQUAL Linux)
     LIST(APPEND HEADERS rsc/debug/LinuxDebugTools.h)
     ADD_DEFINITIONS(-DDEBUGTOOLS_LINUX)
 
+    MESSAGE(STATUS "  PosixSignalWaiter")
+    LIST(APPEND SOURCES rsc/misc/PosixSignalWaiter.cpp)
+
     MESSAGE(STATUS "  LinuxProcessInfo")
     LIST(APPEND SOURCES rsc/os/LinuxProcessInfo.cpp)
 
@@ -92,6 +95,9 @@ ELSEIF(UNIX)
     LIST(APPEND SOURCES rsc/debug/LinuxDebugTools.cpp)
     LIST(APPEND HEADERS rsc/debug/LinuxDebugTools.h)
     ADD_DEFINITIONS(-DDEBUGTOOLS_LINUX)
+
+    MESSAGE(STATUS "  PosixSignalWaiter")
+    LIST(APPEND SOURCES rsc/misc/PosixSignalWaiter.cpp)
 
     MESSAGE(STATUS "  PosixProcessInfo")
     LIST(APPEND SOURCES rsc/os/PosixProcessInfo.cpp)

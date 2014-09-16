@@ -29,14 +29,20 @@ FILE(GLOB SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
                   "rsc/logging/*.cpp"
                   "rsc/config/*.cpp"
                   "rsc/math/*.cpp"
-                  "rsc/misc/*.cpp"
                   "rsc/runtime/*.cpp"
                   "rsc/patterns/*.cpp"
                   "rsc/threading/*.cpp"
                   "rsc/plugins/*.cpp")
 SET(SOURCES ${SOURCES}
-            rsc/debug/DebugTools.cpp
             rsc/subprocess/Subprocess.cpp
+
+            rsc/debug/DebugTools.cpp
+
+            rsc/misc/langutils.cpp
+            rsc/misc/IllegalStateException.cpp
+            rsc/misc/UnsupportedOperationException.cpp
+            rsc/misc/UUID.cpp
+
             "${CMAKE_CURRENT_BINARY_DIR}/rsc/Version.cpp")
 
 FILE(GLOB HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}

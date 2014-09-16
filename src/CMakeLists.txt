@@ -116,6 +116,9 @@ ELSEIF(WIN32)
     LIST(APPEND HEADERS rsc/debug/WindowsDebugTools.h)
     ADD_DEFINITIONS(-DDEBUGTOOLS_WINDOWS)
 
+    MESSAGE(STATUS "  Win32SignalWaiter")
+    LIST(APPEND SOURCES rsc/misc/Win32SignalWaiter.cpp)
+
     MESSAGE(STATUS "  Win32ProcessInfo")
     LIST(APPEND SOURCES rsc/os/Win32ProcessInfo.cpp)
 

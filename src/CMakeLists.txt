@@ -85,6 +85,28 @@ IF(CMAKE_SYSTEM_NAME STREQUAL Linux)
     MESSAGE(STATUS "  LinuxHostInfo")
     LIST(APPEND SOURCES rsc/os/LinuxHostInfo.cpp)
 
+ELSEIF(APPLE)
+
+    MESSAGE(STATUS "  UnixSubprocess")
+    LIST(APPEND SOURCES rsc/subprocess/UnixSubprocess.cpp)
+    LIST(APPEND HEADERS rsc/subprocess/UnixSubprocess.h)
+    ADD_DEFINITIONS(-DSUBPROCESS_UNIX)
+
+    MESSAGE(STATUS "  LinuxDebugTools")
+    LIST(APPEND SOURCES rsc/debug/LinuxDebugTools.cpp)
+    LIST(APPEND HEADERS rsc/debug/LinuxDebugTools.h)
+    ADD_DEFINITIONS(-DDEBUGTOOLS_LINUX)
+
+    MESSAGE(STATUS "  MacSignalWaiter")
+    LIST(APPEND SOURCES rsc/misc/MacSignalWaiter.cpp)
+
+    MESSAGE(STATUS "  PosixProcessInfo")
+    LIST(APPEND SOURCES rsc/os/PosixProcessInfo.cpp)
+
+    MESSAGE(STATUS "  PosixHostInfo")
+    LIST(APPEND SOURCES rsc/os/PosixHostInfo.cpp)
+
+
 ELSEIF(UNIX)
     MESSAGE(STATUS "  UnixSubprocess")
     LIST(APPEND SOURCES rsc/subprocess/UnixSubprocess.cpp)

@@ -62,6 +62,16 @@ Signal waitForSignal() {
     return INTERRUPT_REQUESTED; // should be unreachable
 }
 
+bool hasSignalArrived() {
+    if (requestedSignals == 0) {
+        throw std::logic_error("initSignalWaiter has to be called before"
+                               " hasSignalArrived.");
+    }
+
+    return false;
+}
+
+
 int suggestedExitCode(Signal signal) {
     switch (signal) {
     case INTERRUPT_REQUESTED:

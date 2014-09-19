@@ -43,7 +43,7 @@ namespace misc {
 int requestedSignals = 0;
 static std::string semaphore_name;
 sem_t* semaphore;
-volatile sig_atomic_t receivedSignal;
+volatile sig_atomic_t receivedSignal = 0;
 
 void handler(int signal) {
     // Store the number of the received signal and post a token to the
@@ -144,6 +144,15 @@ Signal waitForSignal() {
         throw std::runtime_error(boost::str(boost::format("unexpected signal number %1%")
                                             % receivedSignal));
     }
+}
+
+bool hasSignalArrived() {
+    if (requestedSignals == 0) {
+        throw std::logic_error("initSignalWaiter has to be called before"
+                               " hasSignalArrived.");
+    }
+
+    return (receivedSignal != 0);
 }
 
 int suggestedExitCode(Signal signal) {

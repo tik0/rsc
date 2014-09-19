@@ -108,6 +108,17 @@ RSC_EXPORT void initSignalWaiter(int signals
 RSC_EXPORT Signal waitForSignal();
 
 /**
+ * Return @c true if one of the signals requested in @ref
+ * initSignalWaiter has arrived.
+ *
+ * @throw std::logic_error If @ref initSignalWaiter has not been
+ *                         called.
+ *
+ * @author jmoringe
+ */
+RSC_EXPORT bool hasSignalArrived();
+
+/**
  * Return suggested exit code for exiting the program after receiving
  * signal @a signal.
  *

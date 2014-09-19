@@ -35,15 +35,24 @@
 namespace rsc {
 namespace misc {
 
+int requestedSignals = 0;
+
 void initSignalWaiter(int signals) {
     // SIGNALS should specify one or more signals.
     if (((INTERRUPT_REQUESTED | TERMINATE_REQUESTED | QUIT_REQUESTED)
          & signals) == 0) {
         throw std::logic_error("At least one signal has to be specified.");
     }
+
+    requestedSignals = signals;
 }
 
 Signal waitForSignal() {
+    if (requestedSignals == 0) {
+        throw std::logic_error("initSignalWaiter has to be called before"
+                               " waitForSignal.");
+    }
+
     std::cerr << "Waiting for termination signals is not implemented for "
                  "this platform. The program will still terminate when "
                  "such a signal is received but without shutting down "

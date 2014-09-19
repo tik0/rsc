@@ -99,6 +99,8 @@ RSC_EXPORT void initSignalWaiter(int signals
  * @return The received signal as a member of the @ref Signal
  *         enumeration.
  *
+ * @throw std::logic_error If @ref initSignalWaiter has not been
+ *                         called.
  * @throw std::runtime_error If waiting for signals fails.
  *
  * @author jmoringe

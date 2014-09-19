@@ -40,6 +40,7 @@
 namespace rsc {
 namespace misc {
 
+int requestedSignals = 0;
 static std::string semaphore_name;
 sem_t* semaphore;
 volatile sig_atomic_t receivedSignal;
@@ -65,6 +66,8 @@ void initSignalWaiter(int signals) {
          & signals) == 0) {
         throw std::logic_error("At least one signal has to be specified.");
     }
+
+    requestedSignals = signals;
 
     // Initialize the semaphore to a blocked state.
     semaphore_name = (randAlnumStr(3)
@@ -104,6 +107,11 @@ void initSignalWaiter(int signals) {
 }
 
 Signal waitForSignal() {
+    if (requestedSignals == 0) {
+        throw std::logic_error("initSignalWaiter has to be called before"
+                               " waitForSignal.");
+    }
+
     // sem_wait can be interrupted by any signal. Since we only want
     // to wait for the specified signals, we have to resume waiting in
     // case of random unrelated interruptions.

@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
 
     if (argc < 2) {
        std::cerr << "Usage: " << argv[0] << " pid" << std::endl;
-       return EXIT_FAILURE; 
+       return EXIT_FAILURE;
     }
 
     rsc::os::PID pid = boost::lexical_cast<rsc::os::PID> (argv[1]);

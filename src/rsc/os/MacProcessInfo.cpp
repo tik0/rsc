@@ -60,7 +60,7 @@ std::vector<std::string> getCommandlineComponents(PID pid) {
                                                           " %1%")
                                  % strerror(errno)));
     }
- 
+
     /*
      * Make a sysctl() call to get the raw argument space of the process.
      * The layout is documented in start.s, which is part of the Csu
@@ -113,15 +113,15 @@ std::vector<std::string> getCommandlineComponents(PID pid) {
                                                           " %1%")
                                  % strerror(errno)));
     }
- 
-    // get the number of arguments from the first memory segment  
+
+    // get the number of arguments from the first memory segment
     int nargs;
     memcpy(&nargs, procargs.get(), sizeof(nargs));
-    
+
     // increment pointer to the memory by the size of argc to point to the first argument
     char* cp;
     cp = procargs.get() + sizeof(nargs);
- 
+
     // Skip the saved exec_path
     for (; cp < &procargs[size]; cp++) {
         if (*cp == '\0') {
@@ -134,7 +134,7 @@ std::vector<std::string> getCommandlineComponents(PID pid) {
                                      " End of info memory reached without"
                                      " finding the string area.");
     }
- 
+
     // Skip trailing '\0' characters
     for (; cp < &procargs[size]; cp++) {
         if (*cp != '\0') {
@@ -148,7 +148,7 @@ std::vector<std::string> getCommandlineComponents(PID pid) {
                                      " finding the string area.");
     }
     // cp has reached the beginning of argv[0]
- 
+
     // scan through the memory starting at the begining of argv[0] and
     // grab as many null-terminated arguments as possible.
     std::vector<std::string> commandLine;
@@ -188,7 +188,7 @@ std::string getExecutablePath(PID pid) {
                                                           " program name:"
                                                           " %1%")
                                  % strerror(errno)));
-        
+
     }
     return std::string(pathBuffer);
 }
@@ -232,11 +232,11 @@ boost::posix_time::ptime getProcessStartTime(PID pid) {
                                  % strerror(errno)));
     }
     if (len == 0) {
-        throw std::runtime_error("Could not determine process start time:" 
+        throw std::runtime_error("Could not determine process start time:"
                                  " No such PID.");
     }
 
-    return boost::posix_time::from_time_t(kp.kp_proc.p_starttime.tv_sec) + 
+    return boost::posix_time::from_time_t(kp.kp_proc.p_starttime.tv_sec) +
         boost::posix_time::microseconds(kp.kp_proc.p_starttime.tv_usec);
 }
 

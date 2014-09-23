@@ -69,7 +69,7 @@ std::string currentHostId() {
     }
     std::stringstream stream;
     for (unsigned int i = 0; i < 16; ++i) {
-    	stream << std::hex << std::setw(2) << std::setfill('0') << (int) id[i];
+        stream << std::hex << std::setw(2) << std::setfill('0') << (int) id[i];
     }
     return stream.str();
 }
@@ -86,7 +86,7 @@ boost::posix_time::ptime currentBootTime() {
                                                           " %1%")
                                  % strerror(errno)));
     }
-    return boost::posix_time::from_time_t(t.tv_sec) + 
+    return boost::posix_time::from_time_t(t.tv_sec) +
         boost::posix_time::microseconds(t.tv_usec);
 }
 

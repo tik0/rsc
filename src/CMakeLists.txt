@@ -101,10 +101,10 @@ ELSEIF(APPLE)
     LIST(APPEND SOURCES rsc/misc/MacSignalWaiter.cpp)
 
     MESSAGE(STATUS "  PosixProcessInfo")
-    LIST(APPEND SOURCES rsc/os/PosixProcessInfo.cpp)
+    LIST(APPEND SOURCES rsc/os/MacProcessInfo.cpp)
 
     MESSAGE(STATUS "  PosixHostInfo")
-    LIST(APPEND SOURCES rsc/os/PosixHostInfo.cpp)
+    LIST(APPEND SOURCES rsc/os/MacHostInfo.cpp)
 
 
 ELSEIF(UNIX)

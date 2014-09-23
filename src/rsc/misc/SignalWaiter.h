@@ -44,6 +44,11 @@ namespace misc {
 enum Signal {
 
     /**
+     * Artificial enum entry to indicate that no signal is meant at all.
+     */
+    NO_SIGNAL = 0,
+
+    /**
      * Interrupting the program has be requested.
      *
      * On POSIX platforms, this corresponds to @c SIGINT.
@@ -97,7 +102,7 @@ RSC_EXPORT void initSignalWaiter(int signals
  * arrives, then return the signal.
  *
  * @return The received signal as a member of the @ref Signal
- *         enumeration.
+ *         enumeration. Will not include @ref Signal::NO_SIGNAL
  *
  * @throw std::logic_error If @ref initSignalWaiter has not been
  *                         called.
@@ -108,22 +113,24 @@ RSC_EXPORT void initSignalWaiter(int signals
 RSC_EXPORT Signal waitForSignal();
 
 /**
- * Return @c true if one of the signals requested in @ref
- * initSignalWaiter has arrived.
+ * Returns the last signal that has arrived at this process or
+ * @ref Signal::NO_SIGNAL in case no signal arrived so far.
+ *
+ * @return a signal to handle or @ref Signal::NO_SIGNAL
  *
  * @throw std::logic_error If @ref initSignalWaiter has not been
  *                         called.
  *
  * @author jmoringe
  */
-RSC_EXPORT bool hasSignalArrived();
+RSC_EXPORT Signal lastArrivedSignal();
 
 /**
  * Return suggested exit code for exiting the program after receiving
  * signal @a signal.
  *
  * @param signal The received signal as a member of the @ref Signal
- *               enumeration.
+ *               enumeration. @ref Signal::NO_SIGNAL is not allowed.
  *
  * @return The suggested exit code.
  *

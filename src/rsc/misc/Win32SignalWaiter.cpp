@@ -62,13 +62,13 @@ Signal waitForSignal() {
     return INTERRUPT_REQUESTED; // should be unreachable
 }
 
-bool hasSignalArrived() {
+Signal lastArrivedSignal() {
     if (requestedSignals == 0) {
         throw std::logic_error("initSignalWaiter has to be called before"
                                " hasSignalArrived.");
     }
 
-    return false;
+    return NO_SIGNAL;
 }
 
 
@@ -80,8 +80,10 @@ int suggestedExitCode(Signal signal) {
         return 1;
     case QUIT_REQUESTED:
         return 1;
+    case NO_SIGNAL:
+    default:
+        throw std::logic_error("Invalid signal number");
     }
-    throw std::logic_error("Invalid signal number");
 }
 
 }

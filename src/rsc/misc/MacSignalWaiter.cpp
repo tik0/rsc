@@ -106,6 +106,25 @@ void initSignalWaiter(int signals) {
     }
 }
 
+Signal mappedSignal() {
+
+    if (receivedSignal == 0) {
+        return NO_SIGNAL;
+    } else if (receivedSignal == SIGINT) {
+        return INTERRUPT_REQUESTED;
+    } else if (receivedSignal == SIGTERM) {
+        return TERMINATE_REQUESTED;
+    } else if (receivedSignal == SIGQUIT) {
+        return QUIT_REQUESTED;
+    } else {
+        throw std::runtime_error(
+                boost::str(
+                        boost::format("unexpected signal number %1%")
+                                % receivedSignal));
+    }
+
+}
+
 Signal waitForSignal() {
     if (requestedSignals == 0) {
         throw std::logic_error("initSignalWaiter has to be called before"
@@ -133,26 +152,17 @@ Signal waitForSignal() {
         throwRuntimeError(errno, "Could not close semaphore used for waiting");
     }
 
-
-    if (receivedSignal == SIGINT) {
-        return INTERRUPT_REQUESTED;
-    } else if (receivedSignal == SIGTERM) {
-        return TERMINATE_REQUESTED;
-    } else if (receivedSignal == SIGQUIT) {
-        return QUIT_REQUESTED;
-    } else {
-        throw std::runtime_error(boost::str(boost::format("unexpected signal number %1%")
-                                            % receivedSignal));
-    }
+    assert(receivedSignal != 0);
+    return mappedSignal();
 }
 
-bool hasSignalArrived() {
+Signal lastArrivedSignal() {
     if (requestedSignals == 0) {
         throw std::logic_error("initSignalWaiter has to be called before"
                                " hasSignalArrived.");
     }
 
-    return (receivedSignal != 0);
+    return mappedSignal();
 }
 
 int suggestedExitCode(Signal signal) {
@@ -163,8 +173,10 @@ int suggestedExitCode(Signal signal) {
         return 1;
     case QUIT_REQUESTED:
         return 1;
+    case NO_SIGNAL:
+    default:
+        throw std::logic_error("Invalid signal number");
     }
-    throw std::logic_error("Invalid signal number");
 }
 
 }

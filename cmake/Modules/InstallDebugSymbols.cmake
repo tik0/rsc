@@ -34,7 +34,7 @@
 #   CoR-Lab, Research Institute for Cognition and Robotics
 #     Bielefeld University
 
-INCLUDE(GitProjectVersion)
+INCLUDE(ParseArguments)
 
 FUNCTION(INSTALL_DEBUG_SYMBOLS)
 

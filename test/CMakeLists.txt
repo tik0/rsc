@@ -44,7 +44,7 @@ FILE(GLOB TEST_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
                        "rsc/patterns/*.cpp"
                        "rsc/os/*.cpp")
 SET(TEST_SOURCES ${TEST_SOURCES} "rsc/RscTestSuite.cpp")
-LIST(APPEND TEST_SOURCES "rsc/misc/UUIDTest.cpp" "rsc/misc/RegistryTest.cpp" "rsc/misc/langutilsTest.cpp")
+LIST(APPEND TEST_SOURCES "rsc/misc/UUIDTest.cpp" "rsc/misc/RegistryTest.cpp" "rsc/misc/langutilsTest.cpp" "rsc/misc/uriTest.cpp")
 LIST(APPEND TEST_SOURCES "rsc/plugins/ConfiguratorTest.cpp"
                          "rsc/plugins/PluginTest.cpp")
 

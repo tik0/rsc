@@ -42,6 +42,7 @@ SET(SOURCES ${SOURCES}
             rsc/misc/IllegalStateException.cpp
             rsc/misc/UnsupportedOperationException.cpp
             rsc/misc/UUID.cpp
+            rsc/misc/uri.cpp
 
             "${CMAKE_CURRENT_BINARY_DIR}/rsc/Version.cpp")
 

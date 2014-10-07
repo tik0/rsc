@@ -139,11 +139,14 @@ public:
     /**
      * Sets a new property in the map. If a property with this name exits, the
      * new one will not be inserted. The old property has to be removed first.
+     * The property will be stored with type @c Target.
      *
      * @param name name of the property to set
      * @param value value to set
-     * @return @c true of the property was inserted, @c false if a property with
+     * @return @c true if the property was inserted, @c false if a property with
      *         the given name existed and nothing was changed
+     *
+     * usage: props.set<unsigned int>("port", 22);
      */
     template<typename Target, typename T>
     bool

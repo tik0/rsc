@@ -62,7 +62,7 @@ struct uri_builder : qi::grammar<std::string::const_iterator, uri()> {
 		host_port %=  -host >> -port;
 		host      %=  qi::lit("//") >> qi::attr("host") 
 		                            >> qi::as_string [ ipv4address | reg_name ];
-		port      %=  qi::lit(':')  >> qi::attr("port") >> qi::uint_;
+		port      %=  qi::lit(':')  >> qi::attr("port") >> qi::as_string [ qi::raw [ qi::uint_ ] ];
 
 		// reg-name = *( unreserved / pct-encoded / sub-delims )
 		reg_name  %= qi::raw[+(unreserved | pct_encoded | sub_delims)];
@@ -111,7 +111,7 @@ uri::uri (const std::string& source) {
 	std::string::const_iterator first=source.begin(), last=source.end();
 	bool is_valid = qi::parse(first, last, grammar, *this);
 
-#if 1 // DEBUG CODE
+#if 0 // DEBUG CODE
 	cout << "parsed: " << source << " : ";
 	if (!is_valid) cout << "failed." << endl;
 	else {
@@ -144,9 +144,7 @@ std::string uri::host() const {
 }
 
 std::string uri::port() const {
-	if (!query.has("port")) return std::string();
-	unsigned int p = query.get("port", 0U);
-	return (boost::format("%1%") % p).str();
+	return query.get("port", std::string());
 }
 
 } // namespace misc

@@ -24,6 +24,7 @@
  *
  * ============================================================ */
 
+#pragma once
 #include <rsc/runtime/Properties.h>
 
 namespace rsc {

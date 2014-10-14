@@ -62,12 +62,16 @@ std::vector<std::string> getCommandlineComponents(PID pid) {
 
     std::vector<std::string> components;
     std::string::iterator it = cmdline.begin();
-    while (it != cmdline.end() && (it + 1) != cmdline.end()) {
-        std::string::iterator end = find(it + 1, cmdline.end(), '\0');
+    while (it != cmdline.end()) {
+        std::string::iterator end = find(it, cmdline.end(), '\0');
         std::string component;
         std::copy(it, end, std::back_inserter(component));
         components.push_back(component);
         it = end;
+        std::cout << "foo" << std::endl;
+        if (it != cmdline.end()) {
+            ++it;
+        }
     }
     return components;
 }

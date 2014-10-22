@@ -56,7 +56,15 @@ PID currentProcessId() {
 
 std::vector<std::string> getCommandlineComponents(PID pid) {
     std::ifstream self(procFilename(pid, "cmdline").c_str());
-    self.exceptions(std::ios_base::badbit | std::ios_base::failbit);
+    try {
+        // in case enabling exceptions on this stream throws immediately,
+        // the file could not be read at all
+        self.exceptions(std::ios_base::badbit | std::ios_base::failbit);
+    } catch (const std::ifstream::failure& e) {
+        throw std::runtime_error(boost::str(boost::format(
+                        "Could not read the command line for PID %1%. The "
+                        "process probably does not exist.") % pid));
+    }
     std::string cmdline;
     self >> cmdline;
 

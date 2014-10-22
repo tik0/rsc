@@ -86,7 +86,12 @@ std::vector<std::string> currentCommandlineArguments() {
 
     std::vector<std::string> result;
     for (int i = 0; i < numArguments; ++i) {
-        result.push_back(std::string(reinterpret_cast<const char*>(arguments[i])));
+		std::wstring arg = arguments[i];
+		// the conversion from wstring to string relies on truncating the
+		// multibytes while assuming that for common characters, the first
+		// byte matches ASCII:
+		// http://stackoverflow.com/a/12097772/283649
+        result.push_back(std::string(arg.begin(), arg.end()));
     }
     LocalFree(arguments);
 

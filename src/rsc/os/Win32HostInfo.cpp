@@ -35,6 +35,8 @@
 
 #include <boost/format.hpp>
 
+#include <boost/date_time/posix_time/posix_time.hpp>
+
 #include "Win32Common.h"
 
 namespace rsc {
@@ -76,7 +78,10 @@ std::string currentHostId() {
 // Boot time
 
 boost::posix_time::ptime currentBootTime() {
-    throw std::runtime_error("Could not get boot time: not supported");
+    // at least an approximation due to runtime differences in the two calls
+    boost::uint64_t millisSinceBoot = GetTickCount64();
+    return boost::posix_time::microsec_clock::local_time()
+            - boost::posix_time::millisec(millisSinceBoot);
 }
 
 }

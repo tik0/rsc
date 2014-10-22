@@ -62,7 +62,7 @@ RSC_EXPORT PID currentProcessId();
  * @param pid The id of the process for which the program name should
  *            be returned.
  *
- * @return Name of the program executed in the current process.
+ * @return Name of the program executed in the process with the given @a pid.
  *
  * @throw std::runtime_error If the program name cannot be determined.
  */
@@ -110,7 +110,7 @@ RSC_EXPORT std::string currentExecutablePath();
  *            be returned.
  *
  * @return @ref std::vector containing the commandline arguments of
- *         the current process.
+ *         the process with the given @a pid.
  *
  * @throw std::runtime_error If the commandline arguments cannot be
  *                           determined.
@@ -134,7 +134,7 @@ RSC_EXPORT std::vector<std::string> currentCommandlineArguments();
  * The precision with which the start time can be determined varies
  * between platforms.
  *
- * @param pid The id of the process for which the program name should
+ * @param pid The id of the process for which the start time should
  *            be returned.
  *
  * @return @ref boost::posix_time::ptime encoding the start time of

@@ -141,6 +141,9 @@ ELSEIF(WIN32)
     MESSAGE(STATUS "  Win32SignalWaiter")
     LIST(APPEND SOURCES rsc/misc/Win32SignalWaiter.cpp)
 
+	LIST(APPEND HEADERS rsc/os/Win32Common.h)
+	LIST(APPEND SOURCES rsc/os/Win32Common.cpp)
+
     MESSAGE(STATUS "  Win32ProcessInfo")
     LIST(APPEND SOURCES rsc/os/Win32ProcessInfo.cpp)
 

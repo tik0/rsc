@@ -35,6 +35,8 @@
 
 #include <boost/format.hpp>
 
+#include "Win32Common.h"
+
 namespace rsc {
 namespace os {
 
@@ -48,8 +50,10 @@ std::string currentHostname() {
     if (GetComputerName(buffer, &length) != 0) {
         return std::string(buffer, length);
     } else {
-        throw std::runtime_error(boost::str(boost::format("GetComputerName failed: %1%")
-                                            % GetLastError()));
+        throw std::runtime_error(
+                boost::str(
+                        boost::format("GetComputerName failed: %1%")
+                                % GetLastErrorString()));
     }
 }
 
@@ -63,9 +67,9 @@ std::string currentHostId() {
     if (GetComputerObjectName(NameUniqueId, buffer, &length) != 0) {
         return std::string(buffer, length);
     } else {
-        throw std::runtime_error(boost::str(boost::format("GetComputerObjectName(NameUniqueId)"
-                                                          " failed: %1%")
-                                            % GetLastError()));
+        throw std::runtime_error(
+                boost::str(boost::format("GetComputerObjectName(NameUniqueId)"
+                        " failed: %1%") % GetLastErrorString()));
     }
 }
 

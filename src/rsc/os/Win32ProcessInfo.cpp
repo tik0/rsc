@@ -34,6 +34,8 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/date_time/filetime_functions.hpp>
 
+#include "Win32Common.h"
+
 namespace rsc {
 namespace os {
 
@@ -50,9 +52,8 @@ std::string currentProgramName() {
     int length;
     if ((length = GetModuleFileName(NULL, buffer, MAX_PATH)) == 0) {
         throw std::runtime_error(boost::str(boost::format("Could not"
-                                                          " determine program"
-                                                          " name: %1%")
-                                            % GetLastError()));
+                " determine program"
+                " name: %1%") % GetLastErrorString()));
     }
     return std::string(buffer, length);
 }
@@ -78,7 +79,7 @@ std::vector<std::string> currentCommandlineArguments() {
         throw std::runtime_error(boost::str(boost::format("Could not determine"
                                                           " commandline"
                                                           " arguments: %1%")
-                                            % GetLastError()));
+                                            % GetLastErrorString()));
     }
 
     std::vector<std::string> result;

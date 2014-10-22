@@ -25,14 +25,35 @@
  * ============================================================ */
 
 #include "DebugTools.h"
+#include "StackWalker.h"
 
 using namespace std;
 
 namespace rsc {
 namespace debug {
 
+class MyStackWalker : public StackWalker
+{
+public:
+	MyStackWalker() : StackWalker() {}
+	MyStackWalker(DWORD dwProcessId, HANDLE hProcess) : StackWalker(dwProcessId, hProcess) {}
+	virtual void OnOutput(LPCSTR szText) {
+		stack.push_back(szText);
+		StackWalker::OnOutput(szText);
+	}
+	const vector<string> getStackTrace() const {return stack;}
+
+private:
+	vector<string> stack;
+};
+
+/* utilize StackWalker from:
+ * http://www.codeproject.com/Articles/11132/Walking-the-callstack
+ */
 vector<string> createBacktrace(const unsigned int maxElements) {
-    return vector<string> ();
+	MyStackWalker sw;
+	sw.ShowCallstack();
+	return sw.getStackTrace();
 }
 
 }

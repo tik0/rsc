@@ -129,6 +129,8 @@ ELSEIF(WIN32)
 
     MESSAGE(STATUS "  WindowsDebugTools")
     LIST(APPEND SOURCES rsc/debug/WindowsDebugTools.cpp)
+    LIST(APPEND SOURCES rsc/debug/StackWalker.cpp)
+    LIST(APPEND HEADERS rsc/debug/StackWalker.h)
 
     MESSAGE(STATUS "  Win32SignalWaiter")
     LIST(APPEND SOURCES rsc/misc/Win32SignalWaiter.cpp)

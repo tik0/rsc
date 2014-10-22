@@ -24,21 +24,14 @@
  *
  * ============================================================ */
 
-#include "WindowsDebugTools.h"
+#include "DebugTools.h"
 
 using namespace std;
 
 namespace rsc {
 namespace debug {
 
-WindowsDebugTools::WindowsDebugTools() {
-
-}
-
-WindowsDebugTools::~WindowsDebugTools() {
-}
-
-vector<string> WindowsDebugTools::createBacktrace(const unsigned int& maxElements) {
+vector<string> createBacktrace(const unsigned int maxElements) {
     return vector<string> ();
 }
 

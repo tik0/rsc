@@ -24,7 +24,7 @@
  *
  * ============================================================ */
 
-#include "LinuxDebugTools.h"
+#include "DebugTools.h"
 #include "rsc/runtime/Demangle.h"
 #include <execinfo.h>
 #include <sstream>
@@ -33,12 +33,6 @@ using namespace std;
 
 namespace rsc {
 namespace debug {
-
-LinuxDebugTools::LinuxDebugTools() {
-}
-
-LinuxDebugTools::~LinuxDebugTools() {
-}
 
 // the stacktrace contains the path and a mangled function name
 // <lib name>(<mangled name>+<address offset>) [<address>]
@@ -66,7 +60,7 @@ static string demangle(char* sym) {
     return sym;
 }
 
-vector<string> LinuxDebugTools::createBacktrace(const unsigned int& maxElements) {
+vector<string> createBacktrace(const unsigned int maxElements) {
 
     void** arr = (void**) malloc(maxElements * sizeof(void*));
     int nSize = backtrace(arr, maxElements);

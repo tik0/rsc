@@ -45,13 +45,10 @@ std::string getProgramName(PID /*pid*/) {
     throw std::runtime_error("Could not determine program name: not supported");
 }
 
-const unsigned int PROGRAM_NAME_MAX_LENGTH = 1024;
-
 std::string currentProgramName() {
-    char buffer[PROGRAM_NAME_MAX_LENGTH];
+    char buffer[MAX_PATH];
     int length;
-    if ((length
-         = GetModuleFileName(NULL, buffer, PROGRAM_NAME_MAX_LENGTH)) == 0) {
+    if ((length = GetModuleFileName(NULL, buffer, MAX_PATH)) == 0) {
         throw std::runtime_error(boost::str(boost::format("Could not"
                                                           " determine program"
                                                           " name: %1%")

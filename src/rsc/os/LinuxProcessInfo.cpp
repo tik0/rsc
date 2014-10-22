@@ -68,7 +68,6 @@ std::vector<std::string> getCommandlineComponents(PID pid) {
         std::copy(it, end, std::back_inserter(component));
         components.push_back(component);
         it = end;
-        std::cout << "foo" << std::endl;
         if (it != cmdline.end()) {
             ++it;
         }

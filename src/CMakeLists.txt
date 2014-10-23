@@ -163,7 +163,7 @@ IF(UNIX)
 ENDIF()
 # Windows-specific libraries
 IF(WIN32)
-    TARGET_LINK_LIBRARIES(${RSC_NAME} Secur32)
+    TARGET_LINK_LIBRARIES(${RSC_NAME} Secur32 Psapi)
 ENDIF()
 SET_TARGET_PROPERTIES(${RSC_NAME}
                       PROPERTIES

@@ -113,7 +113,7 @@ Signal mappedSignal() {
         throw std::runtime_error(
                 boost::str(
                         boost::format("unexpected signal number %1%")
-                                % receivedSignal));
+                                % (int)receivedSignal));
     }
 
 }

@@ -24,22 +24,37 @@
  *
  * ============================================================ */
 
-#include "WindowsDebugTools.h"
+#include "DebugTools.h"
+#include "StackWalker.h"
 
 using namespace std;
 
 namespace rsc {
 namespace debug {
 
-WindowsDebugTools::WindowsDebugTools() {
+// collect stack information into a vector<string>
+class StackCreator : public StackWalker
+{
+public:
+    StackCreator() : StackWalker() {}
+    StackCreator(DWORD dwProcessId, HANDLE hProcess) : StackWalker(dwProcessId, hProcess) {}
+    virtual void OnOutput(LPCSTR szText) {
+        stack.push_back(szText);
+        StackWalker::OnOutput(szText);
+    }
+    const vector<string> getStackTrace() const {return stack;}
 
-}
+private:
+    vector<string> stack;
+};
 
-WindowsDebugTools::~WindowsDebugTools() {
-}
-
-vector<string> WindowsDebugTools::createBacktrace(const unsigned int& maxElements) {
-    return vector<string> ();
+/* utilize StackWalker from:
+ * http://www.codeproject.com/Articles/11132/Walking-the-callstack
+ */
+vector<string> createBacktrace(const unsigned int maxElements) {
+    StackCreator creator;
+    creator.ShowCallstack();
+    return creator.getStackTrace();
 }
 
 }

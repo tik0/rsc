@@ -33,11 +33,15 @@ namespace debug {
 
 string formatBacktrace(const vector<string>& trace) {
     stringstream s;
-    for (std::vector<std::string>::const_iterator traceIt = trace.begin(); traceIt
-            != trace.end(); ++traceIt) {
+    for (std::vector<std::string>::const_iterator traceIt = trace.begin(); 
+         traceIt != trace.end(); ++traceIt) {
         s << "\t" << *traceIt << std::endl;
     }
     return s.str();
+}
+
+string formatBacktrace(const unsigned int maxElements) {
+    return formatBacktrace(createBacktrace(maxElements));
 }
 
 }

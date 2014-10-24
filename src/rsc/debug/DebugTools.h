@@ -43,11 +43,11 @@ namespace debug {
  */
 RSC_EXPORT std::vector<std::string> createBacktrace(const unsigned int maxElements = 20);
 
+/// formatting the stacktrace, indenting every line with a single tab
 RSC_EXPORT std::string formatBacktrace(const std::vector<std::string>& trace);
 
-inline std::string formatBacktrace(const unsigned int maxElements = 20) {
-    return formatBacktrace(createBacktrace(maxElements));
-}
+/// conveniency function, creating and formating the stacktrace
+RSC_EXPORT std::string formatBacktrace(const unsigned int maxElements = 20);
 
 /**
  * Generates a string giving verbose information about an exception in the

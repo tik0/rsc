@@ -2,7 +2,7 @@
  *
  * This file is part of the RSC project
  *
- * Copyright (C) 2014 Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
+ * Copyright (C) 2014 Johannes Wienke <jwienke at techfak dot uni-bielefeld dot de>
  *
  * This file may be licensed under the terms of the
  * GNU Lesser General Public License Version 3 (the ``LGPL''),
@@ -24,20 +24,27 @@
  *
  * ============================================================ */
 
-#include <gtest/gtest.h>
+#include "Win32Common.h"
 
-#include "rsc/os/HostInfo.h"
+#include <string>
 
-TEST(HostInfoTest, testCurrentHostId)
-{
-    try {
-        EXPECT_FALSE(rsc::os::currentHostId().empty());
-    } catch (const std::runtime_error& e) {
-        // errors are expected on window. Ignore them.
-    }
+#include <windows.h>
+
+namespace rsc {
+namespace os {
+
+std::string GetLastErrorString() {
+    DWORD errorMessageID = ::GetLastError();
+    LPSTR messageBuffer = nullptr;
+    size_t size = FormatMessageA(
+            FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM
+                    | FORMAT_MESSAGE_IGNORE_INSERTS,
+            NULL, errorMessageID, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+            (LPSTR) & messageBuffer, 0, NULL);
+    std::string message(messageBuffer, size);
+    LocalFree(messageBuffer);
+    return message;
 }
 
-TEST(HostInfoTest, testCurrentHostname)
-{
-    EXPECT_FALSE(rsc::os::currentHostname().empty());
+}
 }

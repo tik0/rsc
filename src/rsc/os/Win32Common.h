@@ -2,7 +2,7 @@
  *
  * This file is part of the RSC project
  *
- * Copyright (C) 2014 Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
+ * Copyright (C) 2014 Johannes Wienke <jwienke at techfak dot uni-bielefeld dot de>
  *
  * This file may be licensed under the terms of the
  * GNU Lesser General Public License Version 3 (the ``LGPL''),
@@ -24,20 +24,14 @@
  *
  * ============================================================ */
 
-#include <gtest/gtest.h>
+#pragma once
 
-#include "rsc/os/HostInfo.h"
+#include <string>
 
-TEST(HostInfoTest, testCurrentHostId)
-{
-    try {
-        EXPECT_FALSE(rsc::os::currentHostId().empty());
-    } catch (const std::runtime_error& e) {
-        // errors are expected on window. Ignore them.
-    }
+namespace rsc {
+namespace os {
+
+std::string GetLastErrorString();
+
 }
-
-TEST(HostInfoTest, testCurrentHostname)
-{
-    EXPECT_FALSE(rsc::os::currentHostname().empty());
 }

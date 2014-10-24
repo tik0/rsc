@@ -32,11 +32,12 @@ using namespace std;
 namespace rsc {
 namespace debug {
 
-class MyStackWalker : public StackWalker
+// collect stack information into a vector<string>
+class StackCreator : public StackWalker
 {
 public:
-    MyStackWalker() : StackWalker() {}
-    MyStackWalker(DWORD dwProcessId, HANDLE hProcess) : StackWalker(dwProcessId, hProcess) {}
+    StackCreator() : StackWalker() {}
+    StackCreator(DWORD dwProcessId, HANDLE hProcess) : StackWalker(dwProcessId, hProcess) {}
     virtual void OnOutput(LPCSTR szText) {
         stack.push_back(szText);
         StackWalker::OnOutput(szText);
@@ -51,9 +52,9 @@ private:
  * http://www.codeproject.com/Articles/11132/Walking-the-callstack
  */
 vector<string> createBacktrace(const unsigned int maxElements) {
-    MyStackWalker sw;
-    sw.ShowCallstack();
-    return sw.getStackTrace();
+    StackCreator creator;
+    creator.ShowCallstack();
+    return creator.getStackTrace();
 }
 
 }

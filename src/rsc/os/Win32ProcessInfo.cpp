@@ -51,7 +51,7 @@ std::string getProgramName(PID pid) {
 }
 
 std::string currentProgramName() {
-	return currentExecutablePath();
+    return currentExecutablePath();
 }
 
 std::string getExecutablePath(PID pid) {
@@ -133,10 +133,12 @@ public:
 };
 
 std::vector<std::string> getCommandlineArguments(PID pid) {
-    // will only work with elevated privileges for other processes than the
-    // current
-    // adapted from:
+    // Will only work with elevated privileges for other processes
+    // than the current.
+    //
+    // Adapted from:
     // http://wj32.org/wp/2009/01/24/howto-get-the-command-line-of-processes/
+    //
     // Also note that this is not reliable:
     // http://blogs.msdn.com/b/oldnewthing/archive/2009/11/25/9928372.aspx
 
@@ -147,8 +149,8 @@ std::vector<std::string> getCommandlineArguments(PID pid) {
                 " open process with PID"
                 " %1%: %2%") % pid % GetLastErrorString()));
     }
-    // maintain the process handle in a shared_ptr so that it can be correctly
-    // closed even in case of exceptions
+    // Maintain the process handle in a shared_ptr so that it can be
+    // correctly closed even in case of exceptions.
     boost::shared_ptr<void> processHandle(rawProcessHandle, DeleteHandle());
 
     PVOID pebAddress = GetPebAddress(processHandle);
@@ -190,11 +192,12 @@ std::vector<std::string> getCommandlineArguments(PID pid) {
     }
 
     std::wstring wideCommandLineString = commandLineContents.get();
-    // the conversion from wstring to string relies on truncating the multibytes
-    // while assuming that for common characters, the first byte matches ASCII:
-    // http://stackoverflow.com/a/12097772/283649
-    // Moreover, it seems there is no proper null termination here, So
-    // calculate the end manually
+    // The conversion from wstring to string relies on truncating the
+    // multibytes while assuming that for common characters, the first
+    // byte matches ASCII: http://stackoverflow.com/a/12097772/283649
+    //
+    // Moreover, it seems there is no proper null termination here, so
+    // calculate the end manually.
     std::string commandLineString(wideCommandLineString.begin(),
             wideCommandLineString.begin() + commandLine.Length / 2);
 
@@ -220,11 +223,11 @@ std::vector<std::string> currentCommandlineArguments() {
 
     std::vector<std::string> result;
     for (int i = 0; i < numArguments; ++i) {
-		std::wstring arg = arguments[i];
-		// the conversion from wstring to string relies on truncating the
-		// multibytes while assuming that for common characters, the first
-		// byte matches ASCII:
-		// http://stackoverflow.com/a/12097772/283649
+        std::wstring arg = arguments[i];
+        // The conversion from wstring to string relies on truncating
+        // the multibytes while assuming that for common characters,
+        // the first byte matches ASCII:
+        // http://stackoverflow.com/a/12097772/283649
         result.push_back(std::string(arg.begin(), arg.end()));
     }
     LocalFree(arguments);
@@ -246,9 +249,9 @@ boost::posix_time::ptime getProcessStartTime(PID pid) {
                 " %1%: %2%") % pid % GetLastErrorString()));
     }
 
-	BOOL ret = GetProcessTimes(processHandle,
+    BOOL ret = GetProcessTimes(processHandle,
                         &creationTime, &exitTime, &kernelTime, &userTime);
-	CloseHandle(processHandle);
+    CloseHandle(processHandle);
     if (ret ==0) {
         throw std::runtime_error(boost::str(boost::format("Could not"
                                                           " determine process"
@@ -260,7 +263,7 @@ boost::posix_time::ptime getProcessStartTime(PID pid) {
 }
 
 boost::posix_time::ptime currentProcessStartTime() {
-	return getProcessStartTime(currentProcessId());
+    return getProcessStartTime(currentProcessId());
 }
 
 }

@@ -93,6 +93,13 @@ int main(int, char*[]) {
         cout << "current process start time (UTC): <unknown>" << endl;
         cout << "    reason: " << e.what() << endl;
     }
+    try {
+        cout << "current process executing user: "
+             << currentExecutingUser() << endl;
+    } catch (const runtime_error& e) {
+        cout << "current process executing user: <unknown>" << endl;
+        cout << "    reason: " << e.what() << endl;
+    }
 
     return EXIT_SUCCESS;
 }

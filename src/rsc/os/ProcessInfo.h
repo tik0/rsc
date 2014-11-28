@@ -158,6 +158,30 @@ RSC_EXPORT boost::posix_time::ptime getProcessStartTime(PID pid);
 RSC_EXPORT boost::posix_time::ptime currentProcessStartTime();
 
 /**
+ * Return login- or account-name of the user executing @a pid.
+ *
+ * @param pid The id of the process for which the executing user
+ *            should be returned.
+ *
+ * @return The login- or account-name of the user executing the
+ *         process.
+ *
+ * @throw std::runtime_error If determining the executing user fails.
+ */
+RSC_EXPORT std::string getExecutingUser(PID pid);
+
+/**
+ * Return the login- or account-name of the user executing the current
+ * process.
+ *
+ * @return the login- or account-name of the user executing the
+ *         current process.
+ *
+ * @throw std::runtime_error If determining the executing user fails.
+ */
+RSC_EXPORT std::string currentExecutingUser();
+
+/**
  * @}
  */
 

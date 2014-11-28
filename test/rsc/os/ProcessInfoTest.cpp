@@ -80,3 +80,7 @@ TEST(ProcessInfoTest, testCurrentStartTime)
 {
     rsc::os::currentProcessStartTime();
 }
+
+TEST(ProcessInfoTest, testCurrentExecutingUser) {
+    rsc::os::currentExecutingUser();
+}

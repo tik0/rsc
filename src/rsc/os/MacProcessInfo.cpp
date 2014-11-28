@@ -27,6 +27,9 @@
 #include "ProcessInfo.h"
 
 #include <sys/sysctl.h>
+#include <sys/types.h> // for getpwuid(3)
+#include <pwd.h>       // likewise
+#include <unistd.h>    // for getuid(2)
 #include <stdlib.h>
 #include <string.h>
 #include <libproc.h>
@@ -242,6 +245,16 @@ boost::posix_time::ptime getProcessStartTime(PID pid) {
 
 boost::posix_time::ptime currentProcessStartTime() {
     return getProcessStartTime(currentProcessId());
+}
+
+std::string getExecutingUser(PID /*pid*/) {
+    throw std::runtime_error("Could not determine executing user:"
+                             " not supported");
+}
+
+std::string currentExecutingUser() {
+    passwd* entry = getpwuid(getuid());
+    return entry->pw_name;
 }
 
 }

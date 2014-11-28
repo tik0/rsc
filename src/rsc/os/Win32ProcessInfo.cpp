@@ -266,5 +266,15 @@ boost::posix_time::ptime currentProcessStartTime() {
     return getProcessStartTime(currentProcessId());
 }
 
+std::string getExecutingUser(PID /*pid*/) {
+    throw std::runtime_error("Could not determine executing user:"
+                             " not supported");
+}
+
+std::string currentExecutingUser() {
+    throw std::runtime_error("Could not determine executing user:"
+                             " not supported");
+}
+
 }
 }

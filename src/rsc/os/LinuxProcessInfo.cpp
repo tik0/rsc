@@ -26,7 +26,9 @@
 
 #include "ProcessInfo.h"
 
-#include <unistd.h>
+#include <sys/types.h>   // for getpwuid(3)
+#include <pwd.h>         // likewise
+#include <unistd.h>      // for getuid(2) and others
 #include <linux/param.h> // for HZ in start-time calculation
 
 #include <stdexcept>
@@ -196,6 +198,38 @@ boost::posix_time::ptime getProcessStartTime(PID pid) {
 
 boost::posix_time::ptime currentProcessStartTime() {
     return getProcessStartTime(currentProcessId());
+}
+
+
+std::string uidToName(uid_t id) {
+    passwd* entry = getpwuid(id);
+    return entry->pw_name;
+}
+
+std::string getExecutingUser(PID pid) {
+    const std::string procSelfStatus = procFilename(pid, "status");
+
+    std::ifstream stream(procSelfStatus.c_str());
+    std::string label;
+    try {
+        while (stream) {
+            if ((stream >> label) && (label == "Uid:")) {
+                uid_t uid;
+                if (stream >> uid) {
+                    return uidToName(uid);
+                }
+            }
+        }
+    } catch (std::exception& e) {
+        throw std::runtime_error(boost::str(boost::format("Could not read from %1%: %2%")
+                                            % procSelfStatus % e.what()));
+    }
+    throw std::runtime_error(boost::str(boost::format("Could not find  \"Uid\" field in %1%")
+                                        % procSelfStatus));
+}
+
+std::string currentExecutingUser() {
+    return uidToName(getuid());
 }
 
 }

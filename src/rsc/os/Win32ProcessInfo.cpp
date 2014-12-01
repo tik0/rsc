@@ -27,6 +27,7 @@
 #include "ProcessInfo.h"
 
 #include <windows.h>
+#include <Lmcons.h> // for UNLEN
 #include <Psapi.h>
 
 #include <stdexcept>
@@ -272,8 +273,16 @@ std::string getExecutingUser(PID /*pid*/) {
 }
 
 std::string currentExecutingUser() {
-    throw std::runtime_error("Could not determine executing user:"
-                             " not supported");
+    TCHAR buffer[UNLEN + 1];
+    DWORD size = UNLEN + 1;
+    if (GetUserName((TCHAR*) buffer, &size)) {
+        std::wstring name((wchar_t*) buffer, size - 1);
+        return std::string(name.begin(), name.end());
+    } else {
+        throw std::runtime_error(boost::str(boost::format("Could not determine"
+                                                          " executing user: %1%")
+                                            % GetLastErrorString()));
+    }
 }
 
 }

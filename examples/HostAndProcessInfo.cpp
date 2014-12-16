@@ -40,6 +40,31 @@ int main(int, char*[]) {
 
     // Host information
     try {
+        cout << "current machine type: " << currentMachineType() << endl;
+    } catch (const runtime_error& e) {
+        cout << "current machine type: <unknown>" << endl;
+        cout << "    reason: " << e.what() << endl;
+    }
+    try {
+        cout << "current machine version: " << currentMachineVersion() << endl;
+    } catch (const runtime_error& e) {
+        cout << "current machine version: <unknown>" << endl;
+        cout << "    reason: " << e.what() << endl;
+    }
+    try {
+        cout << "current software type: " << currentSoftwareType() << endl;
+    } catch (const runtime_error& e) {
+        cout << "current software type: <unknown>" << endl;
+        cout << "    reason: " << e.what() << endl;
+    }
+    try {
+        cout << "current software version: " << currentSoftwareVersion() << endl;
+    } catch (const runtime_error& e) {
+        cout << "current software version: <unknown>" << endl;
+        cout << "    reason: " << e.what() << endl;
+    }
+
+    try {
         cout << "current host name: " << currentHostname() << endl;
     } catch (const runtime_error& e) {
         cout << "current host name: <unknown>" << endl;

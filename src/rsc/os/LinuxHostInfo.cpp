@@ -29,11 +29,14 @@
 #include <errno.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/utsname.h>
 
 #include <stdexcept>
 #include <fstream>
 #include <sstream>
 
+#include <boost/algorithm/string.hpp>
+#include <boost/function.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/format.hpp>
 
@@ -41,6 +44,92 @@
 
 namespace rsc {
 namespace os {
+
+// {Machine,Software} {Type,Version}
+
+std::string currentMachineVersion() {
+    // Read entire contents of /proc/cpuinfo, preserving whitespace.
+    const std::string procCPUInfo = "/proc/cpuinfo";
+    std::ifstream stream(procCPUInfo.c_str());
+    stream >> std::noskipws;
+    std::string content;
+    std::copy(std::istream_iterator<char>(stream),
+              std::istream_iterator<char>(),
+              std::back_inserter(content));
+    // Locate the "model name" field.
+    std::string pattern("model name	: ");
+    std::string::iterator start = std::search(content.begin(), content.end(),
+                                              pattern.begin(), pattern.end());
+    if (start == content.end()) {
+        throw std::runtime_error(
+            boost::str(boost::format("Could not determine machine version "
+                                     "since the \"%1\" entry could not be "
+                                     "found in the \"%2%\" file.")
+                       % pattern % procCPUInfo));
+    }
+    // Field value is everything from ": " to end of line.
+    std::string::iterator end = std::find(start, content.end(), '\n');
+    if (end == content.end()) {
+        throw std::runtime_error(
+            boost::str(boost::format("Could not determine machine version "
+                                     "since the end of the \"%1\" entry "
+                                     "could not be found in the \"%2%\" "
+                                     "file.")
+                       % pattern % procCPUInfo));
+    }
+    std::string value;
+    std::copy(start + pattern.size(), end, std::back_inserter(value));
+    return value;
+}
+
+std::string callWithUtsname(const std::string&                            context,
+                            boost::function1<std::string, const utsname&> thunk) {
+    using namespace boost;
+
+    utsname info;
+    if (uname(&info) == -1) {
+        throw std::runtime_error(str(format("Could not determine %1% because"
+                                            " uname(2) failed: %2%")
+                                     % context % strerror(errno)));
+    }
+    return thunk(info);
+}
+
+struct GetMachineType {
+    std::string operator()(const utsname& info) const {
+        if (std::string(info.machine) == "i686") {
+            return "x86";
+        } else {
+            return info.machine;
+        }
+    }
+};
+
+std::string currentMachineType() {
+    return callWithUtsname("machine type", GetMachineType());
+}
+
+struct GetSysname {
+    std::string operator()(const utsname& info) const {
+        std::string result(info.sysname);
+        boost::algorithm::to_lower(result);
+        return result;
+    }
+};
+
+std::string currentSoftwareType() {
+    return callWithUtsname("software type", GetSysname());
+}
+
+struct GetRelease {
+    std::string operator()(const utsname& info) const {
+        return info.release;
+    }
+};
+
+std::string currentSoftwareVersion() {
+    return callWithUtsname("software version", GetRelease());
+}
 
 // Hostname
 

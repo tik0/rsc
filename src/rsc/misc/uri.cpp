@@ -127,7 +127,8 @@ uri::uri (const std::string& source) {
 	}
 #endif
 
-	if (!is_valid || first != last) throw std::invalid_argument ("invalid uri format");
+	if (!is_valid || first != last)
+		throw std::invalid_argument ("invalid uri format: " + source);
 }
 
 uri::uri (const uri &other) {*this = other;}

@@ -29,8 +29,9 @@
 #include <errno.h>
 #include <string.h>
 #include <unistd.h>
-#include <sys/sysctl.h>
 #include <stdlib.h>
+#include <sys/types.h>
+#include <sys/sysctl.h>
 
 #include <stdexcept>
 #include <sstream>
@@ -44,34 +45,14 @@ namespace os {
 
 // {Machine,Software} {Type,Version}
 
-std::string currentMachineType () {
-    throw std::runtime_error("not available");
-}
-
 std::string currentMachineVersion () {
-    throw std::runtime_error("not available");
-}
-
-std::string currentSoftwareType () {
-    throw std::runtime_error("not available");
-}
-
-std::string currentSoftwareVersion () {
-    throw std::runtime_error("not available");
-}
-
-// Hostname
-
-const unsigned int HOSTNAME_MAX_LENGTH = 1024;
-
-std::string currentHostname() {
-    char buffer[HOSTNAME_MAX_LENGTH];
-    if (gethostname(buffer, HOSTNAME_MAX_LENGTH) == 0) {
-        return std::string(buffer);
-    } else {
-        throw std::runtime_error(boost::str(boost::format("gethostname failed: %1%")
+    char buffer[256];
+    size_t size = 256;
+    if (sysctlbyname("machdep.cpu.brand_string", &buffer, &size, 0, 0) != 0) {
+        throw std::runtime_error(boost::str(boost::format("sysctlbyname failed: %1%")
                                             % strerror(errno)));
     }
+    return std::string(buffer);
 }
 
 // Host ID

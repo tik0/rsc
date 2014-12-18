@@ -26,31 +26,11 @@
 
 #include "HostInfo.h"
 
-#include <errno.h>
-#include <string.h>
-#include <unistd.h>
-
 #include <stdexcept>
 #include <sstream>
 
-#include <boost/format.hpp>
-
 namespace rsc {
 namespace os {
-
-// Hostname
-
-const unsigned int HOSTNAME_MAX_LENGTH = 1024;
-
-std::string currentHostname() {
-    char buffer[HOSTNAME_MAX_LENGTH];
-    if (gethostname(buffer, HOSTNAME_MAX_LENGTH) == 0) {
-        return std::string(buffer);
-    } else {
-        throw std::runtime_error(boost::str(boost::format("gethostname failed: %1%")
-                                            % strerror(errno)));
-    }
-}
 
 // Host ID
 

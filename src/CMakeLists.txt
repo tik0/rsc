@@ -83,7 +83,8 @@ IF(CMAKE_SYSTEM_NAME STREQUAL Linux)
     LIST(APPEND SOURCES rsc/os/LinuxProcessInfo.cpp)
 
     MESSAGE(STATUS "  LinuxHostInfo")
-    LIST(APPEND SOURCES rsc/os/LinuxHostInfo.cpp)
+    LIST(APPEND SOURCES rsc/os/LinuxHostInfo.cpp
+                        rsc/os/PosixUtilities.cpp)
 
 ELSEIF(APPLE)
 
@@ -100,11 +101,12 @@ ELSEIF(APPLE)
     MESSAGE(STATUS "  MacSignalWaiter")
     LIST(APPEND SOURCES rsc/misc/MacSignalWaiter.cpp)
 
-    MESSAGE(STATUS "  PosixProcessInfo")
+    MESSAGE(STATUS "  MacProcessInfo")
     LIST(APPEND SOURCES rsc/os/MacProcessInfo.cpp)
 
-    MESSAGE(STATUS "  PosixHostInfo")
-    LIST(APPEND SOURCES rsc/os/MacHostInfo.cpp)
+    MESSAGE(STATUS "  MacHostInfo")
+    LIST(APPEND SOURCES rsc/os/MacHostInfo.cpp
+                        rsc/os/PosixUtilities.cpp)
 
 
 ELSEIF(UNIX)
@@ -125,7 +127,8 @@ ELSEIF(UNIX)
     LIST(APPEND SOURCES rsc/os/PosixProcessInfo.cpp)
 
     MESSAGE(STATUS "  PosixHostInfo")
-    LIST(APPEND SOURCES rsc/os/PosixHostInfo.cpp)
+    LIST(APPEND SOURCES rsc/os/PosixHostInfo.cpp
+                        rsc/os/PosixUtilities.cpp)
 
 ELSEIF(WIN32)
     MESSAGE(STATUS "  WindowsSubprocess")

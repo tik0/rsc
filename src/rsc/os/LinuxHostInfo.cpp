@@ -29,14 +29,11 @@
 #include <errno.h>
 #include <string.h>
 #include <unistd.h>
-#include <sys/utsname.h>
 
 #include <stdexcept>
 #include <fstream>
 #include <sstream>
 
-#include <boost/algorithm/string.hpp>
-#include <boost/function.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/format.hpp>
 
@@ -80,71 +77,6 @@ std::string currentMachineVersion() {
     std::string value;
     std::copy(start + pattern.size(), end, std::back_inserter(value));
     return value;
-}
-
-std::string callWithUtsname(const std::string&                            context,
-                            boost::function1<std::string, const utsname&> thunk) {
-    using namespace boost;
-
-    utsname info;
-    if (uname(&info) == -1) {
-        throw std::runtime_error(str(format("Could not determine %1% because"
-                                            " uname(2) failed: %2%")
-                                     % context % strerror(errno)));
-    }
-    return thunk(info);
-}
-
-struct GetMachineType {
-    std::string operator()(const utsname& info) const {
-        if (std::string(info.machine) == "i686") {
-            return "x86";
-        } else {
-            return info.machine;
-        }
-    }
-};
-
-std::string currentMachineType() {
-    return callWithUtsname("machine type", GetMachineType());
-}
-
-struct GetSysname {
-    std::string operator()(const utsname& info) const {
-        std::string result(info.sysname);
-        boost::algorithm::to_lower(result);
-        return result;
-    }
-};
-
-std::string currentSoftwareType() {
-    return callWithUtsname("software type", GetSysname());
-}
-
-struct GetRelease {
-    std::string operator()(const utsname& info) const {
-        return info.release;
-    }
-};
-
-std::string currentSoftwareVersion() {
-    return callWithUtsname("software version", GetRelease());
-}
-
-// Hostname
-
-const unsigned int HOSTNAME_MAX_LENGTH = 1024;
-
-std::string currentHostname() {
-    using namespace boost;
-
-    char buffer[HOSTNAME_MAX_LENGTH];
-    if (gethostname(buffer, HOSTNAME_MAX_LENGTH) == 0) {
-        return std::string(buffer);
-    } else {
-        throw std::runtime_error(str(format("gethostname failed: %1%")
-                                     % strerror(errno)));
-    }
 }
 
 // Host ID

@@ -26,6 +26,7 @@
 
 #include "HostInfo.h"
 
+#include <assert.h>
 #include <errno.h>
 #include <string.h>
 #include <unistd.h>
@@ -97,7 +98,12 @@ const unsigned int HOSTNAME_MAX_LENGTH = 1024;
 std::string currentHostname() {
     char buffer[HOSTNAME_MAX_LENGTH];
     if (gethostname(buffer, HOSTNAME_MAX_LENGTH) == 0) {
-        return std::string(buffer);
+        std::string maybeQualifiedHostname(buffer);
+        std::vector<std::string> components;
+        boost::algorithm::split(components, maybeQualifiedHostname,
+                                boost::algorithm::is_any_of("."));
+        assert(!components.empty());
+        return components[0];
     } else {
         throw std::runtime_error(boost::str(boost::format("gethostname failed: %1%")
                                             % strerror(errno)));

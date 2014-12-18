@@ -136,6 +136,9 @@ ELSEIF(WIN32)
     MESSAGE(STATUS "  Win32SignalWaiter")
     LIST(APPEND SOURCES rsc/misc/Win32SignalWaiter.cpp)
 
+	LIST(APPEND HEADERS rsc/os/Win32Common.h)
+	LIST(APPEND SOURCES rsc/os/Win32Common.cpp)
+
     MESSAGE(STATUS "  Win32ProcessInfo")
     LIST(APPEND SOURCES rsc/os/Win32ProcessInfo.cpp)
 
@@ -155,7 +158,7 @@ IF(UNIX)
 ENDIF()
 # Windows-specific libraries
 IF(WIN32)
-    TARGET_LINK_LIBRARIES(${RSC_NAME} Secur32)
+    TARGET_LINK_LIBRARIES(${RSC_NAME} Secur32 Psapi)
 ENDIF()
 SET_TARGET_PROPERTIES(${RSC_NAME}
                       PROPERTIES

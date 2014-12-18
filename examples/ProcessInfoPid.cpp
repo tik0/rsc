@@ -72,6 +72,13 @@ int main(int argc, char* argv[]) {
         cout << "process start time (UTC): <unknown>" << endl;
         cout << "    reason: " << e.what() << endl;
     }
+    try {
+        cout << "process executing user: "
+             << getExecutingUser(pid) << endl;
+    } catch (const runtime_error& e) {
+        cout << "process executing user: <unknown>" << endl;
+        cout << "    reason: " << e.what() << endl;
+    }
 
     return EXIT_SUCCESS;
 }

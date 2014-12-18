@@ -43,6 +43,8 @@ ENDIF(ENCODE_VERSION)
 SET(VERSION_SUFFIX "${RSC_VERSION_MAJOR}.${RSC_VERSION_MINOR}")
 SET(INSTALL_PATH_PREFIX "${RSC_NAME}"
     CACHE STRING "Prefix path applied to all non-versioned installed files in order to prevent version clashes.")
+SET(INSTALL_PATH_PREFIX_CMAKE "rsc-cmake${RSC_VERSION_MAJOR}.${RSC_VERSION_MINOR}"
+    CACHE STRING "Prefix path applied to the config files for the CMake library.")
 
 SET(RSC_TEST_NAME "rsctest")
 
@@ -169,12 +171,20 @@ ENDIF()
 CONFIGURE_FILE(RSCConfig.cmake.in
                "${CMAKE_BINARY_DIR}/RSCConfig.cmake"
                @ONLY)
-INSTALL(FILES "${CMAKE_BINARY_DIR}/RSCConfig.cmake"
-        DESTINATION "share/${INSTALL_PATH_PREFIX}")
+CONFIGURE_FILE(RSC-CMakeConfig.cmake.in
+               "${CMAKE_BINARY_DIR}/RSC-CMakeConfig.cmake"
+               @ONLY)
+INSTALL(FILES "${CMAKE_BINARY_DIR}/RSC-CMakeConfig.cmake"
+              "${CMAKE_BINARY_DIR}/RSC-CMakeConfigVersion.cmake"
+        DESTINATION "share/${INSTALL_PATH_PREFIX_CMAKE}")
 CONFIGURE_FILE(RSCConfigVersion.cmake.in
                "${CMAKE_BINARY_DIR}/RSCConfigVersion.cmake"
                @ONLY)
-INSTALL(FILES "${CMAKE_BINARY_DIR}/RSCConfigVersion.cmake"
+CONFIGURE_FILE(RSCConfigVersion.cmake.in
+               "${CMAKE_BINARY_DIR}/RSC-CMakeConfigVersion.cmake"
+               @ONLY)
+INSTALL(FILES "${CMAKE_BINARY_DIR}/RSCConfig.cmake"
+              "${CMAKE_BINARY_DIR}/RSCConfigVersion.cmake"
         DESTINATION "share/${INSTALL_PATH_PREFIX}")
 
 EXPORT(TARGETS ${RSC_NAME} FILE "${CMAKE_BINARY_DIR}/RSCDepends.cmake")

@@ -44,6 +44,50 @@ namespace os {
  */
 
 /**
+ * Determine and return the machine type, usually CPU architecture, of
+ * the local machine.
+ *
+ * @return The machine type of the local machine.
+ *
+ * @throw std::runtime_error If the machine type cannot be determined.
+ */
+RSC_EXPORT std::string currentMachineType();
+
+/**
+ * Determine and return the version within its type, usually the CPU
+ * identification string, of the local machine.
+ *
+ * @return The machine version of the local machine.
+ *
+ * @throw std::runtime_error If the machine version cannot be
+ *                           determined.
+ */
+RSC_EXPORT std::string currentMachineVersion();
+
+/**
+ * Determine and return the type of the operating system, usually the
+ * kernel name, running on the local machine.
+ *
+ * @return The software type of the local machine.
+ *
+ * @throw std::runtime_error If the software type cannot be
+ *                           determined.
+ */
+RSC_EXPORT std::string currentSoftwareType();
+
+/**
+ * Determine and return the version of the operating system within its
+ * type, usually the kernel version string, running on the local
+ * machine.
+ *
+ * @return The software version of the local machine.
+ *
+ * @throw std::runtime_error If the software version cannot be
+ *                           determined.
+ */
+RSC_EXPORT std::string currentSoftwareVersion();
+
+/**
  * Determine and return the hostname of the local machine.
  *
  * Note that the hostname can change over time.

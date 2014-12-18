@@ -62,7 +62,9 @@ TARGET_LINK_LIBRARIES(${RSC_TEST_NAME}
                       ${RSC_NAME}
                       ${GMOCK_LIBRARIES})
 
-ADD_TEST(${RSC_TEST_NAME} ${EXECUTABLE_OUTPUT_PATH}/${RSC_TEST_NAME} "--gtest_output=xml:${TEST_RESULT_DIR}/")
+ADD_TEST(${RSC_TEST_NAME} ${EXECUTABLE_OUTPUT_PATH}/${RSC_TEST_NAME}
+                          "--dummy-for-process-info-test"
+                          "--gtest_output=xml:${TEST_RESULT_DIR}/")
 
 # test plugins
 SET(TESTPLUGIN_NAMES testplugin

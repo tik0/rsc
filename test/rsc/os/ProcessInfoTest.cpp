@@ -57,6 +57,13 @@ TEST(ProcessInfoTest, testCurrentExecutablePath)
 TEST(ProcessInfoTest, testGetCommandlineArguments)
 {
     rsc::os::getCommandlineArguments(rsc::os::currentProcessId());
+    std::vector<std::string> arguments
+        = rsc::os::getCommandlineArguments(rsc::os::currentProcessId());
+    if (!arguments.empty()) {
+        if (!arguments[0].empty()) {
+            EXPECT_NE(arguments[0][0], '\0');
+        }
+    }
 }
 
 TEST(ProcessInfoTest, testCurrentCommandlineArguments)
@@ -72,4 +79,8 @@ TEST(ProcessInfoTest, testGetStartTime)
 TEST(ProcessInfoTest, testCurrentStartTime)
 {
     rsc::os::currentProcessStartTime();
+}
+
+TEST(ProcessInfoTest, testCurrentExecutingUser) {
+    rsc::os::currentExecutingUser();
 }

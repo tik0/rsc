@@ -26,7 +26,9 @@
 
 #include "ProcessInfo.h"
 
-#include <unistd.h>
+#include <sys/types.h>   // for getpwuid(3)
+#include <pwd.h>         // likewise
+#include <unistd.h>      // for getuid(2) and others
 #include <linux/param.h> // for HZ in start-time calculation
 
 #include <stdexcept>
@@ -56,18 +58,29 @@ PID currentProcessId() {
 
 std::vector<std::string> getCommandlineComponents(PID pid) {
     std::ifstream self(procFilename(pid, "cmdline").c_str());
-    self.exceptions(std::ios_base::badbit | std::ios_base::failbit);
+    try {
+        // in case enabling exceptions on this stream throws immediately,
+        // the file could not be read at all
+        self.exceptions(std::ios_base::badbit | std::ios_base::failbit);
+    } catch (const std::ifstream::failure& e) {
+        throw std::runtime_error(boost::str(boost::format(
+                        "Could not read the command line for PID %1%. The "
+                        "process probably does not exist.") % pid));
+    }
     std::string cmdline;
     self >> cmdline;
 
     std::vector<std::string> components;
     std::string::iterator it = cmdline.begin();
-    while (it != cmdline.end() && (it + 1) != cmdline.end()) {
-        std::string::iterator end = find(it + 1, cmdline.end(), '\0');
+    while (it != cmdline.end()) {
+        std::string::iterator end = find(it, cmdline.end(), '\0');
         std::string component;
         std::copy(it, end, std::back_inserter(component));
         components.push_back(component);
         it = end;
+        if (it != cmdline.end()) {
+            ++it;
+        }
     }
     return components;
 }
@@ -185,6 +198,38 @@ boost::posix_time::ptime getProcessStartTime(PID pid) {
 
 boost::posix_time::ptime currentProcessStartTime() {
     return getProcessStartTime(currentProcessId());
+}
+
+
+std::string uidToName(uid_t id) {
+    passwd* entry = getpwuid(id);
+    return entry->pw_name;
+}
+
+std::string getExecutingUser(PID pid) {
+    const std::string procSelfStatus = procFilename(pid, "status");
+
+    std::ifstream stream(procSelfStatus.c_str());
+    std::string label;
+    try {
+        while (stream) {
+            if ((stream >> label) && (label == "Uid:")) {
+                uid_t uid;
+                if (stream >> uid) {
+                    return uidToName(uid);
+                }
+            }
+        }
+    } catch (std::exception& e) {
+        throw std::runtime_error(boost::str(boost::format("Could not read from %1%: %2%")
+                                            % procSelfStatus % e.what()));
+    }
+    throw std::runtime_error(boost::str(boost::format("Could not find  \"Uid\" field in %1%")
+                                        % procSelfStatus));
+}
+
+std::string currentExecutingUser() {
+    return uidToName(getuid());
 }
 
 }

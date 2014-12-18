@@ -42,6 +42,24 @@
 namespace rsc {
 namespace os {
 
+// {Machine,Software} {Type,Version}
+
+std::string currentMachineType () {
+    throw std::runtime_error("not available");
+}
+
+std::string currentMachineVersion () {
+    throw std::runtime_error("not available");
+}
+
+std::string currentSoftwareType () {
+    throw std::runtime_error("not available");
+}
+
+std::string currentSoftwareVersion () {
+    throw std::runtime_error("not available");
+}
+
 // Hostname
 
 const unsigned int HOSTNAME_MAX_LENGTH = 1024;

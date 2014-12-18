@@ -30,10 +30,54 @@
 
 TEST(HostInfoTest, testCurrentHostId)
 {
-    EXPECT_FALSE(rsc::os::currentHostId().empty());
+    try {
+        EXPECT_FALSE(rsc::os::currentHostId().empty());
+    } catch (const std::runtime_error& e) {
+        // errors are expected on window. Ignore them.
+    }
 }
 
 TEST(HostInfoTest, testCurrentHostname)
 {
     EXPECT_FALSE(rsc::os::currentHostname().empty());
+}
+
+TEST(HostInfoTest, testCurrentMachineType)
+{
+    try {
+        EXPECT_FALSE(rsc::os::currentMachineType().empty());
+    } catch (const std::runtime_error& e) {
+        // Functionality may not be available on all platforms =>
+        // ignore errors.
+    }
+}
+
+TEST(HostInfoTest, testCurrentMachineVersion)
+{
+    try {
+        EXPECT_FALSE(rsc::os::currentMachineVersion().empty());
+    } catch (const std::runtime_error& e) {
+        // Functionality may not be available on all platforms =>
+        // ignore errors.
+    }
+}
+
+TEST(HostInfoTest, testCurrentSoftwareType)
+{
+    try {
+        EXPECT_FALSE(rsc::os::currentSoftwareType().empty());
+    } catch (const std::runtime_error& e) {
+        // Functionality may not be available on all platforms =>
+        // ignore errors.
+    }
+}
+
+TEST(HostInfoTest, testCurrentSoftwareVersion)
+{
+    try {
+        EXPECT_FALSE(rsc::os::currentSoftwareVersion().empty());
+    } catch (const std::runtime_error& e) {
+        // Functionality may not be available on all platforms =>
+        // ignore errors.
+    }
 }

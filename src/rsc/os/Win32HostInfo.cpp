@@ -35,8 +35,30 @@
 
 #include <boost/format.hpp>
 
+#include <boost/date_time/posix_time/posix_time.hpp>
+
+#include "Win32Common.h"
+
 namespace rsc {
 namespace os {
+
+// {Machine,Software} {Type,Version}
+
+std::string currentMachineType () {
+    throw std::runtime_error("not available");
+}
+
+std::string currentMachineVersion () {
+    throw std::runtime_error("not available");
+}
+
+std::string currentSoftwareType () {
+    throw std::runtime_error("not available");
+}
+
+std::string currentSoftwareVersion () {
+    throw std::runtime_error("not available");
+}
 
 // Hostname
 
@@ -48,8 +70,10 @@ std::string currentHostname() {
     if (GetComputerName(buffer, &length) != 0) {
         return std::string(buffer, length);
     } else {
-        throw std::runtime_error(boost::str(boost::format("GetComputerName failed: %1%")
-                                            % GetLastError()));
+        throw std::runtime_error(
+                boost::str(
+                        boost::format("GetComputerName failed: %1%")
+                                % GetLastErrorString()));
     }
 }
 
@@ -63,16 +87,19 @@ std::string currentHostId() {
     if (GetComputerObjectName(NameUniqueId, buffer, &length) != 0) {
         return std::string(buffer, length);
     } else {
-        throw std::runtime_error(boost::str(boost::format("GetComputerObjectName(NameUniqueId)"
-                                                          " failed: %1%")
-                                            % GetLastError()));
+        throw std::runtime_error(
+                boost::str(boost::format("GetComputerObjectName(NameUniqueId)"
+                        " failed: %1%") % GetLastErrorString()));
     }
 }
 
 // Boot time
 
 boost::posix_time::ptime currentBootTime() {
-    throw std::runtime_error("Could not get boot time: not supported");
+    // at least an approximation due to runtime differences in the two calls
+    boost::uint64_t millisSinceBoot = GetTickCount64();
+    return boost::posix_time::microsec_clock::local_time()
+            - boost::posix_time::millisec(millisSinceBoot);
 }
 
 }

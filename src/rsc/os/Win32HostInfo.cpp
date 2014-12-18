@@ -53,7 +53,7 @@ std::string currentMachineVersion () {
 }
 
 std::string currentSoftwareType () {
-    throw std::runtime_error("not available");
+    return "win32";
 }
 
 std::string currentSoftwareVersion () {

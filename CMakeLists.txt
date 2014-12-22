@@ -27,7 +27,7 @@ OPTION(ENCODE_VERSION "If set to ON, install pathes and library name will have t
 
 # --- global definitions ---
 
-DEFINE_PROJECT_VERSION(RSC_ 0 11 0 "archive")
+DEFINE_PROJECT_VERSION(RSC_ 0 12 0 "archive")
 CURRENT_DATE(RSC_BUILD_DATE)
 
 MESSAGE(STATUS "This is RSC version: ${RSC_VERSION}-${RSC_WC_REVISION}")

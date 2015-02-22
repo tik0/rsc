@@ -48,7 +48,7 @@ namespace rsc {
 namespace logging {
 
 const string LoggerFactory::DEFAULT_LOGGING_SYSTEM =
-        ConsoleLoggingSystem::getLoggerName();
+        ConsoleLoggingSystem::getName();
 const Logger::Level LoggerFactory::DEFAULT_LEVEL = Logger::LEVEL_WARN;
 
 /**

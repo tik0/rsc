@@ -32,7 +32,7 @@
 namespace rsc {
 namespace logging {
 
-std::string ConsoleLoggingSystem::getLoggerName() {
+std::string ConsoleLoggingSystem::getName() {
     return "ConsoleLoggingSystem";
 }
 
@@ -43,7 +43,7 @@ ConsoleLoggingSystem::~ConsoleLoggingSystem() {
 }
 
 std::string ConsoleLoggingSystem::getRegistryKey() const {
-    return getLoggerName();
+    return getName();
 }
 
 LoggerPtr ConsoleLoggingSystem::createLogger(const std::string& name) {

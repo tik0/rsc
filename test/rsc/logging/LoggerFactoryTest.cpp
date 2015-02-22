@@ -95,7 +95,7 @@ TEST(LoggerFactoryTest, testReselectLoggingSystem) {
     // force default
     LoggerFactory::getInstance().reselectLoggingSystem(
             LoggerFactory::DEFAULT_LOGGING_SYSTEM);
-    EXPECT_EQ(ConsoleLoggingSystem::getLoggerName(),
+    EXPECT_EQ(ConsoleLoggingSystem::getName(),
             LoggerFactory::getInstance().getLoggingSystemName());
     // if the logging system is illegally reported by the line above the next
     // line will cause the mock object to report an error
@@ -204,7 +204,7 @@ TEST(LoggerFactoryTest, testHierarchicalLevels) {
 
 }
 
-TEST(LoggeFactoryTest, testRootLoggerCorrectLevelAfterReselect) {
+TEST(LoggerFactoryTest, testRootLoggerCorrectLevelAfterReselect) {
 
     LoggerFactory::killInstance();
 
@@ -212,7 +212,7 @@ TEST(LoggeFactoryTest, testRootLoggerCorrectLevelAfterReselect) {
             LoggerFactory::getInstance().getLogger("")->getLevel());
     LoggerFactory::getInstance().getLogger("")->setLevel(Logger::LEVEL_FATAL);
     LoggerFactory::getInstance().reselectLoggingSystem(
-            ConsoleLoggingSystem::getLoggerName());
+            ConsoleLoggingSystem::getName());
     EXPECT_EQ(Logger::LEVEL_FATAL,
             LoggerFactory::getInstance().getLogger("")->getLevel());
 

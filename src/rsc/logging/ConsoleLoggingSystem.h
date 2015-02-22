@@ -47,7 +47,7 @@ public:
 
     LoggerPtr createLogger(const std::string& name);
 
-    static std::string getLoggerName();
+    static std::string getName();
 
 };
 

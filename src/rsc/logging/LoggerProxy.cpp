@@ -67,5 +67,10 @@ void LoggerProxy::setLogger(LoggerPtr logger) {
     this->logger = logger;
 }
 
+void LoggerProxy::setLevelCallback(const LoggerProxy::SetLevelCallbackPtr &setter)
+{
+    this->callback = setter;
+}
+
 }
 }

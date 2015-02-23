@@ -114,6 +114,7 @@ TEST(LoggerFactoryTest, testReselectLoggingSystem) {
     EXPECT_CALL(*l2, createLogger(name,_)).Times(1).WillOnce(Return(nameLogger));
     LoggerFactory::getInstance().reselectLoggingSystem(l2->name);
     EXPECT_EQ(l2->name, LoggerFactory::getInstance().getLoggingSystemName());
+    EXPECT_EQ(logger, LoggerFactory::getInstance().getLogger(dummyName));
     logger = LoggerFactory::getInstance().getLogger(name);
     logger->debug("Narf");
     EXPECT_EQ(size_t(1), nameLogger->logs.size());

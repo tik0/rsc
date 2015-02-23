@@ -32,6 +32,11 @@ namespace logging {
 LoggingSystem::~LoggingSystem() {
 }
 
+bool LoggingSystem::needsRecursiveLevelSetting()
+{
+    return true;
+}
+
 rsc::misc::Registry<LoggingSystem>* loggingSystemRegistry() {
     static rsc::misc::Registry<LoggingSystem>* registry =
             new ::rsc::misc::Registry<LoggingSystem>;

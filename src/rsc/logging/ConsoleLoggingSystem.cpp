@@ -32,7 +32,7 @@
 namespace rsc {
 namespace logging {
 
-std::string ConsoleLoggingSystem::getLoggerName() {
+std::string ConsoleLoggingSystem::getName() {
     return "ConsoleLoggingSystem";
 }
 
@@ -43,11 +43,13 @@ ConsoleLoggingSystem::~ConsoleLoggingSystem() {
 }
 
 std::string ConsoleLoggingSystem::getRegistryKey() const {
-    return getLoggerName();
+    return getName();
 }
 
-LoggerPtr ConsoleLoggingSystem::createLogger(const std::string& name) {
-    return LoggerPtr(new ConsoleLogger(name));
+LoggerPtr ConsoleLoggingSystem::createLogger(const std::string& name, Logger::Level level) {
+    LoggerPtr logger(new ConsoleLogger(name));
+    logger->setLevel(level);
+    return logger;
 }
 
 CREATE_GLOBAL_REGISTREE_MSG(loggingSystemRegistry(), new ConsoleLoggingSystem, ConsoleLoggingSystem, "Could it be that you have linked two different versions of RSC in your program?")

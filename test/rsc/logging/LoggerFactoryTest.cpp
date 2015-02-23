@@ -95,7 +95,7 @@ TEST(LoggerFactoryTest, testReselectLoggingSystem) {
     // force default
     LoggerFactory::getInstance().reselectLoggingSystem(
             LoggerFactory::DEFAULT_LOGGING_SYSTEM);
-    EXPECT_EQ(ConsoleLoggingSystem::getLoggerName(),
+    EXPECT_EQ(ConsoleLoggingSystem::getName(),
             LoggerFactory::getInstance().getLoggingSystemName());
     // if the logging system is illegally reported by the line above the next
     // line will cause the mock object to report an error
@@ -107,11 +107,11 @@ TEST(LoggerFactoryTest, testReselectLoggingSystem) {
     string name = randAlnumStr(10);
     boost::algorithm::to_lower(name);
     boost::shared_ptr<StubLogger> nameLogger(new StubLogger(name));
-    EXPECT_CALL(*l2, createLogger("")).Times(1).WillOnce(
+    EXPECT_CALL(*l2, createLogger("",_)).Times(1).WillOnce(
             Return(LoggerPtr(new StubLogger(dummyName))));
-    EXPECT_CALL(*l2, createLogger(dummyName)).Times(1).WillOnce(
+    EXPECT_CALL(*l2, createLogger(dummyName,_)).Times(1).WillOnce(
             Return(LoggerPtr(new StubLogger(dummyName))));
-    EXPECT_CALL(*l2, createLogger(name)).Times(1).WillOnce(Return(nameLogger));
+    EXPECT_CALL(*l2, createLogger(name,_)).Times(1).WillOnce(Return(nameLogger));
     LoggerFactory::getInstance().reselectLoggingSystem(l2->name);
     EXPECT_EQ(l2->name, LoggerFactory::getInstance().getLoggingSystemName());
     logger = LoggerFactory::getInstance().getLogger(name);
@@ -125,13 +125,13 @@ TEST(LoggerFactoryTest, testReselectLoggingSystem) {
     // wrong hint, fallback to other available system
     string newName = randAlnumStr(12);
     boost::algorithm::to_lower(newName);
-    EXPECT_CALL(*l2, createLogger("")).Times(1).WillOnce(
+    EXPECT_CALL(*l2, createLogger("",_)).Times(1).WillOnce(
             Return(LoggerPtr(new StubLogger(dummyName))));
-    EXPECT_CALL(*l2, createLogger(dummyName)).Times(1).WillOnce(
+    EXPECT_CALL(*l2, createLogger(dummyName,_)).Times(1).WillOnce(
             Return(LoggerPtr(new StubLogger(dummyName))));
-    EXPECT_CALL(*l2, createLogger(name)).Times(1).WillOnce(
+    EXPECT_CALL(*l2, createLogger(name,_)).Times(1).WillOnce(
             Return(LoggerPtr(new StubLogger(name))));
-    EXPECT_CALL(*l2, createLogger(newName)).Times(1).WillOnce(
+    EXPECT_CALL(*l2, createLogger(newName,_)).Times(1).WillOnce(
             Return(LoggerPtr(new StubLogger(newName))));
     LoggerFactory::getInstance().reselectLoggingSystem(randAlnumStr(123));
     EXPECT_EQ(l2->name, LoggerFactory::getInstance().getLoggingSystemName());
@@ -204,7 +204,7 @@ TEST(LoggerFactoryTest, testHierarchicalLevels) {
 
 }
 
-TEST(LoggeFactoryTest, testRootLoggerCorrectLevelAfterReselect) {
+TEST(LoggerFactoryTest, testRootLoggerCorrectLevelAfterReselect) {
 
     LoggerFactory::killInstance();
 
@@ -212,7 +212,7 @@ TEST(LoggeFactoryTest, testRootLoggerCorrectLevelAfterReselect) {
             LoggerFactory::getInstance().getLogger("")->getLevel());
     LoggerFactory::getInstance().getLogger("")->setLevel(Logger::LEVEL_FATAL);
     LoggerFactory::getInstance().reselectLoggingSystem(
-            ConsoleLoggingSystem::getLoggerName());
+            ConsoleLoggingSystem::getName());
     EXPECT_EQ(Logger::LEVEL_FATAL,
             LoggerFactory::getInstance().getLogger("")->getLevel());
 

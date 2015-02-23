@@ -44,7 +44,6 @@ Logger::Level LoggerProxy::getLevel() const {
 }
 
 void LoggerProxy::setLevel(const Logger::Level& level) {
-    //logger->setLevel(level);
     callback->call(shared_from_this(), level);
 }
 

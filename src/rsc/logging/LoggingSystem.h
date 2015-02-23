@@ -58,11 +58,22 @@ public:
      * to this method are assumed to be set on the returned logger. The caller
      * is responsible to not request a logger with the same name multiple times.
      * Otherwise it is legal to return a second instance in this method.
+     * If the logging system supports hierarchic log levels by its own (e.g. log4cxx),
+     * the specified log level should be ignored
      *
      * @param name name of the new logger
+     * @param level desired level of the new logger
      * @return new logger instance
      */
-    virtual LoggerPtr createLogger(const std::string& name) = 0;
+    virtual LoggerPtr createLogger(const std::string& name,
+                                   Logger::Level level) = 0;
+
+    /**
+     * Does the LoggingSystem requires recursive setting of levels?
+     *
+     * @return true if recursive level setting is required
+     */
+    virtual bool needsRecursiveLevelSetting();
 
 };
 

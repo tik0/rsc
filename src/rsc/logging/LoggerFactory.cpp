@@ -52,9 +52,30 @@ const string LoggerFactory::DEFAULT_LOGGING_SYSTEM =
 const Logger::Level LoggerFactory::DEFAULT_LEVEL = Logger::LEVEL_WARN;
 
 /**
+ * @author rhaschke
+ */
+class SimpleLevelUpdater : public LoggerProxy::SetLevelCallback {
+public:
+    SimpleLevelUpdater(LoggerTreeNodeWeakPtr treeNode) :
+            treeNode(treeNode) {
+    }
+
+    virtual ~SimpleLevelUpdater() {
+    }
+
+    void call(LoggerProxyPtr proxy, const Logger::Level& level) {
+        treeNode.lock()->setAssignedLevel(level);
+        proxy->getLogger()->setLevel(level);
+    }
+
+protected:
+    LoggerTreeNodeWeakPtr treeNode;
+};
+
+/**
  * @author jwienke
  */
-class TreeLevelUpdater: public LoggerProxy::SetLevelCallback {
+class TreeLevelUpdater: public SimpleLevelUpdater {
 public:
 
     /**
@@ -74,16 +95,14 @@ public:
         }
 
         bool visit(const LoggerTreeNode::NamePath& /*path*/,
-                LoggerTreeNodePtr node, const Logger::Level& /*parentLevel*/) {
+                   LoggerTreeNodePtr node) {
 
-            if (node->getAssignedLevel()) {
+            if (node->hasAssignedLevel()) {
                 return false;
             }
 
             node->getLoggerProxy()->getLogger()->setLevel(level);
-
             return true;
-
         }
 
     private:
@@ -92,45 +111,31 @@ public:
 
     TreeLevelUpdater(LoggerTreeNodeWeakPtr treeNode,
             boost::recursive_mutex& mutex) :
-            treeNode(treeNode), mutex(mutex) {
+            SimpleLevelUpdater(treeNode), mutex(mutex) {
     }
 
     virtual ~TreeLevelUpdater() {
     }
 
     // TODO jwienke: maybe it would be better to make this signature contain the node instead of the proxy? Can this work?
-    void call(LoggerProxyPtr /*proxy*/, const Logger::Level& level) {
-        boost::recursive_mutex::scoped_lock lock(mutex);
+    void call(LoggerProxyPtr proxy, const Logger::Level& level) {
         LoggerTreeNodePtr node = treeNode.lock();
-        node->getLoggerProxy()->getLogger()->setLevel(level);
-        node->setAssignedLevel(level);
-        // TODO we ignore the path anyways... Can this be done by the tree itself?
-        node->visit(LoggerTreeNode::VisitorPtr(new LevelSetter(level)),
-                LoggerTreeNode::NamePath());
+        // unset assigned level, so that recursive LevelSetter proceeds with node
+        node->unsetAssignedLevel();
+        boost::recursive_mutex::scoped_lock lock(mutex);
+        node->visit(LoggerTreeNode::VisitorPtr(new LevelSetter(level)));
+        // now set the level explicitly (sets assigned level)
+        SimpleLevelUpdater::call(proxy, level);
     }
 
 private:
-    LoggerTreeNodeWeakPtr treeNode;
     boost::recursive_mutex& mutex;
-
 };
+
 
 LoggerFactory::LoggerFactory() {
     reselectLoggingSystem();
     loggerTree.reset(new LoggerTreeNode("", LoggerTreeNodePtr()));
-    LoggerPtr logger(loggingSystem->createLogger(""));
-    LoggerProxyPtr proxy(
-            new LoggerProxy(
-                    logger,
-                    LoggerProxy::SetLevelCallbackPtr(
-                            new TreeLevelUpdater(
-                                    LoggerTreeNodeWeakPtr(loggerTree),
-                                    mutex))));
-    loggerTree->setLoggerProxy(proxy);
-    // assign the initial level to the only logger available, which is the root logger
-    // by directly assigning the level to the proxied logger we prevent the
-    // callback mechanism from working uselessly
-    logger->setLevel(DEFAULT_LEVEL);
     loggerTree->setAssignedLevel(DEFAULT_LEVEL);
 }
 
@@ -140,21 +145,18 @@ LoggerFactory::~LoggerFactory() {
 class LoggerFactory::ReselectVisitor: public LoggerTreeNode::Visitor {
 public:
 
-    ReselectVisitor(boost::shared_ptr<LoggingSystem> newSystem) :
-            newSystem(newSystem) {
+    ReselectVisitor(LoggerFactory &factory) :
+            factory(factory) {
     }
 
-    bool visit(const LoggerTreeNode::NamePath& path, LoggerTreeNodePtr node,
-            const Logger::Level& /*parentLevel*/) {
-        const Logger::Level oldLevel =
-                node->getLoggerProxy()->getLogger()->getLevel();
-        node->getLoggerProxy()->setLogger(
-                newSystem->createLogger(LoggerTreeNode::pathToName(path)));
-        node->getLoggerProxy()->getLogger()->setLevel(oldLevel);
+    bool visit(const LoggerTreeNode::NamePath& path, LoggerTreeNodePtr node) {
+        // recreate proxy because we might need a different SetLevelCallback
+        node->setLoggerProxy(factory.createLoggerProxy(
+                                 LoggerTreeNode::pathToName(path), node));
         return true;
     }
 private:
-    boost::shared_ptr<LoggingSystem> newSystem;
+    LoggerFactory &factory;
 };
 
 void LoggerFactory::reselectLoggingSystem(const std::string& nameHint) {
@@ -190,69 +192,66 @@ void LoggerFactory::reselectLoggingSystem(const std::string& nameHint) {
 
     // update existing loggers to use the new logging system
     if (loggerTree) {
-        const Logger::Level oldLevel = loggerTree->getLoggerProxy()->getLevel();
-        loggerTree->getLoggerProxy()->setLogger(
-                loggingSystem->createLogger(""));
-        loggerTree->getLoggerProxy()->getLogger()->setLevel(oldLevel);
         loggerTree->visit(
-                LoggerTreeNode::VisitorPtr(new ReselectVisitor(loggingSystem)));
+                LoggerTreeNode::VisitorPtr(new ReselectVisitor(*this)));
     }
 
 }
 
-LoggerProxyPtr LoggerFactory::createLogger(const LoggerTreeNode::NamePath& path,
+LoggerProxyPtr LoggerFactory::createLoggerProxy(const std::string &name,
         LoggerTreeNodePtr node) {
-    LoggerPtr logger(
-            loggingSystem->createLogger(LoggerTreeNode::pathToName(path)));
-    LoggerProxyPtr proxy(
-            new LoggerProxy(
-                    logger,
-                    LoggerProxy::SetLevelCallbackPtr(
-                            new TreeLevelUpdater(LoggerTreeNodeWeakPtr(node),
-                                    mutex))));
-    // new level can be derived from parent logger
-    logger->setLevel(
-            node->getParent()->getLoggerProxy()->getLogger()->getLevel());
+    LoggerPtr logger(loggingSystem->createLogger(name,
+                                                 node->getLevel()));
+    LoggerProxy::SetLevelCallbackPtr callback;
+    if (loggingSystem->needsRecursiveLevelSetting())
+        callback.reset(new TreeLevelUpdater(LoggerTreeNodeWeakPtr(node), mutex));
+    else
+        callback.reset(new SimpleLevelUpdater(LoggerTreeNodeWeakPtr(node)));
+    LoggerProxyPtr proxy(new LoggerProxy(logger, callback));
     return proxy;
 }
 
 LoggerPtr LoggerFactory::getLogger(const string& name) {
     boost::recursive_mutex::scoped_lock lock(mutex);
     LoggerTreeNode::NamePath path = LoggerTreeNode::nameToPath(name);
-    if (path.empty()) {
-        return loggerTree->getLoggerProxy();
+    LoggerTreeNodePtr node = loggerTree->addChildren(path);
+    if (!node->getLoggerProxy()) {
+        node->setLoggerProxy(this->createLoggerProxy(
+                                 LoggerTreeNode::pathToName(path), node));
     }
-    LoggerTreeNodePtr node = loggerTree->addChildren(path,
-            boost::bind(&LoggerFactory::createLogger, this, _1, _2));
     return node->getLoggerProxy();
 }
 
 class LoggerFactory::ReconfigurationVisitor: public LoggerTreeNode::Visitor {
 public:
 
-    ReconfigurationVisitor(const Logger::Level &newLevel) :
-            newLevel(newLevel) {
+    ReconfigurationVisitor(const Logger::Level &newLevel, bool bRecursive) :
+            newLevel(newLevel), bRecursive(bRecursive) {
     }
 
-    bool visit(const LoggerTreeNode::NamePath& /*path*/, LoggerTreeNodePtr node,
-            const Logger::Level& /*parentLevel*/) {
+    bool visit(const LoggerTreeNode::NamePath& /*path*/, LoggerTreeNodePtr node) {
         if (node->hasAssignedLevel()) {
             node->setAssignedLevel(newLevel);
         }
-        node->getLoggerProxy()->getLogger()->setLevel(newLevel);
+        LoggerProxyPtr proxy = node->getLoggerProxy();
+        if (bRecursive || node->hasAssignedLevel()) {
+            proxy->getLogger()->setLevel(newLevel);
+        }
         return true;
 
     }
 private:
     Logger::Level newLevel;
+    bool bRecursive;
 };
 
 void LoggerFactory::reconfigure(const Logger::Level& level) {
     boost::recursive_mutex::scoped_lock lock(mutex);
-    loggerTree->getLoggerProxy()->getLogger()->setLevel(level);
     loggerTree->setAssignedLevel(level);
     loggerTree->visit(
-            LoggerTreeNode::VisitorPtr(new ReconfigurationVisitor(level)));
+            LoggerTreeNode::VisitorPtr(
+                    new ReconfigurationVisitor(level,
+                                               loggingSystem->needsRecursiveLevelSetting())));
 }
 
 string LoggerFactory::getLoggingSystemName() {

@@ -89,27 +89,13 @@ public:
     void setLoggerProxy(LoggerProxyPtr loggerProxy);
 
     /**
-     * Adds a child if it does not exist so far.
-     *
-     * @param child child to add
-     * @return @c true if the new child was added, @c false if it already exited.
-     */
-    bool addChild(LoggerTreeNodePtr child);
-
-    typedef boost::function<
-            LoggerProxyPtr(const NamePath& name, LoggerTreeNodePtr node)> CreateFunction;
-
-    /**
-     * Retrieves an (indirect) child and creates required ancestors of this
-     * child using a custom callback method.
+     * Retrieves an (indirect) child and creates all required ancestors nodes.
+     * Creation of actual loggers (and their proxies) is postponed until they are used.
      *
      * @param path path of the child starting from this node
-     * @param createFn function used to create new children
-     * @param processedPath the path of this node. Passed to the create function
      * @return the deepest child in the path
      */
-    LoggerTreeNodePtr addChildren(const NamePath& path,
-            CreateFunction createFn, const NamePath &processedPath = NamePath());
+    LoggerTreeNodePtr addChildren(const NamePath& path);
 
     /**
      * Visitor interface to operate on the tree.
@@ -125,20 +111,21 @@ public:
          *
          * @param path current path in the tree
          * @param node currently visited node
-         * @param parentLevel direct or derived level of the parent node
          * @return @true to descend into this node's children, else @c false
          */
-        virtual bool visit(const NamePath& path, LoggerTreeNodePtr node, const Logger::Level& parentLevel) = 0;
+        virtual bool visit(const NamePath& path, LoggerTreeNodePtr node) = 0;
 
     };
     typedef boost::shared_ptr<Visitor> VisitorPtr;
 
     /**
-     * Visits every sub-node excluding this node. Depth-first strategy is used.
+     * Visits this node and all its children. Depth-first strategy is used.
      *
      * @param visitor visitor to use
+     * @param bValidProxiesOnly call visitor->visit() only for nodes with instantiated proxies
      */
-    void visit(VisitorPtr visitor, const NamePath& thisPath = NamePath());
+    void visit(VisitorPtr visitor, bool bValidProxiesOnly=true,
+               const NamePath& thisPath = NamePath());
 
     bool hasChild(const std::string& name) const;
 
@@ -161,9 +148,14 @@ public:
     static NamePath nameToPath(const std::string& name);
     static std::string pathToName(const NamePath& path);
 
-    boost::shared_ptr<Logger::Level> getAssignedLevel() const;
-    void setAssignedLevel(boost::shared_ptr<Logger::Level> level);
+    /**
+     * Get effective level from hierarchy
+     */
+    Logger::Level getLevel() const;
+
     void setAssignedLevel(const Logger::Level& level);
+
+    void unsetAssignedLevel();
     bool hasAssignedLevel() const;
 
 private:
@@ -178,7 +170,8 @@ private:
     LoggerTreeNodeWeakPtr parent;
     std::map<std::string, LoggerTreeNodePtr> children;
 
-    boost::shared_ptr<Logger::Level> assignedLevel;
+    Logger::Level assignedLevel;
+    bool          bHasAssignedLevel;
 
 };
 

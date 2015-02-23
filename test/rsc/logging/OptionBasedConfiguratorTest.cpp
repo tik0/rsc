@@ -106,7 +106,7 @@ TEST(OptionBasedConfiguratorTest, testSystemSelection) {
     StrictMock<MockLoggingSystem>* mockSystem =
             new StrictMock<MockLoggingSystem>(systemName);
     loggingSystemRegistry()->addRegistree(mockSystem);
-    EXPECT_CALL(*mockSystem, createLogger(_)).Times(AtLeast(1)).WillRepeatedly(
+    EXPECT_CALL(*mockSystem, createLogger(_,_)).Times(AtLeast(1)).WillRepeatedly(
             Return(LoggerPtr(new StubLogger(string("")))));
 
     vector<string> root;

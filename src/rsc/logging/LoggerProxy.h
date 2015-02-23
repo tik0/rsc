@@ -97,6 +97,11 @@ public:
      */
     void setLogger(LoggerPtr logger);
 
+    /**
+     * Sets the SetLevelCallback for this proxy.
+     */
+    void setLevelCallback(const SetLevelCallbackPtr &setter);
+
 private:
 
     /**

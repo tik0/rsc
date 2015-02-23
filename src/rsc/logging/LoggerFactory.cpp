@@ -145,18 +145,26 @@ LoggerFactory::~LoggerFactory() {
 class LoggerFactory::ReselectVisitor: public LoggerTreeNode::Visitor {
 public:
 
-    ReselectVisitor(LoggerFactory &factory) :
-            factory(factory) {
+    ReselectVisitor(boost::shared_ptr<LoggingSystem> newSystem,
+                    boost::recursive_mutex& mutex) :
+        newSystem(newSystem), mutex(mutex) {
     }
 
     bool visit(const LoggerTreeNode::NamePath& path, LoggerTreeNodePtr node) {
-        // recreate proxy because we might need a different SetLevelCallback
-        node->setLoggerProxy(factory.createLoggerProxy(
-                                 LoggerTreeNode::pathToName(path), node));
+        LoggerProxyPtr proxy = node->getLoggerProxy();
+        proxy->setLogger(newSystem->createLogger(LoggerTreeNode::pathToName(path),
+                                                 proxy->getLevel()));
+        LoggerProxy::SetLevelCallbackPtr callback;
+        if (newSystem->needsRecursiveLevelSetting())
+            callback.reset(new TreeLevelUpdater(LoggerTreeNodeWeakPtr(node), mutex));
+        else
+            callback.reset(new SimpleLevelUpdater(LoggerTreeNodeWeakPtr(node)));
+        proxy->setLevelCallback(callback);
         return true;
     }
 private:
-    LoggerFactory &factory;
+    boost::shared_ptr<LoggingSystem> newSystem;
+    boost::recursive_mutex& mutex;
 };
 
 void LoggerFactory::reselectLoggingSystem(const std::string& nameHint) {
@@ -193,7 +201,7 @@ void LoggerFactory::reselectLoggingSystem(const std::string& nameHint) {
     // update existing loggers to use the new logging system
     if (loggerTree) {
         loggerTree->visit(
-                LoggerTreeNode::VisitorPtr(new ReselectVisitor(*this)));
+                LoggerTreeNode::VisitorPtr(new ReselectVisitor(loggingSystem, mutex)));
     }
 
 }

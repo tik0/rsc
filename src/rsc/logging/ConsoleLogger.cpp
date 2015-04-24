@@ -75,13 +75,8 @@ ostream& ConsoleLogger::printHeader(ostream& stream, const Level& level) {
 void ConsoleLogger::log(const Level& level, const string& msg) {
     boost::recursive_mutex::scoped_lock lock(mutex);
     if (isEnabledFor(level)) {
-        if (level <= Logger::LEVEL_WARN) {
-            printHeader(cerr, level);
-            cerr << msg << endl;
-        } else {
-            printHeader(cout, level);
-            cout << msg << endl;
-        }
+        printHeader(cerr, level);
+        cerr << msg << endl;
     }
 }
 

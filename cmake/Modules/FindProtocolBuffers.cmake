@@ -89,7 +89,7 @@ FUNCTION(PROTOBUF_GENERATE)
         MESSAGE(SEND_ERROR "Error: PROTOBUF_GENERATE() called with too many export macro names, only one is allowed")
         RETURN()
     ENDIF()
-    
+
     # decide whether to build CPP
     LIST(LENGTH ARG_CPP CPP_LENGTH)
     IF(CPP_LENGTH EQUAL 0)
@@ -103,7 +103,7 @@ FUNCTION(PROTOBUF_GENERATE)
         LIST(GET ARG_CPP 0 RESULT_CPP_SRCS)
         LIST(GET ARG_CPP 1 RESULT_CPP_HDRS)
     ENDIF()
-    
+
     # decide whether to build java
     LIST(LENGTH ARG_JAVA JAVA_LENGTH)
     IF(JAVA_LENGTH EQUAL 0)
@@ -116,7 +116,7 @@ FUNCTION(PROTOBUF_GENERATE)
         SET(BUILD_JAVA TRUE)
         LIST(GET ARG_JAVA 0 RESULT_JAVA)
     ENDIF()
-    
+
     # decide whether to build PYTHON
     LIST(LENGTH ARG_PYTHON PYTHON_LENGTH)
     IF(PYTHON_LENGTH EQUAL 0)
@@ -129,7 +129,7 @@ FUNCTION(PROTOBUF_GENERATE)
         SET(BUILD_PYTHON TRUE)
         LIST(GET ARG_PYTHON 0 RESULT_PYTHON)
     ENDIF()
-    
+
     # decide whether to build MATLAB
     LIST(LENGTH ARG_MATLAB MATLAB_LENGTH)
     IF(MATLAB_LENGTH EQUAL 0)
@@ -142,13 +142,13 @@ FUNCTION(PROTOBUF_GENERATE)
         SET(BUILD_MATLAB TRUE)
         LIST(GET ARG_MATLAB 0 RESULT_MATLAB)
     ENDIF()
-    
+
     # create proper export macro for CPP if desired
     IF(EXPORT_MACRO_LENGTH EQUAL 1)
         SET(ARG_EXPORT "dllexport_decl=${ARG_EXPORT_MACRO}:")
         MESSAGE(STATUS "Enabling export macro ${ARG_EXPORT_MACRO} for CPP")
     ENDIF()
-    
+
     SET(OUTPATH ${CMAKE_CURRENT_BINARY_DIR})
     IF(OUTPATH_LENGTH EQUAL 1)
         SET(OUTPATH ${ARG_OUTPATH})
@@ -157,18 +157,18 @@ FUNCTION(PROTOBUF_GENERATE)
     IF(PROTOROOT_LENGTH GREATER 0)
         SET(PROTOROOTS ${ARG_PROTOROOT})
     ENDIF()
-    
+
     SET(ARG_EXPORT "")
     IF(EXPORT_MACRO_LENGTH EQUAL 1)
         SET(ARG_EXPORT "dllexport_decl=${ARG_EXPORT_MACRO}:")
     ENDIF()
-    
+
     # build command line for additional includes paths
     SET(INCLUDE_CMD_LINE)
     FOREACH(P ${ARG_INCLUDES})
         LIST(APPEND INCLUDE_CMD_LINE "--proto_path" ${P})
     ENDFOREACH()
-    
+
     IF(ARG_DEBUG)
         MESSAGE("OUTPATH: ${OUTPATH}")
         MESSAGE("PROTOROOTS: ${PROTOROOTS}")
@@ -177,21 +177,21 @@ FUNCTION(PROTOBUF_GENERATE)
 
     SET(MATCHED_FILE_PATHS)
     FOREACH(PROTOFILE ${ARG_PROTOFILES})
-    
+
         FILE(TO_CMAKE_PATH ${PROTOFILE} PROTOFILE)
-    
+
         # ensure that the file ends with .proto
         STRING(REGEX MATCH "\\.proto$$" PROTOEND ${PROTOFILE})
         IF(NOT PROTOEND)
             MESSAGE(SEND_ERROR "Proto file '${PROTOFILE}' does not end with .proto")
         ENDIF()
-    
+
         GET_FILENAME_COMPONENT(PROTO_PATH ${PROTOFILE} PATH)
         GET_FILENAME_COMPONENT(ABS_FILE ${PROTOFILE} ABSOLUTE)
         GET_FILENAME_COMPONENT(FILE_WE ${PROTOFILE} NAME_WE)
-        
+
         STRING(LENGTH ${ABS_FILE} ABS_FILE_LENGTH)
-        
+
         IF(ARG_DEBUG)
             MESSAGE("file ${PROTOFILE}:")
             MESSAGE("  PATH=${PROTO_PATH}")
@@ -199,24 +199,24 @@ FUNCTION(PROTOBUF_GENERATE)
             MESSAGE("  FILE_WE=${FILE_WE}")
             MESSAGE("  PROTOROOTS=${PROTOROOTS}")
         ENDIF()
-        
+
         # find out if the file is in one of the specified proto root
         # we mimic the protoc logic here by taking the first matching proto_path
         SET(MATCH_PATH)
         FOREACH(ROOT ${PROTOROOTS})
-        
+
             IF(ARG_DEBUG)
                 MESSAGE("  ROOT=${ROOT}")
             ENDIF()
-        
+
             FILE(RELATIVE_PATH REL_ABS ${ROOT} ${ABS_FILE})
             STRING(LENGTH ${REL_ABS} REL_LENGTH)
-            
+
             IF(ARG_DEBUG)
                 MESSAGE("    REL_ABS=${REL_ABS}")
                 MESSAGE("    REL_LENGTH=${REL_LENGTH}")
             ENDIF()
-            
+
             IF(${REL_LENGTH} GREATER 0 AND ${REL_LENGTH} LESS ${ABS_FILE_LENGTH})
                 # we did not need to go directories up, hence the path is shorter
                 # and this is a match... bad assumption but works
@@ -227,18 +227,18 @@ FUNCTION(PROTOBUF_GENERATE)
                 ENDIF()
                 BREAK()
             ENDIF()
-            
+
         ENDFOREACH()
-        
+
         IF(ARG_DEBUG)
             MESSAGE("  MATCH_PATH=${MATCH_PATH}")
         ENDIF()
-        
+
         IF(NOT MATCH_PATH)
             MESSAGE(SEND_ERROR "Proto file '${PROTOFILE}' is not in protoroots '${PROTOROOTS}'")
         ENDIF()
         LIST(APPEND MATCHED_FILE_PATHS ${ABS_FILE})
-        
+
         # build the result file name
         FILE(RELATIVE_PATH ROOT_CLEANED_FILE ${MATCH_ROOT} ${ABS_FILE})
         IF(ARG_DEBUG)
@@ -248,14 +248,14 @@ FUNCTION(PROTOBUF_GENERATE)
         IF(ARG_DEBUG)
             MESSAGE("  EXT_CLEANED_FILE=${EXT_CLEANED_FILE}")
         ENDIF()
-        
+
         SET(CPP_FILE "${OUTPATH}/${EXT_CLEANED_FILE}.pb.cc")
         SET(HDR_FILE "${OUTPATH}/${EXT_CLEANED_FILE}.pb.h")
         SET(PYTHON_FILE "${OUTPATH}/${EXT_CLEANED_FILE}_pb2.py")
-        
+
         # determine the java file name
         FILE(READ ${PROTOFILE} PROTO_CONTENT)
-        
+
         # first the package
         # TODO jwienke: ignore comments... see below TODO
         SET(PACKAGE_REGEX "package[\t ]+([^;\n\r]+);")
@@ -272,9 +272,9 @@ FUNCTION(PROTOBUF_GENERATE)
             MESSAGE("  PACKAGE=${PACKAGE}")
             MESSAGE("  JAVA_PACKAGE_PATH=${JAVA_PACKAGE_PATH}")
         ENDIF()
-        
+
         # then the java class name
-        
+
         # this is the default
         # TODO jwienke: how to integrate that this line must not start with //?
         #               cmake regex are strange, because ^ and $ match beginning
@@ -295,7 +295,7 @@ FUNCTION(PROTOBUF_GENERATE)
         IF(ARG_DEBUG)
             MESSAGE("  JAVA_CLASS=${JAVA_CLASS}")
         ENDIF()
-        
+
         # finally deduce the real java name
         SET(JAVA_FILE "${OUTPATH}/${JAVA_PACKAGE_PATH}/${JAVA_CLASS}.java")
 
@@ -305,17 +305,17 @@ FUNCTION(PROTOBUF_GENERATE)
             MESSAGE("  JAVA_FILE=${JAVA_FILE}")
             MESSAGE("  PYTHON_FILE=${PYTHON_FILE}")
         ENDIF()
-        
+
         # generate and use a list of protoroot arguments to pass to protoc
         SET(ROOT_ARGS)
         FOREACH(ROOT ${PROTOROOTS})
             LIST(APPEND ROOT_ARGS "--proto_path" ${ROOT})
         ENDFOREACH()
-        
+
         IF(BUILD_CPP)
             LIST(APPEND CPP_SRCS "${CPP_FILE}")
             LIST(APPEND CPP_HDRS "${HDR_FILE}")
-    
+
             ADD_CUSTOM_COMMAND(
                 OUTPUT "${CPP_FILE}"
                        "${HDR_FILE}"
@@ -326,10 +326,10 @@ FUNCTION(PROTOBUF_GENERATE)
                 COMMENT "Running C++ protocol buffer compiler on ${ABS_FILE} with root ${MATCH_ROOT}, generating: ${CPP_FILE}"
                 VERBATIM)
         ENDIF()
-        
+
         IF(BUILD_JAVA)
             LIST(APPEND JAVA_FILES "${JAVA_FILE}")
-    
+
             ADD_CUSTOM_COMMAND(
                 OUTPUT "${JAVA_FILE}"
                 COMMAND ${CMAKE_COMMAND} -E make_directory ${OUTPATH}
@@ -339,10 +339,10 @@ FUNCTION(PROTOBUF_GENERATE)
                 COMMENT "Running Java protocol buffer compiler on ${ABS_FILE} with root ${MATCH_ROOT}, generating: ${JAVA_FILE}"
                 VERBATIM)
         ENDIF()
-        
+
         IF(BUILD_PYTHON)
             LIST(APPEND PYTHON_FILES "${PYTHON_FILE}")
-    
+
             ADD_CUSTOM_COMMAND(
                 OUTPUT "${PYTHON_FILE}"
                 COMMAND ${CMAKE_COMMAND} -E make_directory ${OUTPATH}
@@ -352,7 +352,7 @@ FUNCTION(PROTOBUF_GENERATE)
                 COMMENT "Running Python protocol buffer compiler on ${ABS_FILE} with root ${MATCH_ROOT}, generating: ${PYTHON_FILE}"
                 VERBATIM)
         ENDIF()
-            
+
     ENDFOREACH()
 
     IF(BUILD_CPP)
@@ -370,7 +370,7 @@ FUNCTION(PROTOBUF_GENERATE)
         SET_SOURCE_FILES_PROPERTIES(${${PYTHON_FILES}} PROPERTIES GENERATED TRUE)
         SET(${RESULT_PYTHON} ${PYTHON_FILES} PARENT_SCOPE)
     ENDIF()
-    
+
     IF(BUILD_MATLAB)
         ADD_CUSTOM_COMMAND(
             OUTPUT ${OUTPATH}
@@ -385,7 +385,7 @@ FUNCTION(PROTOBUF_GENERATE)
     IF(BUILD_MATLAB)
         SET(${RESULT_MATLAB} ${OUTPATH} PARENT_SCOPE)
     ENDIF()
-    
+
 ENDFUNCTION()
 
 MACRO(PROTOBUF_GENERATE_CPP SRCS HDRS)
@@ -475,7 +475,7 @@ IF(WIN32)
     SET(CMAKE_FIND_LIBRARY_PREFIXES "${PROTOBUF_ORIG_FIND_LIBRARY_PREFIXES}")
 ENDIF()
 
-INCLUDE(FindPackageHandleStandardArgs) 
+INCLUDE(FindPackageHandleStandardArgs)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(PROTOBUF DEFAULT_MSG PROTOBUF_LIBRARY PROTOBUF_INCLUDE_DIR)
 
 IF(PROTOBUF_FOUND)

@@ -308,7 +308,7 @@ FUNCTION(PROTOBUF_GENERATE)
                 # finally deduce the real java name
                 SET(JAVA_FILE "${OUTPATH}/${JAVA_PACKAGE_PATH}/${JAVA_CLASS}.java")
             ELSE()
-                GET_FILENAME_COMPONENT(JAVA_PACKAGE_PATH "${MATCH_PATH}" DIRECTORY)
+                GET_FILENAME_COMPONENT(JAVA_PACKAGE_PATH "${MATCH_PATH}" PATH)
                 SET(JAVA_FILE "${OUTPATH}/${JAVA_PACKAGE_PATH}/${FILE_WE}${ARG_JAVA_FILENAME_SUFFIX}")
             ENDIF()
         ENDIF()

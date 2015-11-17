@@ -38,7 +38,7 @@ FIND_PATH(MONGO_INCLUDE_DIRS
 FIND_LIBRARY(MONGO_LIBRARIES
              PATHS ${MONGO_ROOT}/lib
              NAMES mongoclient)
-             
+
 # post-process inlude path
 IF(MONGO_INCLUDE_DIRS)
     STRING(REPLACE mongo/client "" MONGO_INCLUDE_DIRS ${MONGO_INCLUDE_DIRS})

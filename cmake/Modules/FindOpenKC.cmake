@@ -1,4 +1,4 @@
-# - Try to find Open KUKA Control FRI 
+# - Try to find Open KUKA Control FRI
 # Will define:
 #
 # OPENKC_FOUND - If OpenKC was found
@@ -30,7 +30,7 @@
 #     Bielefeld University
 
 IF(UNIX)
-    
+
     # Try to find xeno-config.h
     FIND_PATH(OPENKC_DIR
               NAMES fri_okc_comm.h
@@ -40,10 +40,10 @@ IF(UNIX)
                     "${CMAKE_INSTALL_PREFIX}/include")
 
     IF(OPENKC_DIR)
-    
+
         SET(OPENKC_FOUND TRUE)
         SET(OPENKC_INCLUDE_DIRS ${OPENKC_DIR})
-        
+
         FIND_LIBRARY(OPENKC_LIBRARIES openkcfri
               HINTS "${OPENKC_DIR}/../lib"
                     "${OPENKC_ROOT}/lib"

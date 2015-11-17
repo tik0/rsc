@@ -37,10 +37,10 @@ ELSE()
             "${CMAKE_BINARY_DIR}"
             "${CHECK_INIT_METHOD_MODULE_DIR}/TestAttributeConstructor.cpp"
             RUN_OUTPUT_VARIABLE RUN_OUTPUT)
-    
+
     IF(ATTRIBUTE_CONSTRUCTOR_RESULT)
         MESSAGE(STATUS "Checking if __attribute__ ((constructor)) is working - compiles")
-        
+
         IF(RUN_OUTPUT MATCHES ".*CONSTRUCTOR.*")
             MESSAGE(STATUS "Checking if __attribute__ ((constructor)) is working - yes")
             SET(INIT_METHOD_ATTRIBUTE_CONSTRUCTOR TRUE CACHE BOOL "auto init method that can be used" FORCE)
@@ -48,21 +48,21 @@ ELSE()
             MESSAGE(STATUS "Checking if __attribute__ ((constructor)) is working - no")
             SET(INIT_METHOD_ATTRIBUTE_CONSTRUCTOR FALSE CACHE BOOL "auto init method that can be used" FORCE)
         ENDIF()
-        
+
     ELSE()
         MESSAGE(STATUS "Checking if __attribute__ ((constructor)) is working - does not compile")
         SET(INIT_METHOD_ATTRIBUTE_CONSTRUCTOR FALSE CACHE BOOL "auto init method that can be used" FORCE)
     ENDIF()
-    
+
     MESSAGE(STATUS "Checking if CRT initialization is working")
     TRY_RUN(CRT_RESULT COMPILER_COMPILES_CRT
             "${CMAKE_BINARY_DIR}"
             "${CHECK_INIT_METHOD_MODULE_DIR}/TestCRTInit.cpp"
             RUN_OUTPUT_VARIABLE RUN_OUTPUT)
-            
+
     IF(CRT_RESULT)
         MESSAGE(STATUS "Checking if CRT initialization is working - compiles")
-        
+
         IF(RUN_OUTPUT MATCHES ".*CONSTRUCTOR.*")
             MESSAGE(STATUS "Checking if CRT initialization is working - yes")
             SET(INIT_METHOD_CRT TRUE CACHE BOOL "auto init method that can be used" FORCE)
@@ -70,12 +70,12 @@ ELSE()
             MESSAGE(STATUS "Checking if CRT initialization is working - no")
             SET(INIT_METHOD_CRT FALSE CACHE BOOL "auto init method that can be used" FORCE)
         ENDIF()
-        
+
     ELSE()
         MESSAGE(STATUS "Checking if CRT initialization is working - does not compile")
         SET(INIT_METHOD_CRT FALSE CACHE BOOL "auto init method that can be used" FORCE)
     ENDIF()
-    
+
     MARK_AS_ADVANCED(INIT_METHOD_ATTRIBUTE_CONSTRUCTOR INIT_METHOD_CRT)
 
 ENDIF()

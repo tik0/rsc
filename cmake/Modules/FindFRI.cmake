@@ -1,4 +1,4 @@
-# - Try to find KUKA FRI (Fast Research Interface) 
+# - Try to find KUKA FRI (Fast Research Interface)
 # Will define:
 #
 # FRI_FOUND - If FRI was found
@@ -29,7 +29,7 @@
 #     Bielefeld University
 
 IF(UNIX)
-    
+
     # Try to find friComm.h
     FIND_PATH(FRI_DIR
               NAMES friComm.h
@@ -39,7 +39,7 @@ IF(UNIX)
               PATHS "${FRI_ROOT}"
                     "${FRI_ROOT}/include"
                     "${CMAKE_INSTALL_PREFIX}/include")
-                    
+
     SET(FRI_INCLUDE_DIRS "${FRI_DIR}")
 
 ENDIF(UNIX)

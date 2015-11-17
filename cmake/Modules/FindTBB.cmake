@@ -86,7 +86,7 @@ FIND_LIBRARY(TBB_LIBRARY
 FIND_LIBRARY(TBBMALLOC_LIBRARY
              HINTS ${TBB_LIBRARY_HINTS}
              NAMES ${TBBMALLOC_LIB_NAME})
-			 
+
 IF(TBB_LIBRARY AND TBBMALLOC_LIBRARY)
     SET(TBB_LIBRARIES ${TBB_LIBRARY} ${TBBMALLOC_LIBRARY})
 ENDIF()
@@ -138,9 +138,9 @@ IF(NOT TBB_VERSION_ACCEPTABLE)
 	# check if the version is acceptable
 	SET(TBB_VERSION_ACCEPTABLE TRUE)
 	IF(TBB_FIND_VERSION)
-		
+
 		MESSAGE(STATUS "TBB version check requested with target version ${TBB_FIND_VERSION}")
-		
+
 		IF(NOT TBB_VERSION_COMPILE_RESULT)
 			# compiling did not work, no version extracted
 			SET(TBB_VERSION_ACCEPTABLE FALSE)
@@ -154,7 +154,7 @@ IF(NOT TBB_VERSION_ACCEPTABLE)
 		    # store we do not want to repeat this check...
 			SET(TBB_VERSION_ACCEPTABLE TRUE CACHE BOOL "TBB version was checked and is sufficient" FORCE)
 		ENDIF()
-		
+
 	ENDIF()
 
 ENDIF()

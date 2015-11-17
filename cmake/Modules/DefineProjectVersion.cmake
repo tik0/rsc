@@ -3,7 +3,7 @@
 #
 # DEFINE_PROJECT_VERSION(OUT_VARIABLE_PREFIX
 #                        MAJOR_DEFAULT MINOR_DEFAULT PATCH_DEFAULT COMMIT_ID_DEFAULT)
-# 
+#
 # Defines in the calling scope the variables:
 # * ${OUT_VARIABLE_PREFIX}VERSION_MAJOR
 # * ${OUT_VARIABLE_PREFIX}VERSION_MINOR
@@ -59,13 +59,13 @@ INCLUDE(GitProjectVersion)
 FUNCTION(DEFINE_PROJECT_VERSION OUT_VARIABLE_PREFIX MAJOR_DEFAULT MINOR_DEFAULT PATCH_DEFAULT COMMIT_ID_DEFAULT)
 
     # version information
-    
+
     SET(VCS_RELEASE FALSE)
 
     # 1a. try to check git for relevant information
     GIT_PROJECT_VERSION(GIT_TAG_NAME VCS_COMMIT_NUMBER_SINCE_BRANCH VCS_COMMIT_ID GIT_RELEASE_BRANCH)
     SET(VCS_RELEASE ${GIT_RELEASE_BRANCH})
-    
+
     # 1b. try SVN
     IF(NOT VCS_COMMIT_ID)
         FIND_PACKAGE(Subversion)
@@ -81,19 +81,19 @@ FUNCTION(DEFINE_PROJECT_VERSION OUT_VARIABLE_PREFIX MAJOR_DEFAULT MINOR_DEFAULT 
             ENDIF()
         ENDIF()
     ENDIF()
-    
+
     # 2. use a provided version file if existing
     IF(NOT VCS_COMMIT_ID AND EXISTS "${CMAKE_SOURCE_DIR}/gitversion.cmake")
         INCLUDE("${CMAKE_SOURCE_DIR}/vcsversion.cmake")
         # alwayas assume that this is a release
         SET(VCS_RELEASE TRUE)
     ENDIF()
-    
+
     # 3. build variables using defaults
     SET(${OUT_VARIABLE_PREFIX}VERSION_MAJOR "${MAJOR_DEFAULT}" PARENT_SCOPE)
     SET(${OUT_VARIABLE_PREFIX}VERSION_MINOR "${MINOR_DEFAULT}" PARENT_SCOPE)
     # we should not make the next two a cache entry as they wouln't be updated
-    # automatically otherwise when the VCS provides new information 
+    # automatically otherwise when the VCS provides new information
     IF(VCS_COMMIT_NUMBER_SINCE_BRANCH)
         SET(VERSION_PATCH "${VCS_COMMIT_NUMBER_SINCE_BRANCH}")
     ELSE()
@@ -106,7 +106,7 @@ FUNCTION(DEFINE_PROJECT_VERSION OUT_VARIABLE_PREFIX MAJOR_DEFAULT MINOR_DEFAULT 
         SET(${OUT_VARIABLE_PREFIX}WC_REVISION "${COMMIT_ID_DEFAULT}" PARENT_SCOPE)
     ENDIF()
     SET(${OUT_VARIABLE_PREFIX}IS_RELEASE ${VCS_RELEASE} PARENT_SCOPE)
-    
+
     SET(${OUT_VARIABLE_PREFIX}VERSION "${MAJOR_DEFAULT}.${MINOR_DEFAULT}.${VERSION_PATCH}" PARENT_SCOPE)
 
 ENDFUNCTION()

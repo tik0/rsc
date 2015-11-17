@@ -36,12 +36,12 @@ SET(LSB_PROCESSOR_ARCH ${CMAKE_SYSTEM_PROCESSOR})
 IF(CMAKE_SIZEOF_VOID_P EQUAL 8)
     SET(LSB_BIT_TYPE 64)
 ELSE()
-    SET(LSB_BIT_TYPE 32)    
-ENDIF() 
+    SET(LSB_BIT_TYPE 32)
+ENDIF()
 
 # ---- Get the system LSB data ----
 IF(UNIX)
-  
+
     FIND_PROGRAM(LSB_RELEASE_EXECUTABLE lsb_release)
     IF(LSB_RELEASE_EXECUTABLE)
         # ---- Get the distribution codename ----
@@ -59,12 +59,12 @@ IF(UNIX)
                         OUTPUT_VARIABLE TMP_LSB_DISTRIBUTOR_ID
                         OUTPUT_STRIP_TRAILING_WHITESPACE)
         STRING(TOLOWER ${TMP_LSB_DISTRIBUTOR_ID} LSB_DISTRIBUTOR_ID)
-        
+
         MESSAGE(STATUS "LSB-Release system information::
            LSB Distributor-ID: ${LSB_DISTRIBUTOR_ID}
            LSB Release: ${LSB_RELEASE}
            LSB Codename: ${LSB_CODENAME}
            System bit type: ${LSB_BIT_TYPE} bit")
-       
-    ENDIF(LSB_RELEASE_EXECUTABLE) 
+
+    ENDIF(LSB_RELEASE_EXECUTABLE)
 ENDIF(UNIX)

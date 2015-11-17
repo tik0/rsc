@@ -59,9 +59,9 @@ FIND_PACKAGE(Cppcheck)
 FUNCTION(GENERATE_CPPCHECK)
 
     IF(CPPCHECK_FOUND)
-    
+
         PARSE_ARGUMENTS(ARG "SOURCES;SUPPRESSION_FILE;ENABLE_IDS;TARGET_NAME;INCLUDES" "INLINE_SUPPRESSION" ${ARGN})
-        
+
         SET(TARGET_NAME "cppcheck")
         SET(TARGET_NAME_SUFFIX "")
         # parse target name
@@ -70,21 +70,21 @@ FUNCTION(GENERATE_CPPCHECK)
             SET(TARGET_NAME ${ARG_TARGET_NAME})
             SET(TARGET_NAME_SUFFIX "-${ARG_TARGET_NAME}")
         ENDIF()
-        
+
         SET(CPPCHECK_CHECKFILE "${CMAKE_BINARY_DIR}/cppcheck-files${TARGET_NAME_SUFFIX}")
         SET(CPPCHECK_REPORT_FILE "${CMAKE_BINARY_DIR}/cppcheck-report${TARGET_NAME_SUFFIX}.xml")
         SET(CPPCHECK_WRAPPER_SCRIPT "${CMAKE_BINARY_DIR}/cppcheck${TARGET_NAME_SUFFIX}.cmake")
-    
+
         # write a list file containing all sources to check for the call to
         # cppcheck
         SET(SOURCE_ARGS "")
         FOREACH(SOURCE ${ARG_SOURCES})
             SET(SOURCE_ARGS "${SOURCE_ARGS} \"${SOURCE}\"")
         ENDFOREACH()
-        
+
         # prepare a cmake wrapper to write the stderr output of cppcheck to
         # the result file
-        
+
         # suppression argument
         LIST(LENGTH ARG_SUPPRESSION_FILE SUPPRESSION_FILE_LENGTH)
         IF(${SUPPRESSION_FILE_LENGTH} EQUAL 1)
@@ -93,19 +93,19 @@ FUNCTION(GENERATE_CPPCHECK)
             SET(SUPPRESSION_ARGUMENT --suppressions)
             SET(SUPPRESSION_FILE "\"${ABS}\"")
         ENDIF()
-        
+
         # inline suppressions
         SET(INLINE_ARG)
         IF(ARG_INLINE_SUPPRESSION)
             SET(INLINE_ARG "--inline-suppr")
         ENDIF()
-        
+
         # includes
         SET(INCLUDE_ARGUMENTS "")
         FOREACH(INCLUDE ${ARG_INCLUDES})
             SET(INCLUDE_ARGUMENTS "${INCLUDE_ARGUMENTS} \"-I${INCLUDE}\"")
         ENDFOREACH()
-        
+
         # enabled ids
         SET(ID_LIST "")
         FOREACH(ID ${ARG_ENABLE_IDS})
@@ -119,7 +119,7 @@ FUNCTION(GENERATE_CPPCHECK)
         ELSE()
             SET(IDS_ARGUMENT "")
         ENDIF()
-        
+
         FILE(WRITE ${CPPCHECK_WRAPPER_SCRIPT}
 "
 EXECUTE_PROCESS(COMMAND \"${CPPCHECK_EXECUTABLE}\" ${INCLUDE_ARGUMENTS} ${SUPPRESSION_ARGUMENT} ${SUPPRESSION_FILE} ${INLINE_ARG} ${IDS_ARGUMENT} --xml ${SOURCE_ARGS}
@@ -135,10 +135,10 @@ ENDIF()
 FILE(WRITE \"${CPPCHECK_REPORT_FILE}\" \"\${ERROR_OUT}\")
 "
             )
-            
+
         ADD_CUSTOM_TARGET(${TARGET_NAME} ${CMAKE_COMMAND} -P "${CPPCHECK_WRAPPER_SCRIPT}"
                           COMMENT "Generating cppcheck result ${TARGET_NAME}")
-                          
+
         MESSAGE(STATUS "Generating cppcheck target with name ${TARGET_NAME}")
 
     ENDIF()

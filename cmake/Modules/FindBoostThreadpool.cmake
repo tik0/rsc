@@ -28,7 +28,7 @@ INCLUDE(FindPackageHandleStandardArgs)
 FIND_PATH(BOOSTTHREADPOOL_INCLUDE_DIRS
           NAMES threadpool.hpp
           PATH_SUFFIXES boost)
-             
+
 # post-process inlude path
 IF(BOOSTTHREADPOOL_INCLUDE_DIRS)
     STRING(REGEX REPLACE boost$$ "" BOOSTTHREADPOOL_INCLUDE_DIRS ${BOOSTTHREADPOOL_INCLUDE_DIRS})

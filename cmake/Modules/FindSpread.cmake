@@ -7,7 +7,7 @@
 # Will react on:
 #  SPREAD_ROOT, additional directory to search for spread
 #  SPREAD_USE_STATIC, if enabled, search for static lib instead of shared, default OFF
-#  SPREAD_IGNORE_EXECUTABLE, if set to true, a missing spread executable will be ignored, default OFF 
+#  SPREAD_IGNORE_EXECUTABLE, if set to true, a missing spread executable will be ignored, default OFF
 #
 # Copyright (C) 2010 by Johannes Wienke <jwienke at techfak dot uni-bielefeld dot de>
 #
@@ -65,7 +65,7 @@ ENDIF()
 IF(Spread_FIND_VERSION AND NOT SPREAD_VERSION_ACCEPTABLE)
 
     MESSAGE(STATUS "Spread version ${Spread_FIND_VERSION} requested")
-    
+
     # find out the spread version that is present using a program to also work
     # if no executable is available
     CONFIGURE_FILE("${FIND_SPREAD_MODULE_DIR}/ExtractSpreadVersion.cpp.in" "${CMAKE_CURRENT_BINARY_DIR}/ExtractSpreadVersion.cpp" @ONLY)
@@ -75,7 +75,7 @@ IF(Spread_FIND_VERSION AND NOT SPREAD_VERSION_ACCEPTABLE)
             RUN_OUTPUT_VARIABLE SPREAD_VERSION
             COMPILE_OUTPUT_VARIABLE SPREAD_VERSION_COMPILE_OUT)
     MESSAGE(STATUS "Found spread version: ${SPREAD_VERSION}")
-    
+
     IF(NOT SPREAD_VERSION_COMPILE_RESULT)
         # Requested version could not be determined
         MESSAGE(STATUS "Unable to determine spread version because the compilation of the test program failed")
@@ -90,7 +90,7 @@ IF(Spread_FIND_VERSION AND NOT SPREAD_VERSION_ACCEPTABLE)
         # store we do not want to repeat this check...
         SET(SPREAD_VERSION_ACCEPTABLE TRUE CACHE BOOL "Spread version was checked and is sufficient" FORCE)
     ENDIF()
-    
+
 ENDIF()
 
 IF(SPREAD_IGNORE_EXECUTABLE)

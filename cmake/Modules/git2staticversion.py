@@ -33,19 +33,19 @@ from distutils.spawn import find_executable
 versionRegEx = re.compile('(?P<major>[0-9]+)\\.(?P<minor>[0-9]+)-(?P<patch>[0-9]+)-(?P<wcRevision>[a-zA-Z0-9]+)')
 
 def run():
-    
+
     # check arguments
     if len(sys.argv) != 2 or '-h' in sys.argv[1:] or '--help' in sys.argv[1:]:
         print("Usage: %s <project folder>" % sys.argv[0])
         print("Will write a vcsversion.cmake file to the specified project folder.")
         sys.exit(1)
-    
+
     # find the git executable
     git = find_executable("git");
     if git is None:
         print("Unable to find the git executable. Add it to your PATH environment variable.")
         sys.exit(1)
-        
+
     # find out the name of this branch
     branchProcess = subprocess.Popen([git, 'branch', '--no-color'], stdout=subprocess.PIPE, cwd=sys.argv[1])
     (branchOutput, branchError) = branchProcess.communicate()
@@ -59,7 +59,7 @@ def run():
         exit(1)
     branch = branchOutput.replace('*', '').strip()
     print("We're on branch: '%s'" % branch)
-    
+
     # get the version from git
     versionProcess = subprocess.Popen([git, 'describe', '--tags', '--match', '*.*'], stdout=subprocess.PIPE, cwd=sys.argv[1])
     (versionOutput, versionError) = versionProcess.communicate()
@@ -71,10 +71,10 @@ def run():
     if versionProcess.returncode != 0:
         print("Git failed: %s" % versionError)
         exit(1)
-        
+
     # parse the version
     versionMatches = re.match(versionRegEx, versionOutput.strip())
-    
+
     # write a file containing the information which can only be gathered from
     # the VCS
     versionFileContents = ""

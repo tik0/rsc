@@ -55,7 +55,7 @@ ELSEIF(MSVC)
 
     # right now W3 is as pedantic as GCC with the above settings
     # still we do not want everything from the compiler...
-    
+
     # needs to have dll-interface to be used by clients
     ADD_DEFINITIONS(/wd4251)
     # exported class derived from non-exported class

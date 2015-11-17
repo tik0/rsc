@@ -32,19 +32,19 @@
 FIND_PACKAGE(sloccount)
 
 FUNCTION(ENABLE_SLOCCOUNT)
-    
+
     # argument parsing
     PARSE_ARGUMENTS(ARG "FOLDERS;RESULT_FILE" "" ${ARGN})
-    
+
     SET(RESULT_FILE "${CMAKE_BINARY_DIR}/sloccount.sc")
     SET(SLOCCOUNT_COMMAND_FILE "${CMAKE_BINARY_DIR}/sloccount.cmake")
-    
+
     # argument parsing
     LIST(LENGTH ARG_FOLDERS FOLDERS_LENGTH)
     IF(FOLDERS_LENGTH EQUAL 0)
         MESSAGE(SEND_ERROR "No folders given for sloccount target")
     ENDIF()
-    
+
     LIST(LENGTH ARG_RESULT_FILE RESULT_FILE_LENGTH)
     IF(RESULT_FILE_LENGTH GREATER 1)
         MESSAGE(SEND_ERROR "Mutiple result file arguments given for sloccount target.")
@@ -52,7 +52,7 @@ FUNCTION(ENABLE_SLOCCOUNT)
     IF(RESULT_FILE_LENGTH EQUAL 1)
         SET(RESULT_FILE ${ARG_RESULT_FILE})
     ENDIF()
-    
+
     IF(SLOCCOUNT_FOUND)
 
         MESSAGE(STATUS "Creating sloccount target for folders: ${ARG_FOLDERS} with result file ${RESULT_FILE}")
@@ -67,14 +67,14 @@ FUNCTION(ENABLE_SLOCCOUNT)
         FILE(APPEND ${SLOCCOUNT_COMMAND_FILE}
              " OUTPUT_FILE \"${RESULT_FILE}\" WORKING_DIRECTORY \"${CMAKE_CURRENT_SOURCE_DIR}\" ERROR_QUIET)\n")
         FILE(APPEND ${SLOCCOUNT_COMMAND_FILE}
-             "FILE(READ \"${RESULT_FILE}\" SLOCCOUNT_OUT)\n")     
+             "FILE(READ \"${RESULT_FILE}\" SLOCCOUNT_OUT)\n")
         FILE(APPEND ${SLOCCOUNT_COMMAND_FILE}
              "MESSAGE(\"\${SLOCCOUNT_OUT}\")\n")
 
         ADD_CUSTOM_TARGET(sloccount
                           ${CMAKE_COMMAND} -P ${SLOCCOUNT_COMMAND_FILE}
                           COMMENT "Generating sloccount report")
-                     
+
     ENDIF()
 
-ENDFUNCTION()   
+ENDFUNCTION()

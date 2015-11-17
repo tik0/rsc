@@ -33,7 +33,7 @@ FUNCTION(GIT_PROJECT_VERSION LATEST_TAG COMMIT_NUMBER COMMIT_ID RELEASE_BRANCH)
     IF(NOT GIT_EXECUTABLE)
         RETURN()
     ENDIF()
-    
+
     # check whether this is a git repository by calling "git status" once
     EXECUTE_PROCESS(COMMAND ${GIT_EXECUTABLE} status
                     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
@@ -43,32 +43,32 @@ FUNCTION(GIT_PROJECT_VERSION LATEST_TAG COMMIT_NUMBER COMMIT_ID RELEASE_BRANCH)
     IF(NOT STATUS_RESULT EQUAL 0)
         RETURN()
     ENDIF()
-    
+
     MESSAGE(STATUS "This is a git repository")
-    
+
     # first, define the last commit id using git log.
     # This is necessary, as git describe later might fail on shallow clones
     EXECUTE_PROCESS(COMMAND ${GIT_EXECUTABLE} log -1 --pretty=format:g%h
                     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
                     RESULT_VARIABLE HASH_RESULT
                     OUTPUT_VARIABLE HASH_OUTPUT)
-    
+
     IF(NOT HASH_RESULT EQUAL 0)
         MESSAGE(STATUS "Unable to extract the git commit hash.")
         RETURN()
     ENDIF()
-    
-    STRING(STRIP ${HASH_OUTPUT} ID)    
+
+    STRING(STRIP ${HASH_OUTPUT} ID)
     SET(${COMMIT_ID} ${ID} PARENT_SCOPE)
-    
+
     # After the commit hash was extracted safely we can try to use the full
-    # git describe logic, which is now safe to fail. 
+    # git describe logic, which is now safe to fail.
     EXECUTE_PROCESS(COMMAND ${GIT_EXECUTABLE} describe --tags --match release-*.* --long
                     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
                     RESULT_VARIABLE VERSION_RESULT
                     OUTPUT_VARIABLE VERSION_OUTPUT)
-           
-    # we should not fail if git execution had an error         
+
+    # we should not fail if git execution had an error
     IF(NOT VERSION_RESULT EQUAL 0)
         RETURN()
     ENDIF()

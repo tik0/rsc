@@ -32,7 +32,7 @@ FIND_PACKAGE(Subversion)
 FUNCTION(Subversion_IS_WC FOLDER RESULT_VAR)
 
     IF(Subversion_FOUND)
-    
+
         # SVN info does not like .. as paths, so be sure that we use a full path
         GET_FILENAME_COMPONENT(ABS_FOLDER ${FOLDER} ABSOLUTE)
         EXECUTE_PROCESS(COMMAND ${Subversion_SVN_EXECUTABLE} info ${ABS_FOLDER}
@@ -44,7 +44,7 @@ FUNCTION(Subversion_IS_WC FOLDER RESULT_VAR)
         ELSE()
             SET(${RESULT_VAR} FALSE PARENT_SCOPE)
         ENDIF()
-    
+
     ELSE()
         MESSAGE(STATUS "Cannot check whether folder ${FOLDER} is a svn working copy because svn was not found. Returning FALSE.")
         SET(${RESULT_VAR} FALSE PARENT_SCOPE)

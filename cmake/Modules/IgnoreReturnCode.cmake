@@ -37,9 +37,9 @@ ENDFOREACH()
 
 EXECUTE_PROCESS(COMMAND ${COMMAND}
                 RESULT_VARIABLE RETURN_CODE)
-                
+
 IF(RETURN_CODE STREQUAL "0")
     MESSAGE(STATUS "Command executed successfully: ${COMMAND}")
 ELSE()
     MESSAGE(STATUS "Command execution was not successfull. Command ${COMMAND} returned exit code: ${RETURN_CODE}")
-ENDIF()    
+ENDIF()

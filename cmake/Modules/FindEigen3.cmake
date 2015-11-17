@@ -32,7 +32,7 @@ ENDIF()
 
 MACRO(_eigen3_check_version)
     FILE(READ "${EIGEN3_INCLUDE_DIR}/Eigen/src/Core/util/Macros.h"
-        _eigen3_version_header LIMIT 5000 OFFSET 1000)
+        _eigen3_version_header LIMIT 5000)
 
     STRING(REGEX MATCH "define *EIGEN_WORLD_VERSION ([0-9]*)" _eigen3_world_version_match "${_eigen3_version_header}")
     SET(EIGEN3_WORLD_VERSION "${CMAKE_MATCH_1}")

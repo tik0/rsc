@@ -30,6 +30,16 @@ FUNCTION(GIT_PROJECT_VERSION LATEST_TAG COMMIT_NUMBER COMMIT_ID RELEASE_BRANCH)
     SET(${COMMIT_ID} "" PARENT_SCOPE)
     SET(${RELEASE_BRANCH} FALSE PARENT_SCOPE)
 
+    # optional input variables to specify the branches and tags to match when
+    # determining the release state and patch component of the version
+    SET(RELEASE_BRANCH_PATTERN "[0-9]+\\.[0-9]+")
+    SET(RELEASE_TAG_PREFIX "release-")
+    LIST(LENGTH ARGN ARGN_LENGTH)
+    IF(${ARGN_LENGTH} GREATER 0)
+        LIST(GET ARGN 0 RELEASE_BRANCH_PATTERN)
+        LIST(GET ARGN 1 RELEASE_TAG_PREFIX)
+    ENDIF()
+
     IF(NOT GIT_EXECUTABLE)
         RETURN()
     ENDIF()
@@ -63,7 +73,8 @@ FUNCTION(GIT_PROJECT_VERSION LATEST_TAG COMMIT_NUMBER COMMIT_ID RELEASE_BRANCH)
 
     # After the commit hash was extracted safely we can try to use the full
     # git describe logic, which is now safe to fail.
-    EXECUTE_PROCESS(COMMAND ${GIT_EXECUTABLE} describe --tags --match release-*.* --long
+    EXECUTE_PROCESS(COMMAND ${GIT_EXECUTABLE}
+                    describe --tags --match "${RELEASE_TAG_PREFIX}*.*" --long
                     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
                     RESULT_VARIABLE VERSION_RESULT
                     OUTPUT_VARIABLE VERSION_OUTPUT)
@@ -76,7 +87,10 @@ FUNCTION(GIT_PROJECT_VERSION LATEST_TAG COMMIT_NUMBER COMMIT_ID RELEASE_BRANCH)
     # make the matching against the branch more specific and grab the respective
     # information
     STRING(STRIP ${VERSION_OUTPUT} VERSION_OUTPUT)
-    STRING(REGEX REPLACE "(release-[0-9]+\\.[0-9]+)-([0-9]+)-(.+)" "\\1;\\2;\\3" VERSION_MATCH ${VERSION_OUTPUT})
+    STRING(REGEX REPLACE
+           "(${RELEASE_TAG_PREFIX}[0-9]+\\.[0-9]+)-([0-9]+)-(.+)"
+           "\\1;\\2;\\3"
+           VERSION_MATCH ${VERSION_OUTPUT})
 
     LIST(LENGTH VERSION_MATCH MATCH_LENGTH)
     IF(NOT MATCH_LENGTH EQUAL 3)
@@ -98,7 +112,7 @@ FUNCTION(GIT_PROJECT_VERSION LATEST_TAG COMMIT_NUMBER COMMIT_ID RELEASE_BRANCH)
         RETURN()
     ENDIF()
     STRING(STRIP "${BRANCH_OUTPUT}" BRANCH_OUTPUT)
-    STRING(REGEX MATCH "^[0-9]+\\.[0-9]+$" BRANCH_MATCH ${BRANCH_OUTPUT})
+    STRING(REGEX MATCH "^${RELEASE_BRANCH_PATTERN}$" BRANCH_MATCH ${BRANCH_OUTPUT})
 
     IF("" STREQUAL BRANCH_MATCH)
         MESSAGE(STATUS "This repository is on a non-release branch. Not defining patch version.")

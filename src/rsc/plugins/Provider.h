@@ -2,7 +2,7 @@
  *
  * This file is part of the RSC project.
  *
- * Copyright (C) 2012, 2014 Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
+ * Copyright (C) 2012, 2014, 2015 Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  *
  * This file may be licensed under the terms of the
  * GNU Lesser General Public License Version 3 (the ``LGPL''),
@@ -62,9 +62,9 @@
 //@}
 
 /**
- * @name hogh-level plugin initialization
+ * @name High-level plugin initialization
  *
- * To provide a plugin implement the following stub:
+ * To provide a plugin, implement the following stub:
  *
  * RSC_PLUGIN_INIT_SIGNATURE() {}
  * RSC_PLUGIN_SHUTDOWN_SIGNATURE() {}

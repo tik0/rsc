@@ -209,44 +209,44 @@ RSC_EXPORT std::ostream& operator<<(std::ostream& stream, const Logger::Level& l
 
 #define RSCTRACE(logger, msg) \
     if (logger->isTraceEnabled()) { \
-        std::stringstream s; \
-        s << msg; \
-        logger->trace(s.str()); \
+        std::stringstream iShouldNeverBeMatchedByClientCode; \
+        iShouldNeverBeMatchedByClientCode << msg; \
+        logger->trace(iShouldNeverBeMatchedByClientCode.str()); \
     }
 
 #define RSCDEBUG(logger, msg) \
     if (logger->isDebugEnabled()) { \
-        std::stringstream s; \
-        s << msg; \
-        logger->debug(s.str()); \
+        std::stringstream iShouldNeverBeMatchedByClientCode; \
+        iShouldNeverBeMatchedByClientCode << msg; \
+        logger->debug(iShouldNeverBeMatchedByClientCode.str()); \
     }
 
 #define RSCINFO(logger, msg) \
     if (logger->isInfoEnabled()) { \
-        std::stringstream s; \
-        s << msg; \
-        logger->info(s.str()); \
+        std::stringstream iShouldNeverBeMatchedByClientCode; \
+        iShouldNeverBeMatchedByClientCode << msg; \
+        logger->info(iShouldNeverBeMatchedByClientCode.str()); \
     }
 
 #define RSCWARN(logger, msg) \
     if (logger->isWarnEnabled()) { \
-        std::stringstream s; \
-        s << msg; \
-        logger->warn(s.str()); \
+        std::stringstream iShouldNeverBeMatchedByClientCode; \
+        iShouldNeverBeMatchedByClientCode << msg; \
+        logger->warn(iShouldNeverBeMatchedByClientCode.str()); \
     }
 
 #define RSCERROR(logger, msg) \
     if (logger->isErrorEnabled()) { \
-        std::stringstream s; \
-        s << msg; \
-        logger->error(s.str()); \
+        std::stringstream iShouldNeverBeMatchedByClientCode; \
+        iShouldNeverBeMatchedByClientCode << msg; \
+        logger->error(iShouldNeverBeMatchedByClientCode.str()); \
     }
 
 #define RSCFATAL(logger, msg) \
     if (logger->isFatalEnabled()) { \
-        std::stringstream s; \
-        s << msg; \
-        logger->fatal(s.str()); \
+        std::stringstream iShouldNeverBeMatchedByClientCode; \
+        iShouldNeverBeMatchedByClientCode << msg; \
+        logger->fatal(iShouldNeverBeMatchedByClientCode.str()); \
     }
 
 //@}
@@ -261,44 +261,44 @@ RSC_EXPORT std::ostream& operator<<(std::ostream& stream, const Logger::Level& l
 
 #define RSCTRACE_EXPECT(condition, logger, msg) \
     if (!(condition) && logger->isTraceEnabled()) { \
-        std::stringstream s; \
-        s << msg << "\nfailed condition: " << #condition; \
-        logger->trace(s.str()); \
+        std::stringstream iShouldNeverBeMatchedByClientCode; \
+        iShouldNeverBeMatchedByClientCode << msg << "\nfailed condition: " << #condition; \
+        logger->trace(iShouldNeverBeMatchedByClientCode.str()); \
     }
 
 #define RSCDEBUG_EXPECT(condition, logger, msg) \
     if (!(condition) && logger->isDebugEnabled()) { \
-        std::stringstream s; \
-        s << msg << "\nfailed condition: " << #condition; \
-        logger->debug(s.str()); \
+        std::stringstream iShouldNeverBeMatchedByClientCode; \
+        iShouldNeverBeMatchedByClientCode << msg << "\nfailed condition: " << #condition; \
+        logger->debug(iShouldNeverBeMatchedByClientCode.str()); \
     }
 
 #define RSCINFO_EXPECT(condition, logger, msg) \
     if (!(condition) && logger->isInfoEnabled()) { \
-        std::stringstream s; \
-        s << msg << "\nfailed condition: " << #condition; \
-        logger->info(s.str()); \
+        std::stringstream iShouldNeverBeMatchedByClientCode; \
+        iShouldNeverBeMatchedByClientCode << msg << "\nfailed condition: " << #condition; \
+        logger->info(iShouldNeverBeMatchedByClientCode.str()); \
     }
 
 #define RSCWARN_EXPECT(condition, logger, msg) \
     if (!(condition) && logger->isWarnEnabled()) { \
-        std::stringstream s; \
-        s << msg << "\nfailed condition: " << #condition; \
-        logger->warn(s.str()); \
+        std::stringstream iShouldNeverBeMatchedByClientCode; \
+        iShouldNeverBeMatchedByClientCode << msg << "\nfailed condition: " << #condition; \
+        logger->warn(iShouldNeverBeMatchedByClientCode.str()); \
     }
 
 #define RSCERROR_EXPECT(condition, logger, msg) \
     if (!(condition) && logger->isErrorEnabled()) { \
-        std::stringstream s; \
-        s << msg << "\nfailed condition: " << #condition; \
-        logger->error(s.str()); \
+        std::stringstream iShouldNeverBeMatchedByClientCode; \
+        iShouldNeverBeMatchedByClientCode << msg << "\nfailed condition: " << #condition; \
+        logger->error(iShouldNeverBeMatchedByClientCode.str()); \
     }
 
 #define RSCFATAL_EXPECT(condition, logger, msg) \
     if (!(condition) && logger->isFatalEnabled()) { \
-        std::stringstream s; \
-        s << msg << "\nfailed condition: " << #condition; \
-        logger->fatal(s.str()); \
+        std::stringstream iShouldNeverBeMatchedByClientCode; \
+        iShouldNeverBeMatchedByClientCode << msg << "\nfailed condition: " << #condition; \
+        logger->fatal(iShouldNeverBeMatchedByClientCode.str()); \
     }
 
 //@}

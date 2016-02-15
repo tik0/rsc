@@ -31,6 +31,7 @@
 #include <boost/tokenizer.hpp>
 
 #include "../runtime/ContainerIO.h"
+#include "../runtime/NoSuchObject.h"
 
 #include "../logging/LoggerFactory.h"
 
@@ -51,6 +52,9 @@ Configurator::Configurator(ManagerPtr manager, const vector<path>& defaultPath)
 }
 
 Configurator::~Configurator() {
+}
+
+void Configurator::execute(bool errorOnMissing) {
     // If a searchpath has not been set via configuration options, use
     // the default.
     if (!this->pathSet) {
@@ -77,6 +81,11 @@ Configurator::~Configurator() {
                                     % e.what()));
         }
         RSCDEBUG(this->logger, "Found " << matches.size() << " match(es)");
+
+        if (matches.empty() && errorOnMissing) {
+            throw runtime::NoSuchObject(str(format(
+                            "Cannot find a plugin with name %1%") % pattern));
+        }
 
         // Try to load all plugins matching the pattern.
         for (set<PluginPtr>::iterator it = matches.begin();

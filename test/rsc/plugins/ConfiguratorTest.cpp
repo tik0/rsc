@@ -70,6 +70,34 @@ TEST_F(ConfiguratorTest, testNoExceptionSamePluginSpecifiedTwice) {
     c.handleOption(loadOption, "testplugin");
     c.handleOption(loadOption, "testplugin");
 
+    c.execute();
+
+}
+
+TEST_F(ConfiguratorTest, testExceptionIfPluginDoesNotExist) {
+
+    Configurator c(this->pluginManager, this->defaultPath);
+    vector<string> loadOption;
+    loadOption.push_back("plugins");
+    loadOption.push_back("cpp");
+    loadOption.push_back("load");
+    c.handleOption(loadOption, "doesntexist");
+
+    EXPECT_THROW(c.execute(), NoSuchObject);
+
+}
+
+TEST_F(ConfiguratorTest, testNoExceptionIfPluginDoesNotExist) {
+
+    Configurator c(this->pluginManager, this->defaultPath);
+    vector<string> loadOption;
+    loadOption.push_back("plugins");
+    loadOption.push_back("cpp");
+    loadOption.push_back("load");
+    c.handleOption(loadOption, "doesntexist");
+
+    c.execute(false);
+
 }
 
 TEST_F(ConfiguratorTest, testInvalidPluginPath) {

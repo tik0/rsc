@@ -2,7 +2,7 @@
  *
  * This file is part of the RSC project.
  *
- * Copyright (C) 2012, 2014 Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
+ * Copyright (C) 2012, 2014, 2016 Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  *
  * This file may be licensed under the terms of the
  * GNU Lesser General Public License Version 3 (the ``LGPL''),
@@ -81,13 +81,17 @@ private:
 
     ManagerPtr manager;
 
-    bool                                 pathSet;
     std::vector<boost::filesystem::path> defaultPath;
-    std::set<std::string>                load;
+
+    std::vector<std::string>             path;
+    std::vector<std::string>             load;
 
     void addDefaultPath();
 
-    std::vector<std::string> splitValue(const std::string& value) const;
+    void addPathEntries(const std::vector<std::string>& entries);
+
+    void loadPlugins(const std::vector<std::string>& names,
+                     bool errorOnMissing);
 };
 
 }

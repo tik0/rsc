@@ -60,6 +60,21 @@ protected:
     const vector<boost::filesystem::path> defaultPath;
 };
 
+TEST_F(ConfiguratorTest, testListOfPluginsWithPreviousValue) {
+
+    Configurator c(this->pluginManager, this->defaultPath);
+    vector<string> loadOption;
+    loadOption.push_back("plugins");
+    loadOption.push_back("cpp");
+    loadOption.push_back("load");
+    c.handleOption(loadOption, "testplugin:testplugin");
+    c.handleOption(loadOption, "testplugin::");
+
+    EXPECT_THROW(c.execute(false), runtime_error);
+
+}
+
+
 TEST_F(ConfiguratorTest, testNoExceptionSamePluginSpecifiedTwice) {
 
     Configurator c(this->pluginManager, this->defaultPath);

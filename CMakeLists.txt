@@ -27,7 +27,7 @@ OPTION(ENCODE_VERSION "If set to ON, install pathes and library name will have t
 
 # --- global definitions ---
 
-DEFINE_PROJECT_VERSION(RSC_ 0 13 0 "archive")
+DEFINE_PROJECT_VERSION(RSC_ 0 14 0 "archive")
 CURRENT_DATE(RSC_BUILD_DATE)
 
 MESSAGE(STATUS "This is RSC version: ${RSC_VERSION}-${RSC_WC_REVISION}")
@@ -217,4 +217,3 @@ GENERATE_CPPCHECK(SOURCES src test examples
                   "${CMAKE_CURRENT_BINARY_DIR}/src" "${CMAKE_CURRENT_BINARY_DIR}/test" "${CMAKE_CURRENT_BINARY_DIR}/examples"
                   ENABLE_IDS style
                   INLINE_SUPPRESSION)
-

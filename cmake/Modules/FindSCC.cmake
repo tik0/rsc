@@ -1,4 +1,4 @@
-# - Try to find qt-labs scxml binary 
+# - Try to find qt-labs scxml binary
 # Will define:
 #
 # SCC_FOUND - If qt-labs scxml was found

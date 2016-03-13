@@ -3,7 +3,7 @@
 #
 # DEFINE_PROJECT_VERSION(OUT_VARIABLE_PREFIX
 #                        MAJOR_DEFAULT MINOR_DEFAULT PATCH_DEFAULT COMMIT_ID_DEFAULT)
-# 
+#
 # Defines in the calling scope the variables:
 # * ${OUT_VARIABLE_PREFIX}VERSION_MAJOR
 # * ${OUT_VARIABLE_PREFIX}VERSION_MINOR
@@ -56,16 +56,30 @@
 
 INCLUDE(GitProjectVersion)
 
+SET(DEFINE_PROJECT_VERSION_DEFAULT_RELEASE_BRANCH_PATTERN "[0-9]+\\.[0-9]+")
+SET(DEFINE_PROJECT_VERSION_DEFAULT_RELEASE_TAG_PREFIX "release-")
+
 FUNCTION(DEFINE_PROJECT_VERSION OUT_VARIABLE_PREFIX MAJOR_DEFAULT MINOR_DEFAULT PATCH_DEFAULT COMMIT_ID_DEFAULT)
 
+    # optional input variables to specify the branches and tags to match when
+    # determining the release state and patch component of the version
+    SET(RELEASE_BRANCH_PATTERN ${DEFINE_PROJECT_VERSION_DEFAULT_RELEASE_BRANCH_PATTERN})
+    SET(RELEASE_TAG_PREFIX ${DEFINE_PROJECT_VERSION_DEFAULT_RELEASE_TAG_PREFIX})
+    LIST(LENGTH ARGN ARGN_LENGTH)
+    IF(${ARGN_LENGTH} GREATER 0)
+        LIST(GET ARGN 0 RELEASE_BRANCH_PATTERN)
+        LIST(GET ARGN 1 RELEASE_TAG_PREFIX)
+    ENDIF()
+
     # version information
-    
+
     SET(VCS_RELEASE FALSE)
 
     # 1a. try to check git for relevant information
-    GIT_PROJECT_VERSION(GIT_TAG_NAME VCS_COMMIT_NUMBER_SINCE_BRANCH VCS_COMMIT_ID GIT_RELEASE_BRANCH)
+    GIT_PROJECT_VERSION(GIT_TAG_NAME VCS_COMMIT_NUMBER_SINCE_BRANCH VCS_COMMIT_ID GIT_RELEASE_BRANCH
+                        "${RELEASE_BRANCH_PATTERN}" "${RELEASE_TAG_PREFIX}")
     SET(VCS_RELEASE ${GIT_RELEASE_BRANCH})
-    
+
     # 1b. try SVN
     IF(NOT VCS_COMMIT_ID)
         FIND_PACKAGE(Subversion)
@@ -76,24 +90,25 @@ FUNCTION(DEFINE_PROJECT_VERSION OUT_VARIABLE_PREFIX MAJOR_DEFAULT MINOR_DEFAULT 
             IF(SVN_WC_REVISION)
                 SET(VCS_COMMIT_ID ${SVN_WC_REVISION})
             ENDIF()
-            IF("${SVN_WC_URL}" MATCHES "^.*(tags|branches)/.*")
+            IF("${SVN_WC_URL}" MATCHES
+               "^.*(tags/${RELEASE_TAG_PREFIX}[0-9]+\\.[0-9]+-[0-9]+-.+|branches/${RELEASE_BRANCH_PATTERN})(/.*)?")
                 SET(VCS_RELEASE TRUE)
             ENDIF()
         ENDIF()
     ENDIF()
-    
+
     # 2. use a provided version file if existing
     IF(NOT VCS_COMMIT_ID AND EXISTS "${CMAKE_SOURCE_DIR}/gitversion.cmake")
         INCLUDE("${CMAKE_SOURCE_DIR}/vcsversion.cmake")
         # alwayas assume that this is a release
         SET(VCS_RELEASE TRUE)
     ENDIF()
-    
+
     # 3. build variables using defaults
     SET(${OUT_VARIABLE_PREFIX}VERSION_MAJOR "${MAJOR_DEFAULT}" PARENT_SCOPE)
     SET(${OUT_VARIABLE_PREFIX}VERSION_MINOR "${MINOR_DEFAULT}" PARENT_SCOPE)
     # we should not make the next two a cache entry as they wouln't be updated
-    # automatically otherwise when the VCS provides new information 
+    # automatically otherwise when the VCS provides new information
     IF(VCS_COMMIT_NUMBER_SINCE_BRANCH)
         SET(VERSION_PATCH "${VCS_COMMIT_NUMBER_SINCE_BRANCH}")
     ELSE()
@@ -106,7 +121,7 @@ FUNCTION(DEFINE_PROJECT_VERSION OUT_VARIABLE_PREFIX MAJOR_DEFAULT MINOR_DEFAULT 
         SET(${OUT_VARIABLE_PREFIX}WC_REVISION "${COMMIT_ID_DEFAULT}" PARENT_SCOPE)
     ENDIF()
     SET(${OUT_VARIABLE_PREFIX}IS_RELEASE ${VCS_RELEASE} PARENT_SCOPE)
-    
+
     SET(${OUT_VARIABLE_PREFIX}VERSION "${MAJOR_DEFAULT}.${MINOR_DEFAULT}.${VERSION_PATCH}" PARENT_SCOPE)
 
 ENDFUNCTION()

@@ -1,13 +1,13 @@
-# - Try to find the Xenomai Real-Time 
+# - Try to find the Xenomai Real-Time
 # Will define:
 #
 # XENOMAI_INCLUDE_DIR - Include directories needed to use the C++ driver
 # XENOMAI_INCLUDE_POSIX_DIR - Include directories for POSIX systems
 # XENOMAI_POSIX_WRAPPERS - Directories containing the libraries (win)
-# XENOMAI_LIBRARY_XENOMAI - Xenomai library 
+# XENOMAI_LIBRARY_XENOMAI - Xenomai library
 # XENOMAI_LIBRARY_NATIVE - Native library
-# XENOMAI_LIBRARY_PTHREAD_RT - 
-# XENOMAI_LIBRARY_RTDM - 
+# XENOMAI_LIBRARY_PTHREAD_RT -
+# XENOMAI_LIBRARY_RTDM -
 # XENOMAI_DEFINITIONS - Xenomai definitions / compiler flags
 #
 # Possible hints:
@@ -37,12 +37,12 @@ IF(UNIX)
 
 	# Search Path
 	SET(XENOMAI_SEARCH_PATH /usr/include/xenomai /usr/local/xenomai /usr/xenomai /usr)
-	
+
 	# Try to find xeno-config.h
 	FIND_PATH(XENOMAI_DIR xeno_config.h ${XENOMAI_SEARCH_PATH})
 
 	IF(XENOMAI_DIR)
-	
+
 		SET(XENOMAI_FOUND TRUE)
 
 		# Set include directory
@@ -66,7 +66,7 @@ IF(UNIX)
 
 		# Add compile/preprocess options
 		SET(XENOMAI_DEFINITIONS "-D_GNU_SOURCE -D_REENTRANT -Wall -pipe -D__XENO__")
-	
+
 	ENDIF(XENOMAI_DIR)
 
 ENDIF(UNIX)

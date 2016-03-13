@@ -29,43 +29,43 @@ INCLUDE(CheckCXXCompilerFlag)
 # TODO find a flag that better tells if this is GCC
 IF(UNIX)
 
-	SET(FLAGS_TO_TEST 
+	SET(FLAGS_TO_TEST
 	  -pipe
 	  -Wall
 	  -Wextra
-	  -fdiagnostics-show-option 
-	  -pedantic 
-	  -Wchar-subscripts 
-	  -Winit-self 
-	  -Wswitch-enum 
-	  -Wstrict-aliasing=3 
-	  -Wstrict-overflow=5 
-	  -Wundef 
-	  -Wno-endif-labels 
-	  -Wshadow 
-	  -Wno-system-headers 
-	  -Wno-builtin-macro-redefined 
-	  -Wmissing-declarations 
-	  -Wsign-conversion 
+	  -fdiagnostics-show-option
+	  -pedantic
+	  -Wchar-subscripts
+	  -Winit-self
+	  -Wswitch-enum
+	  -Wstrict-aliasing=3
+	  -Wstrict-overflow=5
+	  -Wundef
+	  -Wno-endif-labels
+	  -Wshadow
+	  -Wno-system-headers
+	  -Wno-builtin-macro-redefined
+	  -Wmissing-declarations
+	  -Wsign-conversion
 	  -Weffc++)
 
 	FOREACH(F ${FLAGS_TO_TEST})
-	  #we make a good unique variable name for the check
-	  STRING(REGEX REPLACE "[-+=]" "_" F_CHECK_NAME ${F})
-	  SET(F_CHECK_NAME CHECK_CXX_FLAG${F_CHECK_NAME})
-	  #now we do the check
-	  CHECK_CXX_COMPILER_FLAG(${F} ${F_CHECK_NAME})
-	  #if the check pass, lets add the definition
-	  IF(${F_CHECK_NAME})
-		ADD_DEFINITIONS(${f})
-	  ENDIF(${F_CHECK_NAME})
-	ENDFOREACH(F ${FLAGS_TO_TEST})
+        #we make a good unique variable name for the check
+        STRING(REGEX REPLACE "[-+=]" "_" F_CHECK_NAME ${F})
+        SET(F_CHECK_NAME CHECK_CXX_FLAG${F_CHECK_NAME})
+        #now we do the check
+        CHECK_CXX_COMPILER_FLAG(${F} ${F_CHECK_NAME})
+        #if the check pass, lets add the definition
+        IF(${F_CHECK_NAME})
+            ADD_DEFINITIONS(${f})
+        ENDIF()
+	ENDFOREACH()
 
 ELSEIF(MSVC)
 
     # right now W3 is as pedantic as GCC with the above settings
     # still we do not want everything from the compiler...
-    
+
     # needs to have dll-interface to be used by clients
     ADD_DEFINITIONS(/wd4251)
     # exported class derived from non-exported class

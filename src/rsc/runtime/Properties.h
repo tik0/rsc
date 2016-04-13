@@ -2,7 +2,7 @@
  *
  * This file is part of the RSC project
  *
- * Copyright (C) 2010, 2011 Jan Moringen
+ * Copyright (C) 2010-2016 Jan Moringen
  *
  * This file may be licensed under the terms of the
  * GNU Lesser General Public License Version 3 (the ``LGPL''),
@@ -107,7 +107,8 @@ public:
     T
     get(const std::string& name, const T& default_) const;
 
-    /** Parse the value of the property @a name as type @a T and
+    /**
+     * Parse the value of the property @a name as type @a T and
      * return the parsed value.
      *
      * This assumes that the stored value is of type @ref std::string.
@@ -121,7 +122,8 @@ public:
     template<typename T>
     T getAs(const std::string& name) const;
 
-    /** Parse the value of the property @a name as type @a T and
+    /**
+     * Parse the value of the property @a name as type @a T and
      * return the parsed value.
      *
      * This assumes that the stored value is of type @ref std::string.

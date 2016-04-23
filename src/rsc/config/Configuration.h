@@ -43,8 +43,9 @@ namespace config {
  * The following configuration configuration sources are considered
  * based on @a configFileName:
  *
- * -# Prepending a prefix-wide configuration directory (e.g. @c
- *    /usr/local/etc/) to @a configFileName
+ * -# Prepending a prefix-wide configuration directory, computed by
+ *    applying @ref prefixConfigDirectory to the value of the @a
+ *    prefix parameter, (e.g. @c /usr/local/etc/) to @a configFileName
  * -# Prepending a user-specific configuration directory (e.g. @c
  *    $HOME/.config) to @a configFileName
  * -# Prepending the current working directory (@c $(pwd)) to @a
@@ -71,8 +72,10 @@ namespace config {
  *                                       RSC_ is set as prefix and this is true,
  *                                       RSC_TEST will be passed to the handlers
  *                                       as just TEST. Default is true.
- * @param prefix the (installation) prefix under which to search for a
- *               prefix-wide configuration file
+ * @param prefix the (installation) prefix for which the prefix
+ *               configuration directory should be computed (by
+ *               calling @ref prefixConfigDirectory) when searching
+ *               for a prefix-wide configuration file.
  *
  * @author jmoringe
  */

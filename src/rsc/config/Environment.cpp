@@ -2,7 +2,7 @@
  *
  * This file is part of the RSC project
  *
- * Copyright (C) 2011, 2012, 2013 Jan Moringen
+ * Copyright (C) 2011-2016 Jan Moringen
  *
  * This file may be licensed under the terms of the
  * GNU Lesser General Public License Version 3 (the ``LGPL''),
@@ -99,6 +99,16 @@ path userHomeDirectory() {
 
 path userConfigDirectory() {
     return userHomeDirectory() / ".config";
+}
+
+boost::shared_ptr<std::string> getEnvironmentVariable(const std::string& name) {
+    for (environment_iterator it = environment_iterator(environ); it
+             != environment_iterator(); ++it) {
+        if (it->first == name) {
+            return boost::shared_ptr<string>(new string(it->second));
+        }
+    }
+    return boost::shared_ptr<string>();
 }
 
 string transformName(const string& name, const string& prefix,

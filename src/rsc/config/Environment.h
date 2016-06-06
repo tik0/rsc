@@ -2,7 +2,7 @@
  *
  * This file is part of the RSC project
  *
- * Copyright (C) 2011, 2012, 2013 Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
+ * Copyright (C) 2011-2016 Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  *
  * This file may be licensed under the terms of the
  * GNU Lesser General Public License Version 3 (the ``LGPL''),
@@ -89,6 +89,18 @@ RSC_EXPORT boost::filesystem::path userHomeDirectory();
  */
 RSC_EXPORT boost::filesystem::path userConfigDirectory();
 
+/**
+ * Return the value of the environment value @a name or an empty
+ * pointer.
+ *
+ * @return A @ref boost::shared_ptr that is null if there is no
+ *         environment variable named @a name and holds the value of
+ *         the environment variable otherwise.
+ *
+ * @author jmoringe
+ */
+RSC_EXPORT boost::shared_ptr<std::string>
+getEnvironmentVariable(const std::string& name);
 
 /**
  * Objects of this class analyze the environment of the current

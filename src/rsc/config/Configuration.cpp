@@ -2,7 +2,7 @@
  *
  * This file is part of the RSC project
  *
- * Copyright (C) 2012, 2013 Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
+ * Copyright (C) 2012, 2013, 2016 Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  *
  * This file may be licensed under the terms of the
  * GNU Lesser General Public License Version 3 (the ``LGPL''),
@@ -51,6 +51,13 @@ LoggerPtr getLogger() {
     return logger;
 }
 
+void describeFileStream(const std::string&             label,
+                        const boost::filesystem::path& path,
+                        const istream&                 stream) {
+    cerr << "  " << label << " " << path << " "
+         << (stream ? "exists" : "does not exist") << endl;
+}
+
 void configure(OptionHandler&                 handler,
                const string&                  configFileName,
                const string&                  environmentVariablePrefix,
@@ -58,6 +65,13 @@ void configure(OptionHandler&                 handler,
                const char**                   argv,
                bool                           stripEnvironmentVariablePrefix,
                const boost::filesystem::path& prefix) {
+    bool debug = getEnvironmentVariable("__CONFIG_DEBUG");
+
+    // 0) In debug mode, header first.
+    if (debug) {
+        cerr << "Configuring with sources (lowest priority first)" << endl
+             << "  1. Configuration files" << endl;
+    }
 
     // 1) Try prefix-wide configuration file
     //    (lowest priority)
@@ -65,6 +79,10 @@ void configure(OptionHandler&                 handler,
         prefixWideFile(prefixConfigDirectory(prefix) / configFileName);
     try {
         boost::filesystem::ifstream stream(prefixWideFile);
+        if (debug) {
+            describeFileStream("   1. Prefix wide config file",
+                               prefixWideFile, stream);
+        }
         if (stream) {
             ConfigFileSource source(stream);
             source.provideOptions(handler);
@@ -83,8 +101,12 @@ void configure(OptionHandler&                 handler,
     // exception.
     bool isUserConfigDirOK = false;
     try {
-        boost::filesystem::ifstream
-            stream(userConfigDirectory() / configFileName);
+        boost::filesystem::path userFile(userConfigDirectory()
+                                         / configFileName);
+        boost::filesystem::ifstream stream(userFile);
+        if (debug) {
+            describeFileStream("   2. User config file", userFile, stream);
+        }
         isUserConfigDirOK = true;
         if (stream) {
             ConfigFileSource source(stream);
@@ -102,6 +124,10 @@ void configure(OptionHandler&                 handler,
     // 3) Try configuration file in current directory.
     {
         boost::filesystem::ifstream stream(configFileName);
+        if (debug) {
+            describeFileStream("   3. Current directory file",
+                               configFileName, stream);
+        }
         if (stream) {
             ConfigFileSource source(stream);
             source.provideOptions(handler);
@@ -112,14 +138,41 @@ void configure(OptionHandler&                 handler,
     {
         EnvironmentVariableSource source(environmentVariablePrefix,
                 stripEnvironmentVariablePrefix);
+        if (debug) {
+            cerr << "  2. Environment variables with prefix "
+                 << environmentVariablePrefix << endl;
+            EnvironmentVariableSource::Matches matches = source.getMatches();
+            if (!matches.empty()) {
+                for (EnvironmentVariableSource::Matches::const_iterator it
+                         = matches.begin(); it != matches.end(); ++it) {
+                    cerr << "     "
+                         << it->getRawName() << " -> " << it->getValue();
+                }
+            } else {
+                cerr << "     <none>";
+            }
+            cerr << endl;
+        }
         source.provideOptions(handler);
     }
 
     // 5) Command line
     //    (highest priority)
+    if (debug) {
+        cerr << "  3. Commandline options" << endl;
+    }
     if (argc > 0) {
+        if (debug){
+            for (int i = 0; i < argc; ++i) {
+                cerr << "     " << argv[i] << endl;
+            }
+        }
         CommandLinePropertySource source(argc, argv);
         source.provideOptions(handler);
+    } else {
+        if (debug) {
+            cerr << "     <none>" << endl;
+        }
     }
 
 }

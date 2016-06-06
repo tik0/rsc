@@ -2,7 +2,7 @@
  *
  * This file is part of the RSC project
  *
- * Copyright (C) 2012, 2013 Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
+ * Copyright (C) 2012, 2013, 2016 Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  *
  * This file may be licensed under the terms of the
  * GNU Lesser General Public License Version 3 (the ``LGPL''),
@@ -53,6 +53,10 @@ namespace config {
  * -# Environment Variables
  *
  * See #ConfigFileSource for the configuration file format.
+ *
+ * Setting the environment variable @c __CONFIG_DEBUG to an arbitrary
+ * value enables configuration debugging. All debug output is written
+ * to @c stderr.
  *
  * @param handler Receiver of the configuration options.
  * @param configFileName A filename (without directory) from which

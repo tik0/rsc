@@ -126,26 +126,53 @@ string transformName(const string& name, const string& prefix,
     }
 }
 
+EnvironmentVariableSource::Match::Match(const string& rawName,
+                                        const string& transformedName,
+                                        const string& value)
+    : rawName(rawName), transformedName(transformedName), value(value) {
+}
+
+const string& EnvironmentVariableSource::Match::getRawName() const {
+    return this->rawName;
+}
+
+const string& EnvironmentVariableSource::Match::getTransformedName() const {
+    return this->transformedName;
+}
+
+const string& EnvironmentVariableSource::Match::getValue() const {
+    return this->value;
+}
+
 EnvironmentVariableSource::EnvironmentVariableSource(const string& prefix,
         const bool& stripPrefix) :
         logger(Logger::getLogger("rsc.config.EnvironmentVariableSource")), prefix(
                 prefix), stripPrefix(stripPrefix) {
 }
 
-void EnvironmentVariableSource::provideOptions(OptionHandler& handler) {
-    for (environment_iterator it = environment_iterator(environ); it
-            != environment_iterator(); ++it) {
-        string name = transformName(it->first, this->prefix, this->stripPrefix);
-        if (name.empty()) {
-            continue;
+EnvironmentVariableSource::Matches EnvironmentVariableSource::getMatches() {
+    if (!this->matches) {
+        this->matches.reset(new Matches());
+        for (environment_iterator it = environment_iterator(environ); it
+                 != environment_iterator(); ++it) {
+            string name = transformName(it->first, this->prefix, this->stripPrefix);
+            if (name.empty()) {
+                continue;
+            }
+            this->matches->push_back(Match(it->first, name, it->second));
         }
+    }
+    return *this->matches;
+}
 
+void EnvironmentVariableSource::provideOptions(OptionHandler& handler) {
+    Matches matches = getMatches();
+    for (Matches::const_iterator it = matches.begin();
+         it != matches.end(); ++it) {
         vector<string> key;
-        split(key, name, is_any_of("_"));
-        string value = it->second;
-
+        split(key, it->getTransformedName(), is_any_of("_"));
+        const string& value = it->getValue();
         RSCTRACE(logger, "Option " << key << " -> " << value);
-
         handler.handleOption(key, value);
     }
 }

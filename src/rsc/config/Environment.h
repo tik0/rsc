@@ -27,6 +27,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 #include <boost/filesystem/path.hpp>
 
@@ -113,6 +114,22 @@ getEnvironmentVariable(const std::string& name);
  */
 class RSC_EXPORT EnvironmentVariableSource : public ConfigSource {
 public:
+    class Match {
+    public:
+        Match(const std::string& rawName,
+              const std::string& transformedName,
+              const std::string& value);
+
+        const std::string& getRawName() const;
+        const std::string& getTransformedName() const;
+        const std::string& getValue() const;
+    private:
+        std::string rawName;
+        std::string transformedName;
+        std::string value;
+    };
+    typedef std::vector<Match> Matches;
+
     /**
      * Construct a source that collect environment variables whose
      * name starts with @a prefix.
@@ -129,11 +146,22 @@ public:
             const bool& stripPrefix = true);
 
     void provideOptions(OptionHandler& handler);
+
+    /**
+     * Return matching environment variables.
+     *
+     * @return A collection of @ref Match instances each containing
+     *         the raw and transformed name of an environment variable
+     *         along with its value.
+     */
+    Matches getMatches();
 private:
     rsc::logging::LoggerPtr logger;
 
     const std::string prefix;
     bool stripPrefix;
+
+    boost::shared_ptr<Matches> matches;
 };
 
 }

@@ -28,7 +28,7 @@ OPTION(ENCODE_VERSION "If set to ON, install pathes and library name will have t
 # --- global definitions ---
 
 SET(VERSION_MAJOR "0" CACHE STRING "Major project version part")
-SET(VERSION_MINOR "14" CACHE STRING "Minor project version part")
+SET(VERSION_MINOR "15" CACHE STRING "Minor project version part")
 
 DEFINE_PROJECT_VERSION(RSC_ ${VERSION_MAJOR} ${VERSION_MINOR} 0 "archive")
 CURRENT_DATE(RSC_BUILD_DATE)

@@ -146,12 +146,12 @@ void configure(OptionHandler&                 handler,
                 for (EnvironmentVariableSource::Matches::const_iterator it
                          = matches.begin(); it != matches.end(); ++it) {
                     cerr << "     "
-                         << it->getRawName() << " -> " << it->getValue();
+                         << it->getRawName() << " -> " << it->getValue()
+                         << endl;
                 }
             } else {
-                cerr << "     <none>";
+                cerr << "     <none>" << endl;
             }
-            cerr << endl;
         }
         source.provideOptions(handler);
     }

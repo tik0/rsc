@@ -45,6 +45,8 @@ using namespace rsc::logging;
 namespace rsc {
 namespace config {
 
+const std::string DEFAULT_DEBUG_VARIABLE_NAME = "__CONFIG_DEBUG";
+
 LoggerPtr getLogger() {
     static LoggerPtr logger
     = logging::LoggerFactory::getInstance().getLogger("rsc.config.configure()");
@@ -64,8 +66,9 @@ void configure(OptionHandler&                 handler,
                int                            argc,
                const char**                   argv,
                bool                           stripEnvironmentVariablePrefix,
-               const boost::filesystem::path& prefix) {
-    bool debug = getEnvironmentVariable("__CONFIG_DEBUG").get();
+               const boost::filesystem::path& prefix,
+               const std::string&             debugVariableName) {
+    bool debug = getEnvironmentVariable(debugVariableName).get();
 
     // 0) In debug mode, header first.
     if (debug) {

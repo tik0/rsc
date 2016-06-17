@@ -35,6 +35,8 @@
 namespace rsc {
 namespace config {
 
+extern const std::string DEFAULT_DEBUG_VARIABLE_NAME;
+
 /**
  * Pass configuration options in from configuration files derived from
  * @a configFileName and environment variables with prefix @a
@@ -89,7 +91,8 @@ void RSC_EXPORT configure(OptionHandler&                 handler,
                           int                            argc                           = 0,
                           const char**                   argv                           = 0,
                           bool                           stripEnvironmentVariablePrefix = true,
-                          const boost::filesystem::path& prefix                         = "/");
+                          const boost::filesystem::path& prefix                         = "/",
+                          const std::string&             debugVariableName              = DEFAULT_DEBUG_VARIABLE_NAME);
 
 }
 }

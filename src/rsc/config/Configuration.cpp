@@ -28,6 +28,8 @@
 
 #include <stdexcept>
 
+#include <boost/tuple/tuple.hpp> // for boost::tie
+#include <boost/lexical_cast.hpp>
 #include <boost/format.hpp>
 #include <boost/filesystem/fstream.hpp>
 
@@ -38,6 +40,8 @@
 #include "ConfigFileSource.h"
 #include "CommandLinePropertySource.h"
 
+#include "Utility.h"
+
 using namespace std;
 
 using namespace rsc::logging;
@@ -47,10 +51,51 @@ namespace config {
 
 const std::string DEFAULT_DEBUG_VARIABLE_NAME = "__CONFIG_DEBUG";
 
+const std::string DEFAULT_FILE_VARIABLE_NAME = "__CONFIG_FILES";
+
+const std::string CONFIG_FILE_KEY_PREFIX = "%prefix";
+const std::string CONFIG_FILE_KEY_USER   = "%user";
+const std::string CONFIG_FILE_KEY_PWD    = "%pwd";
+
 LoggerPtr getLogger() {
     static LoggerPtr logger
     = logging::LoggerFactory::getInstance().getLogger("rsc.config.configure()");
     return logger;
+}
+
+std::vector<std::string>
+defaultConfigurationFiles(const std::string& fileVariableName) {
+    boost::shared_ptr<std::string> files;
+    if ((files = getEnvironmentVariable(fileVariableName))) {
+        return splitSequenceValue(*files);
+    } else {
+        std::vector<std::string> result;
+        result.push_back(CONFIG_FILE_KEY_PREFIX);
+        result.push_back(CONFIG_FILE_KEY_USER);
+        result.push_back(CONFIG_FILE_KEY_PWD);
+        return result;
+    }
+}
+
+std::pair<boost::filesystem::path, std::string>
+resolveConfigurationFile(const std::string&             spec,
+                         const boost::filesystem::path& prefix,
+                         const std::string&             configFileName) {
+    if (spec == CONFIG_FILE_KEY_PREFIX) {
+        return std::make_pair(prefixConfigDirectory(prefix)
+                              / configFileName,
+                              "Prefix wide config file");
+    } else if (spec == CONFIG_FILE_KEY_USER) {
+        return std::make_pair(userConfigDirectory()
+                              / configFileName,
+                              "User config file");
+    } else if (spec == CONFIG_FILE_KEY_PWD) {
+        return std::make_pair(configFileName,
+                              "Current directory file");
+    } else {
+        return std::make_pair(boost::filesystem::path(spec),
+                              "User specified config file");
+    }
 }
 
 void describeFileStream(const std::string&             label,
@@ -60,84 +105,62 @@ void describeFileStream(const std::string&             label,
          << (stream ? "exists" : "does not exist") << endl;
 }
 
-void configure(OptionHandler&                 handler,
-               const string&                  configFileName,
-               const string&                  environmentVariablePrefix,
-               int                            argc,
-               const char**                   argv,
-               bool                           stripEnvironmentVariablePrefix,
-               const boost::filesystem::path& prefix,
-               const std::string&             debugVariableName) {
+void processConfigFile(unsigned int                   index,
+                       const std::string&             spec,
+                       const boost::filesystem::path& prefix,
+                       const std::string&             configFileName,
+                       bool                           debug,
+                       OptionHandler&                 handler) {
+    boost::filesystem::path file;
+    std::string             description;
+    boost::tie(file, description)
+        = resolveConfigurationFile(spec, prefix, configFileName);
+    try {
+        boost::filesystem::ifstream stream(file);
+        if (debug) {
+            describeFileStream("   " + boost::lexical_cast<string>(index) + ". "
+                               + description,
+                               file, stream);
+        }
+        if (stream) {
+            ConfigFileSource source(stream);
+            source.provideOptions(handler);
+        }
+    } catch (const runtime_error& e) {
+        RSCWARN(getLogger(),
+                "Failed to process " << description << " `"
+                << file << "': " << e.what());
+    }
+}
+
+void configure(OptionHandler&                  handler,
+               const string&                   configFileName,
+               const string&                   environmentVariablePrefix,
+               int                             argc,
+               const char**                    argv,
+               bool                            stripEnvironmentVariablePrefix,
+               const boost::filesystem::path&  prefix,
+               const std::string&              debugVariableName,
+               const std::vector<std::string>& configurationFiles) {
     bool debug = getEnvironmentVariable(debugVariableName).get();
 
     // 0) In debug mode, header first.
     if (debug) {
-        cerr << "Configuring with sources (lowest priority first)" << endl
-             << "  1. Configuration files" << endl;
+        cerr << "Configuring with sources (lowest priority first)" << endl;
     }
 
-    // 1) Try prefix-wide configuration file
+    // 1) Configuration files
     //    (lowest priority)
-    boost::filesystem::path
-        prefixWideFile(prefixConfigDirectory(prefix) / configFileName);
-    try {
-        boost::filesystem::ifstream stream(prefixWideFile);
-        if (debug) {
-            describeFileStream("   1. Prefix wide config file",
-                               prefixWideFile, stream);
-        }
-        if (stream) {
-            ConfigFileSource source(stream);
-            source.provideOptions(handler);
-        }
-    } catch (const runtime_error& e) {
-        RSCWARN(getLogger(),
-                "Failed to process prefix-wide configuration file `"
-                << prefixWideFile << "': " << e.what());
+    if (debug) {
+        cerr << "  1. Configuration files" << endl;
+    }
+    unsigned int index = 1;
+    for (std::vector<std::string>::const_iterator it = configurationFiles.begin();
+         it != configurationFiles.end(); ++it) {
+        processConfigFile(index++, *it, prefix, configFileName, debug, handler);
     }
 
-    // 2) Try user configuration file.
-    //
-    // The two instance of userConfigDirectory() / configFileName in
-    // the following code cannot be reduce into a variable assignment
-    // outside the try/catch block since the code can throw an
-    // exception.
-    bool isUserConfigDirOK = false;
-    try {
-        boost::filesystem::path userFile(userConfigDirectory()
-                                         / configFileName);
-        boost::filesystem::ifstream stream(userFile);
-        if (debug) {
-            describeFileStream("   2. User config file", userFile, stream);
-        }
-        isUserConfigDirOK = true;
-        if (stream) {
-            ConfigFileSource source(stream);
-            source.provideOptions(handler);
-        }
-    } catch (const runtime_error& e) {
-        RSCWARN(getLogger(),
-                "Failed to process user-specific configuration file `"
-                << (isUserConfigDirOK
-                    ? (userConfigDirectory() / configFileName).string()
-                    : "<failed to determine user config dir>")
-                << "': " << e.what());
-    }
-
-    // 3) Try configuration file in current directory.
-    {
-        boost::filesystem::ifstream stream(configFileName);
-        if (debug) {
-            describeFileStream("   3. Current directory file",
-                               configFileName, stream);
-        }
-        if (stream) {
-            ConfigFileSource source(stream);
-            source.provideOptions(handler);
-        }
-    }
-
-    // 4) Add environment Variables
+    // 2) Add environment Variables
     {
         EnvironmentVariableSource source(environmentVariablePrefix,
                 stripEnvironmentVariablePrefix);
@@ -159,7 +182,7 @@ void configure(OptionHandler&                 handler,
         source.provideOptions(handler);
     }
 
-    // 5) Command line
+    // 3) Command line
     //    (highest priority)
     if (debug) {
         cerr << "  3. Commandline options" << endl;

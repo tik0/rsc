@@ -37,6 +37,33 @@ namespace config {
 
 extern const std::string DEFAULT_DEBUG_VARIABLE_NAME;
 
+extern const std::string DEFAULT_FILE_VARIABLE_NAME;
+
+extern const std::string CONFIG_FILE_KEY_PREFIX;
+extern const std::string CONFIG_FILE_KEY_USER;
+extern const std::string CONFIG_FILE_KEY_PWD;
+
+std::vector<std::string>
+defaultConfigurationFiles(const std::string& fileVariableName
+                          = DEFAULT_FILE_VARIABLE_NAME);
+
+
+/**
+ * Return a pair of configuration file path and description derived
+ * from @a spec.
+ *
+ * If @a spec is one of @ref CONFIG_FILE_KEY_PREFIX, @ref
+ * CONFIG_FILE_KEY_USER or @ref CONFIG_FILE_KEY_PWD, @a configFileName
+ * and potentially @a prefix are used to derive a prefix-wide,
+ * user-specific or pwd-relative configuration file path.
+ *
+ * Otherwise @a spec is treated as a filename and returned.
+ */
+std::pair<boost::filesystem::path, std::string>
+resolveConfigurationFile(const std::string&             spec,
+                         const boost::filesystem::path& prefix,
+                         const std::string&             configFileName);
+
 /**
  * Pass configuration options in from configuration files derived from
  * @a configFileName and environment variables with prefix @a
@@ -82,17 +109,19 @@ extern const std::string DEFAULT_DEBUG_VARIABLE_NAME;
  *               configuration directory should be computed (by
  *               calling @ref prefixConfigDirectory) when searching
  *               for a prefix-wide configuration file.
+ * @param directories
  *
  * @author jmoringe
  */
-void RSC_EXPORT configure(OptionHandler&                 handler,
-                          const std::string&             configFileName,
-                          const std::string&             environmentVariablePrefix,
-                          int                            argc                           = 0,
-                          const char**                   argv                           = 0,
-                          bool                           stripEnvironmentVariablePrefix = true,
-                          const boost::filesystem::path& prefix                         = "/",
-                          const std::string&             debugVariableName              = DEFAULT_DEBUG_VARIABLE_NAME);
+void RSC_EXPORT configure(OptionHandler&                  handler,
+                          const std::string&              configFileName,
+                          const std::string&              environmentVariablePrefix,
+                          int                             argc                           = 0,
+                          const char**                    argv                           = 0,
+                          bool                            stripEnvironmentVariablePrefix = true,
+                          const boost::filesystem::path&  prefix                         = "/",
+                          const std::string&              debugVariableName              = DEFAULT_DEBUG_VARIABLE_NAME,
+                          const std::vector<std::string>& configurationFiles             = defaultConfigurationFiles());
 
 }
 }

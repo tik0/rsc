@@ -219,7 +219,7 @@ void LoggerTreeNode::setAssignedLevel(const Logger::Level& level) {
 }
 
 bool LoggerTreeNode::hasAssignedLevel() const {
-    return assignedLevel;
+    return assignedLevel.get() != NULL;
 }
 
 }

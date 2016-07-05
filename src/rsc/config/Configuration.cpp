@@ -65,7 +65,7 @@ void configure(OptionHandler&                 handler,
                const char**                   argv,
                bool                           stripEnvironmentVariablePrefix,
                const boost::filesystem::path& prefix) {
-    bool debug = getEnvironmentVariable("__CONFIG_DEBUG");
+    bool debug = getEnvironmentVariable("__CONFIG_DEBUG").get();
 
     // 0) In debug mode, header first.
     if (debug) {

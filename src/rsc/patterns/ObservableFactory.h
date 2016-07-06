@@ -2,7 +2,7 @@
  *
  * This file is part of the RSC project
  *
- * Copyright (C) 2010, 2011 Jan Moringen
+ * Copyright (C) 2010-2016 Jan Moringen
  *
  * This file may be licensed under the terms of the
  * GNU Lesser General Public License Version 3 (the ``LGPL''),
@@ -46,10 +46,10 @@ protected:
 public:
     typedef typename base::CreateFunction CreateFunction;
 
-    typedef boost::signals2::signal2<void, const std::string&, const CreateFunction&>
+    typedef boost::signals2::signal<void (const std::string&, const CreateFunction&)>
             ImplAddedSignal;
 
-    typedef boost::signals2::signal2<void, const std::string&, const CreateFunction&>
+    typedef boost::signals2::signal<void (const std::string&, const CreateFunction&)>
             ImplRemovedSignal;
 
     /**

@@ -53,7 +53,7 @@ TEST(OptionBasedConfiguratorTest, testConfigFromFile) {
     OptionBasedConfigurator configurator;
     boost::filesystem::ifstream stream(
             TEST_ROOT + "/rsc/logging/logging.config");
-    ASSERT_TRUE(stream);
+    ASSERT_TRUE(stream.good());
     ConfigFileSource(stream).provideOptions(configurator);
 
     EXPECT_EQ(Logger::LEVEL_TRACE, Logger::getLogger("")->getLevel());
@@ -75,7 +75,7 @@ TEST(OptionBasedConfiguratorTest, testDifferentRoot) {
     OptionBasedConfigurator configurator(root);
     boost::filesystem::ifstream stream(
             TEST_ROOT + "/rsc/logging/logging.config");
-    ASSERT_TRUE(stream);
+    ASSERT_TRUE(stream.good());
     ConfigFileSource(stream).provideOptions(configurator);
 
     EXPECT_EQ(Logger::LEVEL_OFF, Logger::getLogger("sub.logger")->getLevel());
@@ -115,7 +115,7 @@ TEST(OptionBasedConfiguratorTest, testSystemSelection) {
     OptionBasedConfigurator configurator(root);
     boost::filesystem::ifstream stream(
             TEST_ROOT + "/rsc/logging/logging.config");
-    ASSERT_TRUE(stream);
+    ASSERT_TRUE(stream.good());
     ConfigFileSource(stream).provideOptions(configurator);
 
     EXPECT_EQ(systemName, LoggerFactory::getInstance().getLoggingSystemName());

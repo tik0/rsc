@@ -39,7 +39,7 @@ using namespace rsc::debug;
 
 TEST(DebugToolsTest, testNewInstance)
 {
-    EXPECT_TRUE(DebugTools::newInstance());
+    EXPECT_TRUE(DebugTools::newInstance() != NULL);
 }
 
 TEST(DebugToolsTest, testCreateBacktrace)

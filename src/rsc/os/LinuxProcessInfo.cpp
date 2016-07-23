@@ -2,7 +2,7 @@
  *
  * This file is part of the RSC project
  *
- * Copyright (C) 2014 Jan Moringen
+ * Copyright (C) 2014, 2016 Jan Moringen
  *
  * This file may be licensed under the terms of the
  * GNU Lesser General Public License Version 3 (the ``LGPL''),
@@ -155,12 +155,11 @@ std::vector<std::string> currentCommandlineArguments() {
 // system may be different. Unfortunately, there does not seem to be a
 // means to determine the value a runtime.
 boost::posix_time::ptime getProcessStartTime(PID pid) {
-    static const unsigned int START_TIME_BOOT_JIFFIES_FIELD_NUMBER = 22;
-
     // Read process start time in jiffies since *system boot*.
     // See /proc/[pid]/stat section in proc(5).
     boost::uint64_t startTimeBootJiffies;
     {
+        static const unsigned int START_TIME_BOOT_JIFFIES_FIELD_NUMBER = 22;
         const std::string procSelfStat = procFilename(pid, "stat");
         std::ifstream stream(procSelfStat.c_str());
         std::vector<std::string> tokens;

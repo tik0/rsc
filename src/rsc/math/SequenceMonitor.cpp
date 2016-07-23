@@ -44,9 +44,9 @@ double EuclidDist::calc(const double* v1, const double* v2,
 
 double MaximumDist::calc(const double* v1, const double* v2,
         const unsigned int& dim) {
-    double currValue, maxValue = 0.0;
+    double maxValue = 0.0;
     for (int i = dim - 1; i >= 0; i--) {
-        currValue = fabs(v1[i] - v2[i]);
+        double currValue = fabs(v1[i] - v2[i]);
         if (currValue > maxValue) {
             maxValue = currValue;
         }

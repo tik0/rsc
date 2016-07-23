@@ -78,16 +78,11 @@ bool OptionBasedConfigurator::keyStartWithRoot(
 
 string OptionBasedConfigurator::loggerNameFromKey(
         const vector<string>& key) const {
-
-    vector<string> normalizedKey = normalizeKey(key);
-
     string name;
     // the last fragment must be the setting, do not include in the name
     for (vector<string>::const_iterator keyIt = key.begin() + rootOption.size();
             keyIt != key.end() - 1; ++keyIt) {
-
         name += "." + *keyIt;
-
     }
 
     if (name.empty()) {

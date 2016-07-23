@@ -2,7 +2,7 @@
  *
  * This file is part of the RSC project
  *
- * Copyright (C) 2010, 2011, 2012, 2014 Jan Moringen
+ * Copyright (C) 2010-2016 Jan Moringen
  *
  * This file may be licensed under the terms of the
  * GNU Lesser General Public License Version 3 (the ``LGPL''),
@@ -297,7 +297,7 @@ operator<<(basic_ostream<Ch, Tr>& stream, const list<T>& container) {
            : container_brackets.value);
 
     stream << container_style.open;
-    if (container.size() >= 1) {
+    if (!container.empty()) {
         stream << element_sequence_style.first_separator;
         copy(container.begin(), --container.end(),
              ostream_iterator<value_type>(stream,
@@ -329,7 +329,7 @@ operator<<(basic_ostream<Ch, Tr>& stream, const set<T>& container) {
            : container_braces.value);
 
     stream << container_style.open;
-    if (container.size() >= 1) {
+    if (!container.empty()) {
         stream << element_sequence_style.first_separator;
         copy(++container.begin(), container.end(),
              ostream_iterator<value_type>(stream,

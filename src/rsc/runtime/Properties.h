@@ -169,8 +169,8 @@ operator<<(const Properties& left, const Properties& right);
 
 template<typename Ch, typename Tr>
 std::basic_ostream<Ch, Tr>&
-operator<<(std::basic_ostream<Ch, Tr>& stream, const std::pair<std::string,
-        boost::any> property);
+operator<<(std::basic_ostream<Ch, Tr>& stream,
+           const std::pair<std::string, boost::any>& property);
 
 template<typename Ch, typename Tr>
 std::basic_ostream<Ch, Tr>&

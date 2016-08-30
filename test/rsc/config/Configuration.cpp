@@ -38,15 +38,15 @@
 using namespace rsc::config;
 
 TEST(ResolveConfigurationFileTest, testSmoke) {
-    EXPECT_STREQ("foo.conf",
-                 resolveConfigurationFile("foo.conf", "/pre", "c.conf").first.c_str());
+    EXPECT_EQ("foo.conf",
+              resolveConfigurationFile("foo.conf", "/pre", "c.conf").first);
 
-    EXPECT_STREQ("/pre/etc/c.conf",
-                 resolveConfigurationFile(CONFIG_FILE_KEY_PREFIX, "/pre", "c.conf").first.c_str());
+    EXPECT_EQ("/pre/etc/c.conf",
+              resolveConfigurationFile(CONFIG_FILE_KEY_PREFIX, "/pre", "c.conf").first);
 
-    EXPECT_STREQ((userConfigDirectory() / "c.conf").c_str(),
-                 resolveConfigurationFile(CONFIG_FILE_KEY_USER, "/pre", "c.conf").first.c_str());
+    EXPECT_EQ((userConfigDirectory() / "c.conf"),
+              resolveConfigurationFile(CONFIG_FILE_KEY_USER, "/pre", "c.conf").first);
 
-    EXPECT_STREQ("c.conf",
-                 resolveConfigurationFile(CONFIG_FILE_KEY_PWD, "/pre", "c.conf").first.c_str());
+    EXPECT_EQ("c.conf",
+              resolveConfigurationFile(CONFIG_FILE_KEY_PWD, "/pre", "c.conf").first);
 }

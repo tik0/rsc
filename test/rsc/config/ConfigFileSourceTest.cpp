@@ -2,7 +2,7 @@
  *
  * This file is part of the RSC project
  *
- * Copyright (C) 2011, 2014 Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
+ * Copyright (C) 2011-2016 Jan Moringen <jmoringe@techfak.uni-bielefeld.de>
  *
  * This file may be licensed under the terms of the
  * GNU Lesser General Public License Version 3 (the ``LGPL''),
@@ -75,7 +75,7 @@ TEST(ConfigFileSourceTest, testSyntaxErrors) {
             ConfigFileSource source(stream);
             source.provideOptions(handler);
             FAIL();
-        } catch (invalid_argument& e) {
+        } catch (invalid_argument&) {
             // good
         }
     }
@@ -88,7 +88,7 @@ TEST(ConfigFileSourceTest, testEolError) {
         ConfigFileSource source(stream);
         source.provideOptions(handler);
         FAIL();
-    } catch (invalid_argument& e) {
+    } catch (invalid_argument&) {
         // good
     }
 }

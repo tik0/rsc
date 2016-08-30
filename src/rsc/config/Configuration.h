@@ -35,13 +35,13 @@
 namespace rsc {
 namespace config {
 
-extern const std::string DEFAULT_DEBUG_VARIABLE_NAME;
+RSC_EXPORT extern const std::string DEFAULT_DEBUG_VARIABLE_NAME;
 
-extern const std::string DEFAULT_FILE_VARIABLE_NAME;
+RSC_EXPORT extern const std::string DEFAULT_FILE_VARIABLE_NAME;
 
-extern const std::string CONFIG_FILE_KEY_PREFIX;
-extern const std::string CONFIG_FILE_KEY_USER;
-extern const std::string CONFIG_FILE_KEY_PWD;
+RSC_EXPORT extern const std::string CONFIG_FILE_KEY_PREFIX;
+RSC_EXPORT extern const std::string CONFIG_FILE_KEY_USER;
+RSC_EXPORT extern const std::string CONFIG_FILE_KEY_PWD;
 
 std::vector<std::string>
 defaultConfigurationFiles(const std::string& fileVariableName

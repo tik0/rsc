@@ -38,7 +38,7 @@
 
 # TODO allow folder location of google mock in addition to the zip archive
 
-SET(GMOCK_SOURCE "http://googlemock.googlecode.com/files/gmock-1.7.0.zip" CACHE STRING "Location to download a google mock zip")
+SET(GMOCK_SOURCE "https://github.com/google/googletest/archive/release-1.8.0.zip" CACHE STRING "Location to download a google mock zip")
 SET(GMOCK_AVAILABLE FALSE CACHE BOOL "Indicates wether a completely extracted installation of gmock is available")
 
 # check whether the download URL has changed. In this case we need to do a new
@@ -60,8 +60,8 @@ IF(NOT GMOCK_AVAILABLE OR GMOCK_SOURCE_CHANGED)
     ENDIF()
 
     # download fresh archive
-    SET(GMOCK_ARCHIVE "${CMAKE_CURRENT_BINARY_DIR}/gmock.zip")
-    MESSAGE(STATUS "Downloading a fresh Google Mock archive as no old one was found.")
+    SET(GMOCK_ARCHIVE "${CMAKE_CURRENT_BINARY_DIR}/googletest-release.zip")
+    MESSAGE(STATUS "Downloading a fresh Google Test archive (includes Google Mock) as no old one was found.")
     FILE(DOWNLOAD ${GMOCK_SOURCE} ${GMOCK_ARCHIVE} STATUS GMOCK_DOWNLOAD_STATUS)
     #MESSAGE(STATUS "Google Mock download finished with status: ${GMOCK_DOWNLOAD_STATUS}")
     LIST(GET GMOCK_DOWNLOAD_STATUS 0 GMOCK_DOWNLOAD_STATUS_CODE)
@@ -84,12 +84,17 @@ IF(NOT GMOCK_AVAILABLE OR GMOCK_SOURCE_CHANGED)
 
     STRING(REGEX MATCH "[^ ]*/src/gmock-all\\.cc" GMOCK_ALL_FILE ${GMOCK_ARCHIVE_CONTENTS})
     MESSAGE(STATUS "GMOCK_ALL_FILE: ${GMOCK_ALL_FILE}")
-    STRING(REGEX MATCH "[^ ]*/src/gtest-all\\.cc" GTEST_ALL_FILE ${GMOCK_ARCHIVE_CONTENTS})
-    MESSAGE(STATUS "GMOCK_ALL_FILE: ${GTEST_ALL_FILE}")
     FILE(TO_CMAKE_PATH ${GMOCK_ALL_FILE} GMOCK_ALL_FILE_CMAKE)
     STRING(REPLACE "/src/gmock-all.cc" "" GMOCK_BASE_DIR ${GMOCK_ALL_FILE_CMAKE})
     SET(GMOCK_BASE_DIR "${CMAKE_CURRENT_BINARY_DIR}/${GMOCK_BASE_DIR}")
     MESSAGE(STATUS "GMOCK_BASE_DIR: ${GMOCK_BASE_DIR}")
+
+    STRING(REGEX MATCH "[^ ]*/src/gtest-all\\.cc" GTEST_ALL_FILE ${GMOCK_ARCHIVE_CONTENTS})
+    MESSAGE(STATUS "GTEST_ALL_FILE: ${GTEST_ALL_FILE}")
+    FILE(TO_CMAKE_PATH ${GTEST_ALL_FILE} GTEST_ALL_FILE_CMAKE)
+    STRING(REPLACE "/src/gtest-all.cc" "" GTEST_BASE_DIR ${GTEST_ALL_FILE_CMAKE})
+    SET(GTEST_BASE_DIR "${CMAKE_CURRENT_BINARY_DIR}/${GTEST_BASE_DIR}")
+    MESSAGE(STATUS "GTEST_BASE_DIR: ${GTEST_BASE_DIR}")
 
     EXECUTE_PROCESS(COMMAND ${UNZIP_COMMAND} -o ${GMOCK_ARCHIVE} -d ${CMAKE_CURRENT_BINARY_DIR}
                     RESULT_VARIABLE GMOCK_ARCHIVE_EXTRACTED
@@ -99,15 +104,14 @@ IF(NOT GMOCK_AVAILABLE OR GMOCK_SOURCE_CHANGED)
         RETURN()
     ENDIF()
 
-    # provide usefull information
+    # provide useful information
     SET(GMOCK_SOURCES "${CMAKE_CURRENT_BINARY_DIR}/${GMOCK_ALL_FILE}"
                       "${CMAKE_CURRENT_BINARY_DIR}/${GTEST_ALL_FILE}"
                       CACHE STRING "Sources of Google Mock for the compilation target." FORCE)
 
-    SET(GMOCK_INCLUDE_DIRS "${GMOCK_BASE_DIR}/gtest"
-                           "${GMOCK_BASE_DIR}/gtest/include"
-                           "${GMOCK_BASE_DIR}"
-                           "${GMOCK_BASE_DIR}/include" CACHE STRING "Google Mock include directories" FORCE)
+    SET(GMOCK_INCLUDE_DIRS "${GTEST_BASE_DIR}" "${GTEST_BASE_DIR}/include"
+                           "${GMOCK_BASE_DIR}" "${GMOCK_BASE_DIR}/include"
+                           CACHE STRING "Google Mock include directories" FORCE)
     SET(GMOCK_LIBRARIES "gmock" CACHE STRING "Library target for Google Mock")
     IF(MSVC11)
         SET(GMOCK_CFLAGS "/DGTEST_USE_OWN_TR1_TUPLE=0;/D_VARIADIC_MAX=10" CACHE INTERNAL "Google Mock CFLAGS")

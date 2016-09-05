@@ -43,7 +43,7 @@ RSC_EXPORT extern const std::string CONFIG_FILE_KEY_PREFIX;
 RSC_EXPORT extern const std::string CONFIG_FILE_KEY_USER;
 RSC_EXPORT extern const std::string CONFIG_FILE_KEY_PWD;
 
-std::vector<std::string>
+std::vector<std::string> RSC_EXPORT
 defaultConfigurationFiles(const std::string& fileVariableName
                           = DEFAULT_FILE_VARIABLE_NAME);
 
@@ -59,7 +59,7 @@ defaultConfigurationFiles(const std::string& fileVariableName
  *
  * Otherwise @a spec is treated as a filename and returned.
  */
-std::pair<boost::filesystem::path, std::string>
+std::pair<boost::filesystem::path, std::string> RSC_EXPORT
 resolveConfigurationFile(const std::string&             spec,
                          const boost::filesystem::path& prefix,
                          const std::string&             configFileName);

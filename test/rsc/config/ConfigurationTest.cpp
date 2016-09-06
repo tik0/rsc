@@ -38,15 +38,16 @@
 using namespace rsc::config;
 
 TEST(ResolveConfigurationFileTest, testSmoke) {
+    boost::filesystem::path prefix("pre");
     EXPECT_EQ("foo.conf",
-              resolveConfigurationFile("foo.conf", "/pre", "c.conf").first);
+              resolveConfigurationFile("foo.conf", prefix, "c.conf").first);
 
-    EXPECT_EQ("/pre/etc/c.conf",
-              resolveConfigurationFile(CONFIG_FILE_KEY_PREFIX, "/pre", "c.conf").first);
+    EXPECT_EQ(prefix / "etc" / "c.conf",
+              resolveConfigurationFile(CONFIG_FILE_KEY_PREFIX, prefix, "c.conf").first);
 
     EXPECT_EQ((userConfigDirectory() / "c.conf"),
-              resolveConfigurationFile(CONFIG_FILE_KEY_USER, "/pre", "c.conf").first);
+              resolveConfigurationFile(CONFIG_FILE_KEY_USER, prefix, "c.conf").first);
 
     EXPECT_EQ("c.conf",
-              resolveConfigurationFile(CONFIG_FILE_KEY_PWD, "/pre", "c.conf").first);
+              resolveConfigurationFile(CONFIG_FILE_KEY_PWD, prefix, "c.conf").first);
 }

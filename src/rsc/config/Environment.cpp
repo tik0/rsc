@@ -72,7 +72,7 @@ path prefixConfigDirectory(const path& prefix) {
         return prefix / "etc/";
     }
 #else
-    return "c:\\";
+    return prefix / "etc";
 #endif
 }
 

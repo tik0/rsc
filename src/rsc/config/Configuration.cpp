@@ -172,7 +172,13 @@ void configure(OptionHandler&                  handler,
                 for (EnvironmentVariableSource::Matches::const_iterator it
                          = matches.begin(); it != matches.end(); ++it) {
                     cerr << "     "
-                         << it->getRawName() << " -> " << it->getValue()
+                         << it->getRawName();
+                    if (it->getRawName() != it->getTransformedName()) {
+                        cerr << " (mapped to "
+                             << it->getTransformedName()
+                             << ")";
+                    }
+                    cerr << " -> " << it->getValue()
                          << endl;
                 }
             } else {

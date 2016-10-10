@@ -23,7 +23,7 @@ OPTION(BUILD_TESTS "Decide if the test suite shall be built or not" ON)
 OPTION(BUILD_EXAMPLES "Decide if the examples shall be built or not" ON)
 OPTION(INSTALL_TOOLCHAINS "Decide if CMake toolchain files should be installed" ON)
 OPTION(EXPORT_TO_CMAKE_PACKAGE_REGISTRY "If set to ON, RSC will be exported to the CMake user package registry so that downstream projects automatically find the workspace location in find_package calls." OFF)
-OPTION(ENCODE_VERSION "If set to ON, install pathes and library name will have the version encoded ('rsc{major,minor}' instead of 'rsc') to allow parallel installation of different versions." ON)
+OPTION(ENCODE_VERSION "If set to ON, install paths and library name will have the version encoded ('rsc{major,minor}' instead of 'rsc') to allow parallel installation of different versions." ON)
 
 # --- global definitions ---
 

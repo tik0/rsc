@@ -113,9 +113,17 @@ void processConfigFile(unsigned int                   index,
                        OptionHandler&                 handler) {
     boost::filesystem::path file;
     std::string             description;
-    boost::tie(file, description)
-        = resolveConfigurationFile(spec, prefix, configFileName);
     try {
+        boost::tie(file, description)
+            = resolveConfigurationFile(spec, prefix, configFileName);
+    } catch (const runtime_error& e) {
+        RSCWARN(getLogger(),
+                "Failed to resolve configuration file designated by "
+                << spec << "': " << e.what());
+        return;
+    }
+    try {
+
         boost::filesystem::ifstream stream(file);
         if (debug) {
             describeFileStream("   " + boost::lexical_cast<string>(index) + ". "

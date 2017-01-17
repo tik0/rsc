@@ -37,12 +37,12 @@ namespace rsc {
 namespace logging {
 
 LoggerTreeNode::LoggerTreeNode(const string& name, LoggerTreeNodeWeakPtr parent) :
-        name(name), parent(parent) {
+        name(name), parent(parent), bHasAssignedLevel(false) {
 }
 
 LoggerTreeNode::LoggerTreeNode(const string& name, LoggerProxyPtr loggerProxy,
         LoggerTreeNodeWeakPtr parent) :
-        name(name), loggerProxy(loggerProxy), parent(parent) {
+        name(name), loggerProxy(loggerProxy), parent(parent), bHasAssignedLevel(false) {
 }
 
 LoggerTreeNodePtr LoggerTreeNode::getParent() const {
@@ -61,59 +61,43 @@ void LoggerTreeNode::setLoggerProxy(LoggerProxyPtr loggerProxy) {
     this->loggerProxy = loggerProxy;
 }
 
-bool LoggerTreeNode::addChild(LoggerTreeNodePtr child) {
-    // we rely on the fact that map only inserts if not present
-    return children.insert(make_pair(child->getName(), child)).second;
-}
+LoggerTreeNodePtr LoggerTreeNode::addChildren(const NamePath& path) {
 
-LoggerTreeNodePtr LoggerTreeNode::addChildren(const NamePath& path,
-        CreateFunction createFn, const NamePath &processedPath) {
-
-    if (path.size() == 0) {
-        throw invalid_argument("Empty path given");
+    if (path.empty()) {
+        return shared_from_this();
     }
 
-    const string directChildName = path.front();
-    NamePath subPath = path;
-    subPath.erase(subPath.begin());
-    NamePath childPath = processedPath;
-    childPath.push_back(directChildName);
-
-    if (!children.count(path.front())) {
-        children[path.front()] = LoggerTreeNodePtr(
-                new LoggerTreeNode(path.front(), shared_from_this()));
-        children[path.front()]->setLoggerProxy(
-                createFn(childPath, children[directChildName]));
+    const string &directChildName = path.front();
+    if (!children.count(directChildName)) {
+        children[directChildName] = LoggerTreeNodePtr(
+                new LoggerTreeNode(directChildName, shared_from_this()));
     }
 
     if (path.size() > 1) {
-        return children[directChildName]->addChildren(subPath, createFn,
-                childPath);
+        NamePath subPath = path;
+        subPath.erase(subPath.begin());
+        return children[directChildName]->addChildren(subPath);
     } else {
         return children[directChildName];
     }
-
 }
 
 LoggerTreeNode::Visitor::~Visitor() {
 }
 
-void LoggerTreeNode::visit(VisitorPtr visitor, const NamePath& thisPath) {
+void LoggerTreeNode::visit(VisitorPtr visitor, bool bValidProxiesOnly, const NamePath& thisPath) {
+    bool descend = true;
+    if (!bValidProxiesOnly || this->getLoggerProxy())
+        descend = visitor->visit(thisPath, shared_from_this());
+    if (!descend) return;
 
     for (map<string, LoggerTreeNodePtr>::const_iterator it = children.begin();
             it != children.end(); ++it) {
 
         NamePath childPath = thisPath;
         childPath.push_back(it->first);
-
-        bool descend = visitor->visit(childPath, it->second,
-                loggerProxy->getLogger()->getLevel());
-        if (descend) {
-            it->second->visit(visitor, childPath);
-        }
-
+        it->second->visit(visitor, bValidProxiesOnly, childPath);
     }
-
 }
 
 bool LoggerTreeNode::hasChild(const string& name) const {
@@ -206,20 +190,24 @@ string LoggerTreeNode::pathToName(const NamePath& path) {
     return s.str();
 }
 
-boost::shared_ptr<Logger::Level> LoggerTreeNode::getAssignedLevel() const {
-    return assignedLevel;
-}
-
-void LoggerTreeNode::setAssignedLevel(boost::shared_ptr<Logger::Level> level) {
-    this->assignedLevel = level;
+Logger::Level LoggerTreeNode::getLevel() const
+{
+    if (hasAssignedLevel()) return assignedLevel;
+    return getParent()->getLevel();
 }
 
 void LoggerTreeNode::setAssignedLevel(const Logger::Level& level) {
-    assignedLevel.reset(new Logger::Level(level));
+    assignedLevel = level;
+    bHasAssignedLevel = true;
+}
+
+void LoggerTreeNode::unsetAssignedLevel()
+{
+    bHasAssignedLevel = false;
 }
 
 bool LoggerTreeNode::hasAssignedLevel() const {
-    return assignedLevel.get() != NULL;
+    return bHasAssignedLevel;
 }
 
 }

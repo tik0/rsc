@@ -107,13 +107,14 @@ TEST(LoggerFactoryTest, testReselectLoggingSystem) {
     string name = randAlnumStr(10);
     boost::algorithm::to_lower(name);
     boost::shared_ptr<StubLogger> nameLogger(new StubLogger(name));
-    EXPECT_CALL(*l2, createLogger("")).Times(1).WillOnce(
+    EXPECT_CALL(*l2, createLogger("",_)).Times(1).WillOnce(
             Return(LoggerPtr(new StubLogger(dummyName))));
-    EXPECT_CALL(*l2, createLogger(dummyName)).Times(1).WillOnce(
+    EXPECT_CALL(*l2, createLogger(dummyName,_)).Times(1).WillOnce(
             Return(LoggerPtr(new StubLogger(dummyName))));
-    EXPECT_CALL(*l2, createLogger(name)).Times(1).WillOnce(Return(nameLogger));
+    EXPECT_CALL(*l2, createLogger(name,_)).Times(1).WillOnce(Return(nameLogger));
     LoggerFactory::getInstance().reselectLoggingSystem(l2->name);
     EXPECT_EQ(l2->name, LoggerFactory::getInstance().getLoggingSystemName());
+    EXPECT_EQ(logger, LoggerFactory::getInstance().getLogger(dummyName));
     logger = LoggerFactory::getInstance().getLogger(name);
     logger->debug("Narf");
     EXPECT_EQ(size_t(1), nameLogger->logs.size());
@@ -125,13 +126,13 @@ TEST(LoggerFactoryTest, testReselectLoggingSystem) {
     // wrong hint, fallback to other available system
     string newName = randAlnumStr(12);
     boost::algorithm::to_lower(newName);
-    EXPECT_CALL(*l2, createLogger("")).Times(1).WillOnce(
+    EXPECT_CALL(*l2, createLogger("",_)).Times(1).WillOnce(
             Return(LoggerPtr(new StubLogger(dummyName))));
-    EXPECT_CALL(*l2, createLogger(dummyName)).Times(1).WillOnce(
+    EXPECT_CALL(*l2, createLogger(dummyName,_)).Times(1).WillOnce(
             Return(LoggerPtr(new StubLogger(dummyName))));
-    EXPECT_CALL(*l2, createLogger(name)).Times(1).WillOnce(
+    EXPECT_CALL(*l2, createLogger(name,_)).Times(1).WillOnce(
             Return(LoggerPtr(new StubLogger(name))));
-    EXPECT_CALL(*l2, createLogger(newName)).Times(1).WillOnce(
+    EXPECT_CALL(*l2, createLogger(newName,_)).Times(1).WillOnce(
             Return(LoggerPtr(new StubLogger(newName))));
     LoggerFactory::getInstance().reselectLoggingSystem(randAlnumStr(123));
     EXPECT_EQ(l2->name, LoggerFactory::getInstance().getLoggingSystemName());

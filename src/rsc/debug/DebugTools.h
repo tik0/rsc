@@ -30,63 +30,40 @@
 #include <vector>
 #include <sstream>
 
-#include <boost/shared_ptr.hpp>
-
 #include "../runtime/TypeStringTools.h"
 #include "rsc/rscexports.h"
 
 namespace rsc {
 namespace debug {
 
-class DebugTools;
-typedef boost::shared_ptr<DebugTools> DebugToolsPtr;
+/**
+ * Generates a string representation of the current thread's backtrace.
+ *
+ * @return backtrace string as vector of method calls
+ */
+RSC_EXPORT std::vector<std::string> createBacktrace(const unsigned int maxElements = 20);
+
+/// formatting the stacktrace, indenting every line with a single tab
+RSC_EXPORT std::string formatBacktrace(const std::vector<std::string>& trace);
+
+/// conveniency function, creating and formating the stacktrace
+RSC_EXPORT std::string formatBacktrace(const unsigned int maxElements = 20);
 
 /**
- * A class providing platform-specific runtime debugging tools, e.g. to generate
- * a backtrace.
+ * Generates a string giving verbose information about an exception in the
+ * given context. Use this immediately after catching the exception.
+ *
+ * @param e the exception to analyze
+ * @tparam ExceptionType type of the caught exception
  */
-class RSC_EXPORT DebugTools {
-public:
-
-    virtual ~DebugTools();
-
-    static DebugToolsPtr newInstance();
-
-    /**
-     * Generates a string representation of the current thread's backtrace.
-     *
-     * @return backtrace string as vector of method calls
-     */
-    virtual std::vector<std::string> createBacktrace(
-            const unsigned int& maxElements = 20) = 0;
-
-    std::string formatBacktrace(const std::vector<std::string>& trace);
-
-    /**
-     * Generates a string giving verbose information about an exception in the
-     * given context. Use this immediately after catching the exception.
-     *
-     * @param e the exception to analyze
-     * @tparam ExceptionType type of the caught exception
-     */
-    template<class ExceptionType>
-    std::string exceptionInfo(const ExceptionType& e) {
-
-        std::stringstream s;
-        s << "Exception of type: " << rsc::runtime::typeName(e) << std::endl;
-        s << "Backtrace:" << std::endl;
-        std::vector<std::string> trace = createBacktrace();
-        s << formatBacktrace(trace);
-        return s.str();
-
-    }
-
-protected:
-
-    DebugTools();
-
-};
+template<class ExceptionType>
+std::string exceptionInfo(const ExceptionType& e) {
+    std::stringstream s;
+    s << "Exception of type: " << rsc::runtime::typeName(e) << std::endl;
+    s << "Backtrace:" << std::endl;
+    s << formatBacktrace();
+    return s.str();
+}
 
 }
 }
-

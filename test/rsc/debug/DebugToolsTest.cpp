@@ -37,14 +37,9 @@
 using namespace std;
 using namespace rsc::debug;
 
-TEST(DebugToolsTest, testNewInstance)
-{
-    EXPECT_TRUE(DebugTools::newInstance() != NULL);
-}
-
 TEST(DebugToolsTest, testCreateBacktrace)
 {
-    vector<string> trace = DebugTools::newInstance()->createBacktrace();
+    vector<string> trace = createBacktrace();
     for (vector<string>::const_iterator it = trace.begin(); it != trace.end(); ++it) {
         cout << *it << endl;
     }
@@ -56,7 +51,7 @@ TEST(DebugToolsTest, testExceptionInfo)
     try {
         throw invalid_argument("This is a message");
     } catch (exception& e) {
-        cout << DebugTools::newInstance()->exceptionInfo(e);
+        cout << exceptionInfo(e);
     }
 
 }

@@ -42,6 +42,7 @@ SET(SOURCES ${SOURCES}
             rsc/misc/IllegalStateException.cpp
             rsc/misc/UnsupportedOperationException.cpp
             rsc/misc/UUID.cpp
+            rsc/misc/uri.cpp
 
             "${CMAKE_CURRENT_BINARY_DIR}/rsc/Version.cpp")
 
@@ -73,8 +74,6 @@ IF(CMAKE_SYSTEM_NAME STREQUAL Linux)
 
     MESSAGE(STATUS "  LinuxDebugTools")
     LIST(APPEND SOURCES rsc/debug/LinuxDebugTools.cpp)
-    LIST(APPEND HEADERS rsc/debug/LinuxDebugTools.h)
-    ADD_DEFINITIONS(-DDEBUGTOOLS_LINUX)
 
     MESSAGE(STATUS "  PosixSignalWaiter")
     LIST(APPEND SOURCES rsc/misc/PosixSignalWaiter.cpp)
@@ -95,8 +94,6 @@ ELSEIF(APPLE)
 
     MESSAGE(STATUS "  LinuxDebugTools")
     LIST(APPEND SOURCES rsc/debug/LinuxDebugTools.cpp)
-    LIST(APPEND HEADERS rsc/debug/LinuxDebugTools.h)
-    ADD_DEFINITIONS(-DDEBUGTOOLS_LINUX)
 
     MESSAGE(STATUS "  MacSignalWaiter")
     LIST(APPEND SOURCES rsc/misc/MacSignalWaiter.cpp)
@@ -117,8 +114,6 @@ ELSEIF(UNIX)
 
     MESSAGE(STATUS "  LinuxDebugTools")
     LIST(APPEND SOURCES rsc/debug/LinuxDebugTools.cpp)
-    LIST(APPEND HEADERS rsc/debug/LinuxDebugTools.h)
-    ADD_DEFINITIONS(-DDEBUGTOOLS_LINUX)
 
     MESSAGE(STATUS "  PosixSignalWaiter")
     LIST(APPEND SOURCES rsc/misc/PosixSignalWaiter.cpp)
@@ -138,8 +133,8 @@ ELSEIF(WIN32)
 
     MESSAGE(STATUS "  WindowsDebugTools")
     LIST(APPEND SOURCES rsc/debug/WindowsDebugTools.cpp)
-    LIST(APPEND HEADERS rsc/debug/WindowsDebugTools.h)
-    ADD_DEFINITIONS(-DDEBUGTOOLS_WINDOWS)
+    LIST(APPEND SOURCES rsc/debug/StackWalker.cpp)
+    LIST(APPEND HEADERS rsc/debug/StackWalker.h)
 
     MESSAGE(STATUS "  Win32SignalWaiter")
     LIST(APPEND SOURCES rsc/misc/Win32SignalWaiter.cpp)

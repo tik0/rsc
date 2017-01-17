@@ -170,8 +170,8 @@ private:
     class ReconfigurationVisitor;
     class ReselectVisitor;
 
-    LoggerProxyPtr createLogger(const LoggerTreeNode::NamePath& path,
-            LoggerTreeNodePtr node);
+    LoggerProxyPtr createLoggerProxy(const std::string &name,
+                                     LoggerTreeNodePtr node);
 
     boost::shared_ptr<LoggingSystem> loggingSystem;
 

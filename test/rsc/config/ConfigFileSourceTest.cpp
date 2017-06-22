@@ -68,7 +68,7 @@ INSTANTIATE_TEST_CASE_P(ValidFiles,
 
 TEST(ConfigFileSourceTest, testSyntaxErrors) {
     CollectingOptionHandler handler;
-    for (unsigned int i = 1; i <= 2; ++i) {
+    for (unsigned int i = 1; i <= 3; ++i) {
         ifstream stream(
                 str(format("%1%/syntax-errors-%2%.conf") % TEST_ROOT % i).c_str());
         try {

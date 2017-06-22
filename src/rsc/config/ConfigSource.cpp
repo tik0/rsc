@@ -42,9 +42,13 @@ void ConfigSource::splitKeyAtDots(const string& input, vector<string>& output) {
     typedef boost::escaped_list_separator<char> SeparatorType;
     typedef boost::tokenizer<SeparatorType> TokenizerType;
 
-    SeparatorType sep('\\', '.');
-    TokenizerType tok(input, sep);
-    copy(tok.begin(), tok.end(), back_inserter(output));
+    try {
+        SeparatorType sep('\\', '.');
+        TokenizerType tok(input, sep);
+        copy(tok.begin(), tok.end(), back_inserter(output));
+    } catch (boost::escaped_list_error &e) {
+        throw invalid_argument(e.what());
+    }
 
     for (vector<string>::const_iterator outputIt = output.begin();
             outputIt != output.end(); ++outputIt) {
